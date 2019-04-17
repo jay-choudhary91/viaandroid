@@ -145,6 +145,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     customfonttextview tvuptime;
     @BindView(R.id.txt_battery)
     customfonttextview tvbattery;
+    @BindView(R.id.txt_date)
+    customfonttextview tvdate;
+    @BindView(R.id.txt_time)
+    customfonttextview tvtime;
     @BindView(R.id.txt_videoupdatetransactionid)
     customfonttextview tvblockchainid;
     @BindView(R.id.txt_hash_formula)
@@ -251,6 +255,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           tvlanguage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvuptime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvbattery.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvdate.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvtime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvblockchainid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvblockid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvblocknumber.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
@@ -478,10 +484,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.battery),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
-            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.blockchain_id)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
-            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.block_id)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
-            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.block_number), " "+common.getxdatavalue(xdata.getinstance().getSetting(config.datahash)), tvblocknumber);
-            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.metrichash)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);
+            common.setdrawabledata("",common.getdate(), tvdate);
+            common.setdrawabledata("",common.gettime(), tvtime);
+            common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
+            common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
+            common.setdrawabledata("", " "+common.getxdatavalue(xdata.getinstance().getSetting(config.datahash)), tvblocknumber);
+            common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);
 
             String latitude=xdata.getinstance().getSetting(config.Latitude);
             String longitude=xdata.getinstance().getSetting(config.Longitude);
@@ -895,7 +903,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     @Override
                     public void run() {
                         int heading = Math.round(event.values[0]);
-                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+heading +"° " , tvheading);
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+heading +"° " +common.getcompassdirection(heading), tvheading);
                         common.setdrawabledata("",+heading +"° " +common.getcompassdirection(heading) , txtdegree);
                     }
                 });

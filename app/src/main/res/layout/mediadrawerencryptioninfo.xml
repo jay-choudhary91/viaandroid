@@ -32,7 +32,56 @@
             <com.deeptruth.app.android.views.customfonttextview
                 app:fontType="Comfortaa-Regular"
                 style="@style/txt_row_encryption"
-                android:layout_weight="0.3"
+                android:layout_weight="0.4"
+                android:textColor="@color/white"
+                android:text="@string/date"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
+                style="@style/txt_row_encryption"
+                android:layout_weight="0.6"
+                android:id="@+id/txt_date"
+                android:text=""/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
+                style="@style/txt_row_encryption"
+                android:layout_weight="0.4"
+                android:textColor="@color/white"
+                android:text="@string/time"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
+                style="@style/txt_row_encryption"
+                android:layout_weight="0.6"
+                android:id="@+id/txt_time"
+                android:text=""/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
+                style="@style/txt_row_encryption"
+                android:layout_weight="0.4"
+                android:textColor="@color/white"
+                android:text="@string/blockchain_id"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
+                style="@style/txt_row_encryption"
+                android:layout_weight="0.6"
                 android:id="@+id/txt_videoupdatetransactionid"
                 android:text=""/>
 
@@ -41,13 +90,40 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
+                style="@style/txt_row_encryption"
+                android:layout_weight="0.4"
+                android:textColor="@color/white"
+                android:text="@string/blockid"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
+                style="@style/txt_row_encryption"
+                android:layout_weight="0.6"
+                android:id="@+id/txt_blockid"
+                android:text=""/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
             android:layout_weight="0.3"
             android:layout_height="wrap_content">
 
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_row_encryption"
+                android:layout_weight="0.4"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/white"
+                android:text="@string/hash_formula"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_row_encryption"
                 android:id="@+id/txt_hash_formula"
-                android:layout_weight="0.3"
+                android:layout_weight="0.6"
                 app:fontType="Comfortaa-Regular"
                 android:text=""/>
 
@@ -60,8 +136,15 @@
 
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_row_encryption"
+                android:layout_weight="0.4"
+                android:textColor="@color/white"
+                app:fontType="Comfortaa-Regular"
+                android:text="@string/mediahash"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_row_encryption"
                 android:id="@+id/txt_data_hash"
-                android:layout_weight="0.3"
+                android:layout_weight="0.6"
                 app:fontType="Comfortaa-Regular"
                 android:text=""/>
 
@@ -76,9 +159,16 @@
 
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_row_encryption"
+                app:fontType="Comfortaa-Regular"
+                android:layout_weight="0.4"
+                android:textColor="@color/white"
+                android:text="@string/metrichash"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_row_encryption"
                 android:id="@+id/txt_dictionary_hash"
                 app:fontType="Comfortaa-Regular"
-                android:layout_weight="0.3"
+                android:layout_weight="0.6"
                 android:text=""/>
 
         </LinearLayout>

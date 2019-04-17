@@ -2369,5 +2369,20 @@ public class common {
 
         return percentageheight;
     }
+    public static String getdate(){
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        SimpleDateFormat formatted = new SimpleDateFormat("MM/dd/yyyy ",Locale.ENGLISH);
+        String formattedDate = formatted.format(date);
+        return formattedDate;
+    }
+
+    public static String gettime(){
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        SimpleDateFormat formatted = new SimpleDateFormat("hh:mm:ss.SS",Locale.ENGLISH);
+        String formattedDate = formatted.format(date);
+        return formattedDate;
+    }
 }
 
