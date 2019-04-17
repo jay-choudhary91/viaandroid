@@ -21,14 +21,14 @@
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_locationtracking"
                 style="@style/txt_drawer_graphical_title"
-                android:text="@string/locationtracking"
+                android:text="@string/locationinformation"
                 app:fontType="Comfortaa-Regular"
                 />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_marginTop="10dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -41,6 +41,13 @@
                     android:visibility="visible"
                     android:layout_marginTop="10dp"
                     android:layout_height="200dp"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_address"
+                    app:fontType="Comfortaa-Regular"
+                    style="@style/txt_normalview"
+                    android:layout_marginTop="5dp"
+                    android:text="X-Axis"/>
 
             </LinearLayout>
 
@@ -60,14 +67,8 @@
                 android:text="@string/locationanalytics"
                 app:fontType="Comfortaa-Regular"
                 android:layout_marginTop="10dp"
+                android:visibility="gone"
                 />
-
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_address"
-                app:fontType="Comfortaa-Regular"
-                style="@style/txt_normalview"
-                android:layout_marginTop="5dp"
-                android:text="X-Axis"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,7 +82,7 @@
                     android:layout_width="0dp"
                     android:layout_weight="0.4"
                     android:layout_marginTop="5dp"
-                    android:layout_height="180dp">
+                    android:layout_height="150dp">
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:id="@+id/layout_compass"
@@ -112,6 +113,7 @@
                         android:id="@+id/txt_degree"
                         app:fontType="Comfortaa-Regular"
                         style="@style/txt_degreeview"
+                        android:visibility="gone"
                         android:layout_alignParentBottom="true"
                         android:text="Degree"/>
 
@@ -122,30 +124,38 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="0.6"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="150dp"
                         android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            android:id="@+id/txt_heading"
+                            app:fontType="OpenSans_Regular"
+                            android:gravity="center"
+                            style="@style/txt_row_locationinfo"
+                            android:layout_weight="0.3"
+                            android:text="Heading"/>
 
                         <com.deeptruth.app.android.views.customfonttextview
                             android:id="@+id/txt_latitude"
                             app:fontType="OpenSans_Regular"
-                            style="@style/txt_row_encryption"
-                            android:gravity="left"
-                            android:layout_weight="0.5"
+                            style="@style/txt_row_locationinfo"
+                            android:gravity="center"
+                            android:layout_weight="0.3"
                             android:text="Latitude"/>
 
                         <com.deeptruth.app.android.views.customfonttextview
                             android:id="@+id/txt_longitude"
                             app:fontType="OpenSans_Regular"
-                            style="@style/txt_row_encryption"
-                            android:gravity="left"
-                            android:layout_weight="0.5"
+                            style="@style/txt_row_locationinfo"
+                            android:gravity="center"
+                            android:layout_weight="0.3"
                             android:text="Longitude"/>
 
                     </LinearLayout>
@@ -156,52 +166,71 @@
                         android:layout_marginTop="5dp"
                         android:orientation="horizontal">
 
-                        <com.deeptruth.app.android.views.customfonttextview
-                            android:id="@+id/txt_altitude"
-                            app:fontType="OpenSans_Regular"
-                            style="@style/txt_row_encryption"
-                            android:gravity="left"
-                            android:layout_marginTop="5dp"
-                            android:layout_weight="0.5"
-                            android:text="Altitude"/>
-
-                        <com.deeptruth.app.android.views.customfonttextview
-                            android:id="@+id/txt_speed"
-                            app:fontType="OpenSans_Regular"
-                            style="@style/txt_row_encryption"
-                            android:gravity="left"
-                            android:layout_weight="0.5"
-                            android:text="Speed"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
-
-                        <com.deeptruth.app.android.views.customfonttextview
+                        <!--<com.deeptruth.app.android.views.customfonttextview
                             android:id="@+id/txt_heading"
                             app:fontType="OpenSans_Regular"
                             android:gravity="left"
                             style="@style/txt_row_encryption"
                             android:layout_weight="0.5"
-                            android:text="Heading"/>
+                            android:text="Heading"/>-->
 
-                        <com.deeptruth.app.android.views.customfonttextview
-                            android:id="@+id/txt_traveled"
-                            app:fontType="OpenSans_Regular"
-                            style="@style/txt_row_encryption"
-                            android:gravity="left"
-                            android:layout_weight="0.5"
-                            android:text="Traveled"/>
+
 
                     </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_speed"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:text="Speed"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_traveled"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:text="Traveled"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_altitude"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:text="Altitude"/>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_height="40dp"
+                android:orientation="vertical">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_gps_accuracy"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_locationinfo"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:text="GPS Accuracy"/>
+            </LinearLayout>
+
         </LinearLayout>
 
 
@@ -216,7 +245,7 @@
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_drawer_graphical_title"
                 android:id="@+id/txt_orientation"
-                android:text="@string/orientation"
+                android:text="@string/phoneinformation"
                 app:fontType="Comfortaa-Regular"
                 android:layout_marginTop="10dp"
                 />
@@ -226,45 +255,11 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="0.6"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:layout_marginTop="5dp"
-                    android:gravity="top"
-                    android:orientation="horizontal">
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_xaxis"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_normalview"
-                        android:gravity="left"
-                        android:layout_weight="0.2"
-                        android:text="X-Axis"/>
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_yaxis"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_normalview"
-                        android:gravity="left"
-                        android:layout_weight="0.2"
-                        android:text="Y-Axis"/>
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_zaxis"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_normalview"
-                        android:gravity="left"
-                        android:layout_weight="0.2"
-                        android:text="Z-Axis"/>
-
-                </LinearLayout>
-
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="150dp"
-                    android:layout_weight="0.4">
+                    android:gravity="right"
+                    android:layout_weight="0.5">
 
                     <com.deeptruth.app.android.sensor.AttitudeIndicator
                         android:id="@+id/attitude_indicator"
@@ -290,6 +285,40 @@
 
                 </RelativeLayout>
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_xaxis"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_normalview"
+                        android:gravity="center"
+                        android:layout_weight="0.2"
+                        android:text="X-Axis"/>
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_yaxis"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_normalview"
+                        android:gravity="center"
+                        android:layout_weight="0.2"
+                        android:text="Y-Axis"/>
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_zaxis"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_normalview"
+                        android:gravity="center"
+                        android:layout_weight="0.2"
+                        android:text="Z-Axis"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -307,6 +336,7 @@
                 style="@style/txt_drawer_graphical_title"
                 android:id="@+id/txt_Phoneanalytics"
                 app:fontType="Comfortaa-Regular"
+                android:visibility="gone"
                 android:text="@string/Phoneanalytics" />
 
             <LinearLayout
@@ -322,13 +352,84 @@
                     android:orientation="horizontal">
 
                     <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_memoryusage"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_encryption"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:layout_weight="0.5"
+                        android:text="Memory Usage"/>
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_cpu_usage"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_encryption"
+                        android:gravity="center"
+                        android:layout_weight="0.5"
+                        android:layout_marginTop="5dp"
+                        android:text="CPU Usage"/>
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_battery"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_encryption"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="0.5"
+                        android:text="Battery"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <com.deeptruth.app.android.views.customfonttextview
                         android:id="@+id/txt_phone"
                         app:fontType="OpenSans_Regular"
                         style="@style/txt_row_encryption"
-                        android:gravity="left"
+                        android:gravity="center"
                         android:layout_marginTop="5dp"
                         android:layout_weight="0.5"
                         android:text="Phone"/>
+
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_version"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_encryption"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="0.5"
+                        android:text="Version"/>
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_language"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_encryption"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="0.5"
+                        android:text="language"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_country"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_encryption"
+                        android:gravity="center"
+                        android:layout_weight="0.5"
+                        android:layout_marginTop="5dp"
+                        android:text="Country"/>
 
                     <com.deeptruth.app.android.views.customfonttextview
                         android:id="@+id/txt_network"
@@ -336,52 +437,19 @@
                         style="@style/txt_row_encryption"
                         android:layout_weight="0.5"
                         android:layout_marginTop="5dp"
-                        android:gravity="left"
+                        android:gravity="center"
                         android:text="Network"/>
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_connection"
-                        app:fontType="OpenSans_Regular"
-                        android:layout_marginTop="5dp"
-                        style="@style/txt_row_encryption"
-                        android:gravity="left"
-                        android:layout_weight="0.5"
-                        android:text="Connection"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_version"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_row_encryption"
-                        android:gravity="left"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="0.5"
-                        android:text="Version"/>
 
                     <com.deeptruth.app.android.views.customfonttextview
                         android:id="@+id/txt_wifi"
                         app:fontType="OpenSans_Regular"
                         style="@style/txt_row_encryption"
-                        android:gravity="left"
+                        android:gravity="center"
                         android:layout_weight="0.5"
                         android:layout_marginTop="5dp"
                         android:text="WiFi"/>
 
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_gps_accuracy"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_row_encryption"
-                        android:gravity="left"
-                        android:layout_weight="0.5"
-                        android:layout_marginTop="5dp"
-                        android:text="GPS Accuracy"/>
+
 
                 </LinearLayout>
 
@@ -390,33 +458,33 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_storagefree"
+                        app:fontType="OpenSans_Regular"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        style="@style/txt_row_encryption"
+                        android:layout_weight="0.5"
+                        android:text="Storage Free"/>
 
                     <com.deeptruth.app.android.views.customfonttextview
                         android:id="@+id/txt_screen"
                         app:fontType="OpenSans_Regular"
                         style="@style/txt_row_encryption"
-                        android:gravity="left"
+                        android:gravity="center"
                         android:layout_weight="0.5"
                         android:layout_marginTop="5dp"
                         android:text="Screen"/>
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_country"
+                        android:id="@+id/txt_brightness"
                         app:fontType="OpenSans_Regular"
                         style="@style/txt_row_encryption"
-                        android:gravity="left"
+                        android:gravity="center"
                         android:layout_weight="0.5"
                         android:layout_marginTop="5dp"
-                        android:text="Country"/>
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_cpu_usage"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_row_encryption"
-                        android:gravity="left"
-                        android:layout_weight="0.5"
-                        android:layout_marginTop="5dp"
-                        android:text="CPU Usage"/>
+                        android:text="Brightness"/>
 
                 </LinearLayout>
 
@@ -427,31 +495,31 @@
                     android:orientation="horizontal">
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_brightness"
+                        android:id="@+id/txt_localtime"
                         app:fontType="OpenSans_Regular"
                         style="@style/txt_row_encryption"
-                        android:gravity="left"
-                        android:layout_weight="0.5"
+                        android:gravity="center"
                         android:layout_marginTop="5dp"
-                        android:text="Brightness"/>
+                        android:layout_weight="0.5"
+                        android:text="localtime"/>
 
                     <com.deeptruth.app.android.views.customfonttextview
                         android:id="@+id/txt_timezone"
                         app:fontType="OpenSans_Regular"
                         style="@style/txt_row_encryption"
-                        android:gravity="left"
+                        android:gravity="center"
                         android:layout_weight="0.5"
                         android:layout_marginTop="5dp"
                         android:text="Time Zone"/>
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_memoryusage"
+                        android:id="@+id/txt_uptime"
                         app:fontType="OpenSans_Regular"
                         style="@style/txt_row_encryption"
                         android:layout_marginTop="5dp"
-                        android:gravity="left"
+                        android:gravity="center"
                         android:layout_weight="0.5"
-                        android:text="Memory Usage"/>
+                        android:text="Phone UpTime"/>
 
                 </LinearLayout>
 
@@ -459,6 +527,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:visibility="gone"
                     android:orientation="horizontal">
 
                     <com.deeptruth.app.android.views.customfonttextview
@@ -471,57 +540,15 @@
                         android:text="Bluetooth"/>
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_localtime"
+                        android:id="@+id/txt_connection"
                         app:fontType="OpenSans_Regular"
-                        style="@style/txt_row_encryption"
-                        android:gravity="left"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="0.5"
-                        android:text="localtime"/>
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_storagefree"
-                        app:fontType="OpenSans_Regular"
-                        android:gravity="left"
                         android:layout_marginTop="5dp"
                         style="@style/txt_row_encryption"
-                        android:layout_weight="0.5"
-                        android:text="Storage Free"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_language"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_row_encryption"
                         android:gravity="left"
-                        android:layout_marginTop="5dp"
+                        android:visibility="gone"
                         android:layout_weight="0.5"
-                        android:text="language"/>
+                        android:text="Connection"/>
 
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_uptime"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_row_encryption"
-                        android:layout_marginTop="5dp"
-                        android:gravity="left"
-                        android:layout_weight="0.5"
-                        android:text="Phone UpTime"/>
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_battery"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_row_encryption"
-                        android:gravity="left"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="0.5"
-                        android:text="Battery"/>
 
                 </LinearLayout>
 

@@ -451,8 +451,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         String blockid = " ";
         String blocknumber = " ";
         common.setspannable(getResources().getString(R.string.blockchain_id), blockchainid, txt_blockchainid);
-        common.setspannable(getResources().getString(R.string.block_id), blockid, txt_blockid);
-        common.setspannable(getResources().getString(R.string.block_number), blocknumber, txt_blocknumber);
+        common.setspannable(getResources().getString(R.string.hash_formula), blockid, txt_blockid);
+        common.setspannable(getResources().getString(R.string.mediahash), blocknumber, txt_blocknumber);
         edt_medianame.setEnabled(false);
         edt_medianame.setClickable(false);
         edt_medianame.setFocusable(false);
@@ -1013,8 +1013,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                         common.setgraphicalblockchainvalue(config.matrichash, metricmainarraylist.get(0).getMetahash(), true);
 
                                         common.setspannable(getResources().getString(R.string.blockchain_id), " " + metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
-                                        common.setspannable(getResources().getString(R.string.block_id), " " + metricmainarraylist.get(0).getHashmethod(), txt_blockid);
-                                        common.setspannable(getResources().getString(R.string.block_number), " " + metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
+                                        common.setspannable(getResources().getString(R.string.hash_formula), " " + metricmainarraylist.get(0).getHashmethod(), txt_blockid);
+                                        common.setspannable(getResources().getString(R.string.mediahash), " " + metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
                                         common.setspannable(getResources().getString(R.string.metrichash), " " + metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
                                         for (int j = 0; j < metricItemArraylist.size(); j++) {

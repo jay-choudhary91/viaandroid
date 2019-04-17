@@ -55,7 +55,7 @@
         <item name="android:textSize">18sp</item>
         <item name="android:paddingRight">5dp</item>
         <item name="android:paddingLeft">5dp</item>
-        <item name="android:gravity">left</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <style name="txt_drawer_graphical_values">
@@ -71,6 +71,28 @@
     <style name="txt_row_encryption">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/encrypt_row_color</item>
+        <item name="android:gravity">left</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="txt_row_locationinfo">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/encrypt_row_color</item>
+        <item name="android:gravity">left</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="txt_row_orientationinfo">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/encrypt_row_color</item>
         <item name="android:gravity">left</item>

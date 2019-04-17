@@ -2406,8 +2406,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                       common.setgraphicalblockchainvalue(config.matrichash, arraycontainerformetric.getMetahash(), true);
 
                       common.setspannable(getResources().getString(R.string.blockchain_id), " " + arraycontainerformetric.getVideostarttransactionid(), txt_blockchainid);
-                      common.setspannable(getResources().getString(R.string.block_id), " " + arraycontainerformetric.getHashmethod(), txt_blockid);
-                      common.setspannable(getResources().getString(R.string.block_number), " " + arraycontainerformetric.getValuehash(), txt_blocknumber);
+                      common.setspannable(getResources().getString(R.string.hash_formula), " " + arraycontainerformetric.getHashmethod(), txt_blockid);
+                      common.setspannable(getResources().getString(R.string.mediahash), " " + arraycontainerformetric.getValuehash(), txt_blocknumber);
                       common.setspannable(getResources().getString(R.string.metrichash), " " + arraycontainerformetric.getMetahash(), txt_metahash);
 
                       ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
