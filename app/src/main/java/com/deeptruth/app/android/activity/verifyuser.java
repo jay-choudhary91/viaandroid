@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
@@ -90,7 +91,7 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
     public void validatecallapi()
     {
         String value=pinview.getValue();
-        String clientid= xdata.getinstance().getSetting("clientid");
+        String clientid= xdata.getinstance().getSetting(config.clientid);
 
         HashMap<String,String> requestparams=new HashMap<>();
         requestparams.put("type","client");
@@ -110,10 +111,15 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
                         {
                             if(object.getString("success").equalsIgnoreCase("true"))
                             {
-                                if(object.has("clientid"))
-                                    xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
+                                if(object.has(config.clientid))
+                                    xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                gotologin();
+                                xdata.getinstance().saveSetting(config.reset_authtoken,"");
+
+                                if(object.has(config.reset_authtoken))
+                                    xdata.getinstance().saveSetting(config.reset_authtoken,object.getString(config.reset_authtoken));
+
+                                navigateuser();
                             }
                             else
                             {
@@ -145,14 +151,27 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
                 }
                 else
                 {
-                    Toast.makeText(verifyuser.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(verifyuser.this, getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
+    public void navigateuser()
+    {
+        if(xdata.getinstance().getSetting(config.reset_authtoken).toString().trim().length() > 0)
+        {
+            Intent i = new Intent(verifyuser.this, changepassword.class);
+            hidekeyboard();
+            startActivity(i);
+        }
+        else
+        {
+            gotologin();
+        }
+    }
+
     public void gotologin(){
-        //Toast.makeText(createaccount.this, "Auth success", Toast.LENGTH_SHORT).show();
         Intent i = new Intent(verifyuser.this, signinactivity.class);
         hidekeyboard();
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

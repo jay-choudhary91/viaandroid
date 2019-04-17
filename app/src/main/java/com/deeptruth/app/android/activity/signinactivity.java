@@ -141,12 +141,11 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
                         {
                             if(object.getString("success").equalsIgnoreCase("true"))
                             {
-                                if(object.has("clientid"))
-                                    xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
+                                if(object.has(config.clientid))
+                                    xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                //Toast.makeText(signinactivity.this, "Auth success", Toast.LENGTH_SHORT).show();
-                                if(object.has("authtoken"))
-                                    xdata.getinstance().saveSetting(config.authtoken,object.getString("authtoken"));
+                                if(object.has(config.authtoken))
+                                    xdata.getinstance().saveSetting(config.authtoken,object.getString(config.authtoken));
 
                                 login();
                             }
@@ -180,7 +179,7 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
                 }
                 else
                 {
-                    Toast.makeText(signinactivity.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(signinactivity.this, getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });
