@@ -16,6 +16,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.interfaces.itemupdatelistener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -58,7 +59,7 @@ public class AnalogClock extends View {
     private String mDescFormat;
     private TimeZone mTimeZone;
     private boolean mEnableSeconds = true;
-
+    private itemupdatelistener itemupdator;
     public AnalogClock(Context context) {
         this(context, null);
     }
@@ -174,6 +175,9 @@ public class AnalogClock extends View {
             canvas.rotate(secondAngle - minuteAngle, 0f, 0f);
             mSecondHand.draw(canvas);
         }
+        if(itemupdator != null)
+            itemupdator.onitemupdate(mTime);
+
         canvas.restoreToCount(saveCount);
     }
 
@@ -198,7 +202,8 @@ public class AnalogClock extends View {
         invalidate();
     }
 
-    public void setTimeZone(String id) {
+    public void setTimeZone(String id, itemupdatelistener itemupdate) {
+        itemupdator=itemupdate;
         mTimeZone = TimeZone.getTimeZone(id);
         mTime.setTimeZone(mTimeZone);
         onTimeChanged();
