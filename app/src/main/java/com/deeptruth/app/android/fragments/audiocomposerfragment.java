@@ -1282,8 +1282,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         myHandler.postDelayed(this, 10);
                         return;
                     }
-
-                    if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
+//xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0")
+                    if(! common.isnetworkconnected(getActivity()) ||
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
                         try {
