@@ -188,31 +188,82 @@
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
-                <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_speed"
-                    app:fontType="OpenSans_Regular"
-                    style="@style/txt_row_encryption"
-                    android:gravity="center"
-                    android:layout_weight="0.5"
-                    android:text="Speed"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
 
-                <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_traveled"
-                    app:fontType="OpenSans_Regular"
-                    style="@style/txt_row_encryption"
-                    android:gravity="center"
-                    android:layout_weight="0.5"
-                    android:text="Traveled"/>
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_speed"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="12sp"
+                        android:text="Speed"/>
 
-                <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_altitude"
-                    app:fontType="OpenSans_Regular"
-                    style="@style/txt_row_encryption"
-                    android:gravity="center"
-                    android:layout_weight="0.5"
-                    android:text="Altitude"/>
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/linechart_speed"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="70dp"/>
 
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_traveled"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:text="Traveled"/>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/linechart_traveled"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="70dp"/>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_altitude"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:text="Altitude"/>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/linechart_altitude"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="70dp"/>
+
+
+                </LinearLayout>
 
             </LinearLayout>
 

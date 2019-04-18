@@ -54,13 +54,11 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -181,8 +179,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     FrameLayout googlemap;
     @BindView(R.id.img_niddle)
     ImageView img_niddle;
-    @BindView(R.id.linechart)
-    LineChart mChart;
     @BindView(R.id.attitude_indicator)
     AttitudeIndicator attitudeindicator;
     @BindView(R.id.view_latencyline)
@@ -207,6 +203,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     PieChart media_chart;
     @BindView(R.id.meta_pie_chart)
     PieChart meta_pie_chart;
+    @BindView(R.id.linechart_speed)
+    LineChart linechart_speed;
+    @BindView(R.id.linechart_traveled)
+    LineChart linechart_traveled;
+    @BindView(R.id.linechart_altitude)
+    LineChart linechart_altitude;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -322,25 +324,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             //setmetadatavalue();
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
 
-            mChart.setOnChartGestureListener(this);
-            mChart.setOnChartValueSelectedListener(this);
-            mChart.setDrawGridBackground(false);
-
-            // no description text
-            mChart.getDescription().setEnabled(false);
-
-            // enable touch gestures
-            mChart.setTouchEnabled(false);
-
-            // enable scaling and dragging
-            mChart.setDragEnabled(false);
-            mChart.setScaleEnabled(false);
-            // mChart.setScaleXEnabled(true);
-            // mChart.setScaleYEnabled(true);
-
-            // if disabled, scaling can be done on x- and y-axis separately
-            mChart.setPinchZoom(false);
-
             seekbartransparency.setOnSeekChangeListener(new OnSeekChangeListener() {
                 @Override
                 public void onSeeking(SeekParams seekParams) {
@@ -377,25 +360,28 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 googlemap.setAlpha(0.5f);
             }
 
-            /*Calendar calendar = Calendar.getInstance();
-            phone_time_clock.setCalendar(calendar)
-                    .setDiameterInDp(400.0f)
-                    .setOpacity(1.0f)
-                    .setShowSeconds(true)
-                    .setColor(Color.WHITE);
-
-            Calendar calendar2 = Calendar.getInstance();
-            calendar2.add(Calendar.HOUR,-2);
-            world_time_clock.setCalendar(calendar2)
-                    .setDiameterInDp(400.0f)
-                    .setOpacity(1.0f)
-                    .setShowSeconds(true)
-                    .setColor(Color.WHITE);*/
-
             loadmap();
-            setchartdata();
             piechartdata();
             metapiedata();
+
+
+
+            // Code for line chart
+            setchartdata(linechart_speed);
+            setchartdata(linechart_traveled);
+            setchartdata(linechart_altitude);
+            String[] latencyarray ={"10","12","8","2","4","10","12","9","7","5","5"};
+            for(int i = 0 ;i< latencyarray.length;i++)
+            {
+                //float val = (float) (Math.random() * 20) + 3;
+                Entry entry=new Entry();
+                entry.setX(latencyvalues.size());
+                entry.setY(Float.parseFloat(latencyarray[i]));
+                latencyvalues.add(entry);
+            }
+            setlatencydata(linechart_speed);
+            setlatencydata(linechart_traveled);
+            setlatencydata(linechart_altitude);
 
         }
         return rootview;
@@ -705,41 +691,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void setdatacomposing(boolean isdatacomposing)
     {
         this.isdatacomposing=isdatacomposing;
-        if(! isdatacomposing)
-        {
-            latencyvalues.clear();
-            setchartdata();
-            String latency = xdata.getinstance().getSetting(config.latency).toString();
-            if(latency != null && (! latency.trim().isEmpty()) )
-            {
-                if(layout_datalatency != null)
-                    layout_datalatency.setVisibility(View.VISIBLE);
-
-                String[] latencyarray = latency.split(",");
-                for(int i = 0 ;i< latencyarray.length;i++)
-                {
-                    //float val = (float) (Math.random() * 20) + 3;
-                    Entry entry=new Entry();
-                    entry.setX(latencyvalues.size());
-                    entry.setY(Float.parseFloat(latencyarray[i]));
-                    latencyvalues.add(entry);
-                }
-                setlatencydata();
-                mChart.animateX(10);
-                Legend l = mChart.getLegend();
-                l.setForm(Legend.LegendForm.LINE);
-            }
-            else
-            {
-                if(layout_datalatency != null)
-                    layout_datalatency.setVisibility(View.GONE);
-            }
-        }
-        else
-        {
-            if(layout_datalatency != null)
-                layout_datalatency.setVisibility(View.GONE);
-        }
     }
 
     public void drawmappath()
@@ -1032,10 +983,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void onNothingSelected() {
 
     }
-    public void setchartdata()
+    public void setchartdata(LineChart linechart)
     {
         // set an alternative background color
-        // mChart.setBackgroundColor(Color.GRAY);
+        // linechart_speed.setBackgroundColor(Color.GRAY);
 
         // create a custom MarkerView (extend MarkerView) and specify the layout
         // to use for it
@@ -1047,7 +998,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
         llXAxis.setTextSize(10f);
 
-        XAxis xAxis = mChart.getXAxis();
+        XAxis xAxis = linechart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
         //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
         //xAxis.addLimitLine(llXAxis); // add x-axis limit line
@@ -1069,12 +1020,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         ll2.setTextSize(0f);
         //  ll2.setTypeface(tf);
 
-        YAxis leftAxis = mChart.getAxisLeft();
+        YAxis leftAxis = linechart.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
-        //leftAxis.setAxisMaximum(60f);
-        //leftAxis.setAxisMinimum(0);
+        leftAxis.setAxisMaximum(20f);
+        leftAxis.setAxisMinimum(0);
 
         //leftAxis.setYOffset(20f);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
@@ -1083,27 +1034,46 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         // limit lines are drawn behind data (and not on top)
         leftAxis.setDrawLimitLinesBehindData(false);
 
-        mChart.getAxisRight().setEnabled(false);
-        mChart.getAxisLeft().setEnabled(false);
+        linechart.getAxisRight().setEnabled(false);
+        linechart.getAxisLeft().setEnabled(false);
         xAxis.setEnabled(false);
 
-        //mChart.getViewPortHandler().setMaximumScaleY(2f);
-        //mChart.getViewPortHandler().setMaximumScaleX(2f);
+        //linechart_speed.getViewPortHandler().setMaximumScaleY(2f);
+        //linechart_speed.getViewPortHandler().setMaximumScaleX(2f);
+
+        linechart.setOnChartGestureListener(this);
+        linechart.setOnChartValueSelectedListener(this);
+        linechart.setDrawGridBackground(false);
+
+        // no description text
+        linechart.getDescription().setEnabled(false);
+
+        // enable touch gestures
+        linechart.setTouchEnabled(false);
+
+        // enable scaling and dragging
+        linechart.setDragEnabled(false);
+        linechart.setScaleEnabled(false);
+        // linechart_speed.setScaleXEnabled(true);
+        // linechart_speed.setScaleYEnabled(true);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        linechart.setPinchZoom(false);
     }
 
 
-    private void setlatencydata() {
+    private void setlatencydata(LineChart linechart) {
 
         LineDataSet set1;
 
-        if (mChart.getData() != null && mChart.getData().getDataSetCount() > 0 && latencyvalues.size() > 0)
+        if (linechart.getData() != null && linechart.getData().getDataSetCount() > 0 && latencyvalues.size() > 0)
         {
-            set1 = (LineDataSet)mChart.getData().getDataSetByIndex(0);
+            set1 = (LineDataSet) linechart.getData().getDataSetByIndex(0);
             set1.setValues(latencyvalues);
             set1.setHighlightEnabled(true);
             LineData data = new LineData(set1);
-            mChart.setData(data);
-            mChart.notifyDataSetChanged();
+            linechart.setData(data);
+            linechart.notifyDataSetChanged();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(latencyvalues, "");
@@ -1137,8 +1107,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             // create a data object with the datasets
             LineData data = new LineData(dataSets);
             // set data
-            mChart.setData(data);
+            linechart.setData(data);
         }
+
+        linechart.animateX(10);
+        Legend l = linechart.getLegend();
+        l.setForm(Legend.LegendForm.LINE);
     }
 
     public void setlayoutmargin(){
