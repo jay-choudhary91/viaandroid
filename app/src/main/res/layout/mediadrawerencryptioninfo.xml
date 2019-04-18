@@ -178,7 +178,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
-            android:visibility="visible"
+            android:visibility="gone"
             android:orientation="vertical">
 
                 <com.deeptruth.app.android.views.customfonttextview
@@ -197,7 +197,7 @@
                     android:background="@color/white">
 
                     <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/linechart"
+                        android:id="@+id/linechart_latency"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"/>
 
