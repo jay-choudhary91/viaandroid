@@ -46,6 +46,7 @@ import com.deeptruth.app.android.utils.worldanalogclock;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -53,11 +54,16 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -205,6 +211,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     TextView txt_phone_time;
     @BindView(R.id.txt_world_time)
     TextView txt_world_time;
+    @BindView(R.id.pie_chart)
+    PieChart media_chart;
+    @BindView(R.id.meta_pie_chart)
+    PieChart meta_pie_chart;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -359,6 +369,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             loadmap();
             setchartdata();
+            piechartdata();
+            metapiedata();
 
         }
         return rootview;
@@ -1109,5 +1121,110 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         params.setMargins(0,0,0,navigationbarheight);
         layout_constraint.setLayoutParams(params);
         layout_constraint.requestLayout();
+    }
+
+    public void piechartdata(){
+        media_chart.setExtraOffsets(0, 0, 0, 0);
+
+        // add a selection listener
+        media_chart.setOnChartValueSelectedListener(this);
+
+        media_chart.getLegend().setEnabled(false);
+        media_chart.getDescription().setEnabled(false);
+        media_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
+        media_chart.setHoleRadius(0.0f);
+
+        setData();
+    }
+    private void setData() {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+         String[] parties = new String[] {""};
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+
+        entries.add(new PieEntry(10,
+                parties[0 % parties.length],
+                0));
+        entries.add(new PieEntry(10,
+                parties[1 % parties.length],
+                0));
+        entries.add(new PieEntry(10,
+                parties[2 % parties.length],
+                0));
+        entries.add(new PieEntry(10,
+                parties[3 % parties.length],
+                0));
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        colors.add(getResources().getColor(R.color.validating_white_bg));
+
+        colors.add(getResources().getColor(R.color.validating_white_bg));
+
+        colors.add(getResources().getColor(R.color.validating_white_bg));
+
+        colors.add(getResources().getColor(R.color.validating_white_bg));
+
+        dataSet.setColors(colors);
+
+
+        PieData data = new PieData(dataSet);
+        data.setDrawValues(false);
+        media_chart.setData(data);
+    }
+
+    public void metapiedata(){
+        meta_pie_chart.setExtraOffsets(0, 0, 0, 0);
+
+        // add a selection listener
+        meta_pie_chart.setOnChartValueSelectedListener(this);
+
+        meta_pie_chart.getLegend().setEnabled(false);
+        meta_pie_chart.getDescription().setEnabled(false);
+        meta_pie_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
+        meta_pie_chart.setHoleRadius(0.0f);
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        String[] parties = new String[] {""};
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+
+        entries.add(new PieEntry(10,
+                parties[0 % parties.length],
+                0));
+        entries.add(new PieEntry(10,
+                parties[1 % parties.length],
+                0));
+        entries.add(new PieEntry(10,
+                parties[2 % parties.length],
+                0));
+        entries.add(new PieEntry(10,
+                parties[3 % parties.length],
+                0));
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        colors.add(getResources().getColor(R.color.validating_white_bg));
+
+        colors.add(getResources().getColor(R.color.validating_white_bg));
+
+        colors.add(getResources().getColor(R.color.validating_white_bg));
+
+        colors.add(getResources().getColor(R.color.validating_white_bg));
+
+        dataSet.setColors(colors);
+
+
+        PieData data = new PieData(dataSet);
+        data.setDrawValues(false);
+        meta_pie_chart.setData(data);
     }
 }
