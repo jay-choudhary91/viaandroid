@@ -3,7 +3,6 @@ package com.deeptruth.app.android.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
@@ -15,7 +14,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +31,7 @@ import android.widget.TextView;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
+import com.deeptruth.app.android.interfaces.itemupdatelistener;
 import com.deeptruth.app.android.models.arraycontainer;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
@@ -41,8 +40,6 @@ import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.AnalogClock;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
-import com.deeptruth.app.android.utils.myanalogclock;
-import com.deeptruth.app.android.utils.worldanalogclock;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.github.mikephil.charting.charts.LineChart;
@@ -69,7 +66,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -81,14 +77,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -289,6 +281,39 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           tvencryption.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvdataletency.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           txtdegree.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+
+            phone_time_clock.setTimeZone("MST", new itemupdatelistener() {
+                @Override
+                public void onitemupdate(Object object) {
+                    if(object != null)
+                    {
+                        Calendar calendar=(Calendar)object;
+                        txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" MST");
+                    }
+                }
+
+                @Override
+                public void onitemupdate(Object object, int type) {
+
+                }
+            });
+            world_time_clock.setTimeZone("GMT", new itemupdatelistener() {
+                @Override
+                public void onitemupdate(Object object) {
+                    if(object != null)
+                    {
+                        Calendar calendar=(Calendar)object;
+                        txt_world_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" GMT");
+                    }
+                }
+
+                @Override
+                public void onitemupdate(Object object, int type) {
+
+                }
+            });
 
             navigationbarheight =  common.getnavigationbarheight();
             setlayoutmargin();

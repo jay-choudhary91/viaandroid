@@ -2,7 +2,6 @@ package com.deeptruth.app.android.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -19,12 +18,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
-import android.location.OnNmeaMessageListener;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -37,10 +33,10 @@ import android.os.Debug;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Process;
 import android.os.StatFs;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -57,7 +53,6 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
-import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -80,11 +75,8 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.googleutils;
 import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.noise;
-import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
@@ -101,8 +93,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -184,6 +178,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private LocationRequest locationRequest;
     private Location oldlocation;
     private int lastinclination=-1;
+    private long workT, totalT, workAMT, totalprocess, totalBefore, work, workBefore, workAM, workAMBefore;
+    String[] processsysteminfo;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -875,11 +872,16 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     return "";
                 }
             }
-        } else if (key.equalsIgnoreCase(config.cpuusageuser) || key.equalsIgnoreCase(config.cpuusagesystem)
+        } /*else if (key.equalsIgnoreCase(config.cpuusageuser) || key.equalsIgnoreCase(config.cpuusagesystem)
                 || key.equalsIgnoreCase(config.cpuusageiow) || key.equalsIgnoreCase(config.cpuusageirq)) {
             getsystemusage();
             return "";
-        } else if (key.equalsIgnoreCase(config.currentcallinprogress) || key.equalsIgnoreCase(config.currentcalldurationseconds)
+        }*/
+        else if (key.equalsIgnoreCase(config.cpuusagesystem)) {
+            getsystemusage();
+            return "";
+        }
+        else if (key.equalsIgnoreCase(config.currentcallinprogress) || key.equalsIgnoreCase(config.currentcalldurationseconds)
                 || key.equalsIgnoreCase(config.currentcallremotenumber)) {
             getCallInfo();
             return "";
@@ -1560,36 +1562,92 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         Thread thread = new Thread() {
             public void run() {
                 try {
-                    String system = common.executeTop();
-                    if(system.contains("Tasks")){
-                        system=system.substring(system.indexOf("Tasks"),system.length());
-                        system=  system.replace("Tasks:","");
-                    }
-                    String[] cpuArray = system.split(",");
-                    final String[] value1 = {cpuArray[0]};
-                    final String[] value2 = {cpuArray[1]};
-                    final String[] value3 = {cpuArray[2]};
-                    final String[] value4 = {cpuArray[3]};
 
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (getcurrentfragment() != null) {
-                                value1[0] = value1[0].replace("User", "");
-                                updatearrayitem(config.cpuusageuser, value1[0]);
-
-                                value2[0] = value2[0].replace("System", "");
-                                updatearrayitem(config.cpuusagesystem, value2[0]);
-
-                                value3[0] = value3[0].replace("IOW", "");
-                                updatearrayitem(config.cpuusageiow, value3[0]);
-
-                                value4[0] = value4[0].replace("IRQ", "");
-                                updatearrayitem(config.cpuusageirq, value4[0]);
+                    try
+                    {
+                        float totalcpu=0,cpuAM=0;
+                        if (Build.VERSION.SDK_INT < 26)
+                        {
+                            {
+                                BufferedReader reader = new BufferedReader(new FileReader("/proc/stat"));
+                                processsysteminfo = reader.readLine().split("[ ]+", 9);
+                                work = Long.parseLong(processsysteminfo[1]) + Long.parseLong(processsysteminfo[2]) + Long.parseLong(processsysteminfo[3]);
+                                totalprocess = work + Long.parseLong(processsysteminfo[4]) + Long.parseLong(processsysteminfo[5]) + Long.parseLong(processsysteminfo[6]) + Long.parseLong(processsysteminfo[7]);
+                                reader.close();
                             }
+
+                            {
+                                int pId = Process.myPid();
+                                BufferedReader reader = new BufferedReader(new FileReader("/proc/" + pId + "/stat"));
+                                processsysteminfo = reader.readLine().split("[ ]+", 18);
+                                workAM = Long.parseLong(processsysteminfo[13]) + Long.parseLong(processsysteminfo[14]) + Long.parseLong(processsysteminfo[15]) + Long.parseLong(processsysteminfo[16]);
+                                reader.close();
+                            }
+
+                            if (totalBefore != 0) {
+                                totalT = totalprocess - totalBefore;
+                                workT = work - workBefore;
+                                workAMT = workAM - workAMBefore;
+
+                                totalcpu=workT * 100 / (float) totalT;
+                                cpuAM=workAMT * 100 / (float) totalT;
+                                float cpuAM1=workAMT * 100 / (float) totalT;
+                            }
+                            totalBefore = totalprocess;
+                            workBefore = work;
+                            workAMBefore = workAM;
+
+                            final float finalTotalcpu = totalcpu;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (getcurrentfragment() != null) {
+                                        updatearrayitem(config.cpuusageuser, ""+(int)(finalTotalcpu)+"%");
+                                        updatearrayitem(config.cpuusagesystem, ""+(int)(finalTotalcpu)+"%");
+                                        //updatearrayitem(config.cpuusageiow, ""+(int)(finalTotalcpu)+"%");
+                                        //updatearrayitem(config.cpuusageirq, ""+(int)(finalTotalcpu)+"%");
+                                    }
+                                }
+                            });
                         }
-                    });
+                        else
+                        {
+                            String system = common.executeTop();
+                            if(system.contains("Tasks")){
+                                system=system.substring(system.indexOf("Tasks"),system.length());
+                                system=  system.replace("Tasks:","");
+                            }
+                            String[] cpuArray = system.split(",");
+                            final String[] value1 = {cpuArray[0]};
+                            final String[] value2 = {cpuArray[1]};
+                            final String[] value3 = {cpuArray[2]};
+                            final String[] value4 = {cpuArray[3]};
+
+                            final float finalTotalcpu = totalcpu;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (getcurrentfragment() != null) {
+                                        value1[0] = value1[0].replace("User", "");
+                                        updatearrayitem(config.cpuusageuser, value1[0]);
+                                        value2[0] = value2[0].replace("System", "");
+                                        updatearrayitem(config.cpuusagesystem, value2[0]);
+                                        value3[0] = value3[0].replace("IOW", "");
+                                        updatearrayitem(config.cpuusageiow, value3[0]);
+                                        value4[0] = value4[0].replace("IRQ", "");
+                                        updatearrayitem(config.cpuusageirq, value4[0]);
+
+                                    }
+                                }
+                            });
+                        }
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
