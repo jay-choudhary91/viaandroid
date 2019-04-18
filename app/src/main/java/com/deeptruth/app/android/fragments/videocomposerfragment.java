@@ -1899,7 +1899,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         myhandler.postDelayed(this, 1000);
                         return;
                     }
-                    if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
+
+                    if(! common.isnetworkconnected(getActivity()) ||
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
                         try {

@@ -148,6 +148,8 @@
     <string name="type_of_chart">Type of Chart:</string>
     <string name="encryption_information">ENCRYPTION INFORMATION</string>
     <string name="transparency_meter">Transparency Meter</string>
+    <string name="media_information">MEDIA INFORMATION</string>
+
 
     <string name="developermode_description">App entered in developer mode</string>
     <string name="title_activity_bottombaractivity">bottombaractivity</string>
@@ -229,6 +231,12 @@
     <string name="world_clock_time">World Clock Time</string>
 
     <string name="json_parsing_failed">Failed to parse json!</string>
+    <string name="valid">Valid</string>
+    <string name="caution">Caution</string>
+    <string name="invalid">Invalid</string>
+    <string name="unsent">Unsent</string>
+    <string name="metadata">Meta Data</string>
+    <string name="video_audio_data">Video/Audio Data</string>
 
 
 </resources>
