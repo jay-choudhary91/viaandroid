@@ -307,7 +307,7 @@
                         android:layout_height="130dp"
                         android:id="@+id/world_time_clock"
                         android:elevation="10dp"
-                        android:layout_margin="10dp"
+                        android:layout_marginTop="10dp"
                         app:showSecondHand="true"/>
 
                     <com.deeptruth.app.android.views.customfonttextview
