@@ -792,6 +792,12 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:background="@color/validating_white_bg"
+                    android:layout_marginTop="@dimen/margin_10dp"
+                    android:layout_height="30dp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -915,6 +921,11 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <View android:layout_width="match_parent"
+                    android:background="@color/validating_white_bg"
+                    android:layout_marginTop="@dimen/margin_10dp"
+                    android:layout_height="30dp"/>
             </LinearLayout>
 
 
