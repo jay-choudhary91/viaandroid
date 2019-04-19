@@ -506,7 +506,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lpexpandable.setMargins(0, 0, 0,  0);
                         expandable_layout.setLayoutParams(lpexpandable);
 
-
                     }else{
 
                         RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -651,6 +650,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         layoutparams.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
                         setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,90);
 
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        lpexpandable.setMargins(0, 0, 0,  0);
+                        expandable_layout.setLayoutParams(lpexpandable);
+
+
                         img_dotmenu.setVisibility(View.GONE);
                         /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -678,6 +683,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
                         layoutparams.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
                         setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,270);
+
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        lpexpandable.setMargins(0, 0, 0,  0);
+                        expandable_layout.setLayoutParams(lpexpandable);
+
 
                         img_dotmenu.setVisibility(View.GONE);
                         /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -720,6 +731,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         img_dotmenu.setVisibility(View.VISIBLE);
                         setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);
+
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        lpexpandable.setMargins(20, 0, 0,  0);
+                        expandable_layout.setLayoutParams(lpexpandable);
 
                         txt_weakgps.setPadding(0,0,20,0);
                         txt_no_gps_wifi.setPadding(20,0,0,0);
