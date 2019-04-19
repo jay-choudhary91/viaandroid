@@ -374,8 +374,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
 
             loadmap();
-            piechartdata();
-            metapiedata();
+            piechartdata(media_chart);
+            piechartdata(meta_pie_chart);
 
             halfpaichartdate(chart_memoeyusage);
             halfpaichartdate(chart_cpuusage);
@@ -1180,8 +1180,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.setMaxAngle(180f); // HALF CHART
         chart.setRotationAngle(180f);
         chart.setCenterTextOffset(0, -20);
-
-       chart.getLegend().setEnabled(false);
+        chart.getLegend().setEnabled(false);
 
         // entry label styling
         chart.setEntryLabelColor(Color.WHITE);
@@ -1221,20 +1220,26 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.invalidate();
     }
 
-    public void piechartdata(){
-        media_chart.setExtraOffsets(0, 0, 0, 0);
+    public void piechartdata(PieChart mediadatachart){
+        mediadatachart.setExtraOffsets(0, 0, 0, 0);
 
         // add a selection listener
-        media_chart.setOnChartValueSelectedListener(this);
+        mediadatachart.setOnChartValueSelectedListener(this);
+        mediadatachart.setDrawHoleEnabled(true);
+        mediadatachart.setHoleColor(Color.TRANSPARENT);
+        mediadatachart.setBackgroundColor(Color.TRANSPARENT);
 
-        media_chart.getLegend().setEnabled(false);
-        media_chart.getDescription().setEnabled(false);
-        media_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
-        media_chart.setHoleRadius(0.0f);
+        mediadatachart.getLegend().setEnabled(false);
+        mediadatachart.getDescription().setEnabled(false);
+        mediadatachart.setRotationEnabled(false);
+        mediadatachart.setHighlightPerTapEnabled(false);
+        mediadatachart.setHoleRadius(55f);
+        //media_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
+        //media_chart.setHoleRadius(0.0f);
 
-        setData();
+        setData(mediadatachart);
     }
-    private void setData() {
+    private void setData(PieChart mediasetdataonchart) {
         ArrayList<PieEntry> entries = new ArrayList<>();
          String[] parties = new String[] {""};
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
@@ -1272,7 +1277,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         PieData data = new PieData(dataSet);
         data.setDrawValues(false);
-        media_chart.setData(data);
+        mediasetdataonchart.setData(data);
     }
 
     public void metapiedata(){
@@ -1280,11 +1285,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         // add a selection listener
         meta_pie_chart.setOnChartValueSelectedListener(this);
-
         meta_pie_chart.getLegend().setEnabled(false);
         meta_pie_chart.getDescription().setEnabled(false);
-        meta_pie_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
-        meta_pie_chart.setHoleRadius(0.0f);
+        meta_pie_chart.setHoleColor(Color.TRANSPARENT);
+        meta_pie_chart.setBackgroundColor(Color.TRANSPARENT);
+        meta_pie_chart.getLegend().setEnabled(false);
+        meta_pie_chart.getDescription().setEnabled(false);
+        meta_pie_chart.setRotationEnabled(false);
+        meta_pie_chart.setHighlightPerTapEnabled(false);
+        meta_pie_chart.setHoleRadius(55f);
+
+        //meta_pie_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
+       // meta_pie_chart.setHoleRadius(0.0f);
+
 
         ArrayList<PieEntry> entries = new ArrayList<>();
         String[] parties = new String[] {""};
