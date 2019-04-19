@@ -2384,5 +2384,13 @@ public class common {
         String formattedDate = formatted.format(date);
         return formattedDate;
     }
+
+    public static String currenttime_analogclock(){
+        Calendar calendar = Calendar.getInstance();
+        Date date = calendar.getTime();
+        SimpleDateFormat formatted = new SimpleDateFormat("hh:mm:ss",Locale.ENGLISH);
+        String formattedDate = formatted.format(date);
+        return formattedDate;
+    }
 }
 

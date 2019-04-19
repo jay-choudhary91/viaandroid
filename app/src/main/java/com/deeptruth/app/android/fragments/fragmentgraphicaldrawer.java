@@ -303,8 +303,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
-                        txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
-                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" MST");
+                        /*txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" MST");*/
+                        txt_phone_time.setText(common.currenttime_analogclock()+" MST");
                     }
                 }
 
