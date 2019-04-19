@@ -547,31 +547,27 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
+            common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
+            common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
 
-            if(chart_memoeyusage!= null){
+
+            if(chart_memoeyusage!= null)
                 sethalfpaichartData(chart_memoeyusage,common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
-            }
 
             if(chart_cpuusage!= null){
-                String cpuusagevalue = common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage));
-                String lastWord = cpuusagevalue.substring(cpuusagevalue.lastIndexOf(" ")+1);
-
-                if(lastWord.equalsIgnoreCase("total")){
-                    sethalfpaichartData(chart_cpuusage,"33%");
-                    common.setdrawabledata("","\n"+"33%", tvcpuusage);
-
-                }else{
-                    sethalfpaichartData(chart_cpuusage,common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
-                    common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
+                    String cpuusagevalue = common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage));
+                    cpuusagevalue = cpuusagevalue.substring(cpuusagevalue.lastIndexOf(" ")+1);
+                    if(cpuusagevalue.equalsIgnoreCase("total")){
+                        sethalfpaichartData(chart_cpuusage,"33%");
+                        common.setdrawabledata("","\n"+"33%", tvcpuusage);
+                    }else{
+                        sethalfpaichartData(chart_cpuusage,common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
+                        common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
+                    }
                 }
-            }
 
-            if(chart_battery!= null){
+            if(chart_battery!= null)
                 sethalfpaichartData(chart_battery,common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)));
-            }
-
-                  common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
-        common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
 
             //chart_memoeyusage.setCenterText(generateCenterSpannableText(common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage))));;
             //chart_cpuusage.setCenterText(generateCenterSpannableText(common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage))));
@@ -1197,16 +1193,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         String[] parties = new String[] {""};
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        String allvalues = value;
-        if(allvalues.equalsIgnoreCase("NA")){
-            allvalues = "0";
+        String chartdatavalue = value;
+        if(chartdatavalue.equalsIgnoreCase("NA")){
+            chartdatavalue = "0";
         }else{
-            allvalues= allvalues.substring(0, allvalues.indexOf("%"));
+            chartdatavalue= chartdatavalue.substring(0, chartdatavalue.indexOf("%"));
         }
+        int remainingvalue = 100 - Integer.parseInt(chartdatavalue);
 
-        int remainingvalue = 100 - Integer.parseInt(allvalues);
-
-        entries.add(new PieEntry(Integer.parseInt(allvalues),
+        entries.add(new PieEntry(Integer.parseInt(chartdatavalue),
                 parties[0 % parties.length],
                 0));
         entries.add(new PieEntry(remainingvalue,
