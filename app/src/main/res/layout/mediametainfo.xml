@@ -289,7 +289,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_timeinformation"
@@ -493,38 +494,129 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="150dp"
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_memoryusage"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_row_encryption"
-                        android:layout_marginTop="5dp"
-                        android:gravity="center"
-                        android:layout_weight="0.5"
-                        android:text="Memory Usage"/>
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_cpu_usage"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_row_encryption"
-                        android:gravity="center"
-                        android:layout_weight="0.5"
-                        android:layout_marginTop="5dp"
-                        android:text="CPU Usage"/>
+                        <com.deeptruth.app.android.views.customfonttextview
+                            app:fontType="OpenSans_Regular"
+                            android:id="@+id/txt_Memory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/white"
+                            android:text="Memory Usage"/>
 
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_battery"
-                        app:fontType="OpenSans_Regular"
-                        style="@style/txt_row_encryption"
-                        android:gravity="center"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="0.5"
-                        android:text="Battery"/>
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/chart_memoeyusage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:layout_below="@+id/txt_Memory"/>
+
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            android:id="@+id/txt_memoryusage"
+                            app:fontType="OpenSans_Regular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:gravity="center_horizontal"
+                            android:layout_marginTop="75dp"
+                           />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            app:fontType="OpenSans_Regular"
+                            android:id="@+id/txt_cpuusage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/white"
+                            android:gravity="center_horizontal"
+                            android:text="CPU Usage"/>
+
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/chart_cpuusage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:layout_below="@+id/txt_cpuusage"/>
+
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            android:id="@+id/txt_cpu_usage"
+                            app:fontType="OpenSans_Regular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:gravity="center_horizontal"
+                            android:layout_marginTop="75dp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            app:fontType="OpenSans_Regular"
+                            android:id="@+id/txtbattery"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@color/white"
+                            android:gravity="center_horizontal"
+                            android:text="Battery"/>
+
+
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/chart_battery"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:layout_below="@+id/txtbattery"/>
+
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            android:id="@+id/txt_battery"
+                            app:fontType="OpenSans_Regular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:gravity="center_horizontal"
+                            android:layout_marginTop="75dp"
+                            />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

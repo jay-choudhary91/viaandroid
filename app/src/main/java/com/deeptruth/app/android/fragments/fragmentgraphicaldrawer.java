@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -14,6 +15,10 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -59,6 +64,8 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -203,6 +210,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     PieChart media_chart;
     @BindView(R.id.meta_pie_chart)
     PieChart meta_pie_chart;
+    @BindView(R.id.chart_memoeyusage)
+    PieChart chart_memoeyusage;
+    @BindView(R.id.chart_cpuusage)
+    PieChart chart_cpuusage;
+    @BindView(R.id.chart_battery)
+    PieChart chart_battery;
     @BindView(R.id.linechart_speed)
     LineChart linechart_speed;
     @BindView(R.id.linechart_traveled)
@@ -269,7 +282,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           tvstoragefree.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvlanguage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvuptime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+
           tvbattery.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+
           tvdate.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvtime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvblockchainid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
@@ -363,6 +378,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             loadmap();
             piechartdata();
             metapiedata();
+            halfpaichartdate(chart_memoeyusage);
+            halfpaichartdate(chart_cpuusage);
+            halfpaichartdate(chart_battery);
+
 
 
 
@@ -523,16 +542,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.screen),"\n"+xdata.getinstance().getSetting(config.ScreenWidth) +"*" +xdata.getinstance().getSetting(config.ScreenHeight), tvscreen);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.country),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Country)), tvcountry);
-            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.cpuusage),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
+            common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.brightness),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Brightness)), tvbrightness);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.timezone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.TimeZone)), tvtimezone);
-            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.memoryusage),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
+            common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.bluetooth),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Bluetooth)), tvbluetooth);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.localtime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.LocalTime)), tvlocaltime);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
-            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.battery),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
+            common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
+
+            //chart_memoeyusage.setCenterText(generateCenterSpannableText(common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage))));;
+            //chart_cpuusage.setCenterText(generateCenterSpannableText(common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage))));
+            //chart_battery.setCenterText(generateCenterSpannableText(common.getxdatavalue(xdata.getinstance().getSetting(config.Battery))));
+
             common.setdrawabledata("",common.getdate(), tvdate);
             common.setdrawabledata("",common.gettime(), tvtime);
             common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
@@ -1062,6 +1086,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     }
 
 
+
+
+
+    private void setlatencydata() {
     private void setlatencydata(LineChart linechart) {
 
         LineDataSet set1;
@@ -1120,6 +1148,66 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         params.setMargins(0,0,0,navigationbarheight);
         layout_constraint.setLayoutParams(params);
         layout_constraint.requestLayout();
+    }
+
+
+
+    public void halfpaichartdate(PieChart chart){
+        chart.setBackgroundColor(Color.TRANSPARENT);
+        // moveOffScreen();
+        chart.setUsePercentValues(true);
+        chart.getDescription().setEnabled(false);
+        // chart.setCenterText(generateCenterSpannableText());
+        chart.setDrawHoleEnabled(true);
+        chart.setHoleColor(Color.TRANSPARENT);
+        chart.setHoleRadius(58f);
+        chart.setDrawCenterText(true);
+        chart.setRotationEnabled(false);
+        chart.setHighlightPerTapEnabled(false);
+        chart.setMaxAngle(180f); // HALF CHART
+        chart.setRotationAngle(180f);
+        chart.setCenterTextOffset(0, -20);
+
+        sethalfpaichartData(chart_memoeyusage,15);
+        sethalfpaichartData(chart_cpuusage,20);
+        sethalfpaichartData(chart_battery,25);
+
+       chart.getLegend().setEnabled(false);
+
+        // entry label styling
+        chart.setEntryLabelColor(Color.WHITE);
+        chart.setEntryLabelTextSize(12f);
+    }
+
+    private void sethalfpaichartData(PieChart chart,int Value) {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        String[] parties = new String[] {""};
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+
+        entries.add(new PieEntry(Value,
+                parties[0 % parties.length],
+                0));
+        entries.add(new PieEntry(10,
+                parties[1 % parties.length],
+                0));
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        colors.add(getResources().getColor(R.color.btn_background));
+
+        colors.add(getResources().getColor(R.color.drawer_seekbar_max));
+
+        dataSet.setColors(colors);
+
+
+        PieData data = new PieData(dataSet);
+        data.setDrawValues(false);
+        chart.setData(data);
     }
 
     public void piechartdata(){
@@ -1225,5 +1313,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         PieData data = new PieData(dataSet);
         data.setDrawValues(false);
         meta_pie_chart.setData(data);
+    }
+
+    private SpannableString generateCenterSpannableText(String text) {
+
+        SpannableString s = new SpannableString(text);
+        s.setSpan(new RelativeSizeSpan(1f), 0, s.length(), 0);
+        s.setSpan(new StyleSpan(Typeface.NORMAL), 0, s.length(), 0);
+        s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+        return s;
     }
 }
