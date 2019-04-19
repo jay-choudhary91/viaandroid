@@ -1108,9 +1108,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private void setlatencydata() {
 
     }
-
-
-    }
     private void setlatencydata(LineChart linechart) {
 
         LineDataSet set1;
