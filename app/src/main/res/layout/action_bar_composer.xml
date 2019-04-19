@@ -34,8 +34,8 @@
                 android:id="@+id/img_roundblink"
                 android:layout_width="5dp"
                 android:layout_height="5dp"
-                android:layout_centerVertical="true"
                 android:layout_marginRight="6dp"
+                android:layout_marginTop="@dimen/margin_10dp"
                 android:visibility="gone"
                 android:layout_toLeftOf="@id/txt_title_actionbarcomposer"
                 android:background="@drawable/round_corner_recorder_blink"/>

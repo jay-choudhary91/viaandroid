@@ -375,8 +375,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
 
             loadmap();
-            piechartdata();
-            metapiedata();
+            piechartdata(media_chart);
+            piechartdata(meta_pie_chart);
 
             halfpaichartdate(chart_memoeyusage);
             halfpaichartdate(chart_cpuusage);
@@ -548,31 +548,27 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
+            common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
+            common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
 
-            if(chart_memoeyusage!= null){
+
+            if(chart_memoeyusage!= null)
                 sethalfpaichartData(chart_memoeyusage,common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
-            }
 
             if(chart_cpuusage!= null){
-                String cpuusagevalue = common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage));
-                String lastWord = cpuusagevalue.substring(cpuusagevalue.lastIndexOf(" ")+1);
-
-                if(lastWord.equalsIgnoreCase("total")){
-                    sethalfpaichartData(chart_cpuusage,"33%");
-                    common.setdrawabledata("","\n"+"33%", tvcpuusage);
-
-                }else{
-                    sethalfpaichartData(chart_cpuusage,common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
-                    common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
+                    String cpuusagevalue = common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage));
+                    cpuusagevalue = cpuusagevalue.substring(cpuusagevalue.lastIndexOf(" ")+1);
+                    if(cpuusagevalue.equalsIgnoreCase("total")){
+                        sethalfpaichartData(chart_cpuusage,"33%");
+                        common.setdrawabledata("","\n"+"33%", tvcpuusage);
+                    }else{
+                        sethalfpaichartData(chart_cpuusage,common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
+                        common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
+                    }
                 }
-            }
 
-            if(chart_battery!= null){
+            if(chart_battery!= null)
                 sethalfpaichartData(chart_battery,common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)));
-            }
-
-                  common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
-        common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
 
             //chart_memoeyusage.setCenterText(generateCenterSpannableText(common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage))));;
             //chart_cpuusage.setCenterText(generateCenterSpannableText(common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage))));
@@ -1185,8 +1181,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.setMaxAngle(180f); // HALF CHART
         chart.setRotationAngle(180f);
         chart.setCenterTextOffset(0, -20);
-
-       chart.getLegend().setEnabled(false);
+        chart.getLegend().setEnabled(false);
 
         // entry label styling
         chart.setEntryLabelColor(Color.WHITE);
@@ -1198,16 +1193,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         String[] parties = new String[] {""};
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        String allvalues = value;
-        if(allvalues.equalsIgnoreCase("NA")){
-            allvalues = "0";
+        String chartdatavalue = value;
+        if(chartdatavalue.equalsIgnoreCase("NA")){
+            chartdatavalue = "0";
         }else{
-            allvalues= allvalues.substring(0, allvalues.indexOf("%"));
+            chartdatavalue= chartdatavalue.substring(0, chartdatavalue.indexOf("%"));
         }
+        int remainingvalue = 100 - Integer.parseInt(chartdatavalue);
 
-        int remainingvalue = 100 - Integer.parseInt(allvalues);
-
-        entries.add(new PieEntry(Integer.parseInt(allvalues),
+        entries.add(new PieEntry(Integer.parseInt(chartdatavalue),
                 parties[0 % parties.length],
                 0));
         entries.add(new PieEntry(remainingvalue,
@@ -1227,20 +1221,26 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.invalidate();
     }
 
-    public void piechartdata(){
-        media_chart.setExtraOffsets(0, 0, 0, 0);
+    public void piechartdata(PieChart mediadatachart){
+        mediadatachart.setExtraOffsets(0, 0, 0, 0);
 
         // add a selection listener
-        media_chart.setOnChartValueSelectedListener(this);
+        mediadatachart.setOnChartValueSelectedListener(this);
+        mediadatachart.setDrawHoleEnabled(true);
+        mediadatachart.setHoleColor(Color.TRANSPARENT);
+        mediadatachart.setBackgroundColor(Color.TRANSPARENT);
 
-        media_chart.getLegend().setEnabled(false);
-        media_chart.getDescription().setEnabled(false);
-        media_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
-        media_chart.setHoleRadius(0.0f);
+        mediadatachart.getLegend().setEnabled(false);
+        mediadatachart.getDescription().setEnabled(false);
+        mediadatachart.setRotationEnabled(false);
+        mediadatachart.setHighlightPerTapEnabled(false);
+        mediadatachart.setHoleRadius(55f);
+        //media_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
+        //media_chart.setHoleRadius(0.0f);
 
-        setData();
+        setData(mediadatachart);
     }
-    private void setData() {
+    private void setData(PieChart mediasetdataonchart) {
         ArrayList<PieEntry> entries = new ArrayList<>();
          String[] parties = new String[] {""};
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
@@ -1278,7 +1278,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         PieData data = new PieData(dataSet);
         data.setDrawValues(false);
-        media_chart.setData(data);
+        mediasetdataonchart.setData(data);
     }
 
     public void metapiedata(){
@@ -1286,11 +1286,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         // add a selection listener
         meta_pie_chart.setOnChartValueSelectedListener(this);
-
         meta_pie_chart.getLegend().setEnabled(false);
         meta_pie_chart.getDescription().setEnabled(false);
-        meta_pie_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
-        meta_pie_chart.setHoleRadius(0.0f);
+        meta_pie_chart.setHoleColor(Color.TRANSPARENT);
+        meta_pie_chart.setBackgroundColor(Color.TRANSPARENT);
+        meta_pie_chart.getLegend().setEnabled(false);
+        meta_pie_chart.getDescription().setEnabled(false);
+        meta_pie_chart.setRotationEnabled(false);
+        meta_pie_chart.setHighlightPerTapEnabled(false);
+        meta_pie_chart.setHoleRadius(55f);
+
+        //meta_pie_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
+       // meta_pie_chart.setHoleRadius(0.0f);
+
 
         ArrayList<PieEntry> entries = new ArrayList<>();
         String[] parties = new String[] {""};
