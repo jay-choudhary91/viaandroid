@@ -494,7 +494,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:orientation="horizontal">
 
@@ -511,6 +511,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="14sp"
                             android:layout_marginTop="5dp"
+                            android:layout_marginBottom="@dimen/margin_15dp"
                             android:gravity="center_horizontal"
                             android:textColor="@color/white"
                             android:text="Memory Usage"/>
@@ -520,7 +521,6 @@
                             android:id="@+id/chart_memoeyusage"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="8dp"
                             android:layout_below="@+id/txt_Memory"/>
 
 
@@ -532,7 +532,7 @@
                             android:textSize="12sp"
                             android:textColor="@color/white"
                             android:gravity="center_horizontal"
-                            android:layout_marginTop="75dp"
+                            android:layout_alignParentBottom="true"
                            />
 
                     </RelativeLayout>
@@ -550,6 +550,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="14sp"
                             android:layout_marginTop="5dp"
+                            android:layout_marginBottom="@dimen/margin_15dp"
                             android:textColor="@color/white"
                             android:gravity="center_horizontal"
                             android:text="CPU Usage"/>
@@ -559,7 +560,6 @@
                             android:id="@+id/chart_cpuusage"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="8dp"
                             android:layout_below="@+id/txt_cpuusage"/>
 
 
@@ -571,7 +571,7 @@
                             android:textSize="12sp"
                             android:textColor="@color/white"
                             android:gravity="center_horizontal"
-                            android:layout_marginTop="75dp" />
+                            android:layout_alignParentBottom="true" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -588,6 +588,7 @@
                             android:textSize="14sp"
                             android:layout_alignParentTop="true"
                             android:layout_marginTop="5dp"
+                            android:layout_marginBottom="@dimen/margin_15dp"
                             android:textColor="@color/white"
                             android:gravity="center_horizontal"
                             android:text="Battery"/>
@@ -597,7 +598,6 @@
                             android:id="@+id/chart_battery"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_margin="8dp"
                             android:layout_below="@+id/txtbattery"/>
 
 
@@ -609,7 +609,7 @@
                             android:textSize="12sp"
                             android:textColor="@color/white"
                             android:gravity="center_horizontal"
-                            android:layout_marginTop="75dp"
+                            android:layout_alignParentBottom="true"
                             />
 
                     </RelativeLayout>
@@ -621,7 +621,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:orientation="horizontal">
 
                     <com.deeptruth.app.android.views.customfonttextview
