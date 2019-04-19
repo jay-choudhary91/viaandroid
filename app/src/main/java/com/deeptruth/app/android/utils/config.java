@@ -122,7 +122,8 @@ public class config {
     public static final String hashformula = "hashformula";
     public static final String datahash = "datahash";
     public static final String matrichash = "matrichash";
-
+    public static final String createaccount = "createaccount";
+    public static final String forgotpassword = "forgotpassword";
 
 
     //graphicaldata

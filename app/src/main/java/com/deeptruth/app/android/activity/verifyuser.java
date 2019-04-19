@@ -2,6 +2,7 @@ package com.deeptruth.app.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -64,7 +65,6 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
 
         tvcomplete.setOnClickListener(this);
         tvcancel.setOnClickListener(this);
-
         pinview.setPinViewEventListener(new Pinview.PinViewEventListener() {
             @Override
             public void onDataEntered(Pinview pinview, boolean fromUser) {
@@ -92,10 +92,15 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
     {
         String value=pinview.getValue();
         String clientid= xdata.getinstance().getSetting(config.clientid);
+        String activityname = getIntent().getExtras().getString("activityname");
 
         HashMap<String,String> requestparams=new HashMap<>();
         requestparams.put("type","client");
-        requestparams.put("action","verify");
+        if(activityname.equals(config.createaccount)){
+            requestparams.put("action","verify");
+        }else{
+            requestparams.put("action","verifyforgotten");
+        }
         requestparams.put("clientid",clientid);
         requestparams.put("code",value);
         progressdialog.showwaitingdialog(verifyuser.this);

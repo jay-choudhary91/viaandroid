@@ -104,6 +104,7 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
                                     Intent intent=new Intent(createaccount.this,verifyuser.class);
+                                    intent.putExtra("activityname",config.createaccount);
                                     startActivity(intent);
                                 }
                                 else

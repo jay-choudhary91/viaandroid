@@ -85,6 +85,7 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
                                 Intent intent=new Intent(forgotpassword.this,verifyuser.class);
+                                intent.putExtra("activityname",config.forgotpassword);
                                 startActivity(intent);
                             }
                             else
