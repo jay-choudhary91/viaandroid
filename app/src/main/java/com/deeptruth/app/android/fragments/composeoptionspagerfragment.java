@@ -241,6 +241,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         return rootview;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        gethelper().setisrecordrunning(false);
+    }
+
     public class CustomPagerAdapter extends PagerAdapter {
 
         private Context mContext;
@@ -666,6 +672,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if (! iscircle)
             makecircle();
 
+        gethelper().setisrecordrunning(false);
         xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
         txt_zoomlevel.setText("1.0 x");
         switch (currentselectedcomposer)
@@ -723,6 +730,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     {
         if(type == startrecorder) // for video record start,audio record start and image capture button click
         {
+            gethelper().setisrecordrunning(true);
             if(currentselectedcomposer == 0)
             {
                 showhideactionbottombaricon(0);
@@ -736,6 +744,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(type == stoprecorder) // for video record stop,audio record stop and image captured button click
         {
+            gethelper().setisrecordrunning(false);
             if(currentselectedcomposer == 0)
             {
                 showhideactionbottombaricon(1);

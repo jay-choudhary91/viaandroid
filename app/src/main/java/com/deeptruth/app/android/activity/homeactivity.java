@@ -273,11 +273,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     public int getlayoutid() {
         return R.layout.activity_homeactivity;
     }
-    @Override
-
-    public void launchHome() {
-
-    }
 
     @Override
     public void updateheader(String txt) {
@@ -568,6 +563,18 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     public void setdatacomposing(boolean isdatacomposing, String mediafilepath) {
         if((graphicaldrawerfragment!= null))
             graphicaldrawerfragment.setdatacomposing(isdatacomposing,mediafilepath);
+    }
+
+    @Override
+    public void setcurrentmediaposition(int currentmediaposition) {
+        if(graphicaldrawerfragment!= null)
+            graphicaldrawerfragment.setcurrentmediaposition(currentmediaposition);
+    }
+
+    @Override
+    public void setisrecordrunning(boolean isrecodrunning) {
+        if(graphicaldrawerfragment!= null)
+            graphicaldrawerfragment.setrecordrunning(isrecodrunning);
     }
 
     @Override

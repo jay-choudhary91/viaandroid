@@ -226,80 +226,44 @@ public abstract class basefragment extends Fragment {
     public interface fragmentnavigationhelper {
 
         public void addFragment(basefragment f, boolean clearBackStack, boolean addToBackstack);
-
         public void addFragment(basefragment f, int layoutId, boolean clearBackStack, boolean addToBackstack);
-
         public void replaceFragment(basefragment f, boolean clearBackStack, boolean addToBackstack);
-
         public void replaceFragment(basefragment f, int layoutId, boolean clearBackStack, boolean addToBackstack);
-
         public void replacetabfragment(basefragment f,  boolean clearBackStack, boolean addToBackstack );
-
         public void onBack();
-
         public void switchtomedialist();
-
-        public void launchHome();
-
         public void updateheader(String txt);
-
-        public void updatezoomlevel(double latitude,double longitude);
-
         public void setdatacomposing(boolean isdatacomposing);
-
         public void setdatacomposing(boolean isdatacomposing,String mediafilepath);
-
+        public void setcurrentmediaposition(int currentmediaposition);
+        public void setisrecordrunning(boolean isrecodrunning);
         public void updateactionbar(int showHide, int color);
-
         public void updateactionbar(int showHide);
-
+        public void updatezoomlevel(double latitude, double longitude);
         public void showPermissionDialog();
-
         public void setdraweropen(boolean isdraweropen);
-
         public boolean isdraweropened();
-
         public void registerAccelerometerSensor();
-
         public void registerMobileNetworkStrength();
-
         public void registerCompassSensor();
-
         public void registerBarometerSensor();
-
         public void getsystemusage();
-
         public void registerUsageSystem();
-
         public void registerUsageIow();
-
         public void registerUsageIrq();
-
         public void getCallInfo();
-
         public void setdrawerheightonfullscreen(int drawerheight);
-
         public void getairplanemodeon();
-
         public void drawerenabledisable(boolean enable);
-
         public void hidedrawerbutton(boolean enable);
-
         public void setwindowfitxy(boolean isfullscreen);
         public boolean isuserlogin();
         public void redirecttologin();
-
         public ArrayList<metricmodel> getmetricarraylist();
         public void setrecordingrunning(boolean toggle);
-        public boolean getrecordingrunning();
-
-        public void setcameracapture(boolean toggle);
-        public boolean iscameracapture();
-
         public void xapi_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void xapipost_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void xapipost_sendjson(Context mContext, String Action, HashMap<String,Object> mPairList, apiresponselistener mListener);
-
     }
 
     public void updatewifigpsstatus()

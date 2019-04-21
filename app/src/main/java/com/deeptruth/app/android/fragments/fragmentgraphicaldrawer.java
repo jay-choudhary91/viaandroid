@@ -229,15 +229,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private SensorManager msensormanager;
     private Sensor maccelerometersensormanager;
     public ScrollView scrollview_meta;
+    ArrayList<Entry> speedgraphitems = new ArrayList<Entry>();
+    ArrayList<Entry> travelledgraphitems = new ArrayList<Entry>();
+    ArrayList<Entry> altitudegraphitems = new ArrayList<Entry>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    private boolean isinbackground=false,ismediaplayer = false,isgraphicopen=false,isdatacomposing=false;
+    private boolean isinbackground=false,ismediaplayer = false,isgraphicopen=false,isdatacomposing=false,isrecodrunning=false;
     String latitude = "", longitude = "",screenheight = "",screenwidth = "",lastsavedangle="";
     private float currentDegree = 0f;
     String hashmethod= "",videostarttransactionid = "",valuehash = "",metahash = "";
-    ArrayList<Entry> latencyvalues = new ArrayList<Entry>();
     private Orientation mOrientation;
     private String[] transparentarray=common.gettransparencyvalues();
     int navigationbarheight = 0;
+    arraycontainer arraycontainerformetric =null;
     @Override
     public int getlayoutid() {
         return R.layout.frag_graphicaldrawer;
@@ -386,21 +389,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             setchartdata(linechart_speed);
             setchartdata(linechart_traveled);
             setchartdata(linechart_altitude);
-
-            String[] latencyarray ={"10","12","8","2","4","10","12","9","7","5","5"};
-
-            for(int i = 0 ;i< latencyarray.length;i++)
-            {
-                //float val = (float) (Math.random() * 20) + 3;
-                Entry entry=new Entry();
-                entry.setX(latencyvalues.size());
-                entry.setY(Float.parseFloat(latencyarray[i]));
-                latencyvalues.add(entry);
-            }
-            setlatencydata(linechart_speed);
-            setlatencydata(linechart_traveled);
-            setlatencydata(linechart_altitude);
-
         }
         return rootview;
     }
@@ -482,7 +470,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             return;*/
         String latitudedegree  = xdata.getinstance().getSetting(config.Latitude);
         String longitudedegree = xdata.getinstance().getSetting(config.Longitude);
-        String altitude=xdata.getinstance().getSetting(config.Altitude);
         String value=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
 
         if(! latitudedegree.isEmpty() && (! latitudedegree.equalsIgnoreCase("NA")))
@@ -503,15 +490,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         else
         {
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+"NA", tvlongitude);
-        }
-
-        if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
-        {
-            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+altitude, tvaltitude);
-        }
-        else
-        {
-            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+"NA", tvaltitude);
         }
 
             /**/
@@ -548,31 +526,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
-            common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
-            common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
-
-
-            if(chart_memoeyusage!= null)
-                sethalfpaichartData(chart_memoeyusage,common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
-
-            if(chart_cpuusage!= null){
-                    String cpuusagevalue = common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage));
-                    cpuusagevalue = cpuusagevalue.substring(cpuusagevalue.lastIndexOf(" ")+1);
-                    if(cpuusagevalue.equalsIgnoreCase("total")){
-                        sethalfpaichartData(chart_cpuusage,"33%");
-                        common.setdrawabledata("","\n"+"33%", tvcpuusage);
-                    }else{
-                        sethalfpaichartData(chart_cpuusage,common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
-                        common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
-                    }
-                }
-
-            if(chart_battery!= null)
-                sethalfpaichartData(chart_battery,common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)));
-
-            //chart_memoeyusage.setCenterText(generateCenterSpannableText(common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage))));;
-            //chart_cpuusage.setCenterText(generateCenterSpannableText(common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage))));
-            //chart_battery.setCenterText(generateCenterSpannableText(common.getxdatavalue(xdata.getinstance().getSetting(config.Battery))));
 
             common.setdrawabledata("",common.getdate(), tvdate);
             common.setdrawabledata("",common.gettime(), tvtime);
@@ -583,12 +536,103 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             String latitude=xdata.getinstance().getSetting(config.Latitude);
             String longitude=xdata.getinstance().getSetting(config.Longitude);
+            String altitude=xdata.getinstance().getSetting(config.Altitude);
+            String speed=common.getxdatavalue(xdata.getinstance().getSetting(config.Speed));
+            String traveled=xdata.getinstance().getSetting(config.distancetravelled);
 
+            if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
+            {
+                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+altitude, tvaltitude);
+            }
+            else
+            {
+                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+"NA", tvaltitude);
+            }
 
             if(isdatacomposing)
             {
                 latitude=xdata.getinstance().getSetting("lat");
                 longitude=xdata.getinstance().getSetting("lng");
+
+                common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
+                common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
+
+                if(chart_memoeyusage!= null)
+                    sethalfpaichartData(chart_memoeyusage,common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
+
+                if(chart_cpuusage!= null){
+                    String cpuusagevalue = common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage));
+                    cpuusagevalue = cpuusagevalue.substring(cpuusagevalue.lastIndexOf(" ")+1);
+                    if(cpuusagevalue.contains("total")){
+                        sethalfpaichartData(chart_cpuusage,"33%");
+                        common.setdrawabledata("","\n"+"33%", tvcpuusage);
+                    }else{
+                        sethalfpaichartData(chart_cpuusage,common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
+                        common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
+                    }
+                }
+                if(chart_battery!= null)
+                    sethalfpaichartData(chart_battery,common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)));
+
+                if(isrecodrunning)
+                {
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
+                            "\n"+xdata.getinstance().getSetting(config.distancetravelled), tvtraveled);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),
+                            "\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
+
+
+                    if(! speed.isEmpty() && (! speed.equalsIgnoreCase("NA")))
+                    {
+                        String[] item=speed.split(" ");
+                        if(item.length > 0)
+                        {
+                            Entry entry=new Entry();
+                            entry.setX(speedgraphitems.size());
+                            entry.setY(Float.parseFloat(item[0]));
+                            speedgraphitems.add(entry);
+                        }
+                        setlatencydata(linechart_speed,speedgraphitems);
+                    }
+
+                    if(! traveled.isEmpty() && (! traveled.equalsIgnoreCase("NA")))
+                    {
+                        String[] item=traveled.split(" ");
+                        if(item.length > 0)
+                        {
+                            Entry entry=new Entry();
+                            entry.setX(speedgraphitems.size());
+                            entry.setY(Float.parseFloat(item[0]));
+                            travelledgraphitems.add(entry);
+                        }
+                        setlatencydata(linechart_traveled,travelledgraphitems);
+                    }
+
+                    if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
+                    {
+                        String[] item=altitude.split(" ");
+                        if(item.length > 0)
+                        {
+                            Entry entry=new Entry();
+                            entry.setX(altitudegraphitems.size());
+                            entry.setY(Float.parseFloat(item[0]));
+                            altitudegraphitems.add(entry);
+                        }
+                        setlatencydata(linechart_altitude,altitudegraphitems);
+                    }
+                }
+                else
+                {
+                    if(altitudegraphitems.size() > 0 || speedgraphitems.size() > 0 || travelledgraphitems.size() > 0)
+                    {
+                        altitudegraphitems.clear();
+                        speedgraphitems.clear();
+                        travelledgraphitems.clear();
+                        linechart_speed.clear();
+                        linechart_traveled.clear();
+                        linechart_altitude.clear();
+                    }
+                }
             }
 
             if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
@@ -664,60 +708,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
 
         }
+    }
 
-        String latency = xdata.getinstance().getSetting(config.currentlatency).toString();
-        if(latency != null && (! latency.trim().isEmpty()) )
-        {
-            final String[] currentlatencyarray = latency.split(",");
-            if(latencyvalues.size() > 0)
-            {
-                if(currentlatencyarray.length < latencyvalues.size())
-                {
-                    layout_datalatency.post(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-                            float currentlatency=currentlatencyarray.length;
-                            float maxlatency=latencyvalues.size();
-                            float latencypercentage=(currentlatency/maxlatency);
-                            latencypercentage=latencypercentage*100;
-
-                            int viewmaxwidth=layout_datalatency.getWidth();
-                            final float viewcurrentwidth=(latencypercentage*viewmaxwidth)/100;
-                            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(2,
-                                    RelativeLayout.LayoutParams.MATCH_PARENT);
-                            p.setMargins((int)viewcurrentwidth,0, 0, 0);
-                            view_latencyline.setLayoutParams(p);
-
-                            /*Animation a = new Animation() {
-
-                                @Override
-                                protected void applyTransformation(float interpolatedTime, Transformation t) {
-                                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view_latencyline.getLayoutParams();
-                                    params.leftMargin = (int)(viewcurrentwidth * interpolatedTime);
-                                    view_latencyline.setLayoutParams(params);
-                                }
-                            };
-                            a.setDuration(700); // in ms
-                            a.setFillAfter(false);
-                            view_latencyline.startAnimation(a);*/
-
-                            /*TranslateAnimation animation = new TranslateAnimation(view_latencyline.getX(), viewcurrentwidth,
-                                    0.0f, 0.0f);
-                            animation.setDuration(700);
-                            animation.setRepeatCount(1);
-                            animation.setFillAfter(false);
-                            view_latencyline.startAnimation(animation);*/
-                        }
-                    });
-
-                }
-            }
-        }
+    public void setrecordrunning(boolean isrecodrunning)
+    {
+        this.isrecodrunning=isrecodrunning;
     }
 
     public void setdatacomposing(boolean isdatacomposing,String mediafilepath)
     {
+        this.isdatacomposing=isdatacomposing;
         if(! isdatacomposing)
         {
             metricmainarraylist.clear();
@@ -727,6 +727,66 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             fetchmetadatafromdb(mediafilepath);
             drawmappath();
         }
+    }
+
+    public void setcurrentmediaposition(int currentmediaposition)
+    {
+        try
+        {
+            if(! isdatacomposing)
+            {
+                if (currentmediaposition < metricmainarraylist.size() && metricmainarraylist.size() > 0) {
+                    arraycontainerformetric = new arraycontainer();
+                    arraycontainerformetric = metricmainarraylist.get(currentmediaposition);
+
+                    ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
+
+                    for (int j = 0; j < metricItemArraylist.size(); j++)
+                    {
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.Battery))
+                        {
+                            if(chart_battery!= null)
+                                sethalfpaichartData(chart_battery,metricItemArraylist.get(j).getMetricTrackValue());
+
+                            common.setdrawabledata("","\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvbattery);
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("memoryusage"))
+                        {
+                            if(chart_memoeyusage!= null)
+                                sethalfpaichartData(chart_memoeyusage,metricItemArraylist.get(j).getMetricTrackValue());
+
+                            common.setdrawabledata("","\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvmemoryusage);
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.cpuusageuser))
+                        {
+                            if(chart_cpuusage!= null){
+                                String cpuusagevalue = metricItemArraylist.get(j).getMetricTrackValue();
+                                cpuusagevalue = cpuusagevalue.substring(cpuusagevalue.lastIndexOf(" ")+1);
+                                if(cpuusagevalue.equalsIgnoreCase("total"))
+                                {
+                                    sethalfpaichartData(chart_cpuusage,"33%");
+                                    common.setdrawabledata("","\n"+"33%", tvcpuusage);
+                                }
+                                else
+                                {
+                                    sethalfpaichartData(chart_cpuusage,metricItemArraylist.get(j).getMetricTrackValue());
+                                    common.setdrawabledata("","\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvcpuusage);
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public void setdatacomposing(boolean isdatacomposing)
@@ -756,12 +816,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             LatLng point = new LatLng(latitude,longitude);
             options.add(point);
         }
-        /*options.add(new LatLng(26.763653, 75.645427));
-        options.add(new LatLng(26.860102, 75.753649));
-        options.add(new LatLng(26.888557, 75.810985));*/
         if(mgooglemap != null)
             mgooglemap.addPolyline(options);
-
         // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
     }
 
@@ -1065,7 +1121,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
-        leftAxis.setAxisMaximum(20f);
+        //leftAxis.setAxisMaximum(20f);
         leftAxis.setAxisMinimum(0);
 
         //leftAxis.setYOffset(20f);
@@ -1102,24 +1158,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         linechart.setPinchZoom(false);
     }
 
-    private void setlatencydata() {
-
-    }
-    private void setlatencydata(LineChart linechart) {
+    private void setlatencydata(LineChart linechart,ArrayList<Entry> graphitems) {
 
         LineDataSet set1;
-
-        if (linechart.getData() != null && linechart.getData().getDataSetCount() > 0 && latencyvalues.size() > 0)
+        if (linechart.getData() != null && linechart.getData().getDataSetCount() > 0 && graphitems.size() > 0)
         {
             set1 = (LineDataSet) linechart.getData().getDataSetByIndex(0);
-            set1.setValues(latencyvalues);
+            set1.setValues(graphitems);
             set1.setHighlightEnabled(true);
             LineData data = new LineData(set1);
             linechart.setData(data);
             linechart.notifyDataSetChanged();
         } else {
             // create a dataset and give it a type
-            set1 = new LineDataSet(latencyvalues, "");
+            set1 = new LineDataSet(graphitems, "");
             set1.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
 
             set1.setDrawIcons(false);

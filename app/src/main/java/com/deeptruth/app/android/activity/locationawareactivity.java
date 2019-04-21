@@ -285,11 +285,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     @Override
-    public void setcameracapture(boolean toggle) {
-        iscameracapture=toggle;
-    }
-
-    @Override
     public void onOrientationChanged(float pitch, float roll) {
         //attitudeindicator.setAttitude(pitch, roll);
     }
@@ -327,11 +322,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
 
        // Log.e("Pitch roll cases ",xdata.getinstance().getSetting(config.phone_attitude));
-    }
-
-    @Override
-    public boolean iscameracapture() {
-        return iscameracapture;
     }
 
     public void getsistermetric()
@@ -502,11 +492,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     public void setrecordingrunning(boolean toggle) {
         isrecording = toggle;
-    }
-
-    @Override
-    public boolean getrecordingrunning() {
-        return isrecording;
     }
 
     @Override

@@ -798,6 +798,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                recyview_frames.smoothScrollToPosition(scrubberprogress);
                    }
 
+                   gethelper().setcurrentmediaposition(currentprocessframe);
 
                    layout_progressline.setVisibility(View.VISIBLE);
                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
