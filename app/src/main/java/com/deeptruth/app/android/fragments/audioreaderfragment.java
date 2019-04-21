@@ -613,6 +613,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         if(encryptionadapter != null && recycler_encryption!= null)
                             recycler_encryption.smoothScrollToPosition(currentprocessframe);
                     }
+
+                    gethelper().setcurrentmediaposition(currentprocessframe);
                 }
             }
 
