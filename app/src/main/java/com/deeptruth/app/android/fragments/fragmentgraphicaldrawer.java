@@ -878,16 +878,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
                 lastsequenceno=sequenceno;
 
-                sectioncount++;
-                if(! lastcolor.equalsIgnoreCase(metricmainarraylist.get(i).getColor()))
+                if(! metricmainarraylist.get(i).getColor().trim().isEmpty())
                 {
-                    colorsectioncount.add(metricmainarraylist.get(i).getColor()+","+sectioncount);
+                    sectioncount++;
+                    if(! lastcolor.equalsIgnoreCase(metricmainarraylist.get(i).getColor()))
+                    {
+                        colorsectioncount.add(metricmainarraylist.get(i).getColor()+","+sectioncount);
+                    }
+                    else
+                    {
+                        colorsectioncount.set(colorsectioncount.size()-1,metricmainarraylist.get(i).getColor()+","+sectioncount);
+                    }
+                    lastcolor=metricmainarraylist.get(i).getColor();
                 }
-                else
-                {
-                    colorsectioncount.set(colorsectioncount.size()-1,metricmainarraylist.get(i).getColor()+","+sectioncount);
-                }
-                lastcolor=metricmainarraylist.get(i).getColor();
             }
         }
 
