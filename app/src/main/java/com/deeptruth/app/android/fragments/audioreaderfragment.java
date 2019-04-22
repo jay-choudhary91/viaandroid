@@ -1455,7 +1455,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
-                              String color) {
+                              String color,String latency,String sequenceno)  {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -1473,7 +1473,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,color));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
+                        color,latency,sequenceno));
             }
             else if(json instanceof JSONArray)
             {
@@ -1490,7 +1491,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         model.setMetricTrackValue(value);
                         metricItemArraylist.add(model);
                     }
-                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,color));
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
+                            color,latency,sequenceno));
                 }
             }
         } catch (Exception e) {
@@ -1918,8 +1920,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                         String serverdictionaryhash = mitemlist.get(i).getValuehash();
                         String color = mitemlist.get(i).getColor();
-
-                        parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color);
+                        String sequenceno = mitemlist.get(i).getSequenceno();
+                        parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,
+                                latency,sequenceno);
                     }
 
                     if((!mediastartdevicedate.isEmpty()) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate!= null)){

@@ -905,8 +905,19 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = "" + Locale.getDefault().getCountry();
         } else if (key.equalsIgnoreCase("timezone")) {
             TimeZone timezone = TimeZone.getDefault();
-            metricItemValue = timezone.getDisplayName();
-        } else if (key.equalsIgnoreCase("devicelanguage")) {
+            metricItemValue = timezone.getID();
+        }else if (key.equalsIgnoreCase(config.phoneclocktime)) {
+            Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+            String time=common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                    +":"+common.appendzero(calendar.get(Calendar.SECOND));
+            metricItemValue = time;
+        }else if (key.equalsIgnoreCase(config.worldclocktime)) {
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+            String time=common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                    +":"+common.appendzero(calendar.get(Calendar.SECOND));
+            metricItemValue = time+" GMT";
+        }
+        else if (key.equalsIgnoreCase("devicelanguage")) {
             metricItemValue = Locale.getDefault().getDisplayLanguage();
         } else if (key.equalsIgnoreCase("brightness")) {
             try {

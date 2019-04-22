@@ -904,9 +904,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             String hashmethod = mitemlist.get(i).getHashmethod();
                             String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                             String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                            String latency = mitemlist.get(i).getLatency();
                             String color = mitemlist.get(i).getColor();
-                            parsemetadata(metricdata, hashmethod, videostarttransactionid, sequencehash, serverdictionaryhash
-                                    , color);
+                            String sequenceno = mitemlist.get(i).getSequenceno();
+                            parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,
+                                    latency,sequenceno);
                         }
 
                         if ((!mediastartdevicedate.isEmpty() && mediastartdevicedate != null) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate != null)) {
@@ -1144,8 +1146,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash
-            ,String color) {
+    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
+                              String color,String latency,String sequenceno) {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -1163,8 +1165,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,
-                        hashvalue,metahash,color));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
+                        color,latency,sequenceno));
             }
             else if(json instanceof JSONArray)
             {
@@ -1181,8 +1183,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         model.setMetricTrackValue(value);
                         metricItemArraylist.add(model);
                     }
-                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,
-                            hashvalue,metahash,color));
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
+                            color,latency,sequenceno));
                 }
             }
         } catch (Exception e) {

@@ -1994,6 +1994,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 String serverdictionaryhash = mitemlist.get(i).getValuehash();
                                 String color = mitemlist.get(i).getColor();
                                 String latency = mitemlist.get(i).getLatency();
+                                String sequenceno = mitemlist.get(i).getSequenceno();
                                 metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,
                                         sequencehash,serverdictionaryhash,color,latency));
                             }
@@ -2009,7 +2010,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 String serverdictionaryhash = mitemlist.get(i).getValuehash();
                                 String color = mitemlist.get(i).getColor();
                                 String latency = mitemlist.get(i).getLatency();
-                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,latency);
+                                String sequenceno = mitemlist.get(i).getSequenceno();
+                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,
+                                        latency,sequenceno);
                             }
 
                             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -2152,7 +2155,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
-                              String color,String latency) {
+                              String color,String latency,String sequenceno) {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -2171,7 +2174,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     metricItemArraylist.add(model);
                 }
                 metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
-                        color,latency));
+                        color,latency,sequenceno));
             }
             else if(json instanceof JSONArray)
             {
@@ -2188,8 +2191,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         model.setMetricTrackValue(value);
                         metricItemArraylist.add(model);
                     }
-                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,
-                            metahash,color,latency));
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
+                            color,latency,sequenceno));
                 }
             }
         } catch (Exception e) {

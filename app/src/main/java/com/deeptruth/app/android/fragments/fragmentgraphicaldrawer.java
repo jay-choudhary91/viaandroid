@@ -11,6 +11,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -48,6 +49,7 @@ import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfonttextview;
+import com.deeptruth.app.android.views.customseekbar;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -87,6 +89,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -207,10 +210,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     TextView txt_phone_time;
     @BindView(R.id.txt_world_time)
     TextView txt_world_time;
-    @BindView(R.id.pie_chart)
-    PieChart media_chart;
-    @BindView(R.id.meta_pie_chart)
-    PieChart meta_pie_chart;
+    @BindView(R.id.pie_metadatachart)
+    PieChart pie_metadatachart;
+    @BindView(R.id.pie_videoaudiochart)
+    PieChart pie_videoaudiochart;
     @BindView(R.id.chart_memoeyusage)
     PieChart chart_memoeyusage;
     @BindView(R.id.chart_cpuusage)
@@ -223,6 +226,26 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     LineChart linechart_traveled;
     @BindView(R.id.linechart_altitude)
     LineChart linechart_altitude;
+    @BindView(R.id.txt_videoaudio_validframes)
+    TextView txt_videoaudio_validframes;
+    @BindView(R.id.txt_videoaudio_cautionframes)
+    TextView txt_videoaudio_cautionframes;
+    @BindView(R.id.txt_videoaudio_invalidframes)
+    TextView txt_videoaudio_invalidframes;
+    @BindView(R.id.txt_meta_validframes)
+    TextView txt_meta_validframes;
+    @BindView(R.id.txt_meta_cautionframes)
+    TextView txt_meta_cautionframes;
+    @BindView(R.id.txt_meta_invalidframes)
+    TextView txt_meta_invalidframes;
+    @BindView(R.id.linear_mediavideoaudio)
+    LinearLayout linear_mediavideoaudio;
+    @BindView(R.id.linear_mediametadata)
+    LinearLayout linear_mediametadata;
+    @BindView(R.id.seekbar_mediavideoaudio)
+    customseekbar seekbar_mediavideoaudio;
+    @BindView(R.id.seekbar_mediametadata)
+    customseekbar seekbar_mediametadata;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -300,14 +323,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           tvdataletency.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           txtdegree.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
 
-            phone_time_clock.setTimeZone("MST", new itemupdatelistener() {
+          seekbar_mediavideoaudio.setEnabled(false);
+          seekbar_mediametadata.setEnabled(false);
+          linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
+          linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
+
+          TimeZone timezone = TimeZone.getDefault();
+          final String timezoneid=timezone.getID();
+          phone_time_clock.setTimeZone(timezoneid, new itemupdatelistener() {
                 @Override
                 public void onitemupdate(Object object) {
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
                         txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
-                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" MST");
+                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneid);
                         //txt_phone_time.setText(common.currenttime_analogclock()+" MST");
                     }
                 }
@@ -317,7 +347,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 }
             });
-            world_time_clock.setTimeZone("GMT", new itemupdatelistener() {
+          world_time_clock.setTimeZone("GMT", new itemupdatelistener() {
                 @Override
                 public void onitemupdate(Object object) {
                     if(object != null)
@@ -378,17 +408,22 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
 
             loadmap();
-            piechartdata(media_chart);
-            piechartdata(meta_pie_chart);
 
             halfpaichartdate(chart_memoeyusage);
             halfpaichartdate(chart_cpuusage);
             halfpaichartdate(chart_battery);
 
             // Code for line chart
+            linechart_speed.setVisibility(View.GONE);
+            linechart_traveled.setVisibility(View.GONE);
+            linechart_altitude.setVisibility(View.GONE);
+
             setchartdata(linechart_speed);
             setchartdata(linechart_traveled);
             setchartdata(linechart_altitude);
+
+            emptymediapiechartdata(pie_videoaudiochart);
+            emptymediapiechartdata(pie_metadatachart);
         }
         return rootview;
     }
@@ -527,13 +562,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
 
-            common.setdrawabledata("",common.getdate(), tvdate);
-            common.setdrawabledata("",common.gettime(), tvtime);
-            common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
-            common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
-            common.setdrawabledata("", " "+common.getxdatavalue(xdata.getinstance().getSetting(config.datahash)), tvblocknumber);
-            common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);
-
             String latitude=xdata.getinstance().getSetting(config.Latitude);
             String longitude=xdata.getinstance().getSetting(config.Longitude);
             String altitude=xdata.getinstance().getSetting(config.Altitude);
@@ -551,6 +579,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(isdatacomposing)
             {
+                common.setdrawabledata("",common.getdate(), tvdate);
+                common.setdrawabledata("",common.gettime(), tvtime);
+
                 latitude=xdata.getinstance().getSetting("lat");
                 longitude=xdata.getinstance().getSetting("lng");
 
@@ -620,6 +651,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         }
                         setlatencydata(linechart_altitude,altitudegraphitems);
                     }
+
+                    common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
+                    common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
+                    common.setdrawabledata("", " "+common.getxdatavalue(xdata.getinstance().getSetting(config.datahash)), tvblocknumber);
+                    common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);
                 }
                 else
                 {
@@ -632,6 +668,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         linechart_traveled.clear();
                         linechart_altitude.clear();
                     }
+
+                    tvblockchainid.setText("");
+                    tvblockid.setText("");
+                    tvblocknumber.setText("");
+                    tvmetahash.setText("");
                 }
             }
 
@@ -725,8 +766,195 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 mgooglemap.clear();
 
             fetchmetadatafromdb(mediafilepath);
-            drawmappath();
+            if(metricmainarraylist != null && metricmainarraylist.size() > 0)
+            {
+                drawmappath();
+                drawmediainformation();
+            }
         }
+        else
+        {
+            resetmediainformation();
+        }
+    }
+
+    public void resetmediainformation()
+    {
+
+        try
+        {
+            txt_videoaudio_validframes.setText("0 Frames");
+            txt_videoaudio_cautionframes.setText("0 Frames");
+            txt_videoaudio_invalidframes.setText("0 Frames");
+            txt_meta_validframes.setText("0 Frames");
+            txt_meta_cautionframes.setText("0 Frames");
+            txt_meta_invalidframes.setText("0 Frames");
+
+            emptymediapiechartdata(pie_videoaudiochart);
+            emptymediapiechartdata(pie_metadatachart);
+
+            if(seekbar_mediametadata != null)
+                seekbar_mediametadata.setProgress(0);
+
+            if(seekbar_mediavideoaudio != null)
+                seekbar_mediavideoaudio.setProgress(0);
+
+            linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
+            linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            linear_mediametadata.removeAllViews();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            linear_mediavideoaudio.removeAllViews();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void drawmappath()
+    {
+        PolylineOptions options = new PolylineOptions().width(7).color(Color.RED).geodesic(true);
+        for (int i = 0; i < metricmainarraylist.size(); i++)
+        {
+            arraycontainer container=metricmainarraylist.get(i);
+            ArrayList<metricmodel> arraylist=container.getMetricItemArraylist();
+            double latitude=0.0,longitude=0.0;
+            for(int j=0;j<arraylist.size();j++)
+            {
+                metricmodel model=arraylist.get(j);
+                if(model.getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
+                {
+                    latitude=Double.parseDouble(model.getMetricTrackValue());
+                }
+                if(model.getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
+                {
+                    longitude=Double.parseDouble(model.getMetricTrackValue());
+                }
+            }
+
+            LatLng point = new LatLng(latitude,longitude);
+            options.add(point);
+        }
+        if(mgooglemap != null)
+            mgooglemap.addPolyline(options);
+        // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
+    }
+
+    public void drawmediainformation()
+    {
+        int validcount=0,cautioncount=0,invalidcount=0,lastsequenceno=0,sectioncount=0;
+        String lastcolor="";
+        ArrayList<String> colorsectioncount=new ArrayList<>();
+        for (int i = 0; i < metricmainarraylist.size(); i++)
+        {
+            String strsequence=metricmainarraylist.get(i).getSequenceno();
+            if(! strsequence.trim().isEmpty() && (! strsequence.equalsIgnoreCase("NA")) && (! strsequence.equalsIgnoreCase("null")))
+            {
+                int sequenceno=Integer.parseInt(strsequence);
+                int sequencecount=sequenceno-lastsequenceno;
+                if(metricmainarraylist.get(i).getColor().equalsIgnoreCase(config.color_green))
+                {
+                    validcount=validcount+sequencecount;
+                }
+                else if(metricmainarraylist.get(i).getColor().equalsIgnoreCase(config.color_yellow))
+                {
+                    cautioncount=cautioncount+sequencecount;
+                }
+                else if(metricmainarraylist.get(i).getColor().equalsIgnoreCase(config.color_red))
+                {
+                    invalidcount=invalidcount+sequencecount;
+                }
+                lastsequenceno=sequenceno;
+
+                sectioncount++;
+                if(! lastcolor.equalsIgnoreCase(metricmainarraylist.get(i).getColor()))
+                {
+                    colorsectioncount.add(metricmainarraylist.get(i).getColor()+","+sectioncount);
+                }
+                else
+                {
+                    colorsectioncount.set(colorsectioncount.size()-1,metricmainarraylist.get(i).getColor()+","+sectioncount);
+                }
+                lastcolor=metricmainarraylist.get(i).getColor();
+            }
+        }
+
+        try {
+            linear_mediavideoaudio.removeAllViews();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try {
+            linear_mediametadata.removeAllViews();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
+        linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
+
+        for(int i=0;i<colorsectioncount.size();i++)
+        {
+            String item=colorsectioncount.get(i);
+            if(! item.trim().isEmpty())
+            {
+                String[] itemarray=item.split(",");
+                if(itemarray.length >= 2)
+                {
+                    String color=itemarray[0];
+                    String weight=itemarray[1];
+                    if(! weight.trim().isEmpty())
+                    {
+                        linear_mediavideoaudio.addView(getmediaseekbarbackgroundview(weight,color));
+                        linear_mediametadata.addView(getmediaseekbarbackgroundview(weight,color));
+                    }
+                }
+            }
+        }
+
+        txt_videoaudio_validframes.setText(validcount+" Frames");
+        txt_videoaudio_cautionframes.setText(cautioncount+" Frames");
+        txt_videoaudio_invalidframes.setText(invalidcount+" Frames");
+        txt_meta_validframes.setText(validcount+" Frames");
+        txt_meta_cautionframes.setText(cautioncount+" Frames");
+        txt_meta_invalidframes.setText(invalidcount+" Frames");
+        mediapiechartdata(pie_videoaudiochart,validcount,cautioncount,invalidcount);
+        mediapiechartdata(pie_metadatachart,validcount,cautioncount,invalidcount);
+
+        seekbar_mediavideoaudio.setMax(metricmainarraylist.size());
+        seekbar_mediametadata.setMax(metricmainarraylist.size());
+    }
+
+    public View getmediaseekbarbackgroundview(String weight,String color)
+    {
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+        View view = new View(applicationviavideocomposer.getactivity());
+        view.setLayoutParams(param);
+        if((! color.isEmpty()))
+        {
+            view.setBackgroundColor(Color.parseColor(common.getcolorbystring(color)));
+        }
+        else
+        {
+            view.setBackgroundColor(Color.parseColor(config.color_code_gray));
+        }
+        return view;
     }
 
     public void setcurrentmediaposition(int currentmediaposition)
@@ -740,10 +968,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     arraycontainerformetric = metricmainarraylist.get(currentmediaposition);
 
                     ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
-
                     for (int j = 0; j < metricItemArraylist.size(); j++)
                     {
-
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.Battery))
                         {
                             if(chart_battery!= null)
@@ -778,47 +1004,45 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             }
                         }
 
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicedate"))
+                            tvdate.setText(metricItemArraylist.get(j).getMetricTrackValue());
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequencestarttime"))
+                            tvtime.setText(metricItemArraylist.get(j).getMetricTrackValue());
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequenceendtime"))
+                            tvtime.setText(tvtime.getText()+" - "+metricItemArraylist.get(j).getMetricTrackValue());
                     }
+                    tvblockchainid.setText(arraycontainerformetric.getVideostarttransactionid());
+                    tvblockid.setText(arraycontainerformetric.getHashmethod());
+                    tvblocknumber.setText(arraycontainerformetric.getValuehash());
+                    tvmetahash.setText(arraycontainerformetric.getMetahash());
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                {
+                    if(seekbar_mediavideoaudio != null)
+                        seekbar_mediavideoaudio.setProgress(currentmediaposition,true);
+                    if(seekbar_mediametadata != null)
+                        seekbar_mediametadata.setProgress(currentmediaposition,true);
+                }
+                else
+                {
+                    if(seekbar_mediavideoaudio != null)
+                        seekbar_mediavideoaudio.setProgress(currentmediaposition);
+                    if(seekbar_mediametadata != null)
+                        seekbar_mediametadata.setProgress(currentmediaposition);
                 }
             }
-
         }catch (Exception e)
         {
             e.printStackTrace();
         }
-
     }
 
     public void setdatacomposing(boolean isdatacomposing)
     {
         this.isdatacomposing=isdatacomposing;
-    }
-
-    public void drawmappath()
-    {
-        PolylineOptions options = new PolylineOptions().width(7).color(Color.RED).geodesic(true);
-        for (int i = 0; i < metricmainarraylist.size(); i++) {
-            arraycontainer container=metricmainarraylist.get(i);
-            ArrayList<metricmodel> arraylist=container.getMetricItemArraylist();
-            double latitude=0.0,longitude=0.0;
-            for(int j=0;j<arraylist.size();j++)
-            {
-                metricmodel model=arraylist.get(j);
-                if(model.getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
-                {
-                    latitude=Double.parseDouble(model.getMetricTrackValue());
-                }
-                if(model.getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
-                {
-                    longitude=Double.parseDouble(model.getMetricTrackValue());
-                }
-            }
-            LatLng point = new LatLng(latitude,longitude);
-            options.add(point);
-        }
-        if(mgooglemap != null)
-            mgooglemap.addPolyline(options);
-        // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
     }
 
     public void fetchmetadatafromdb(String mediafilepath) {
@@ -842,7 +1066,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 String serverdictionaryhash = mitemlist.get(i).getValuehash();
                 String color = mitemlist.get(i).getColor();
                 String latency = mitemlist.get(i).getLatency();
-                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,latency);
+                String sequenceno = mitemlist.get(i).getSequenceno();
+                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,latency,sequenceno);
             }
         }catch (Exception e)
         {
@@ -851,7 +1076,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
-                              String color,String latency) {
+                              String color,String latency,String sequenceno) {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -870,7 +1095,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     metricItemArraylist.add(model);
                 }
                 metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
-                        color,latency));
+                        color,latency,sequenceno));
             }
             else if(json instanceof JSONArray)
             {
@@ -888,7 +1113,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         metricItemArraylist.add(model);
                     }
                     metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,
-                            metahash,color,latency));
+                            metahash,color,latency,sequenceno));
                 }
             }
         } catch (Exception e) {
@@ -1273,123 +1498,71 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.invalidate();
     }
 
-    public void piechartdata(PieChart mediadatachart){
-        mediadatachart.setExtraOffsets(0, 0, 0, 0);
-
+    public void mediapiechartdata(PieChart piechart,int valid,int caution,int invalid)
+    {
+        piechart.setExtraOffsets(0, 0, 0, 0);
         // add a selection listener
-        mediadatachart.setOnChartValueSelectedListener(this);
-        mediadatachart.setDrawHoleEnabled(true);
-        mediadatachart.setHoleColor(Color.TRANSPARENT);
-        mediadatachart.setBackgroundColor(Color.TRANSPARENT);
-
-        mediadatachart.getLegend().setEnabled(false);
-        mediadatachart.getDescription().setEnabled(false);
-        mediadatachart.setRotationEnabled(false);
-        mediadatachart.setHighlightPerTapEnabled(false);
-        mediadatachart.setHoleRadius(55f);
-        //media_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
-        //media_chart.setHoleRadius(0.0f);
-
-        setData(mediadatachart);
-    }
-    private void setData(PieChart mediasetdataonchart) {
-        ArrayList<PieEntry> entries = new ArrayList<>();
-         String[] parties = new String[] {""};
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-
-        entries.add(new PieEntry(10,
-                parties[0 % parties.length],
-                0));
-        entries.add(new PieEntry(10,
-                parties[1 % parties.length],
-                0));
-        entries.add(new PieEntry(10,
-                parties[2 % parties.length],
-                0));
-        entries.add(new PieEntry(10,
-                parties[3 % parties.length],
-                0));
-
-        PieDataSet dataSet = new PieDataSet(entries, "");
-
-        // add a lot of colors
-
-        ArrayList<Integer> colors = new ArrayList<>();
-
-        colors.add(getResources().getColor(R.color.validating_white_bg));
-
-        colors.add(getResources().getColor(R.color.validating_white_bg));
-
-        colors.add(getResources().getColor(R.color.validating_white_bg));
-
-        colors.add(getResources().getColor(R.color.validating_white_bg));
-
-        dataSet.setColors(colors);
-
-
-        PieData data = new PieData(dataSet);
-        data.setDrawValues(false);
-        mediasetdataonchart.setData(data);
-    }
-
-    public void metapiedata(){
-        meta_pie_chart.setExtraOffsets(0, 0, 0, 0);
-
-        // add a selection listener
-        meta_pie_chart.setOnChartValueSelectedListener(this);
-        meta_pie_chart.getLegend().setEnabled(false);
-        meta_pie_chart.getDescription().setEnabled(false);
-        meta_pie_chart.setHoleColor(Color.TRANSPARENT);
-        meta_pie_chart.setBackgroundColor(Color.TRANSPARENT);
-        meta_pie_chart.getLegend().setEnabled(false);
-        meta_pie_chart.getDescription().setEnabled(false);
-        meta_pie_chart.setRotationEnabled(false);
-        meta_pie_chart.setHighlightPerTapEnabled(false);
-        meta_pie_chart.setHoleRadius(55f);
-
+        piechart.setOnChartValueSelectedListener(this);
+        piechart.getLegend().setEnabled(false);
+        piechart.getDescription().setEnabled(false);
+        piechart.setHoleColor(Color.TRANSPARENT);
+        piechart.setBackgroundColor(Color.TRANSPARENT);
+        piechart.getLegend().setEnabled(false);
+        piechart.getDescription().setEnabled(false);
+        piechart.setRotationEnabled(false);
+        piechart.setHighlightPerTapEnabled(false);
+        piechart.setHoleRadius(55f);
         //meta_pie_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
        // meta_pie_chart.setHoleRadius(0.0f);
-
-
         ArrayList<PieEntry> entries = new ArrayList<>();
-        String[] parties = new String[] {""};
+        String[] items = new String[] {""};
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-
-        entries.add(new PieEntry(10,
-                parties[0 % parties.length],
-                0));
-        entries.add(new PieEntry(10,
-                parties[1 % parties.length],
-                0));
-        entries.add(new PieEntry(10,
-                parties[2 % parties.length],
-                0));
-        entries.add(new PieEntry(10,
-                parties[3 % parties.length],
-                0));
-
+        entries.add(new PieEntry(valid,items[0 % items.length],0));
+        entries.add(new PieEntry(caution,items[1 % items.length],0));
+        entries.add(new PieEntry(invalid,items[2 % items.length],0));
         PieDataSet dataSet = new PieDataSet(entries, "");
-
         // add a lot of colors
-
         ArrayList<Integer> colors = new ArrayList<>();
-
-        colors.add(getResources().getColor(R.color.validating_white_bg));
-
-        colors.add(getResources().getColor(R.color.validating_white_bg));
-
-        colors.add(getResources().getColor(R.color.validating_white_bg));
-
-        colors.add(getResources().getColor(R.color.validating_white_bg));
-
+        colors.add(Color.parseColor(config.color_code_green));
+        colors.add(Color.parseColor(config.color_code_yellow));
+        colors.add(Color.parseColor(config.color_code_red));
+        //colors.add(getResources().getColor(R.color.validating_white_bg));
         dataSet.setColors(colors);
-
-
         PieData data = new PieData(dataSet);
         data.setDrawValues(false);
-        meta_pie_chart.setData(data);
+        piechart.setData(data);
+    }
+
+    public void emptymediapiechartdata(PieChart piechart)
+    {
+        piechart.setExtraOffsets(0, 0, 0, 0);
+        // add a selection listener
+        piechart.setOnChartValueSelectedListener(this);
+        piechart.getLegend().setEnabled(false);
+        piechart.getDescription().setEnabled(false);
+        piechart.setHoleColor(Color.TRANSPARENT);
+        piechart.setBackgroundColor(Color.TRANSPARENT);
+        piechart.getLegend().setEnabled(false);
+        piechart.getDescription().setEnabled(false);
+        piechart.setRotationEnabled(false);
+        piechart.setHighlightPerTapEnabled(false);
+        piechart.setHoleRadius(55f);
+        //meta_pie_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
+        // meta_pie_chart.setHoleRadius(0.0f);
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        String[] items = new String[] {""};
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+        entries.add(new PieEntry(10,items[0 % items.length],0));
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        // add a lot of colors
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
+        dataSet.setColors(colors);
+        PieData data = new PieData(dataSet);
+        data.setDrawValues(false);
+        piechart.setData(data);
     }
 
     private SpannableString generateCenterSpannableText(String text) {

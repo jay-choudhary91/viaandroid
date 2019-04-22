@@ -469,11 +469,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          }
          else if(fragment instanceof composeoptionspagerfragment)
          {
+             setdatacomposing(true,"");
              common.resetgraphicaldata();
              updateactionbar(0);
          }
          else if(fragment instanceof myfolderfragment)
          {
+
          }
         else
         {
@@ -539,6 +541,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 {
                     e.printStackTrace();
                 }
+
 
 
                 myhandler.postDelayed(this, 1000);

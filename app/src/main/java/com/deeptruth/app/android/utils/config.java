@@ -160,6 +160,8 @@ public class config {
     public static final String SystemUptime="System Uptime";
     public static final String Battery="Battery";
     public static final String Address="Address";
+    public static final String phoneclocktime="phoneclocktime";
+    public static final String worldclocktime="worldclocktime";
 
     public static final String sync_offline="offline";
     public static final String sync_pending="pending";
