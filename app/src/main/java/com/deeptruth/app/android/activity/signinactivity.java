@@ -172,6 +172,20 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
                             }
                             Toast.makeText(signinactivity.this, error, Toast.LENGTH_SHORT).show();
                         }
+
+                        if(object.has("not_verified"))
+                        {
+                            if(object.getString("not_verified").equalsIgnoreCase("1"))
+                            {
+                                if(object.has(config.clientid))
+                                    xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
+
+                                Intent intent=new Intent(signinactivity.this,verifyuser.class);
+                                intent.putExtra("activityname",config.createaccount);
+                                startActivity(intent);
+                            }
+                        }
+
                     }catch (Exception e)
                     {
                         e.printStackTrace();
