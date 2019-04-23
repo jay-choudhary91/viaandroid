@@ -999,8 +999,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         txtslotmeta.setOnClickListener(new setonClick());
         txtslotmedia.setOnClickListener(new setonClick());
         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
-        mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
-        gethelper().setdatacomposing(false,mediafilepath);
+        mediafilepath = xdata.getinstance().getSetting(config.selectedvideourl);
         edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -2103,7 +2102,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                         File destinationmediafile = new File(folderpath + File.separator + new File(mediafilepath).getName());
                                         updatefilemediafolderdirectory(mediafilepath,destinationmediafile.getAbsolutePath(),folderpath);
                                         mediafilepath=destinationmediafile.getAbsolutePath();
-                                        xdata.getinstance().saveSetting("selectedvideourl",mediafilepath);
+                                        xdata.getinstance().saveSetting(config.selectedvideourl,mediafilepath);
                                     }
                                 }
                             }catch (Exception e)

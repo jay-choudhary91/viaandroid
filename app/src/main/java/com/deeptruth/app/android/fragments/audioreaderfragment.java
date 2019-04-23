@@ -1766,8 +1766,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
    }
 
    public void setupaudiodata() {
-       audiourl = xdata.getinstance().getSetting("selectedaudiourl");
-       gethelper().setdatacomposing(false,audiourl);
+       audiourl = xdata.getinstance().getSetting(config.selectedaudiourl);
        if (audiourl != null && (!audiourl.isEmpty())) {
 
            audioduration = 0;
@@ -2031,7 +2030,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                         File destinationmediafile = new File(folderpath + File.separator + new File(audiourl).getName());
                                         updatefilemediafolderdirectory(audiourl,destinationmediafile.getAbsolutePath(),folderpath);
                                         audiourl=destinationmediafile.getAbsolutePath();
-                                        xdata.getinstance().saveSetting("selectedaudiourl",audiourl);
+                                        xdata.getinstance().saveSetting(config.selectedaudiourl,audiourl);
                                     }
                                 }
                             }catch (Exception e)

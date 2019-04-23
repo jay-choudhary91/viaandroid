@@ -376,6 +376,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         else if(fragment instanceof videoreaderfragment){
              getstatusbarheight();
              common.resetgraphicaldata();
+             setdatacomposing(false,xdata.getinstance().getSetting(config.selectedvideourl));
             try
             {
                 View view=((videoreaderfragment) getcurrentfragment()).layout_videodetails;
@@ -399,19 +400,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 e.printStackTrace();
             }
              updateactionbar(1);
-         }
-         else if(fragment instanceof fragmentmedialist){
-
-
-        }
-         else if(fragment instanceof imagecomposerfragment){
-             drawerenabledisable(true);
-             updateactionbar(0);
-         }
-         else if(fragment instanceof audiocomposerfragment){
-             drawerenabledisable(true);
-             updateactionbar(0);
-
          }
          else if(fragment instanceof audioreaderfragment){
              common.resetgraphicaldata();
@@ -438,9 +426,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              }
              updateactionbar(1);
              getstatusbarheight();
+             setdatacomposing(false,xdata.getinstance().getSetting(config.selectedaudiourl));
          } else if(fragment instanceof imagereaderfragment){
              getstatusbarheight();
              common.resetgraphicaldata();
+             setdatacomposing(false,xdata.getinstance().getSetting(config.selectedphotourl));
              try
              {
                  View view=((imagereaderfragment) getcurrentfragment()).layout_photodetails;
@@ -461,6 +451,19 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                  e.printStackTrace();
              }
              updateactionbar(1);
+
+         }
+         else if(fragment instanceof fragmentmedialist){
+
+
+        }
+         else if(fragment instanceof imagecomposerfragment){
+             drawerenabledisable(true);
+             updateactionbar(0);
+         }
+         else if(fragment instanceof audiocomposerfragment){
+             drawerenabledisable(true);
+             updateactionbar(0);
 
          }
          else if(fragment instanceof settingfragment)

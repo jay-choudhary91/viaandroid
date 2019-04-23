@@ -1424,21 +1424,21 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             if(videoobj.getmimetype().startsWith("image"))
             {
-                xdata.getinstance().saveSetting("selectedphotourl",""+videoobj.getPath());
+                xdata.getinstance().saveSetting(config.selectedphotourl,""+videoobj.getPath());
                 imagereaderfragment fragmentimagereader = new imagereaderfragment();
                 fragmentimagereader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentimagereader, false, true);
 
             }else if(videoobj.getmimetype().startsWith("audio"))
             {
-                xdata.getinstance().saveSetting("selectedaudiourl",""+videoobj.getPath());
+                xdata.getinstance().saveSetting(config.selectedaudiourl,""+videoobj.getPath());
                 audioreaderfragment fragmentaudioreader = new audioreaderfragment();
                 fragmentaudioreader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentaudioreader, false, true);
 
             }else if(videoobj.getmimetype().startsWith("video"))
             {
-                xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
+                xdata.getinstance().saveSetting(config.selectedvideourl,""+videoobj.getPath());
                 videoreaderfragment fragmentvideoreader=new videoreaderfragment();
                 fragmentvideoreader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentvideoreader, false, true);

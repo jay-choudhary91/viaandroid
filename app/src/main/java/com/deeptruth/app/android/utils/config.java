@@ -204,8 +204,13 @@ public class config {
     public static final String satellitedate="satellitedate";
     public static final String remoteip="remoteip";
     public static final String satellitesdata="satellites";
+    public static final String sister_metric="sister metric";
+    public static final String json_blob="json blob";
 
     public static final String selected_folder="selected_folder";
+    public static final String selectedphotourl="selectedphotourl";
+    public static final String selectedaudiourl="selectedaudiourl";
+    public static final String selectedvideourl="selectedvideourl";
 
     public static final String latency = "latency";
     public static final String currentlatency = "currentlatency";
