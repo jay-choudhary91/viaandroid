@@ -652,7 +652,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 return true;
                             }
 
-                            if(event.getAction() == MotionEvent.ACTION_UP) {
+                            if(event.getAction() == MotionEvent.ACTION_DOWN) {
                                 if(mIsScrolling ) {
 
                                     if(!islastdragarrow)
