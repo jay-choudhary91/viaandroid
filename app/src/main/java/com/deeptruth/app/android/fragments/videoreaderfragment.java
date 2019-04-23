@@ -1517,8 +1517,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 layout_mediatype.setVisibility(View.VISIBLE);
                                 img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                                 layoutpause.setVisibility(View.VISIBLE);
+
                                 if(!isplaypauswebtnshow){
-                                    playpausebutton.setVisibility(View.VISIBLE);
+                                      playpausebutton.setVisibility(View.VISIBLE);
 
                                 }else{
                                     getpausebtnheight();
@@ -1623,6 +1624,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             getcontrollerheight();
                             backgroundcolor();
                         }
+
                         playpausebutton.setVisibility(View.GONE);
                         start();
                     }
@@ -1736,6 +1738,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             layout_mediatype.setVisibility(View.GONE);
             getcontrollerheight();
         }else{
+            isplaypauswebtnshow = false;
             img_fullscreen.setVisibility(View.VISIBLE);
             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
             layoutpause.setVisibility(View.VISIBLE);

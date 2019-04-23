@@ -834,13 +834,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             for(int j=0;j<arraylist.size();j++)
             {
                 metricmodel model=arraylist.get(j);
+
                 if(model.getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
                 {
-                    latitude=Double.parseDouble(model.getMetricTrackValue());
+                    if(!model.getMetricTrackValue().equalsIgnoreCase("NA"))
+                          latitude=Double.parseDouble(model.getMetricTrackValue());
                 }
                 if(model.getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
                 {
-                    longitude=Double.parseDouble(model.getMetricTrackValue());
+                    if(!model.getMetricTrackValue().equalsIgnoreCase("NA"))
+                          longitude=Double.parseDouble(model.getMetricTrackValue());
                 }
             }
 
