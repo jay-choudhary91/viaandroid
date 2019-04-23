@@ -338,6 +338,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         JSONObject object=new JSONObject(response.getData().toString());
                         if(object.has("metrics"))
                         {
+                            xdata.getinstance().saveSetting(config.sister_metric,object.getJSONObject("metrics").toString());
                             JSONObject metricobject=object.getJSONObject("metrics");
                             if(metricobject.has("satellitedate"))
                                 xdata.getinstance().saveSetting(config.satellitedate,metricobject.getString("satellitedate"));
@@ -1330,13 +1331,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("address")) {
             metricItemValue = xdata.getinstance().getSetting("currentaddress");
         } else if (key.equalsIgnoreCase("numberofsatellites")) {
-            // metricItemValue = "" + numberofsatellites;
             metricItemValue = xdata.getinstance().getSetting("gpsnumberofsatelites");
         } else if (key.equalsIgnoreCase("satelliteangle")) {
-            //metricItemValue = "" + anglesatellite;
             metricItemValue = xdata.getinstance().getSetting("satelliteangle");
         } else if (key.equalsIgnoreCase("satelliteid")) {
-            //metricItemValue = "" + satelliteid;
             metricItemValue = xdata.getinstance().getSetting("satelliteid");
         } else if (key.equalsIgnoreCase("strengthofsatellites")) {
             metricItemValue =xdata.getinstance().getSetting("strengthofsatellites");;
@@ -1350,6 +1348,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             {
                 metricItemValue = "OFF";
             }
+        }
+        else if (key.equalsIgnoreCase(config.sister_metric)) {
+            metricItemValue=xdata.getinstance().getSetting(config.sister_metric);
+        }
+        else if (key.equalsIgnoreCase(config.json_blob)) {
+            metricItemValue=xdata.getinstance().getSetting(config.json_blob);
         }
 
         if (metricItemValue == null)

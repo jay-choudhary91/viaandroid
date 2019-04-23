@@ -130,6 +130,20 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                                 }
                                 Toast.makeText(createaccount.this, error, Toast.LENGTH_SHORT).show();
                             }
+
+                            if(object.has("not_verified"))
+                            {
+                                if(object.getString("not_verified").equalsIgnoreCase("1"))
+                                {
+                                    if(object.has(config.clientid))
+                                        xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
+
+                                    Intent intent=new Intent(createaccount.this,verifyuser.class);
+                                    intent.putExtra("activityname",config.createaccount);
+                                    startActivity(intent);
+                                }
+                            }
+
                         }catch (Exception e)
                         {
                             e.printStackTrace();

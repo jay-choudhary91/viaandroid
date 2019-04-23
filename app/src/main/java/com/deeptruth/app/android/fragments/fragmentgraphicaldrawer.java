@@ -579,6 +579,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(isdatacomposing)
             {
+                if(phone_time_clock != null)
+                    phone_time_clock.setPostRecordData(true,"");
+
+                if(world_time_clock != null)
+                    world_time_clock.setPostRecordData(true,"");
+
+
                 common.setdrawabledata("",common.getdate(), tvdate);
                 common.setdrawabledata("",common.gettime(), tvtime);
 
@@ -1018,6 +1025,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequenceendtime"))
                             tvtime.setText(tvtime.getText()+" - "+metricItemArraylist.get(j).getMetricTrackValue());
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclocktime))
+                        {
+                            String time=metricItemArraylist.get(j).getMetricTrackValue();
+                            if(phone_time_clock != null && (! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
+                                phone_time_clock.setPostRecordData(false,time);
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.worldclocktime))
+                        {
+                            String time=metricItemArraylist.get(j).getMetricTrackValue();
+                            if(world_time_clock != null && (! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
+                                world_time_clock.setPostRecordData(false,time);
+                        }
+
                     }
                     tvblockchainid.setText(arraycontainerformetric.getVideostarttransactionid());
                     tvblockid.setText(arraycontainerformetric.getHashmethod());

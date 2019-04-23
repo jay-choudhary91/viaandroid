@@ -1606,7 +1606,9 @@ public class common {
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
                 "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","syncphonetime","country",
                 "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers","numberofsatellites",
-                "satelliteangle","satelliteid","strengthofsatellites","attitude","phoneclocktime","worldclocktime"};
+                "satelliteangle","satelliteid","strengthofsatellites","attitude","phoneclocktime","worldclocktime",config.sister_metric,
+                config.json_blob
+        };
 
         return items;
     }

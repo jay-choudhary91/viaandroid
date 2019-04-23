@@ -790,7 +790,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void setupimagedata() {
-        imageurl = xdata.getinstance().getSetting("selectedphotourl");
+        imageurl = xdata.getinstance().getSetting(config.selectedphotourl);
         tvsize.setText(common.filesize(imageurl));
         if (imageurl != null && (!imageurl.isEmpty())) {
             setupphoto(Uri.parse(imageurl));
@@ -1096,7 +1096,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                         File destinationmediafile = new File(folderpath + File.separator + new File(imageurl).getName());
                                         updatefilemediafolderdirectory(imageurl,destinationmediafile.getAbsolutePath(),folderpath);
                                         imageurl=destinationmediafile.getAbsolutePath();
-                                        xdata.getinstance().saveSetting("selectedphotourl",imageurl);
+                                        xdata.getinstance().saveSetting(config.selectedphotourl,imageurl);
                                     }
                                 }
                             }catch (Exception e)

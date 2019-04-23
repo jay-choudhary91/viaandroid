@@ -20,12 +20,15 @@ import com.deeptruth.app.android.interfaces.itemupdatelistener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 import static android.text.format.DateUtils.SECOND_IN_MILLIS;
 
 public class AnalogClock extends View {
 
+    boolean isdatacomposing=true;
+    String serverdate="";
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -152,7 +155,6 @@ public class AnalogClock extends View {
 
         final int w = getWidth();
         final int h = getHeight();
-
         final int saveCount = canvas.save();
         canvas.translate(w / 2, h / 2);
         final float scale = Math.min((float) w / mDial.getIntrinsicWidth(),
@@ -161,23 +163,64 @@ public class AnalogClock extends View {
             canvas.scale(scale, scale, 0f, 0f);
         }
         mDial.draw(canvas);
+        if(isdatacomposing)
+        {
+            final float hourAngle = mTime.get(Calendar.HOUR) * 30f;
+            canvas.rotate(hourAngle, 0f, 0f);
+            mHourHand.draw(canvas);
 
-        final float hourAngle = mTime.get(Calendar.HOUR) * 30f;
-        canvas.rotate(hourAngle, 0f, 0f);
-        mHourHand.draw(canvas);
+            final float minuteAngle = mTime.get(Calendar.MINUTE) * 6f;
+            canvas.rotate(minuteAngle - hourAngle, 0f, 0f);
+            mMinuteHand.draw(canvas);
 
-        final float minuteAngle = mTime.get(Calendar.MINUTE) * 6f;
-        canvas.rotate(minuteAngle - hourAngle, 0f, 0f);
-        mMinuteHand.draw(canvas);
-
-        if (mEnableSeconds) {
-            final float secondAngle = mTime.get(Calendar.SECOND) * 6f;
-            canvas.rotate(secondAngle - minuteAngle, 0f, 0f);
-            mSecondHand.draw(canvas);
+            if (mEnableSeconds) {
+                final float secondAngle = mTime.get(Calendar.SECOND) * 6f;
+                canvas.rotate(secondAngle - minuteAngle, 0f, 0f);
+                mSecondHand.draw(canvas);
+            }
+            if(itemupdator != null)
+                itemupdator.onitemupdate(mTime);
         }
-        if(itemupdator != null)
-            itemupdator.onitemupdate(mTime);
+        else
+        {
+            if(! serverdate.trim().isEmpty() && (! serverdate.equalsIgnoreCase("NA")) && (! serverdate.equalsIgnoreCase("null")))
+            {
+                String[] arrayitem=serverdate.split(" ");
+                if(arrayitem.length > 0)
+                {
+                    String dateitem=arrayitem[0];
+                    try {
 
+                        //1. Create a Date from String
+                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+                        Date date = sdf.parse(dateitem);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(date);
+
+                        final float hourAngle = calendar.get(Calendar.HOUR) * 30f;
+                        canvas.rotate(hourAngle, 0f, 0f);
+                        mHourHand.draw(canvas);
+
+                        final float minuteAngle = calendar.get(Calendar.MINUTE) * 6f;
+                        canvas.rotate(minuteAngle - hourAngle, 0f, 0f);
+                        mMinuteHand.draw(canvas);
+
+                        if (mEnableSeconds) {
+                            final float secondAngle = calendar.get(Calendar.SECOND) * 6f;
+                            canvas.rotate(secondAngle - minuteAngle, 0f, 0f);
+                            mSecondHand.draw(canvas);
+                        }
+                        if(itemupdator != null)
+                            itemupdator.onitemupdate(calendar);
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
         canvas.restoreToCount(saveCount);
     }
 
@@ -207,5 +250,11 @@ public class AnalogClock extends View {
         mTimeZone = TimeZone.getTimeZone(id);
         mTime.setTimeZone(mTimeZone);
         onTimeChanged();
+    }
+
+    public void setPostRecordData(boolean isdatacomposing,String serverdate)
+    {
+        this.isdatacomposing=isdatacomposing;
+        this.serverdate=serverdate;
     }
 }

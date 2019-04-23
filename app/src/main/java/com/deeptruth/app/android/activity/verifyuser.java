@@ -96,11 +96,10 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
 
         HashMap<String,String> requestparams=new HashMap<>();
         requestparams.put("type","client");
-        if(activityname.equals(config.createaccount)){
-            requestparams.put("action","verify");
-        }else{
+        requestparams.put("action","verify");
+        if(activityname.equals(config.forgotpassword))
             requestparams.put("action","verifyforgotten");
-        }
+
         requestparams.put("clientid",clientid);
         requestparams.put("code",value);
         progressdialog.showwaitingdialog(verifyuser.this);
