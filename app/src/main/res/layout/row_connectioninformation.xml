@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="150dp">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_connection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fontType="OpenSans_Regular"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text=""/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/txt_connection"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7"
+                android:orientation="vertical"
+                android:background="@color/green_background"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:orientation="vertical"
+                android:background="@color/yellow_background"/>
+
+        </LinearLayout>
+
+
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/linechart_connectionspeed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/txt_connection"
+            android:layout_marginTop="5dp"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_height="150dp">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_datatimedelay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fontType="OpenSans_Regular"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text=""/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/txt_datatimedelay"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:background="@color/yellow_background"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:background="@color/green_background"/>
+
+        </LinearLayout>
+
+
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/linechart_datatimedelay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/txt_datatimedelay"
+        android:layout_marginTop="5dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

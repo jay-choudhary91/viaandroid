@@ -777,16 +777,6 @@
                         android:layout_weight="0.5"
                         android:text="Bluetooth"/>
 
-                    <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_connection"
-                        app:fontType="OpenSans_Regular"
-                        android:layout_marginTop="5dp"
-                        style="@style/txt_row_encryption"
-                        android:gravity="left"
-                        android:visibility="gone"
-                        android:layout_weight="0.5"
-                        android:text="Connection"/>
-
 
                 </LinearLayout>
 
@@ -811,6 +801,25 @@
            <include layout="@layout/row_mediainformation"></include>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_connectioninformation"
+                style="@style/txt_drawer_graphical_title"
+                android:text="@string/connection_information"
+                app:fontType="Comfortaa-Regular"
+                android:layout_marginTop="@dimen/margin_10dp"
+                android:textColor="@color/white"
+                />
+
+            <include layout="@layout/row_connectioninformation"></include>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
