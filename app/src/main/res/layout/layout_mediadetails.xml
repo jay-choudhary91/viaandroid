@@ -507,13 +507,12 @@
         android:layout_marginLeft="@dimen/normal_margin_left"
         android:layout_marginRight="@dimen/normal_margin_right"
         android:layout_below="@+id/tab_layout"
-        android:layout_above="@+id/layout_footer"
         android:scrollbars="none"
         android:nestedScrollingEnabled="true"
         android:visibility="gone"
         >
 
-        <include layout="@layout/mediametainfo"/>
+        <include layout="@layout/layout_metainfo"/>
 
     </ScrollView>
 

@@ -137,6 +137,8 @@
     <string name="item_hashes">hashes</string>
     <string name="item_graphical">graphical</string>
     <string name="introscreen">Intro Screen</string>
+    <string name="locationtracking">locationtracking</string>
+    <string name="orientation">orientation</string>
 
     <string name="locationinformation">LOCATION INFORMATION</string>
     <string name="timeinformation">TIME INFORMATION</string>
