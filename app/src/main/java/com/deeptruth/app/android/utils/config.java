@@ -124,6 +124,7 @@ public class config {
     public static final String matrichash = "matrichash";
     public static final String createaccount = "createaccount";
     public static final String forgotpassword = "forgotpassword";
+    public static final String loginpage = "loginpage";
 
 
     //graphicaldata

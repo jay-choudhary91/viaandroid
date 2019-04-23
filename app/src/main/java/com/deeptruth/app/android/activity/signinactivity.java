@@ -181,7 +181,7 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
                                 Intent intent=new Intent(signinactivity.this,verifyuser.class);
-                                intent.putExtra("activityname",config.createaccount);
+                                intent.putExtra("activityname",config.loginpage);
                                 startActivity(intent);
                             }
                         }
