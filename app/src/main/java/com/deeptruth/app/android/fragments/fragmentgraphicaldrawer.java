@@ -62,7 +62,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -246,6 +248,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     customseekbar seekbar_mediavideoaudio;
     @BindView(R.id.seekbar_mediametadata)
     customseekbar seekbar_mediametadata;
+    @BindView(R.id.linechart_connectionspeed)
+    LineChart linechart_connectionspeed;
+    @BindView(R.id.linechart_datatimedelay)
+    LineChart linechart_datatimedelay;
+    @BindView(R.id.txt_datatimedelay)
+    TextView txt_datatimedelay;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -421,6 +429,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             setchartdata(linechart_speed);
             setchartdata(linechart_traveled);
             setchartdata(linechart_altitude);
+
+            initconnectionchart(linechart_connectionspeed);
+            initconnectionchart(linechart_datatimedelay);
 
             emptymediapiechartdata(pie_videoaudiochart);
             emptymediapiechartdata(pie_metadatachart);
@@ -832,6 +843,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void drawmappath()
     {
+        ArrayList<Float> arrayitems=new ArrayList<>();
         PolylineOptions options = new PolylineOptions().width(7).color(Color.RED).geodesic(true);
         for (int i = 0; i < metricmainarraylist.size(); i++)
         {
@@ -852,6 +864,26 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(!model.getMetricTrackValue().equalsIgnoreCase("NA"))
                           longitude=Double.parseDouble(model.getMetricTrackValue());
                 }
+                if(model.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed"))
+                {
+                    String connectionspeed=model.getMetricTrackValue();
+                    if((! connectionspeed.trim().isEmpty()) && (! connectionspeed.equalsIgnoreCase("NA"))
+                            && (! connectionspeed.equalsIgnoreCase("null")))
+                    {
+                        String[] speedarray=connectionspeed.split(" ");
+                        if(speedarray.length > 0)
+                        {
+                            try
+                            {
+                                arrayitems.add(Float.parseFloat(speedarray[0]));
+                            }
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
             }
 
             LatLng point = new LatLng(latitude,longitude);
@@ -859,6 +891,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
         if(mgooglemap != null)
             mgooglemap.addPolyline(options);
+
+        if(arrayitems.size() > 0)
+        {
+            setconnectionchartdata(linechart_connectionspeed,arrayitems);
+            setconnectionchartdata(linechart_datatimedelay,arrayitems);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay),
+                    "\n"+"5 Seconds" , txt_datatimedelay);
+        }
         // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
     }
 
@@ -1409,6 +1449,114 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         // if disabled, scaling can be done on x- and y-axis separately
         linechart.setPinchZoom(false);
+    }
+
+    public  void initconnectionchart(LineChart chart)
+    {
+        // background color
+        chart.setBackgroundColor(Color.TRANSPARENT);
+        XAxis xAxis;
+        xAxis = chart.getXAxis();
+
+        YAxis yAxis;
+        yAxis = chart.getAxisLeft();
+        chart.getAxisRight().setEnabled(false);
+        yAxis.setAxisMaximum(20f);
+        yAxis.setAxisMinimum(0f);
+
+        // // Create Limit Lines // //
+        LimitLine llXAxis = new LimitLine(9f, "Index 10");
+        llXAxis.setLineWidth(0f);
+        llXAxis.enableDashedLine(10f, 10f, 0f);
+        llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+        llXAxis.setTextSize(0f);
+        LimitLine ll1 = new LimitLine(150f, "");
+        ll1.setLineWidth(0f);
+        ll1.enableDashedLine(10f, 10f, 0f);
+        ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        ll1.setTextSize(0f);
+        LimitLine ll2 = new LimitLine(-30f, "");
+        ll2.setLineWidth(0f);
+        ll2.enableDashedLine(10f, 10f, 0f);
+        ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+        ll2.setTextSize(0f);
+        yAxis.setDrawLimitLinesBehindData(true);
+        xAxis.setDrawLimitLinesBehindData(true);
+        yAxis.addLimitLine(ll1);
+        yAxis.addLimitLine(ll2);
+        xAxis.setDrawLimitLinesBehindData(false);
+        chart.getAxisRight().setEnabled(false);
+        chart.getAxisLeft().setEnabled(false);
+        xAxis.setEnabled(false);
+        chart.setDrawGridBackground(false);
+        chart.getDescription().setEnabled(false);
+        chart.setTouchEnabled(false);
+        chart.setDragEnabled(false);
+        chart.setScaleEnabled(false);
+        chart.setPinchZoom(false);
+    }
+
+    public void setconnectionchartdata(final LineChart chart,ArrayList<Float> arrayitems)
+    {
+        ArrayList<Entry> values = new ArrayList<>();
+        /*for (int i = 0; i < arrayitems.size(); i++) {
+
+            float val = arrayitems.get(i);
+            values.add(new Entry(i, val, 0));
+        }
+*/
+
+        int[] itemarray={4,5,4,8,9,10,4,6,9,8,5,5,7,4,8,5,9,4,5,8,9,6,4,5,4,5,6,4,8,9,10,5,6,9,8,5,5,7,4,8,5,9,5,5,8,9,6,4,6,4};
+        for (int i = 0; i < itemarray.length; i++) {
+
+            float val = itemarray[i];
+            values.add(new Entry(i, val, 0));
+        }
+
+        LineDataSet set1;
+
+        if (chart.getData() != null &&
+                chart.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+            set1.setValues(values);
+            set1.notifyDataSetChanged();
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+        } else {
+            // create a dataset and give it a type
+            set1 = new LineDataSet(values, "");
+
+            set1.setDrawIcons(false);
+            set1.setColor(Color.WHITE);
+            set1.setCircleColor(Color.GREEN);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(3f);
+            set1.setDrawCircles(false);
+            set1.setDrawCircleHole(false);
+            set1.setValueTextSize(0f);
+            set1.setDrawFilled(false);
+            set1.setFillFormatter(new IFillFormatter() {
+                @Override
+                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                    return chart.getAxisLeft().getAxisMinimum();
+                }
+            });
+
+            set1.setFillColor(Color.TRANSPARENT);
+
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1); // add the data sets
+
+            // create a data object with the data sets
+            LineData data = new LineData(dataSets);
+
+            // set data
+            chart.setData(data);
+        }
+
+        chart.animateX(1500);
+        Legend l = chart.getLegend();
+        l.setForm(Legend.LegendForm.LINE);
     }
 
     private void setlatencydata(LineChart linechart,ArrayList<Entry> graphitems) {
