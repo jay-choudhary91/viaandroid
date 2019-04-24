@@ -58,8 +58,8 @@ public class progressbarview extends View implements onrangeseekbarlistener, onp
     }
 
     private void init() {
-        int lineprogress = ContextCompat.getColor(getContext(), R.color.line_color);
-        int linebackground = ContextCompat.getColor(getContext(), R.color.line_color);
+        int lineprogress = ContextCompat.getColor(getContext(), R.color.black);
+        int linebackground = ContextCompat.getColor(getContext(), R.color.black);
 
         mprogressheight = getContext().getResources().getDimensionPixelOffset(R.dimen.progress_video_line_height);
 

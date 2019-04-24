@@ -54,6 +54,7 @@ import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -84,6 +85,7 @@ import android.widget.Toast;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.fragments.fragmentrimvideo;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.views.customfontedittext;
@@ -158,6 +160,7 @@ public class common {
     static AlertDialog alertdialog = null;
     static Dialog custompermissiondialog =null;
     static int systemdialogshowrequestcode =110;
+    static Dialog subdialogshare = null;
 
     public static boolean isnetworkconnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
@@ -2394,5 +2397,100 @@ public class common {
         String formattedDate = formatted.format(date);
         return formattedDate;
     }
+
+
+    public static void showsharepopupsub(final String path, String type)
+    {
+        if(subdialogshare != null && subdialogshare.isShowing())
+            subdialogshare.dismiss();
+
+        subdialogshare=new Dialog(applicationviavideocomposer.getactivity());
+        subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        subdialogshare.setCanceledOnTouchOutside(true);
+
+        subdialogshare.setContentView(R.layout.share_popup);
+        //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        int[] widthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
+        int width=widthHeight[0];
+        double height=widthHeight[1]/1.6;
+        subdialogshare.getWindow().setLayout(width-20, (int)height);
+
+        TextView txt_share_btn1 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn1);
+        TextView txt_share_btn2 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn2);
+        TextView txt_share_btn3 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn3);
+        TextView txt_share_btn4 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn4);
+        TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
+        TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
+        ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
+
+        if(type.equalsIgnoreCase("video")){
+            txt_share_btn4.setVisibility(View.VISIBLE);
+        }else{
+            txt_share_btn4.setVisibility(View.GONE);
+        }
+
+        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        txt_share_btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+
+                Uri selectedimageuri =Uri.fromFile(new File(path));
+
+                final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(),selectedimageuri);
+                if(mp != null)
+                {
+                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            int duration = mp.getDuration();
+                            fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
+                            fragtrimvideo.setdata(path,duration);
+                            //gethelper().addFragment(fragtrimvideo, false, true);
+
+                        }
+                    });
+                }
+            }
+        });
+
+
+        img_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+            }
+        });
+        subdialogshare.show();
+    }
+
 }
 

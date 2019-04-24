@@ -33,6 +33,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -48,6 +50,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.videotrimmer.interfaces.onhglvideolistener;
@@ -77,7 +80,7 @@ import java.util.Locale;
 
 
 
-public class hglvideotrimmer extends FrameLayout {
+public class hglvideotrimmer extends FrameLayout implements View.OnClickListener {
 
     private static final String tag = hglvideotrimmer.class.getSimpleName();
     private static final int min_time_frame = 1000;
@@ -92,6 +95,8 @@ public class hglvideotrimmer extends FrameLayout {
     private TextView mtextsize;
     private TextView mtexttimeframe;
     private TextView mtexttime;
+    private TextView txt_cancel;
+    private ImageView img_share_icon;
     private timelineview mtimelineview;
 
     private progressbarview mvideoprogressindicator,mvideoprogressindicatorbottom;
@@ -146,6 +151,27 @@ public class hglvideotrimmer extends FrameLayout {
         mtexttimeframe = ((TextView) findViewById(R.id.textTimeSelection));
         mtexttime = ((TextView) findViewById(R.id.textTime));
         mtimelineview = ((timelineview) findViewById(R.id.timeLineView));
+        txt_cancel = ((TextView) findViewById(R.id.txt_cancel));
+        img_share_icon = ((ImageView) findViewById(R.id.img_share_icon));
+
+        img_share_icon.setOnClickListener(this);
+        txt_cancel.setOnClickListener(this);
+
+        try {
+            DrawableCompat.setTint(mplayview.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.white));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        /*try {
+            DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.img_bg));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }*/
 
 
         mholdertopview.setEnabled(false);
@@ -294,15 +320,15 @@ public class hglvideotrimmer extends FrameLayout {
 
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mholdertopview.getLayoutParams();
         Log.e("margine Right","" + (marge - widthSeek));
-        lp.setMargins(marge - widthSeek, 0, 15, 0);
+        lp.setMargins((marge - widthSeek) - widthSeek, 0, 15, 0);
         mholdertopview.setLayoutParams(lp);
 
         lp = (RelativeLayout.LayoutParams) mtimelineview.getLayoutParams();
-        lp.setMargins(marge, 0, marge, 0);
+        lp.setMargins(marge , 0, marge, 0);
         mtimelineview.setLayoutParams(lp);
 
         lp = (RelativeLayout.LayoutParams) mvideoprogressindicator.getLayoutParams();
-        lp.setMargins(marge, 0, marge, 0);
+        lp.setMargins(marge, 0, marge , 0);
         mvideoprogressindicator.setLayoutParams(lp);
 
         lp = (RelativeLayout.LayoutParams) mvideoprogressindicatorbottom.getLayoutParams();
@@ -311,11 +337,10 @@ public class hglvideotrimmer extends FrameLayout {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD_MR1)
+
     public void onSaveClicked() {
-            mplayview.setBackgroundResource(R.drawable.play);
+            mplayview.setBackgroundResource(R.drawable.ic_white_play);
             mplayview.setVisibility(View.VISIBLE);
-
-
             mvideoview.pause();
 
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
@@ -355,11 +380,11 @@ public class hglvideotrimmer extends FrameLayout {
 
     private void onClickVideoPlayPause() {
         if (mvideoview.isPlaying()) {
-            mplayview.setBackgroundResource(R.drawable.play);
+            mplayview.setBackgroundResource(R.drawable.ic_white_play);
             mmessagehandler.removeMessages(show_progress);
             mvideoview.pause();
         } else {
-            mplayview.setBackgroundResource(R.drawable.pause);
+            mplayview.setBackgroundResource(R.drawable.ic_white_pause);
             if (mresetseekbar) {
                 mresetseekbar = false;
                 mvideoview.seekTo(mstartposition);
@@ -413,7 +438,7 @@ public class hglvideotrimmer extends FrameLayout {
         mmessagehandler.removeMessages(show_progress);
         mvideoview.pause();
 
-        mplayview.setBackgroundResource(R.drawable.play);
+        mplayview.setBackgroundResource(R.drawable.ic_white_play);
         mplayview.setVisibility(View.VISIBLE);
 
         int duration = (int) ((mduration * seekBar.getProgress()) / 1000L);
@@ -443,7 +468,7 @@ public class hglvideotrimmer extends FrameLayout {
         }
         mvideoview.setLayoutParams(lp);
 
-        mplayview.setBackgroundResource(R.drawable.play);
+        mplayview.setBackgroundResource(R.drawable.ic_white_play);
         mplayview.setVisibility(View.VISIBLE);
 
         mduration = mvideoview.getDuration();
@@ -529,15 +554,15 @@ public class hglvideotrimmer extends FrameLayout {
     private void onStopSeekThumbs() {
         mmessagehandler.removeMessages(show_progress);
         mvideoview.pause();
-        mplayview.setBackgroundResource(R.drawable.play);
+        mplayview.setBackgroundResource(R.drawable.ic_white_play);
         mplayview.setVisibility(View.VISIBLE);
     }
 
     private void onVideoCompleted() {
-        mplayview.setBackgroundResource(R.drawable.play);
+        mplayview.setBackgroundResource(R.drawable.ic_white_play);
 
        // Log.e("onComplete =", ""+ mstartposition);
-        mvideoview.seekTo(mstartposition);
+        mvideoview.seekTo(0);
     }
 
     private void notifyProgressUpdate(boolean all) {
@@ -564,7 +589,7 @@ public class hglvideotrimmer extends FrameLayout {
         if (time >= mendposition) {
             mmessagehandler.removeMessages(show_progress);
             mvideoview.pause();
-            mplayview.setBackgroundResource(R.drawable.play);
+            mplayview.setBackgroundResource(R.drawable.ic_white_play);
             mplayview.setVisibility(View.VISIBLE);
             mresetseekbar = true;
             return;
@@ -686,6 +711,22 @@ public class hglvideotrimmer extends FrameLayout {
         mvideoview.requestFocus();
 
         mtimelineview.setvideo(msrc);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+
+            case R.id.img_share_icon:
+                onSaveClicked();
+                break;
+
+            case R.id.txt_cancel:
+
+
+                break;
+        }
+
     }
 
     private static class MessageHandler extends Handler {

@@ -32,6 +32,7 @@ import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
 import com.deeptruth.app.android.fragments.fragmentgraphicaldrawer;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
+import com.deeptruth.app.android.fragments.fragmentrimvideo;
 import com.deeptruth.app.android.fragments.framemetricssettings;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
@@ -477,6 +478,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              updateactionbar(0);
          }
          else if(fragment instanceof myfolderfragment)
+         {
+
+         }else if(fragment instanceof fragmentrimvideo)
          {
 
          }
