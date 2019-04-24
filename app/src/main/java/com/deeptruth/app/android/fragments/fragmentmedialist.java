@@ -1371,30 +1371,37 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 return;
             }
             if(videoobj.getmimetype().startsWith("image")){
-                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                String imagepath = videoobj.getPath();
+
+                gethelper().showsharepopupsub(videoobj.getPath(),"image");
+                /*Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.putExtra(Intent.EXTRA_STREAM, uri);
                 share.setType("image/*");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share photo"));
+                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share photo"));*/
             }else if(videoobj.getmimetype().startsWith("audio")){
-                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+
+                gethelper().showsharepopupsub(videoobj.getPath(),"audio");
+                /*Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.putExtra(Intent.EXTRA_STREAM, uri);
                 share.setType("audio/*");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share audio"));
+                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share audio"));*/
 
             }else if(videoobj.getmimetype().startsWith("video")){
-                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+
+                gethelper().showsharepopupsub(videoobj.getPath(),"video");
+               /* Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.putExtra(Intent.EXTRA_STREAM, uri);
                 share.setType("video/*");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share video"));
+                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share video"));*/
             }
 
         }

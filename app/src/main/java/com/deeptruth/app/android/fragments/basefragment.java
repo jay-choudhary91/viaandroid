@@ -264,6 +264,8 @@ public abstract class basefragment extends Fragment {
         public void xapi_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void xapipost_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void xapipost_sendjson(Context mContext, String Action, HashMap<String,Object> mPairList, apiresponselistener mListener);
+        public void showsharepopupsub(String path,String type);
+
     }
 
     public void updatewifigpsstatus()

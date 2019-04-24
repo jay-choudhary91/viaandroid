@@ -117,6 +117,11 @@
     <string name="megabyte">MB</string>
     <string name="kilobyte">KB</string>
 
+    <string name="str_private">Private</string>
+    <string name="str_public">Public</string>
+    <string name="str_direct_link">Direct Link</string>
+    <string name="str_trim_share">Trim &amp; Share</string>
+
     <string name="file_not_supported">File format not supported</string>
     <string name="file_doesnot_exist">File doesn\'t exist!</string>
     <string name="file_is_empty">File is empty!</string>

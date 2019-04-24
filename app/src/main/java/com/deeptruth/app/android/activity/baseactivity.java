@@ -1,10 +1,13 @@
 package com.deeptruth.app.android.activity;
 
+import android.app.Dialog;
 import android.arch.lifecycle.Lifecycle;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,15 +18,20 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
+import com.deeptruth.app.android.fragments.fragmentrimvideo;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
@@ -34,10 +42,12 @@ import com.deeptruth.app.android.netutils.connectivityreceiver;
 import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
 import com.deeptruth.app.android.netutils.xapipostjson;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.homewatcher;
 import com.deeptruth.app.android.utils.progressdialog;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -49,6 +59,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     public boolean isapprunning = false;
     private basefragment mcurrentfragment;
     private SharedPreferences prefs;
+    static Dialog subdialogshare = null;
     private Stack<Fragment> mfragments = new Stack<Fragment>();
     private static final int permission_location_request_code = 91;
     public boolean isisapprunning() {
@@ -444,4 +455,97 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         api.execute();
     }
 
+    @Override
+    public void showsharepopupsub(final String path, String type)
+    {
+        if(subdialogshare != null && subdialogshare.isShowing())
+            subdialogshare.dismiss();
+
+        subdialogshare=new Dialog(applicationviavideocomposer.getactivity());
+        subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        subdialogshare.setCanceledOnTouchOutside(true);
+
+        subdialogshare.setContentView(R.layout.share_popup);
+        //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        int[] widthHeight= common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
+        int width=widthHeight[0];
+        double height=widthHeight[1]/1.6;
+        subdialogshare.getWindow().setLayout(width-20, (int)height);
+
+        TextView txt_share_btn1 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn1);
+        TextView txt_share_btn2 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn2);
+        TextView txt_share_btn3 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn3);
+        TextView txt_share_btn4 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn4);
+        TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
+        TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
+        ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
+
+        if(type.equalsIgnoreCase("video")){
+            txt_share_btn4.setVisibility(View.VISIBLE);
+        }else{
+            txt_share_btn4.setVisibility(View.GONE);
+        }
+
+        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        txt_share_btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+
+                Uri selectedimageuri =Uri.fromFile(new File(path));
+
+                final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(),selectedimageuri);
+                if(mp != null)
+                {
+                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            int duration = mp.getDuration();
+                            fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
+                            fragtrimvideo.setdata(path,duration);
+                            addFragment(fragtrimvideo, false, true);
+                        }
+                    });
+                }
+            }
+        });
+
+
+        img_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+            }
+        });
+        subdialogshare.show();
+    }
 }
+
