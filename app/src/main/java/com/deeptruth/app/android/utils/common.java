@@ -1607,7 +1607,7 @@ public class common {
                 "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","syncphonetime","country",
                 "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers","numberofsatellites",
                 "satelliteangle","satelliteid","strengthofsatellites","attitude","phoneclocktime","worldclocktime",config.sister_metric,
-                config.json_blob
+                config.json_blob,config.connectiondatadelay
         };
 
         return items;

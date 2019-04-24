@@ -163,6 +163,7 @@ public class config {
     public static final String Address="Address";
     public static final String phoneclocktime="phoneclocktime";
     public static final String worldclocktime="worldclocktime";
+    public static final String connectiondatadelay="connectiondatadelay";
 
     public static final String sync_offline="offline";
     public static final String sync_pending="pending";

@@ -140,7 +140,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     private IntentFilter intentFilter;
     private BroadcastReceiver phonecallbroadcast;
-    String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", connectionspeed = "";
+    String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", connectionspeed = "",
+            connectiondatadelay="";
     MyPhoneStateListener mPhoneStatelistener;
     int mSignalStrength = 0, dbtoxapiupdatecounter = 0,servermetricsgetupdatecounter=0;
 
@@ -177,7 +178,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private LocationCallback mLocationCallback;
     private LocationRequest locationRequest;
     private Location oldlocation;
-    private int lastinclination=-1;
+    private int lastinclination=-1,timercounterhandler=-1;
     private long workT, totalT, workAMT, totalprocess, totalBefore, work, workBefore, workAM, workAMBefore;
     String[] processsysteminfo;
 
@@ -407,8 +408,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 // calculate how long it took by subtracting endtime from starttime
                 double timeTakenMills = Math.floor(endTime - startTime);  // time taken in milliseconds
                 double timeTakenSecs = timeTakenMills / 1000;  // divide by 1000 to get time in seconds
+                //Log.e("milisec second"," "+timeTakenMills+" "+timeTakenSecs);
+                connectiondatadelay=""+String.valueOf(new DecimalFormat("#.#").format(timeTakenSecs))+" Second";
                 final int kilobytePerSec = (int) Math.round(1024 / timeTakenSecs);
-
                 if (kilobytePerSec <= POOR_BANDWIDTH) {
                     // slow connection
                 }
@@ -740,65 +742,70 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         myHandler = new Handler();
         myRunnable = new Runnable() {
             @Override
-            public void run() {
-
+            public void run()
+            {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+
                         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                        {
                             getconnectionspeed();
 
-                            try {
-                                xdata.getinstance().saveSetting("gpsenabled", "1");
-                                if (! locationawareactivity.checkLocationEnable(locationawareactivity.this))
-                                    xdata.getinstance().saveSetting("gpsenabled", "0");
-
-                                if(getcurrentfragment() != null)
-                                    getcurrentfragment().updatewifigpsstatus();
-                            }catch (Exception e)
+                        if(timercounterhandler == -1 || timercounterhandler >= 3)
+                        {
+                            timercounterhandler=0;
+                            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
                             {
-                                e.printStackTrace();
-                            }
+                                try {
+                                    xdata.getinstance().saveSetting("gpsenabled", "1");
+                                    if (! locationawareactivity.checkLocationEnable(locationawareactivity.this))
+                                        xdata.getinstance().saveSetting("gpsenabled", "0");
 
-                            towerinfolist = gettowerinfo();
-                            for (int i = 0; i < metricitemarraylist.size(); i++) {
-                                if (metricitemarraylist.get(i).isSelected()) {
-                                    String value = metric_read(metricitemarraylist.get(i).getMetricTrackKeyName());
-                                    metricitemarraylist.get(i).setMetricTrackValue(metricitemarraylist.get(i).getMetricTrackValue());
+                                    if(getcurrentfragment() != null)
+                                        getcurrentfragment().updatewifigpsstatus();
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
 
-                                    if (!value.trim().isEmpty())
-                                        metricitemarraylist.get(i).setMetricTrackValue(value);
+                                towerinfolist = gettowerinfo();
+                                for (int i = 0; i < metricitemarraylist.size(); i++) {
+                                    if (metricitemarraylist.get(i).isSelected()) {
+                                        String value = metric_read(metricitemarraylist.get(i).getMetricTrackKeyName());
+                                        metricitemarraylist.get(i).setMetricTrackValue(metricitemarraylist.get(i).getMetricTrackValue());
+
+                                        if (!value.trim().isEmpty())
+                                            metricitemarraylist.get(i).setMetricTrackValue(value);
+                                    }
+                                }
+                                if (getcurrentfragment() instanceof videocomposerfragment) {
+                                    isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
+                                    String datainsertion=xdata.getinstance().getSetting(config.ismediadataservicerunning);
+                                    if (isrecording || (datainsertion.equalsIgnoreCase("1")))
+                                        return;
                                 }
                             }
-                            if (getcurrentfragment() instanceof videocomposerfragment) {
-                                isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
-                                String datainsertion=xdata.getinstance().getSetting(config.ismediadataservicerunning);
-                                if (isrecording || (datainsertion.equalsIgnoreCase("1")))
-                                    return;
+                            dbtoxapiupdatecounter++;
+                            if (dbtoxapiupdatecounter > 1) {
+                                dbtoxapiupdatecounter = 0;
+
+                                if(! isdatasyncing)
+                                    syncmediadatabase();
+                            }
+
+                            servermetricsgetupdatecounter++;
+                            if((servermetricsgetupdatecounter >= 20 && common.isnetworkconnected(locationawareactivity.this)) ||
+                                    (xdata.getinstance().getSetting(config.satellitedate).trim().isEmpty()))
+                            {
+                                servermetricsgetupdatecounter=0;
+                                getsistermetric();
                             }
                         }
-
-                        dbtoxapiupdatecounter++;
-                        if (dbtoxapiupdatecounter > 1) {
-                            dbtoxapiupdatecounter = 0;
-
-                            if(! isdatasyncing)
-                                syncmediadatabase();
-                        }
-
-                        servermetricsgetupdatecounter++;
-                        if((servermetricsgetupdatecounter >= 20 && common.isnetworkconnected(locationawareactivity.this)) ||
-                                (xdata.getinstance().getSetting(config.satellitedate).trim().isEmpty()))
-                        {
-                            servermetricsgetupdatecounter=0;
-                            getsistermetric();
-                        }
-
+                        timercounterhandler++;
                     }
                 }).start();
 
-                myHandler.postDelayed(this, 3000);
+                myHandler.postDelayed(this, 1000);
             }
         };
         myHandler.post(myRunnable);
@@ -1260,7 +1267,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
         } else if (key.equalsIgnoreCase("connectionspeed")) {
             metricItemValue = "" + connectionspeed;
-        } else if (key.equalsIgnoreCase("address")) {
+        }else if (key.equalsIgnoreCase(config.connectiondatadelay)) {
+            metricItemValue = "" + connectiondatadelay;
+        }
+        else if (key.equalsIgnoreCase("address")) {
             metricItemValue = xdata.getinstance().getSetting("currentaddress");
         }
         else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")) {

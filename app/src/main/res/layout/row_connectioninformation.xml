@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_height="150dp">
+        android:layout_height="wrap_content">
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_connection"
@@ -23,7 +23,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="120dp"
             android:layout_below="@id/txt_connection"
             android:layout_marginTop="5dp"
             android:orientation="vertical">
@@ -49,7 +49,7 @@
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/linechart_connectionspeed"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="120dp"
             android:layout_below="@id/txt_connection"
             android:layout_marginTop="5dp"/>
 
@@ -60,7 +60,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_marginTop="10dp"
-        android:layout_height="150dp">
+        android:layout_height="wrap_content">
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_datatimedelay"
@@ -75,7 +75,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="120dp"
             android:layout_marginTop="5dp"
             android:layout_below="@id/txt_datatimedelay"
             android:orientation="vertical">
@@ -101,7 +101,7 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/linechart_datatimedelay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="120dp"
         android:layout_below="@id/txt_datatimedelay"
         android:layout_marginTop="5dp"/>
 

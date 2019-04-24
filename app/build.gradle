@@ -86,7 +86,7 @@ dependencies {
     implementation 'rongi.rotate-layout:rotate-layout:3.0.0'
     implementation 'com.github.Akashkamble:RevealSwitch:1.0.1'
     implementation 'ru.egslava:MaskedEditText:1.0.5'
-    implementation 'com.robinhood.spark:spark:1.2.0'
+    implementation 'com.facebook.network.connectionclass:connectionclass:1.0.1'
 
     implementation 'com.github.GoodieBag:Pinview:v1.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
