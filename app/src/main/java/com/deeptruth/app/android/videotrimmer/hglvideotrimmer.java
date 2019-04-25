@@ -98,6 +98,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
     private TextView txt_cancel;
     private ImageView img_share_icon;
     private timelineview mtimelineview;
+    RelativeLayout rl_playpausebtn;
 
     private progressbarview mvideoprogressindicator,mvideoprogressindicatorbottom;
     private Uri msrc;
@@ -153,6 +154,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         mtimelineview = ((timelineview) findViewById(R.id.timeLineView));
         txt_cancel = ((TextView) findViewById(R.id.txt_cancel));
         img_share_icon = ((ImageView) findViewById(R.id.img_share_icon));
+        rl_playpausebtn = ((RelativeLayout) findViewById(R.id.rl_playpausebtn));
 
         img_share_icon.setOnClickListener(this);
         txt_cancel.setOnClickListener(this);
@@ -245,7 +247,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
             }
         });
 
-        mplayview.setOnClickListener(new OnClickListener() {
+        rl_playpausebtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 onClickVideoPlayPause();
