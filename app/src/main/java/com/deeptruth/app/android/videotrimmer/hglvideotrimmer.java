@@ -720,6 +720,16 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         switch (view.getId()){
 
             case R.id.img_share_icon:
+
+                img_share_icon.setEnabled(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        img_share_icon.setEnabled(true);
+                    }
+                }, 1500);
+
                 onSaveClicked();
                 break;
 
