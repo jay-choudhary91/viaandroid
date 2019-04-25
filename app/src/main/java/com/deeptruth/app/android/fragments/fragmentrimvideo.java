@@ -61,7 +61,6 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
                 mvideotrimmer.setVideoURI(Uri.parse(videopath));
                 mvideotrimmer.setVideoInformationVisibility(true);
             }
-
         }
         return rootview;
     }
@@ -130,6 +129,11 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
     }
 
     @Override
+    public void onclik() {
+        gethelper().onBack();
+    }
+
+    @Override
     public void onvideoprepared() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -138,9 +142,6 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
             }
         });
     }
-
-
-
 
    /* @Override
     public void onHeaderBtnClick(int btnid) {

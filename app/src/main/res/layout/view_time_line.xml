@@ -62,7 +62,7 @@
                     android:layout_centerVertical="true"
                     android:padding="@dimen/margin_5dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_play"/>
+                    />
 
                 <ImageView
                     android:id="@+id/img_share_icon"
@@ -73,9 +73,11 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="@dimen/margin_5dp"
-                    android:layout_marginRight="@dimen/margin_15dp"
-                    android:background="@drawable/share"
-                    android:padding="@dimen/margin_5dp" />
+                    android:layout_marginRight="@dimen/margin_10dp"
+                    android:src="@drawable/share"
+                    android:paddingRight="@dimen/margin_5dp"
+                    android:paddingLeft="@dimen/margin_5dp"
+                    />
             </RelativeLayout>
 
 

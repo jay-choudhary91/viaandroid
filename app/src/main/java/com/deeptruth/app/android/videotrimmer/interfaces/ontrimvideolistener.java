@@ -32,8 +32,10 @@ public interface ontrimvideolistener {
     void getresult(final Uri uri);
 
     void getresult(final String path);
-
+    
     void cancelaction();
 
     void onerror(final String message);
+
+    void onclik();
 }

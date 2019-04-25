@@ -320,7 +320,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
 
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mholdertopview.getLayoutParams();
         Log.e("margine Right","" + (marge - widthSeek));
-        lp.setMargins((marge - widthSeek) - widthSeek, 0, 15, 0);
+        lp.setMargins(marge , 0, 15, 0);
         mholdertopview.setLayoutParams(lp);
 
         lp = (RelativeLayout.LayoutParams) mtimelineview.getLayoutParams();
@@ -562,7 +562,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         mplayview.setBackgroundResource(R.drawable.ic_white_play);
 
        // Log.e("onComplete =", ""+ mstartposition);
-        mvideoview.seekTo(0);
+        mvideoview.seekTo(mstartposition);
     }
 
     private void notifyProgressUpdate(boolean all) {
@@ -722,7 +722,8 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
                 break;
 
             case R.id.txt_cancel:
-
+                if (montrimvideolistener != null)
+                        montrimvideolistener.onclik();
 
                 break;
         }
