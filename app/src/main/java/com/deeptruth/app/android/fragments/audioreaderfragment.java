@@ -833,7 +833,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 }, 1500);
                 if (audiourl != null && (!audiourl.isEmpty()))
-                    gethelper().showsharepopupsub(audiourl,"audio");
+                    gethelper().showsharepopupsub(audiourl,"audio",xdata.getinstance().getSetting(config.selectedaudiourl));
                     //common.shareaudio(getActivity(), audiourl);
                 break;
 

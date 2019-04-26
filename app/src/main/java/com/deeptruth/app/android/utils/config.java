@@ -213,6 +213,9 @@ public class config {
     public static final String selectedphotourl="selectedphotourl";
     public static final String selectedaudiourl="selectedaudiourl";
     public static final String selectedvideourl="selectedvideourl";
+    public static final String selectedaudiotoken="selectedaudiotoken";
+    public static final String selectedvideotoken="selectedvideotoken";
+    public static final String selectedphototoken="selectedphototoken";
 
     public static final String latency = "latency";
     public static final String currentlatency = "currentlatency";

@@ -884,6 +884,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
                         String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
                         String status = "" + cursor.getString(cursor.getColumnIndex("status"));
+                        String token = "" + cursor.getString(cursor.getColumnIndex("token"));
 
                         video videoobject=new video();
                         if(id.trim().isEmpty() || id.equalsIgnoreCase("null"))
@@ -904,6 +905,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             videoobject.setName(common.getfilename(location));
                             videoobject.setMediastatus(status);
                             videoobject.setDoenable(false);
+                            videoobject.setVideotoken(token);
 
                             if(mediaduration.trim().isEmpty() && (! type.equalsIgnoreCase("image")))
                             {
@@ -1167,6 +1169,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
                 String status = "" + cursor.getString(cursor.getColumnIndex("status"));
                 String mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
+                String token = "" + cursor.getString(cursor.getColumnIndex("token"));
 
 
                 for(int i = 0; i< arraymediaitemlist.size(); i++)
@@ -1373,7 +1376,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if(videoobj.getmimetype().startsWith("image")){
                 String imagepath = videoobj.getPath();
 
-                gethelper().showsharepopupsub(videoobj.getPath(),"image");
+                gethelper().showsharepopupsub(videoobj.getPath(),"image",videoobj.getVideotoken());
                 /*Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
@@ -1383,7 +1386,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share photo"));*/
             }else if(videoobj.getmimetype().startsWith("audio")){
 
-                gethelper().showsharepopupsub(videoobj.getPath(),"audio");
+                gethelper().showsharepopupsub(videoobj.getPath(),"audio",videoobj.getVideotoken());
                 /*Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
@@ -1394,7 +1397,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             }else if(videoobj.getmimetype().startsWith("video")){
 
-                gethelper().showsharepopupsub(videoobj.getPath(),"video");
+                gethelper().showsharepopupsub(videoobj.getPath(),"video",videoobj.getVideotoken());
                /* Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
@@ -1432,6 +1435,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if(videoobj.getmimetype().startsWith("image"))
             {
                 xdata.getinstance().saveSetting(config.selectedphotourl,""+videoobj.getPath());
+                xdata.getinstance().saveSetting(config.selectedphototoken,""+videoobj.getVideotoken());
                 imagereaderfragment fragmentimagereader = new imagereaderfragment();
                 fragmentimagereader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentimagereader, false, true);
@@ -1439,6 +1443,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }else if(videoobj.getmimetype().startsWith("audio"))
             {
                 xdata.getinstance().saveSetting(config.selectedaudiourl,""+videoobj.getPath());
+                xdata.getinstance().saveSetting(config.selectedaudiotoken,""+videoobj.getVideotoken());
                 audioreaderfragment fragmentaudioreader = new audioreaderfragment();
                 fragmentaudioreader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentaudioreader, false, true);
@@ -1446,6 +1451,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }else if(videoobj.getmimetype().startsWith("video"))
             {
                 xdata.getinstance().saveSetting(config.selectedvideourl,""+videoobj.getPath());
+                xdata.getinstance().saveSetting(config.selectedvideotoken,""+videoobj.getVideotoken());
                 videoreaderfragment fragmentvideoreader=new videoreaderfragment();
                 fragmentvideoreader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentvideoreader, false, true);

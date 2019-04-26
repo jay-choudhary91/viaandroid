@@ -22,6 +22,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.deeptruth.app.android.R;
@@ -46,6 +47,11 @@ import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.homewatcher;
 import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.taskresult;
+import com.deeptruth.app.android.utils.xdata;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.HashMap;
@@ -54,7 +60,7 @@ import java.util.Set;
 import java.util.Stack;
 
 public abstract class baseactivity extends AppCompatActivity implements basefragment.fragmentnavigationhelper,
-        connectivityreceiver.ConnectivityReceiverListener{
+        connectivityreceiver.ConnectivityReceiverListener {
     public static baseactivity instance;
     public boolean isapprunning = false;
     private basefragment mcurrentfragment;
@@ -62,13 +68,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     static Dialog subdialogshare = null;
     private Stack<Fragment> mfragments = new Stack<Fragment>();
     private static final int permission_location_request_code = 91;
+
     public boolean isisapprunning() {
         return isapprunning;
     }
+
     homewatcher mHomeWatcher;
+
     public static baseactivity getinstance() {
         return instance;
     }
+
     public void isapprunning(boolean b) {
         isapprunning = b;
     }
@@ -99,6 +109,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 // do something here...
                 //finish();
             }
+
             @Override
             public void onHomeLongPressed() {
             }
@@ -109,8 +120,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     @Override
     public void onnetworkconnectionchanged(boolean isconnected) {
-        if(isconnected)
-        {
+        if (isconnected) {
 
         }
     }
@@ -123,28 +133,28 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     protected void onRestart() {
         super.onRestart();
 
-        if(getcurrentfragment() instanceof videoreaderfragment ){
-             try{
-                 ((videoreaderfragment) getcurrentfragment()).onRestart();
-             }catch (Exception e){
-                 e.printStackTrace();
-             }
+        if (getcurrentfragment() instanceof videoreaderfragment) {
+            try {
+                ((videoreaderfragment) getcurrentfragment()).onRestart();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        }
-        else if( getcurrentfragment() instanceof audioreaderfragment){
-            try{
+        } else if (getcurrentfragment() instanceof audioreaderfragment) {
+            try {
                 ((audioreaderfragment) getcurrentfragment()).onRestart();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 101){
+        if (requestCode == 101) {
             progressdialog.dismisswaitdialog();
         }
     }
@@ -152,13 +162,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mHomeWatcher != null)
+        if (mHomeWatcher != null)
             mHomeWatcher.stopWatch();
     }
 
     public void initviews(Bundle savedInstanceState) {
 
     }
+
     public abstract int getlayoutid();
 
     @Override
@@ -202,7 +213,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-      // transaction.setCustomAnimations(R.anim.card_flip_right_in, R.anim.card_flip_right_out, R.anim.card_flip_left_in, R.anim.card_flip_left_out);
+        // transaction.setCustomAnimations(R.anim.card_flip_right_in, R.anim.card_flip_right_out, R.anim.card_flip_left_in, R.anim.card_flip_left_out);
         transaction.replace(layoutId, f);
         if (addToBackstack) {
             transaction.addToBackStack(null);
@@ -215,6 +226,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         onfragmentbackstackchanged();
     }
+
     @Override
     public void replacetabfragment(basefragment f, boolean clearBackStack, boolean addToBackstack) {
         replacetabfragment(f, R.id.tab_container, clearBackStack, addToBackstack);
@@ -233,7 +245,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
 
         // Placed after crash on 2018-11-16
-        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)){
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             // Do fragment's transaction commit
             transaction.commit();
         }
@@ -251,27 +263,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     @Override
-    public void switchtomedialist()
-    {
-        if(getcurrentfragment() instanceof composeoptionspagerfragment)
-        {
-            if(mfragments.size() == 1)
-            {
+    public void switchtomedialist() {
+        if (getcurrentfragment() instanceof composeoptionspagerfragment) {
+            if (mfragments.size() == 1) {
                 mfragments.pop();
                 launchmedialistfragment();
-            }
-            else
-            {
+            } else {
                 backtolastfragment();
                 switchtomedialist();
             }
-        }
-        else if(getcurrentfragment() instanceof fragmentmedialist)
-        {
+        } else if (getcurrentfragment() instanceof fragmentmedialist) {
 
-        }
-        else
-        {
+        } else {
             backtolastfragment();
             switchtomedialist();
         }
@@ -280,61 +283,45 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     public void onBack() {
 
-        int a=getSupportFragmentManager().getBackStackEntryCount();
-        int b=getMinNumberOfFragments();
+        int a = getSupportFragmentManager().getBackStackEntryCount();
+        int b = getMinNumberOfFragments();
 
-        int size=mfragments.size();
+        int size = mfragments.size();
         if (getSupportFragmentManager().getBackStackEntryCount() <= getMinNumberOfFragments()) {
             finish();
             return;
         }
 
-        if(getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof audiocomposerfragment
-                || getcurrentfragment() instanceof imagecomposerfragment)
-        {
+        if (getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof audiocomposerfragment
+                || getcurrentfragment() instanceof imagecomposerfragment) {
             backtolastfragment();
             onBack();
-        }
-
-        else if(getcurrentfragment() instanceof audioreaderfragment
-                || getcurrentfragment() instanceof videoreaderfragment || getcurrentfragment() instanceof imagereaderfragment)
-        {
+        } else if (getcurrentfragment() instanceof audioreaderfragment
+                || getcurrentfragment() instanceof videoreaderfragment || getcurrentfragment() instanceof imagereaderfragment) {
             backtolastfragment();
 
-        }
-        else if(getcurrentfragment() instanceof fragmentmedialist)
-        {
+        } else if (getcurrentfragment() instanceof fragmentmedialist) {
             finish();
-        }
-        else if(getcurrentfragment() instanceof composeoptionspagerfragment)
-        {
-            if(mfragments.size() == 1)
-            {
+        } else if (getcurrentfragment() instanceof composeoptionspagerfragment) {
+            if (mfragments.size() == 1) {
                 mfragments.pop();
                 launchmedialistfragment();
-            }
-            else
-            {
+            } else {
                 backtolastfragment();
             }
-        }
-        else
-        {
+        } else {
             backtolastfragment();
         }
     }
 
-    public void launchmedialistfragment()
-    {
-        fragmentmedialist frag=new fragmentmedialist();
+    public void launchmedialistfragment() {
+        fragmentmedialist frag = new fragmentmedialist();
         replaceFragment(frag, false, true);
     }
 
-    public void backtolastfragment()
-    {
+    public void backtolastfragment() {
         getSupportFragmentManager().popBackStack();
-        if(mfragments.size() > 0)
-        {
+        if (mfragments.size() > 0) {
             mfragments.pop();
             mcurrentfragment = (basefragment) (mfragments.isEmpty() ? null : ((mfragments.peek()
                     instanceof basefragment) ? mfragments.peek() : null));
@@ -345,7 +332,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void clearfragmentbackstack() {
         FragmentManager fm = getSupportFragmentManager();
-        for (int i = 0; i < fm.getBackStackEntryCount()-getMinNumberOfFragments(); i++) {
+        for (int i = 0; i < fm.getBackStackEntryCount() - getMinNumberOfFragments(); i++) {
             fm.popBackStack();
         }
 
@@ -379,6 +366,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 //            getcurrentfragment().onRequestPermissionsResult(requestCode, permissions, grantResults);
 //        }
     }
+
     @Override
     public boolean onKeyDown(int keycode, KeyEvent event) {
         if (keycode == KeyEvent.KEYCODE_BACK) {
@@ -417,135 +405,168 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
 
     @Override
-    public void xapi_send(Context mContext, HashMap<String,String> mPairList, apiresponselistener mListener) {
-        xapi api = new xapi(mContext,mListener);
+    public void xapi_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener) {
+        xapi api = new xapi(mContext, mListener);
         Set keys = mPairList.keySet();
         Iterator itr = keys.iterator();
         while (itr.hasNext()) {
-            String key = (String)itr.next();
-            String argvalue = (String)mPairList.get(key);
-            api.add(key,argvalue);
+            String key = (String) itr.next();
+            String argvalue = (String) mPairList.get(key);
+            api.add(key, argvalue);
         }
         api.execute();
     }
 
     @Override
-    public void xapipost_send(Context mContext, HashMap<String,String> mPairList, apiresponselistener mListener) {
-        xapipost api = new xapipost(mContext,mListener);
+    public void xapipost_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener) {
+        xapipost api = new xapipost(mContext, mListener);
         Set keys = mPairList.keySet();
         Iterator itr = keys.iterator();
         while (itr.hasNext()) {
-            String key = (String)itr.next();
-            String argvalue = (String)mPairList.get(key);
-            api.add(key,argvalue);
+            String key = (String) itr.next();
+            String argvalue = (String) mPairList.get(key);
+            api.add(key, argvalue);
         }
         api.execute();
     }
 
     @Override
-    public void xapipost_sendjson(Context mContext, String Action, HashMap<String,Object> mPairList, apiresponselistener mListener) {
-        xapipostjson api = new xapipostjson(mContext,Action,mListener);
+    public void xapipost_sendjson(Context mContext, String Action, HashMap<String, Object> mPairList, apiresponselistener mListener) {
+        xapipostjson api = new xapipostjson(mContext, Action, mListener);
         Set keys = mPairList.keySet();
         Iterator itr = keys.iterator();
         while (itr.hasNext()) {
-            String key = (String)itr.next();
+            String key = (String) itr.next();
             Object argvalue = mPairList.get(key);
-            api.add(key,argvalue);
+            api.add(key, argvalue);
         }
         api.execute();
     }
 
     @Override
-    public void showsharepopupsub(final String path, String type)
-    {
-        if(subdialogshare != null && subdialogshare.isShowing())
+    public void showsharepopupsub(final String path, final String type, final String videotoken) {
+        if (subdialogshare != null && subdialogshare.isShowing())
             subdialogshare.dismiss();
 
-        subdialogshare=new Dialog(applicationviavideocomposer.getactivity());
-        subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        subdialogshare.setCanceledOnTouchOutside(true);
+            subdialogshare = new Dialog(applicationviavideocomposer.getactivity());
+            subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            subdialogshare.setCanceledOnTouchOutside(true);
 
-        subdialogshare.setContentView(R.layout.share_popup);
-        //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            subdialogshare.setContentView(R.layout.share_popup);
+            //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        int[] widthHeight= common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
-        int width=widthHeight[0];
-        double height=widthHeight[1]/1.6;
-        subdialogshare.getWindow().setLayout(width-20, (int)height);
+            int[] widthHeight = common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
+            int width = widthHeight[0];
+            double height = widthHeight[1] / 1.6;
+            subdialogshare.getWindow().setLayout(width - 20, (int) height);
 
-        TextView txt_share_btn1 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn1);
-        TextView txt_share_btn2 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn2);
-        TextView txt_share_btn3 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn3);
-        TextView txt_share_btn4 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn4);
-        TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
-        TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
-        ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
+            final TextView txt_share_btn1 = (TextView) subdialogshare.findViewById(R.id.txt_share_btn1);
+            final TextView txt_share_btn2 = (TextView) subdialogshare.findViewById(R.id.txt_share_btn2);
+            final TextView txt_share_btn3 = (TextView) subdialogshare.findViewById(R.id.txt_share_btn3);
+            final TextView txt_share_btn4 = (TextView) subdialogshare.findViewById(R.id.txt_share_btn4);
+            TextView txt_title1 = (TextView) subdialogshare.findViewById(R.id.txt_title1);
+            TextView txt_title2 = (TextView) subdialogshare.findViewById(R.id.txt_title2);
+            ImageView img_cancel = subdialogshare.findViewById(R.id.img_cancelicon);
 
-        if(type.equalsIgnoreCase("video")){
-            txt_share_btn4.setVisibility(View.VISIBLE);
-        }else{
-            txt_share_btn4.setVisibility(View.GONE);
-        }
-
-        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
+            if (type.equalsIgnoreCase("video")) {
+                txt_share_btn4.setVisibility(View.VISIBLE);
+            } else {
+                txt_share_btn4.setVisibility(View.GONE);
             }
-        });
 
-        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
+            txt_share_btn1.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-        txt_share_btn4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                if(subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
-
-                Uri selectedimageuri =Uri.fromFile(new File(path));
-
-                final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(),selectedimageuri);
-                if(mp != null)
-                {
-                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mediaPlayer) {
-                            int duration = mp.getDuration();
-                            fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
-                            fragtrimvideo.setdata(path,duration);
-                            addFragment(fragtrimvideo, false, true);
-                        }
-                    });
+                @Override
+                public void onClick(View v) {
+                    //callshareapi(type, videotoken, path, txt_share_btn1.getText().toString());
                 }
-            }
-        });
+            });
 
+            txt_share_btn2.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    //callshareapi(type, videotoken, path, txt_share_btn2.getText().toString());
+                }
+            });
+
+            txt_share_btn3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //callshareapi(type, videotoken, path, txt_share_btn3.getText().toString());
+                }
+            });
+
+
+            txt_share_btn4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    //callshareapi(type, videotoken, path, txt_share_btn4.getText().toString());
+                    if (subdialogshare != null && subdialogshare.isShowing())
+                          subdialogshare.dismiss();
+
+                    Uri selectedimageuri = Uri.fromFile(new File(path));
+
+                    final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), selectedimageuri);
+                    if (mp != null) {
+                        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                int duration = mp.getDuration();
+                                fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
+                                fragtrimvideo.setdata(path, duration,videotoken);
+                                addFragment(fragtrimvideo, false, true);
+                            }
+                        });
+                    }
+                }
+            });
 
         img_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(subdialogshare != null && subdialogshare.isShowing())
+                if (subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
             }
         });
         subdialogshare.show();
     }
+
+    public void callshareapi(String type, String videotoken, String path, String method) {
+
+        HashMap<String, String> requestparams = new HashMap<>();
+        requestparams.put("type", type);
+        requestparams.put("action", "share");
+        requestparams.put("videotoken", videotoken);
+        requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
+        requestparams.put("sharemethod", "private");
+        requestparams.put("fileextension","mp4");
+
+        progressdialog.showwaitingdialog(getinstance());
+        xapipost_send(getinstance(), requestparams, new apiresponselistener() {
+
+            @Override
+            public void onResponse(taskresult response) {
+
+                progressdialog.dismisswaitdialog();
+                if(response.isSuccess())
+                {
+                    JSONObject object= null;
+                    try {
+                        object = new JSONObject(response.getData().toString());
+                        if(object.has("success"))
+                        {
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
 }
+
+
 
