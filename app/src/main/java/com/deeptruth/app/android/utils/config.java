@@ -165,6 +165,7 @@ public class config {
     public static final String worldclocktime="worldclocktime";
     public static final String connectiondatadelay="connectiondatadelay";
     public static final String availablewifinetwork="availablewifinetwork";
+    public static final String availablewifis="availablewifis";
 
     public static final String sync_offline="offline";
     public static final String sync_pending="pending";

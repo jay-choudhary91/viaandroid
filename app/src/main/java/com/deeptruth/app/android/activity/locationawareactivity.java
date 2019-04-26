@@ -142,7 +142,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private IntentFilter intentFilter;
     private BroadcastReceiver phonecallbroadcast;
     String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", connectionspeed = "",
-            connectiondatadelay = "";
+            connectiondatadelay = "",availablewifinetwork="";
     MyPhoneStateListener mPhoneStatelistener;
     int mSignalStrength = 0, dbtoxapiupdatecounter = 0, servermetricsgetupdatecounter = 0;
 
@@ -184,6 +184,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private int lastinclination = -1, timercounterhandler = -1;
     private long workT, totalT, workAMT, totalprocess, totalBefore, work, workBefore, workAM, workAMBefore;
     String[] processsysteminfo;
+    BroadcastReceiver wifiReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -279,6 +280,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         wifiManager.startScan();
+        getwifinetworks();
     }
 
     @Override
@@ -560,6 +562,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                     try {
                         unregisterReceiver(phonecallbroadcast);
+                        unregisterReceiver(wifiReceiver);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1316,7 +1319,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricItemValue = "OFF";
             }
         } else if (key.equalsIgnoreCase(config.availablewifinetwork)) {
-            metricItemValue = xdata.getinstance().getSetting(config.availablewifinetwork);
+            metricItemValue = availablewifinetwork;
+            // metricItemValue = xdata.getinstance().getSetting(config.availablewifis);
 
         }
         /*else if (key.equalsIgnoreCase(config.sister_metric)) {
@@ -2598,24 +2602,28 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
     }
     //** end code of media composer sync process
+    public void getwifinetworks(){
+         wifiReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String availablewifiname = "";
+                results = wifiManager.getScanResults();
+                unregisterReceiver(this);
 
-    BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String avilablewifiname = "";
-            results = wifiManager.getScanResults();
-            unregisterReceiver(this);
+                for (ScanResult scanResult : results) {
 
-            for (ScanResult scanResult : results) {
-
-                if (avilablewifiname.isEmpty()) {
-                    avilablewifiname = "" + scanResult.SSID;
-                } else {
-                    avilablewifiname = avilablewifiname + ", " + scanResult.SSID;
+                    if (availablewifiname.isEmpty()) {
+                        availablewifiname = "" + scanResult.SSID;
+                    } else {
+                        availablewifiname = availablewifiname + ", " + scanResult.SSID;
+                    }
                 }
+                availablewifinetwork = availablewifiname;
+              //  xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
+                Log.e("availablenetworks",""+availablewifiname);
             }
-            xdata.getinstance().saveSetting(config.availablewifinetwork, avilablewifiname);
-            Log.e("avilablenetworks",""+avilablewifiname);
-        }
-    };
+        };
+        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifiManager.startScan();
+    }
 }
