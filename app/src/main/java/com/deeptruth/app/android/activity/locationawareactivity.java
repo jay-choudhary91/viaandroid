@@ -403,6 +403,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 // get the download speed by dividing the file size by time taken to download
                 double speed = fileSize / timeTakenMills;
                 double speedinmb = kilobytePerSec / 1024;
+                if(speedinmb > 20)
+                    speedinmb=20;
+
                 connectionspeed = speedinmb + " mbps";
                 /*Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
                 Log.d("Case2 ", "kilobyte per sec: " + kilobytePerSec);
