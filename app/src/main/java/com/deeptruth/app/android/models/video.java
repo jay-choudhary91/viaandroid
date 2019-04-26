@@ -26,6 +26,7 @@ public class video
     public boolean isSelected = false;
     public String mediastatus = "";
     public String videostarttransactionid = "";
+    public String videotoken = "";
     public String thumbnailpath = "";
     public String mediatitle = "";
     public String medianotes = "";
@@ -40,6 +41,7 @@ public class video
     public int unsentunreceived = 0;
     public ArrayList<String> mediabarcolor=new ArrayList<>();
     public View colorbarview=null;
+
 
 
 
@@ -288,4 +290,13 @@ public class video
     public void setMediabarcolor(ArrayList<String> mediabarcolor) {
         this.mediabarcolor = mediabarcolor;
     }
+
+    public String getVideotoken() {
+        return videotoken;
+    }
+
+    public void setVideotoken(String videotoken) {
+        this.videotoken = videotoken;
+    }
+
 }

@@ -633,7 +633,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
                 }, 1500);
                 if (imageurl != null && (!imageurl.isEmpty()))
-                    gethelper().showsharepopupsub(imageurl,"image");
+                    gethelper().showsharepopupsub(imageurl,"image",xdata.getinstance().getSetting(config.selectedphototoken));
                     //common.shareimage(getActivity(), imageurl);
 
                 break;

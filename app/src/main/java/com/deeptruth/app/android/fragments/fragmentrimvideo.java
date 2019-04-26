@@ -28,7 +28,7 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
 
     private progressdialog mprogressdialog;
     View rootview = null;
-    String videopath;
+    String videopath="",videotoken="";
     int videoduration;
     int navigationbarheight = 0;
 
@@ -69,13 +69,6 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()){
 
-            case R.id.img_share_icon:
-                mvideotrimmer.onSaveClicked();
-                break;
-
-            case R.id.txt_cancel:
-               gethelper().onBack();
-                break;
         }
     }
 
@@ -131,6 +124,7 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
     @Override
     public void onclik() {
         gethelper().onBack();
+        gethelper().showsharepopupsub(videopath,"video",videotoken);
     }
 
     @Override
@@ -164,10 +158,12 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
         }
     }
 */
-    public void setdata(String videoPath, int duration)
+    public void setdata(String videoPath, int duration,String videotoken)
     {
         this.videopath =videoPath;
         this.videoduration =  duration;
+        this.videotoken =  videotoken;
+
     }
 
     public void setlayoutmargin(){

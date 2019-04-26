@@ -1452,13 +1452,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                     }, 1500);
                     if (mediafilepath != null && (!mediafilepath.isEmpty())){
-
-                        gethelper().showsharepopupsub(mediafilepath,"video");
-
+                        gethelper().showsharepopupsub(mediafilepath,"video",xdata.getinstance().getSetting(config.selectedvideotoken));
                     }
                    // common.sharevideo(getActivity(), mediafilepath);
-
-
                     break;
 
                 case R.id.img_dotmenu:
