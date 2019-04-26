@@ -1319,8 +1319,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricItemValue = "OFF";
             }
         } else if (key.equalsIgnoreCase(config.availablewifinetwork)) {
-            metricItemValue = availablewifinetwork;
-            // metricItemValue = xdata.getinstance().getSetting(config.availablewifis);
+            // metricItemValue = availablewifinetwork;
+             metricItemValue = xdata.getinstance().getSetting(config.availablewifis);
 
         }
         /*else if (key.equalsIgnoreCase(config.sister_metric)) {
@@ -2618,8 +2618,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         availablewifiname = availablewifiname + ", " + scanResult.SSID;
                     }
                 }
-                availablewifinetwork = availablewifiname;
-              //  xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
+              //  availablewifinetwork = availablewifiname;
+                xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
                 Log.e("availablenetworks",""+availablewifiname);
             }
         };
