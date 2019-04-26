@@ -571,7 +571,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
-            common.setdrawabledata(config.availablewifinetwork,"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.availablewifis)), txt_availablewifinetwork);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.availablewifinetwork),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.availablewifis)), txt_availablewifinetwork);
 
             String latitude=xdata.getinstance().getSetting(config.Latitude);
             String longitude=xdata.getinstance().getSetting(config.Longitude);
