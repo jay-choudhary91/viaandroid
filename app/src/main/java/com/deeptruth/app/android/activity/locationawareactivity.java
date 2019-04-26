@@ -278,9 +278,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else {
             startmetrices();
         }
-        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        wifiManager.startScan();
-        getwifinetworks();
     }
 
     @Override
@@ -1015,6 +1012,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             } else {
                 metricItemValue = "NO";
                 xdata.getinstance().saveSetting("wificonnected", "0");
+                xdata.getinstance().saveSetting(config.availablewifis, "");
             }
             return metricItemValue;
         } else if (key.equalsIgnoreCase("bluetoothonoff")) {
@@ -1319,7 +1317,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricItemValue = "OFF";
             }
         } else if (key.equalsIgnoreCase(config.availablewifinetwork)) {
-            // metricItemValue = availablewifinetwork;
+            getwifinetworks();
+           //  metricItemValue = availablewifinetwork;
              metricItemValue = xdata.getinstance().getSetting(config.availablewifis);
 
         }
@@ -1759,6 +1758,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
             try {
                 registerReceiver(phonecallbroadcast, intentFilter);
+                registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+                wifiManager.startScan();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -2607,20 +2608,25 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             @Override
             public void onReceive(Context context, Intent intent) {
                 String availablewifiname = "";
-                results = wifiManager.getScanResults();
-                unregisterReceiver(this);
-
-                for (ScanResult scanResult : results) {
-
-                    if (availablewifiname.isEmpty()) {
-                        availablewifiname = "" + scanResult.SSID;
-                    } else {
-                        availablewifiname = availablewifiname + ", " + scanResult.SSID;
-                    }
+                if((xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0"))){
+                    xdata.getinstance().saveSetting(config.availablewifis, "");
                 }
-              //  availablewifinetwork = availablewifiname;
-                xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
-                Log.e("availablenetworks",""+availablewifiname);
+                else{
+                    results = wifiManager.getScanResults();
+                    //  unregisterReceiver(this);
+
+                    for (ScanResult scanResult : results) {
+
+                        if (availablewifiname.isEmpty()) {
+                            availablewifiname = "" + scanResult.SSID;
+                        } else {
+                            availablewifiname = availablewifiname + ", " + scanResult.SSID;
+                        }
+                    }
+                    //  availablewifinetwork = availablewifiname;
+                    xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
+                    Log.e("availablenetworks",""+availablewifiname);
+                }
             }
         };
         registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
