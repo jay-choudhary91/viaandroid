@@ -530,6 +530,7 @@ public class common {
             xdata.getinstance().saveSetting(config.latency,"");
             xdata.getinstance().saveSetting(config.currentlatency,"");
             xdata.getinstance().saveSetting(config.attitude_data,"");
+            xdata.getinstance().saveSetting(config.availablewifinetwork,"");
     }
 
     public static void setgraphicalitems(String keyname,String value,boolean ismetricsselected)
@@ -607,6 +608,9 @@ public class common {
         }
         else if (keyname.equalsIgnoreCase(config.airplanemode)) {
             xdata.getinstance().saveSetting(config.airplanemode,((ismetricsselected)?value:"NA"));
+        }
+        else if (keyname.equalsIgnoreCase(config.availablewifinetwork)) {
+            xdata.getinstance().saveSetting(config.availablewifinetwork,((ismetricsselected)?value:"NA"));
         }
     }
 
@@ -836,6 +840,21 @@ public class common {
             metricItemName ="satelliteid";
         }else if(key.equalsIgnoreCase("strengthofsatellites")){
             metricItemName ="strengthofsatellites";
+        }
+        else if(key.equalsIgnoreCase("attitude")){
+            metricItemName =config.phone_attitude;
+        }
+        else if(key.equalsIgnoreCase(config.availablewifinetwork)){
+            metricItemName =config.availablewifinetwork;
+        }
+        else if(key.equalsIgnoreCase(config.worldclocktime)){
+            metricItemName =config.worldclocktime;
+        }
+        else if(key.equalsIgnoreCase(config.phoneclocktime)){
+            metricItemName =config.phoneclocktime;
+        }
+        else if(key.equalsIgnoreCase(config.connectiondatadelay)){
+            metricItemName =config.connectiondatadelay;
         }
         return metricItemName;
     }
@@ -1609,12 +1628,11 @@ public class common {
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
                 "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","syncphonetime","country",
                 "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers","numberofsatellites",
-                "satelliteangle","satelliteid","strengthofsatellites","attitude","phoneclocktime","worldclocktime",config.sister_metric,
-                config.json_blob,config.connectiondatadelay
-        };
+                "satelliteangle","satelliteid","strengthofsatellites","attitude",config.availablewifinetwork,"phoneclocktime","worldclocktime",config.connectiondatadelay};
 
         return items;
     }
+    // config.sister_metric,config.json_blob
 
     public static String getCurrentDate(){
         Date c = Calendar.getInstance().getTime();

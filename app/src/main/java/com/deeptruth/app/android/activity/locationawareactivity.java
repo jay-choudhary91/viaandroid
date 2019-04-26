@@ -24,6 +24,7 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
@@ -141,9 +142,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private IntentFilter intentFilter;
     private BroadcastReceiver phonecallbroadcast;
     String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", connectionspeed = "",
-            connectiondatadelay="";
+            connectiondatadelay = "";
     MyPhoneStateListener mPhoneStatelistener;
-    int mSignalStrength = 0, dbtoxapiupdatecounter = 0,servermetricsgetupdatecounter=0;
+    int mSignalStrength = 0, dbtoxapiupdatecounter = 0, servermetricsgetupdatecounter = 0;
 
     noise mNoise;
     private static final int PERMISSION_RECORD_AUDIO = 92;
@@ -154,6 +155,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private Runnable myRunnable;
     public boolean isrecording = false;
     public boolean iscameracapture = false;
+    private WifiManager wifiManager;
+    private List<ScanResult> results;
 
     long startTime;
     long endTime;
@@ -178,7 +181,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private LocationCallback mLocationCallback;
     private LocationRequest locationRequest;
     private Location oldlocation;
-    private int lastinclination=-1,timercounterhandler=-1;
+    private int lastinclination = -1, timercounterhandler = -1;
     private long workT, totalT, workAMT, totalprocess, totalBefore, work, workBefore, workAM, workAMBefore;
     String[] processsysteminfo;
 
@@ -187,6 +190,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         super.onCreate(savedInstanceState);
 
         applicationviavideocomposer.setActivity(locationawareactivity.this);
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         try {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(locationawareactivity.this);
@@ -209,21 +213,18 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 public void onLocationResult(LocationResult locationResult) {
                     for (Location location : locationResult.getLocations()) {
                         // Update UI with location data
-                        if (location != null)
-                        {
+                        if (location != null) {
                             try {
                                 googleutils.saveUserCurrentLocation(location);
-                                if (location.hasSpeed())
-                                {
-                                    float mps=location.getSpeed();
-                                    double mph=common.convertmpstomph(mps);
-                                    DecimalFormat precision=new DecimalFormat("0.0");
+                                if (location.hasSpeed()) {
+                                    float mps = location.getSpeed();
+                                    double mph = common.convertmpstomph(mps);
+                                    DecimalFormat precision = new DecimalFormat("0.0");
                                     //xdata.getinstance().saveSetting("gpsspeed", "" +mps+" "+ mph);
-                                    xdata.getinstance().saveSetting("gpsspeed", ""+precision.format(mph));
+                                    xdata.getinstance().saveSetting("gpsspeed", "" + precision.format(mph));
                                 }
 
-                                if (location.hasAltitude())
-                                {
+                                if (location.hasAltitude()) {
                                     int altitudefeet = (int) (location.getAltitude() / 0.3048);
                                     xdata.getinstance().saveSetting(config.gpsaltitude, "" + altitudefeet);
                                 }
@@ -236,24 +237,20 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     updatelocationsparams(location);
                                 }
 
-                                if(xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
-                                {
-                                    if(oldlocation == null)
-                                        oldlocation=location;
+                                if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true")) {
+                                    if (oldlocation == null)
+                                        oldlocation = location;
 
                                     long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(), oldlocation.getLatitude(),
                                             oldlocation.getLongitude());
-                                    double miles=common.convertmetertomiles(meter);
-                                    DecimalFormat precision=new DecimalFormat("0.0");
-                                    xdata.getinstance().saveSetting("travelleddistance", ""+precision.format(miles));
-                                }
-                                else
-                                {
+                                    double miles = common.convertmetertomiles(meter);
+                                    DecimalFormat precision = new DecimalFormat("0.0");
+                                    xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
+                                } else {
                                     xdata.getinstance().saveSetting("travelleddistance", "0.0");
-                                    oldlocation=null;
+                                    oldlocation = null;
                                 }
-                            }catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
@@ -273,16 +270,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         initialdate = new Date();
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-        {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
             mOrientation = new Orientation(this);
             registerallbroadcast();
             getconnectionspeed();
-        }
-        else
-        {
+        } else {
             startmetrices();
         }
+        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifiManager.startScan();
     }
 
     @Override
@@ -292,7 +288,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     @Override
     public boolean isuserlogin() {
-        if(xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
+        if (xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
             return false;
 
         return true;
@@ -300,58 +296,49 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     @Override
     public void redirecttologin() {
-        Intent intent=new Intent(locationawareactivity.this,signinactivity.class);
+        Intent intent = new Intent(locationawareactivity.this, signinactivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
-        if(adjustedRotationMatrix != null && adjustedRotationMatrix.length > 0)
-        {
-            String datavalue="";
+        if (adjustedRotationMatrix != null && adjustedRotationMatrix.length > 0) {
+            String datavalue = "";
             for (float number : adjustedRotationMatrix) {
-                if(datavalue.isEmpty())
-                {
-                    datavalue=""+number;
-                }
-                else
-                {
-                    datavalue=datavalue+","+number;
+                if (datavalue.isEmpty()) {
+                    datavalue = "" + number;
+                } else {
+                    datavalue = datavalue + "," + number;
                 }
             }
-            xdata.getinstance().saveSetting(config.phone_attitude,datavalue);
+            xdata.getinstance().saveSetting(config.phone_attitude, datavalue);
         }
 
-       // Log.e("Pitch roll cases ",xdata.getinstance().getSetting(config.phone_attitude));
+        // Log.e("Pitch roll cases ",xdata.getinstance().getSetting(config.phone_attitude));
     }
 
-    public void getsistermetric()
-    {
-        HashMap<String,String> requestparams=new HashMap<>();
-        requestparams.put("action","servermetrics_get");
-        xapipost_send(locationawareactivity.this,requestparams, new apiresponselistener() {
+    public void getsistermetric() {
+        HashMap<String, String> requestparams = new HashMap<>();
+        requestparams.put("action", "servermetrics_get");
+        xapipost_send(locationawareactivity.this, requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
-                if(response.isSuccess())
-                {
-                    try
-                    {
-                        JSONObject object=new JSONObject(response.getData().toString());
-                        if(object.has("metrics"))
-                        {
-                            xdata.getinstance().saveSetting(config.sister_metric,object.getJSONObject("metrics").toString());
-                            JSONObject metricobject=object.getJSONObject("metrics");
-                            if(metricobject.has("satellitedate"))
-                                xdata.getinstance().saveSetting(config.satellitedate,metricobject.getString("satellitedate"));
+                if (response.isSuccess()) {
+                    try {
+                        JSONObject object = new JSONObject(response.getData().toString());
+                        if (object.has("metrics")) {
+                            xdata.getinstance().saveSetting(config.sister_metric, object.getJSONObject("metrics").toString());
+                            JSONObject metricobject = object.getJSONObject("metrics");
+                            if (metricobject.has("satellitedate"))
+                                xdata.getinstance().saveSetting(config.satellitedate, metricobject.getString("satellitedate"));
 
-                            if(metricobject.has("satellites"))
-                                xdata.getinstance().saveSetting(config.satellitesdata,metricobject.getJSONArray("satellites").toString());
+                            if (metricobject.has("satellites"))
+                                xdata.getinstance().saveSetting(config.satellitesdata, metricobject.getJSONArray("satellites").toString());
 
-                            if(metricobject.has("remote_ip"))
-                                xdata.getinstance().saveSetting(config.remoteip,metricobject.getString("remote_ip"));
+                            if (metricobject.has("remote_ip"))
+                                xdata.getinstance().saveSetting(config.remoteip, metricobject.getString("remote_ip"));
                         }
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -359,8 +346,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         });
     }
 
-    public void getconnectionspeed()
-    {
+    public void getconnectionspeed() {
         if (!common.isnetworkconnected(locationawareactivity.this)) {
             connectionspeed = "NA";
             return;
@@ -409,7 +395,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 double timeTakenMills = Math.floor(endTime - startTime);  // time taken in milliseconds
                 double timeTakenSecs = timeTakenMills / 1000;  // divide by 1000 to get time in seconds
                 //Log.e("milisec second"," "+timeTakenMills+" "+timeTakenSecs);
-                connectiondatadelay=""+String.valueOf(new DecimalFormat("#.#").format(timeTakenSecs))+" Second";
+                connectiondatadelay = "" + String.valueOf(new DecimalFormat("#.#").format(timeTakenSecs)) + " Second";
                 final int kilobytePerSec = (int) Math.round(1024 / timeTakenSecs);
                 if (kilobytePerSec <= POOR_BANDWIDTH) {
                     // slow connection
@@ -445,7 +431,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                     final Intent locationService = new Intent(applicationviavideocomposer.getactivity(), locationservice.class);
                     applicationviavideocomposer.getactivity().startService(locationService);
-                    isservicebound =applicationviavideocomposer.getactivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
+                    isservicebound = applicationviavideocomposer.getactivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
                 }
             } else {
                 String[] array = new String[common.getphonelocationdeniedpermissions().size()];
@@ -526,7 +512,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     private void doafterallpermissionsgranted() {
-        if (! checkPermission(this)) {
+        if (!checkPermission(this)) {
             return;
         }
 
@@ -535,7 +521,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         enableGPS(locationawareactivity.this);
         preparemetricesdata();
 
-        if(mOrientation != null)
+        if (mOrientation != null)
             mOrientation.startListening(this);
     }
 
@@ -565,11 +551,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-        {
-            try
-            {
-                if(isservicebound)
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
+            try {
+                if (isservicebound)
                     applicationviavideocomposer.getactivity().unbindService(serviceConnection);
 
                 try {
@@ -593,8 +577,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     e.printStackTrace();
                 }
 
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -616,23 +599,19 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        try
-        {
+        try {
             mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, null);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
     protected void stopLocationUpdates() {
-        try
-        {
+        try {
             if (mFusedLocationClient != null)
                 mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -666,16 +645,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     public void enableGPS(final Context context) {
 
-        if(getcurrentfragment() != null)
-        {
-            if(getcurrentfragment() instanceof videocomposerfragment ||
+        if (getcurrentfragment() != null) {
+            if (getcurrentfragment() instanceof videocomposerfragment ||
                     getcurrentfragment() instanceof audiocomposerfragment || getcurrentfragment() instanceof imagecomposerfragment
-                    || getcurrentfragment() instanceof composeoptionspagerfragment)
-            {
+                    || getcurrentfragment() instanceof composeoptionspagerfragment) {
                 // its a case where user is on recorder (video/image/audio)
-            }
-            else
-            {
+            } else {
                 // its a case where it can show gps dialog in other fragments when onResume(activity) method called.
                 return;
             }
@@ -715,17 +690,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GPS_REQUEST_CODE) {
             setNavigateWithLocation();
-        }
-        else if (requestCode == systemdialogshowrequestcode) {
+        } else if (requestCode == systemdialogshowrequestcode) {
 
         }
     }
 
 
-    private void preparemetricesdata()
-    {
-        if(metricitemarraylist.size() == 0)
-        {
+    private void preparemetricesdata() {
+        if (metricitemarraylist.size() == 0) {
             metricitemarraylist.clear();
             String[] items = common.getmetricesarray();
             for (int i = 0; i < items.length; i++)
@@ -742,29 +714,25 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         myHandler = new Handler();
         myRunnable = new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
 
-                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
                             getconnectionspeed();
 
-                        if(timercounterhandler == -1 || timercounterhandler >= 3)
-                        {
-                            timercounterhandler=0;
-                            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                            {
+                        if (timercounterhandler == -1 || timercounterhandler >= 3) {
+                            timercounterhandler = 0;
+                            if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
                                 try {
                                     xdata.getinstance().saveSetting("gpsenabled", "1");
-                                    if (! locationawareactivity.checkLocationEnable(locationawareactivity.this))
+                                    if (!locationawareactivity.checkLocationEnable(locationawareactivity.this))
                                         xdata.getinstance().saveSetting("gpsenabled", "0");
 
-                                    if(getcurrentfragment() != null)
+                                    if (getcurrentfragment() != null)
                                         getcurrentfragment().updatewifigpsstatus();
-                                }catch (Exception e)
-                                {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
@@ -780,7 +748,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 }
                                 if (getcurrentfragment() instanceof videocomposerfragment) {
                                     isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
-                                    String datainsertion=xdata.getinstance().getSetting(config.ismediadataservicerunning);
+                                    String datainsertion = xdata.getinstance().getSetting(config.ismediadataservicerunning);
                                     if (isrecording || (datainsertion.equalsIgnoreCase("1")))
                                         return;
                                 }
@@ -789,15 +757,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             if (dbtoxapiupdatecounter > 1) {
                                 dbtoxapiupdatecounter = 0;
 
-                                if(! isdatasyncing)
+                                if (!isdatasyncing)
                                     syncmediadatabase();
                             }
 
                             servermetricsgetupdatecounter++;
-                            if((servermetricsgetupdatecounter >= 20 && common.isnetworkconnected(locationawareactivity.this)) ||
-                                    (xdata.getinstance().getSetting(config.satellitedate).trim().isEmpty()))
-                            {
-                                servermetricsgetupdatecounter=0;
+                            if ((servermetricsgetupdatecounter >= 20 && common.isnetworkconnected(locationawareactivity.this)) ||
+                                    (xdata.getinstance().getSetting(config.satellitedate).trim().isEmpty())) {
+                                servermetricsgetupdatecounter = 0;
                                 getsistermetric();
                             }
                         }
@@ -869,12 +836,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 || key.equalsIgnoreCase(config.cpuusageiow) || key.equalsIgnoreCase(config.cpuusageirq)) {
             getsystemusage();
             return "";
-        }*/
-        else if (key.equalsIgnoreCase(config.cpuusagesystem)) {
+        }*/ else if (key.equalsIgnoreCase(config.cpuusagesystem)) {
             getsystemusage();
             return "";
-        }
-        else if (key.equalsIgnoreCase(config.currentcallinprogress) || key.equalsIgnoreCase(config.currentcalldurationseconds)
+        } else if (key.equalsIgnoreCase(config.currentcallinprogress) || key.equalsIgnoreCase(config.currentcalldurationseconds)
                 || key.equalsIgnoreCase(config.currentcallremotenumber)) {
             getCallInfo();
             return "";
@@ -914,18 +879,17 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("timezone")) {
             TimeZone timezone = TimeZone.getDefault();
             metricItemValue = timezone.getID();
-        }else if (key.equalsIgnoreCase(config.phoneclocktime)) {
+        } else if (key.equalsIgnoreCase(config.phoneclocktime)) {
             Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-            String time=common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
-                    +":"+common.appendzero(calendar.get(Calendar.SECOND));
+            String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
+                    + ":" + common.appendzero(calendar.get(Calendar.SECOND));
             metricItemValue = time;
-        }else if (key.equalsIgnoreCase(config.worldclocktime)) {
+        } else if (key.equalsIgnoreCase(config.worldclocktime)) {
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-            String time=common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
-                    +":"+common.appendzero(calendar.get(Calendar.SECOND));
-            metricItemValue = time+" GMT";
-        }
-        else if (key.equalsIgnoreCase("devicelanguage")) {
+            String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
+                    + ":" + common.appendzero(calendar.get(Calendar.SECOND));
+            metricItemValue = time + " GMT";
+        } else if (key.equalsIgnoreCase("devicelanguage")) {
             metricItemValue = Locale.getDefault().getDisplayLanguage();
         } else if (key.equalsIgnoreCase("brightness")) {
             try {
@@ -1026,13 +990,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     if (key.equalsIgnoreCase("externalip"))
                         metricItemValue = common.getWifiIPAddress(locationawareactivity.this);
 
-                    if (key.equalsIgnoreCase("wifiname"))
-                    {
+                    if (key.equalsIgnoreCase("wifiname")) {
                         metricItemValue = connectionInfo.getSSID();
                         xdata.getinstance().saveSetting("wificonnected", "1");
                     }
 
-                    metricItemValue=metricItemValue.replace("\"", "");
+                    metricItemValue = metricItemValue.replace("\"", "");
                     if (key.equalsIgnoreCase("connectedwifiquality")) {
                         int rssi = connectionInfo.getRssi();
                         if (rssi >= -50) {
@@ -1267,73 +1230,68 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
         } else if (key.equalsIgnoreCase("connectionspeed")) {
             metricItemValue = "" + connectionspeed;
-        }else if (key.equalsIgnoreCase(config.connectiondatadelay)) {
+        } else if (key.equalsIgnoreCase(config.connectiondatadelay)) {
             metricItemValue = "" + connectiondatadelay;
-        }
-        else if (key.equalsIgnoreCase("address")) {
+        } else if (key.equalsIgnoreCase("address")) {
             metricItemValue = xdata.getinstance().getSetting("currentaddress");
-        }
-        else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")) {
+        } else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")) {
 
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             int networkType = telephonyManager.getNetworkType();
 
-            if(towerinfolist != null && towerinfolist.size() > 0){
+            if (towerinfolist != null && towerinfolist.size() > 0) {
                 CellInfo info = towerinfolist.get(0);
                 if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
                     metricItemValue = "";
                 } else {
-                    if(key.equalsIgnoreCase("celltowersignalstrength")){
+                    if (key.equalsIgnoreCase("celltowersignalstrength")) {
 
-                        if(info != null){
-                            try{
-                                if(TelephonyManager.NETWORK_TYPE_LTE == networkType){
+                        if (info != null) {
+                            try {
+                                if (TelephonyManager.NETWORK_TYPE_LTE == networkType) {
                                     CellSignalStrengthLte gsm = ((CellInfoLte) info).getCellSignalStrength();
-                                    int signalstrength =  gsm.getDbm();
+                                    int signalstrength = gsm.getDbm();
                                     metricItemValue = "" + signalstrength + " " + "dBm";
-                                }else{
+                                } else {
 
                                     CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
-                                    int signalstrength =  gsm.getDbm();
+                                    int signalstrength = gsm.getDbm();
                                     metricItemValue = "" + signalstrength + " " + "dBm";
                                 }
 
 
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
 
-                    }else if(key.equalsIgnoreCase("celltowerid")){
-                        if(info != null) {
+                    } else if (key.equalsIgnoreCase("celltowerid")) {
+                        if (info != null) {
 
-                            try{
-                                if(TelephonyManager.NETWORK_TYPE_LTE == networkType){
+                            try {
+                                if (TelephonyManager.NETWORK_TYPE_LTE == networkType) {
                                     CellIdentityLte identity = ((CellInfoLte) info).getCellIdentity();
                                     int celltowerid = identity.getCi();
                                     metricItemValue = "" + celltowerid;
-                                }else{
+                                } else {
                                     CellIdentityGsm identityGsm = ((CellInfoGsm) info).getCellIdentity();
                                     int celltowerid = identityGsm.getCid();
                                     metricItemValue = "" + celltowerid;
                                 }
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     }
                 }
             }
-        }
-        else if (key.equalsIgnoreCase("numberoftowers")) {
+        } else if (key.equalsIgnoreCase("numberoftowers")) {
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
-                metricItemValue = "" ;
-            }
-            else
-            {
+                metricItemValue = "";
+            } else {
                 metricItemValue = "0";
-                if(towerinfolist != null)
+                if (towerinfolist != null)
                     metricItemValue = "" + towerinfolist.size();
             }
         } else if (key.equalsIgnoreCase("connectionspeed")) {
@@ -1347,24 +1305,26 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("satelliteid")) {
             metricItemValue = xdata.getinstance().getSetting("satelliteid");
         } else if (key.equalsIgnoreCase("strengthofsatellites")) {
-            metricItemValue =xdata.getinstance().getSetting("strengthofsatellites");;
-        }
-        else if (key.equalsIgnoreCase("attitude")) {
-            metricItemValue =xdata.getinstance().getSetting(config.phone_attitude);;
-        }
-        else if (key.equalsIgnoreCase(config.airplanemode)) {
+            metricItemValue = xdata.getinstance().getSetting("strengthofsatellites");
+            ;
+        } else if (key.equalsIgnoreCase("attitude")) {
+            metricItemValue = xdata.getinstance().getSetting(config.phone_attitude);
+            ;
+        } else if (key.equalsIgnoreCase(config.airplanemode)) {
             metricItemValue = "ON";
-            if(Settings.Global.getInt(locationawareactivity.this.getContentResolver(),Settings.Global.AIRPLANE_MODE_ON, 0) == 0)
-            {
+            if (Settings.Global.getInt(locationawareactivity.this.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) == 0) {
                 metricItemValue = "OFF";
             }
+        } else if (key.equalsIgnoreCase(config.availablewifinetwork)) {
+            metricItemValue = xdata.getinstance().getSetting(config.availablewifinetwork);
+
         }
-        else if (key.equalsIgnoreCase(config.sister_metric)) {
+        /*else if (key.equalsIgnoreCase(config.sister_metric)) {
             metricItemValue=xdata.getinstance().getSetting(config.sister_metric);
         }
         else if (key.equalsIgnoreCase(config.json_blob)) {
             metricItemValue=xdata.getinstance().getSetting(config.json_blob);
-        }
+        }*/
 
         if (metricItemValue == null)
             metricItemValue = "";
@@ -1444,7 +1404,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onResume() {
         super.onResume();
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
             getallpermissions();
     }
 
@@ -1498,20 +1458,23 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         az = sensorEvent.values[2];
 
                         int inclination = (int) Math.round(Math.toDegrees(Math.acos(ay)));
-                        if(inclination != lastinclination)
-                        {
-                            double xAngle = Math.atan( ax / (Math.sqrt(Math.pow(ay,2) + Math.pow(az,2))));
-                            double yAngle = Math.atan( ay / (Math.sqrt(Math.pow(ax,2) + Math.pow(az,2))));
-                            double zAngle = Math.atan( Math.sqrt(Math.pow(ax,2) + Math.pow(ay,2)) / az);
+                        if (inclination != lastinclination) {
+                            double xAngle = Math.atan(ax / (Math.sqrt(Math.pow(ay, 2) + Math.pow(az, 2))));
+                            double yAngle = Math.atan(ay / (Math.sqrt(Math.pow(ax, 2) + Math.pow(az, 2))));
+                            double zAngle = Math.atan(Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2)) / az);
 
-                            xAngle *= 180.00;   yAngle *= 180.00;   zAngle *= 180.00;
-                            xAngle /= 3.141592; yAngle /= 3.141592; zAngle /= 3.141592;
+                            xAngle *= 180.00;
+                            yAngle *= 180.00;
+                            zAngle *= 180.00;
+                            xAngle /= 3.141592;
+                            yAngle /= 3.141592;
+                            zAngle /= 3.141592;
 
-                            updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(Math.abs(xAngle))+"° ");
-                            updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(Math.abs(yAngle))+"° ");
-                            updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(Math.abs(zAngle))+"° ");
+                            updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(Math.abs(xAngle)) + "° ");
+                            updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(Math.abs(yAngle)) + "° ");
+                            updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(Math.abs(zAngle)) + "° ");
                         }
-                        lastinclination=inclination;
+                        lastinclination = inclination;
                         // Source link of degree conversion http://wizmoz.blogspot.com/2013/01/simple-accelerometer-data-conversion-to.html
                     }
                 }
@@ -1573,11 +1536,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             public void run() {
                 try {
 
-                    try
-                    {
-                        float totalcpu=0,cpuAM=0;
-                        if (Build.VERSION.SDK_INT < 26)
-                        {
+                    try {
+                        float totalcpu = 0, cpuAM = 0;
+                        if (Build.VERSION.SDK_INT < 26) {
                             {
                                 BufferedReader reader = new BufferedReader(new FileReader("/proc/stat"));
                                 processsysteminfo = reader.readLine().split("[ ]+", 9);
@@ -1599,9 +1560,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 workT = work - workBefore;
                                 workAMT = workAM - workAMBefore;
 
-                                totalcpu=workT * 100 / (float) totalT;
-                                cpuAM=workAMT * 100 / (float) totalT;
-                                float cpuAM1=workAMT * 100 / (float) totalT;
+                                totalcpu = workT * 100 / (float) totalT;
+                                cpuAM = workAMT * 100 / (float) totalT;
+                                float cpuAM1 = workAMT * 100 / (float) totalT;
                             }
                             totalBefore = totalprocess;
                             workBefore = work;
@@ -1612,20 +1573,18 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 @Override
                                 public void run() {
                                     if (getcurrentfragment() != null) {
-                                        updatearrayitem(config.cpuusageuser, ""+(int)(finalTotalcpu)+"%");
-                                        updatearrayitem(config.cpuusagesystem, ""+(int)(finalTotalcpu)+"%");
+                                        updatearrayitem(config.cpuusageuser, "" + (int) (finalTotalcpu) + "%");
+                                        updatearrayitem(config.cpuusagesystem, "" + (int) (finalTotalcpu) + "%");
                                         //updatearrayitem(config.cpuusageiow, ""+(int)(finalTotalcpu)+"%");
                                         //updatearrayitem(config.cpuusageirq, ""+(int)(finalTotalcpu)+"%");
                                     }
                                 }
                             });
-                        }
-                        else
-                        {
+                        } else {
                             String system = common.executeTop();
-                            if(system.contains("Tasks")){
-                                system=system.substring(system.indexOf("Tasks"),system.length());
-                                system=  system.replace("Tasks:","");
+                            if (system.contains("Tasks")) {
+                                system = system.substring(system.indexOf("Tasks"), system.length());
+                                system = system.replace("Tasks:", "");
                             }
                             String[] cpuArray = system.split(",");
                             final String[] value1 = {cpuArray[0]};
@@ -1652,8 +1611,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             });
                         }
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -1728,11 +1686,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 public void run() {
                     if (getcurrentfragment() != null) {
                         int heading = Math.round(event.values[0]);
-                       // Log.e("Heading ",""+heading);;
+                        // Log.e("Heading ",""+heading);;
                         String compassdirection = common.getcompassdirection(heading);
                         updatearrayitem(config.compass, compassdirection);
-                        updatearrayitem(config.orientation, "" + (int)heading);
-                        updatearrayitem(config.heading, "" +(int)heading);
+                        updatearrayitem(config.orientation, "" + (int) heading);
+                        updatearrayitem(config.heading, "" + (int) heading);
 
                     }
                 }
@@ -1795,11 +1753,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 }
             };
 
-            try
-            {
+            try {
                 registerReceiver(phonecallbroadcast, intentFilter);
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -1812,7 +1768,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             e.printStackTrace();
         }
 
-        if(mOrientation != null)
+        if (mOrientation != null)
             mOrientation.startListening(this);
 
         try {
@@ -1863,9 +1819,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricitemarraylist.get(i).setMetricTrackValue("" + degree);
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
-                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("travelleddistance") +" "+ "miles");
-                if(xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
-                    metricitemarraylist.get(i).setMetricTrackValue("0"+" "+ "miles");
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("travelleddistance") + " " + "miles");
+                if (xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
+                    metricitemarraylist.get(i).setMetricTrackValue("0" + " " + "miles");
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("gpsaccuracy"));
@@ -1874,14 +1830,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("currentaddress"));
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
-                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("gpsspeed") +" "+ "mph");
-                if(xdata.getinstance().getSetting("gpsspeed").trim().isEmpty())
-                    metricitemarraylist.get(i).setMetricTrackValue("0"+" "+ "mph");
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("gpsspeed") + " " + "mph");
+                if (xdata.getinstance().getSetting("gpsspeed").trim().isEmpty())
+                    metricitemarraylist.get(i).setMetricTrackValue("0" + " " + "mph");
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
-                String altitude=xdata.getinstance().getSetting(config.gpsaltitude);
-                if(altitude.trim().isEmpty())
-                    altitude="0";
+                String altitude = xdata.getinstance().getSetting(config.gpsaltitude);
+                if (altitude.trim().isEmpty())
+                    altitude = "0";
 
                 metricitemarraylist.get(i).setMetricTrackValue("" + altitude + " feet");
             }
@@ -1910,16 +1866,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     public void onStart() {
         super.onStart();
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
             IntentFilter intentFilter = new IntentFilter(config.reader_service_getmetadata);
             coredatabroadcastreceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     try {
                         updatesyncedreaderitems();
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -1952,29 +1906,24 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onStop() {
         super.onStop();
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
 
-        if(mOrientation != null)
+        if (mOrientation != null)
             mOrientation.stopListening();
     }
 
-    public void syncmediadatabase()
-    {
-        Log.e("Method ","syncmediadatabase");
-        if(! common.isnetworkconnected(locationawareactivity.this))
-        {
-            isdatasyncing=false;
+    public void syncmediadatabase() {
+        Log.e("Method ", "syncmediadatabase");
+        if (!common.isnetworkconnected(locationawareactivity.this)) {
+            isdatasyncing = false;
             return;
         }
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-        {
-            if(getcurrentfragment() instanceof videocomposerfragment)
-            {
-                boolean isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
-                if(isrecording)
-                {
-                    isdatasyncing=false;
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
+            if (getcurrentfragment() instanceof videocomposerfragment) {
+                boolean isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
+                if (isrecording) {
+                    isdatasyncing = false;
                     return;
                 }
             }
@@ -1986,42 +1935,34 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
             try {
                 mdbhelper.open();
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             // Fetch data which are unsynced or sync = 0
             unsyncedmediaitems = mdbhelper.fetchunsynceddata();
             try {
                 mdbhelper.close();
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            syncupdationcounter=0;
-            if(unsyncedmediaitems.size() > 0)
-            {
-                isdatasyncing=true;
+            syncupdationcounter = 0;
+            if (unsyncedmediaitems.size() > 0) {
+                isdatasyncing = true;
                 updateunsyncedcomposeritems();
+            } else {
+                isdatasyncing = false;
             }
-            else
-            {
-                isdatasyncing=false;
-            }
-        }
-        else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
-            if(common.isnetworkconnected(getApplicationContext()))
-            {
-                Date currentdate=new Date();
-                String initialdatereaderapi=xdata.getinstance().getSetting("initialdatereaderapi");
-                long olddate=0;
-                if(! initialdatereaderapi.trim().isEmpty())
-                    olddate=Long.parseLong(initialdatereaderapi);
+        } else if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
+            if (common.isnetworkconnected(getApplicationContext())) {
+                Date currentdate = new Date();
+                String initialdatereaderapi = xdata.getinstance().getSetting("initialdatereaderapi");
+                long olddate = 0;
+                if (!initialdatereaderapi.trim().isEmpty())
+                    olddate = Long.parseLong(initialdatereaderapi);
 
-                int seconddifference= (int) (Math.abs(olddate-currentdate.getTime())/1000);
-                if(seconddifference > 20 || olddate == 0)
+                int seconddifference = (int) (Math.abs(olddate - currentdate.getTime()) / 1000);
+                if (seconddifference > 20 || olddate == 0)
                     updatesyncedreaderitems();
             }
         }
@@ -2029,66 +1970,53 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     //------------------------------------------
     //** start code of media reader sync process
-    public void updatesyncedreaderitems()
-    {
+    public void updatesyncedreaderitems() {
         File videodir = new File(config.dirallmedia);
-        if(! videodir.exists())
+        if (!videodir.exists())
             return;
 
-        databasemanager mdbhelper=null;
+        databasemanager mdbhelper = null;
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
             mdbhelper.createDatabase();
         }
         try {
             mdbhelper.open();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
 
-            if(readerarraymedialist.size() > 0)
-            {
-                if(readerarraymedialist.get(readerarraymedialist.size()-1).isIscheck())
+            if (readerarraymedialist.size() > 0) {
+                if (readerarraymedialist.get(readerarraymedialist.size() - 1).isIscheck())
                     readerarraymedialist.clear();
             }
-            if(readerarraymedialist.size() == 0)
-            {
+            if (readerarraymedialist.size() == 0) {
                 Cursor cursor = mdbhelper.getallmediastartdata();
-                if(cursor != null && cursor.getCount() > 0)
-                {
-                    if(cursor.moveToFirst())
-                    {
-                        do{
+                if (cursor != null && cursor.getCount() > 0) {
+                    if (cursor.moveToFirst()) {
+                        do {
                             String location = "" + cursor.getString(cursor.getColumnIndex("location"));
                             String type = "" + cursor.getString(cursor.getColumnIndex("type"));
                             String status = "" + cursor.getString(cursor.getColumnIndex("status"));
                             String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
                             String media_sync_attempt = "" + cursor.getString(cursor.getColumnIndex("media_sync_attempt"));
 
-                            if(! status.equalsIgnoreCase(config.sync_complete) && (! status.equalsIgnoreCase(config.sync_notfound)))
-                            {
-                                int totalattempt=0;
-                                if(media_sync_attempt.trim().isEmpty() || media_sync_attempt.equalsIgnoreCase("null"))
-                                {
-                                    totalattempt=0;
-                                }
-                                else if(status.equalsIgnoreCase(config.sync_pending))
-                                {
-                                    totalattempt=Integer.parseInt(media_sync_attempt);
+                            if (!status.equalsIgnoreCase(config.sync_complete) && (!status.equalsIgnoreCase(config.sync_notfound))) {
+                                int totalattempt = 0;
+                                if (media_sync_attempt.trim().isEmpty() || media_sync_attempt.equalsIgnoreCase("null")) {
+                                    totalattempt = 0;
+                                } else if (status.equalsIgnoreCase(config.sync_pending)) {
+                                    totalattempt = Integer.parseInt(media_sync_attempt);
                                     totalattempt++;
                                 }
 
-                                if(totalattempt > downloadmetadataattempt)
-                                {
-                                    status=config.sync_notfound;
-                                    updatemediaattempt(location,totalattempt,status);
+                                if (totalattempt > downloadmetadataattempt) {
+                                    status = config.sync_notfound;
+                                    updatemediaattempt(location, totalattempt, status);
                                     sendbroadcastreader();
-                                }
-                                else
-                                {
-                                    updatemediaattempt(location,totalattempt,status);
+                                } else {
+                                    updatemediaattempt(location, totalattempt, status);
                                     video videoobj = new video();
                                     videoobj.setPath(mediafilepath);
                                     videoobj.setmimetype(type);
@@ -2097,38 +2025,33 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 }
                             }
 
-                        }while(cursor.moveToNext());
+                        } while (cursor.moveToNext());
                     }
                 }
             }
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try
-        {
+        try {
             mdbhelper.close();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (readerarraymedialist != null && readerarraymedialist.size() > 0) {
             for (int i = 0; i < readerarraymedialist.size(); i++) {
                 String status = readerarraymedialist.get(i).getMediastatus();
-                if (! readerarraymedialist.get(i).isIscheck())
-                {
+                if (!readerarraymedialist.get(i).isIscheck()) {
                     readerarraymedialist.get(i).setIscheck(true);
                     if (!common.isnetworkconnected(applicationviavideocomposer.getappcontext()))
                         readerarraymedialist.get(i).setMediastatus(config.sync_offline);
 
-                    if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending))
-                    {
+                    if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending)) {
                         readerarraymedialist.get(i).setMediastatus(config.sync_inprogress);
                         //initialdate = new Date();
-                        callreadersyncservice(readerarraymedialist.get(i).getPath(),readerarraymedialist.get(i).getmimetype());
+                        callreadersyncservice(readerarraymedialist.get(i).getPath(), readerarraymedialist.get(i).getmimetype());
                         break;
                     }
                 }
@@ -2136,35 +2059,29 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
     }
 
-    public void callreadersyncservice(String mediafilepath,String mimetype)
-    {
-        if(! common.isnetworkconnected(getApplicationContext()))
+    public void callreadersyncservice(String mediafilepath, String mimetype) {
+        if (!common.isnetworkconnected(getApplicationContext()))
             return;
 
         String keytype = common.checkkey();
-        String firsthash="";
+        String firsthash = "";
 
-        if(mimetype.startsWith("image"))
-            firsthash= md5.fileToMD5(mediafilepath);
+        if (mimetype.startsWith("image"))
+            firsthash = md5.fileToMD5(mediafilepath);
 
         Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
         intent.putExtra("firsthash", firsthash);
         intent.putExtra("mediapath", mediafilepath);
         intent.putExtra("keytype", keytype);
-        if(mimetype.startsWith("video"))
-        {
-            intent.putExtra("mediatype","video");
+        if (mimetype.startsWith("video")) {
+            intent.putExtra("mediatype", "video");
+        } else if (mimetype.startsWith("audio")) {
+            intent.putExtra("mediatype", "audio");
+        } else if (mimetype.startsWith("image")) {
+            intent.putExtra("mediatype", "image");
         }
-        else if(mimetype.startsWith("audio"))
-        {
-            intent.putExtra("mediatype","audio");
-        }
-        else if(mimetype.startsWith("image"))
-        {
-            intent.putExtra("mediatype","image");
-        }
-        initialdate=new Date();
-        xdata.getinstance().saveSetting("initialdatereaderapi",""+initialdate.getTime());
+        initialdate = new Date();
+        xdata.getinstance().saveSetting("initialdatereaderapi", "" + initialdate.getTime());
         applicationviavideocomposer.getactivity().startService(intent);
     }
     //** end code of media reader sync process
@@ -2172,19 +2089,17 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
 
     //** start code of media composer sync process
-    public void updateunsyncedcomposeritems()
-    {
-        String hashmethod="",hashvalue="",mediatitle="",selectedid="", header = "", type = "",localkey = "", token = "", mediakey = "",
-                sync = "",sync_date = "",action_type="",apirequestdevicedate = "",videostartdevicedate= "",devicetimeoffset = "",
+    public void updateunsyncedcomposeritems() {
+        String hashmethod = "", hashvalue = "", mediatitle = "", selectedid = "", header = "", type = "", localkey = "", token = "", mediakey = "",
+                sync = "", sync_date = "", action_type = "", apirequestdevicedate = "", videostartdevicedate = "", devicetimeoffset = "",
                 videocompletedevicedate = "";
 
         String synchdefaultversion = "1", synchstatus = config.sync_inprogress, synchcompletedate = "", synchlastsequence = "";
 
-        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
+        HashMap<String, Object> mpairslist = new HashMap<String, Object>();
 
-        if(unsyncedmediaitems != null && unsyncedmediaitems.size() > 0 && syncupdationcounter < unsyncedmediaitems.size())
-        {
-            selectedid= unsyncedmediaitems.get(syncupdationcounter).getId().toString();
+        if (unsyncedmediaitems != null && unsyncedmediaitems.size() > 0 && syncupdationcounter < unsyncedmediaitems.size()) {
+            selectedid = unsyncedmediaitems.get(syncupdationcounter).getId().toString();
             header = unsyncedmediaitems.get(syncupdationcounter).getHeader().toString();
             type = unsyncedmediaitems.get(syncupdationcounter).getType().toString();
             localkey = unsyncedmediaitems.get(syncupdationcounter).getLocalkey().toString();
@@ -2199,132 +2114,117 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             videocompletedevicedate = unsyncedmediaitems.get(syncupdationcounter).getVideocompletedevicedate().toString();
         }
 
-        if(sync.equalsIgnoreCase("0")){
+        if (sync.equalsIgnoreCase("0")) {
 
             String currentdate[] = common.getcurrentdatewithtimezone();
             String firstdate = currentdate[0];
 
             HashMap<String, String> map = new HashMap<String, String>();
-            map.put("version",synchdefaultversion);
-            map.put("firstdate",firstdate);
-            map.put("lastdate",firstdate);
-            map.put("lastsequence",synchlastsequence);
-            map.put("status",synchstatus);
-            map.put("completedate",synchcompletedate);
+            map.put("version", synchdefaultversion);
+            map.put("firstdate", firstdate);
+            map.put("lastdate", firstdate);
+            map.put("lastsequence", synchlastsequence);
+            map.put("status", synchstatus);
+            map.put("completedate", synchcompletedate);
 
             Gson gson = new Gson();
             String json = gson.toJson(map);
-            Log.e("json",""+json);
-            updatedatasync(json,selectedid);
+            Log.e("json", "" + json);
+            updatedatasync(json, selectedid);
         }
 
-        Log.e("video_updateid ",""+selectedid);
+        Log.e("video_updateid ", "" + selectedid);
 
-        if(!header.isEmpty()){
+        if (!header.isEmpty()) {
             try {
                 JSONObject obj = new JSONObject(header);
-                hashmethod  = obj.getString("hashmethod");
-                hashvalue  = obj.getString("firsthash");
-                mediatitle  = obj.getString("name");
+                hashmethod = obj.getString("hashmethod");
+                hashvalue = obj.getString("firsthash");
+                mediatitle = obj.getString("name");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        final String  finalselectedid = selectedid;
+        final String finalselectedid = selectedid;
 
-        mpairslist.put("html","0");
-        mpairslist.put("hashmethod",""+hashmethod);
-        mpairslist.put("hashvalue",""+hashvalue);
-        mpairslist.put("title",mediatitle);
-        mpairslist.put("apirequestdevicedate",apirequestdevicedate);
-        mpairslist.put("devicetimeoffset",devicetimeoffset);
+        mpairslist.put("html", "0");
+        mpairslist.put("hashmethod", "" + hashmethod);
+        mpairslist.put("hashvalue", "" + hashvalue);
+        mpairslist.put("title", mediatitle);
+        mpairslist.put("apirequestdevicedate", apirequestdevicedate);
+        mpairslist.put("devicetimeoffset", devicetimeoffset);
 
-        if(type.equalsIgnoreCase("video"))
-        {
-            mpairslist.put("videostartdevicedate",videostartdevicedate);
-        }
-        else if(type.equalsIgnoreCase("audio"))
-        {
-            mpairslist.put("audiostartdevicedate",videostartdevicedate);
-        }
-        else if(type.equalsIgnoreCase("image"))
-        {
-            mpairslist.put("imagestartdevicedate",videostartdevicedate);
+        if (type.equalsIgnoreCase("video")) {
+            mpairslist.put("videostartdevicedate", videostartdevicedate);
+        } else if (type.equalsIgnoreCase("audio")) {
+            mpairslist.put("audiostartdevicedate", videostartdevicedate);
+        } else if (type.equalsIgnoreCase("image")) {
+            mpairslist.put("imagestartdevicedate", videostartdevicedate);
         }
 
-        if(mediakey.trim().isEmpty())
-        {
+        if (mediakey.trim().isEmpty()) {
             // api calling for video_start or audio_start
-            xapipost_sendjson(locationawareactivity.this,action_type,mpairslist, new apiresponselistener() {
+            xapipost_sendjson(locationawareactivity.this, action_type, mpairslist, new apiresponselistener() {
                 @Override
-                public void onResponse(taskresult response)
-                {
-                    if(response.isSuccess())
-                    {
+                public void onResponse(taskresult response) {
+                    if (response.isSuccess()) {
                         try {
-                            String token="",transactionid="";
+                            String token = "", transactionid = "";
                             JSONObject object = (JSONObject) response.getData();
-                            String key=object.getString("key");
-                            if(object.has("videotoken"))
-                                token=object.getString("videotoken");
+                            String key = object.getString("key");
+                            if (object.has("videotoken"))
+                                token = object.getString("videotoken");
 
-                            if(object.has("audiotoken"))
-                                token=object.getString("audiotoken");
+                            if (object.has("audiotoken"))
+                                token = object.getString("audiotoken");
 
-                            if(object.has("imagetoken"))
-                                token=object.getString("imagetoken");
+                            if (object.has("imagetoken"))
+                                token = object.getString("imagetoken");
 
-                            if(object.has("videostarttransactionid"))
-                                transactionid=object.getString("videostarttransactionid");
+                            if (object.has("videostarttransactionid"))
+                                transactionid = object.getString("videostarttransactionid");
 
-                            if(object.has("audiostarttransactionid"))
-                                transactionid=object.getString("audiostarttransactionid");
+                            if (object.has("audiostarttransactionid"))
+                                transactionid = object.getString("audiostarttransactionid");
 
-                            if(object.has("imagestarttransactionid"))
-                                transactionid=object.getString("imagestarttransactionid");
+                            if (object.has("imagestarttransactionid"))
+                                transactionid = object.getString("imagestarttransactionid");
 
-                            updatevideokeytoken(finalselectedid,key,token,transactionid);
-                        }catch (Exception e)
-                        {
+                            updatevideokeytoken(finalselectedid, key, token, transactionid);
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                     triggersyncstatus();
                 }
             });
-        }
-        else
-        {
-            if(sync_date.equalsIgnoreCase("0"))
-                runmediaupdate(header,localkey,mediakey,token,sync,devicetimeoffset,apirequestdevicedate,finalselectedid,videocompletedevicedate,type);
+        } else {
+            if (sync_date.equalsIgnoreCase("0"))
+                runmediaupdate(header, localkey, mediakey, token, sync, devicetimeoffset, apirequestdevicedate, finalselectedid, videocompletedevicedate, type);
         }
     }
 
-    public void triggersyncstatus()
-    {
+    public void triggersyncstatus() {
         syncupdationcounter++;
-        if(syncupdationcounter < unsyncedmediaitems.size() && unsyncedmediaitems.size() > 0)
-        {
+        if (syncupdationcounter < unsyncedmediaitems.size() && unsyncedmediaitems.size() > 0) {
             updateunsyncedcomposeritems();
-        }
-        else
-        {
-            isdatasyncing=false;
+        } else {
+            isdatasyncing = false;
         }
     }
 
     public void runmediaupdate(String finalheader, String finallocalkey, String finalvideokey, String finaltoken, String finalsync,
                                String finaldevicetimeoffset, String finalapirequestdevicedate, String startselectedid,
-                               String finalvideocompletedevicedate,String type){
+                               String finalvideocompletedevicedate, String type) {
 
-        String selectedid = "", blockchain= "",valuehash= "",hashmethod= "",localkey= "",metricdata= "",
-                recordate= "",rsequenceno= "",sequencehash= "",sequenceno= "",serverdate= "",videoupdatedevicedate= "",sequencedevicedate = "";
+        String selectedid = "", blockchain = "", valuehash = "", hashmethod = "", localkey = "", metricdata = "",
+                recordate = "", rsequenceno = "", sequencehash = "", sequenceno = "", serverdate = "", videoupdatedevicedate = "", sequencedevicedate = "";
 
-        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
+        HashMap<String, Object> mpairslist = new HashMap<String, Object>();
         JSONObject finalobject = null;
 
-        JSONArray array=new JSONArray();
+        JSONArray array = new JSONArray();
         String matadata[] = new String[0];
 
         String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
@@ -2338,149 +2238,139 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         try {
             mdbhelper.open();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
 
-            ArrayList<mediametadatainfo>  mediametadatainfosarray  =  mdbhelper.setmediametadatainfo(finallocalkey);
+            ArrayList<mediametadatainfo> mediametadatainfosarray = mdbhelper.setmediametadatainfo(finallocalkey);
 
 
-            if(mediametadatainfosarray != null && mediametadatainfosarray.size()>0){
+            if (mediametadatainfosarray != null && mediametadatainfosarray.size() > 0) {
 
-                selectedid= mediametadatainfosarray.get(0).getId();
+                selectedid = mediametadatainfosarray.get(0).getId();
                 blockchain = mediametadatainfosarray.get(0).getBlockchain();
-                valuehash =mediametadatainfosarray.get(0).getValuehash();
+                valuehash = mediametadatainfosarray.get(0).getValuehash();
                 hashmethod = mediametadatainfosarray.get(0).getHashmethod();
                 localkey = mediametadatainfosarray.get(0).getLocalkey();
                 metricdata = mediametadatainfosarray.get(0).getMetricdata();
                 recordate = mediametadatainfosarray.get(0).getRecordate();
                 rsequenceno = mediametadatainfosarray.get(0).getRsequenceno();
-                sequencehash =mediametadatainfosarray.get(0).getSequencehash();
-                sequenceno =mediametadatainfosarray.get(0).getSequenceno();
+                sequencehash = mediametadatainfosarray.get(0).getSequencehash();
+                sequenceno = mediametadatainfosarray.get(0).getSequenceno();
                 serverdate = mediametadatainfosarray.get(0).getServerdate();
                 sequencedevicedate = mediametadatainfosarray.get(0).getSequencedevicedate();
 
-            }else{
+            } else {
 
-                callvideocompletedapi(startselectedid,finalheader,finallocalkey,finalapirequestdevicedate,finalvideokey,
-                        finaldevicetimeoffset,finaltoken,finalvideocompletedevicedate,finalsync,type);
-                return ;
+                callvideocompletedapi(startselectedid, finalheader, finallocalkey, finalapirequestdevicedate, finalvideokey,
+                        finaldevicetimeoffset, finaltoken, finalvideocompletedevicedate, finalsync, type);
+                return;
 
             }
 
-            final String finalselectedid =  selectedid;
+            final String finalselectedid = selectedid;
             String dictionaryhashvalue = "";
 
             try {
 
                 JSONArray jsonArray = new JSONArray(metricdata);
-                org.json.simple.JSONObject obj=new org.json.simple.JSONObject();
-                for(int i=0;i<jsonArray.length();i++)
-                {
+                org.json.simple.JSONObject obj = new org.json.simple.JSONObject();
+                for (int i = 0; i < jsonArray.length(); i++) {
                     Iterator<String> myIter = jsonArray.getJSONObject(0).keys();
                     while (myIter.hasNext()) {
                         String key = myIter.next();
                         String value = jsonArray.getJSONObject(0).optString(key);
-                        obj.put(key,value);
+                        obj.put(key, value);
                     }
                 }
-                JSONObject mainobject=new JSONObject();
+                JSONObject mainobject = new JSONObject();
                 StringWriter out = new StringWriter();
                 obj.writeJSONString(out);
 
                 String jsontext = out.toString();
                 dictionaryhashvalue = md5.calculatestringtomd5(jsontext);
 
-                mainobject.put("sequencedevicedate",""+sequencedevicedate);
-                mainobject.put("sequenceno",sequenceno);
-                mainobject.put("sequencehashmethod",""+hashmethod);
-                mainobject.put("dictionaryhashmethod",""+hashmethod);
-                mainobject.put("dictionaryhashvalue",dictionaryhashvalue);
-                mainobject.put("recorddate",""+recordate);
-                mainobject.put("dictionary",jsontext);
-                mainobject.put("sequencehashvalue",sequencehash);
+                mainobject.put("sequencedevicedate", "" + sequencedevicedate);
+                mainobject.put("sequenceno", sequenceno);
+                mainobject.put("sequencehashmethod", "" + hashmethod);
+                mainobject.put("dictionaryhashmethod", "" + hashmethod);
+                mainobject.put("dictionaryhashvalue", dictionaryhashvalue);
+                mainobject.put("recorddate", "" + recordate);
+                mainobject.put("dictionary", jsontext);
+                mainobject.put("sequencehashvalue", sequencehash);
                 array.put(mainobject);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            mpairslist.put("html","0");
-            mpairslist.put("key",""+finalvideokey);
-            mpairslist.put("devicetimeoffset",""+finaldevicetimeoffset);
-            mpairslist.put("apirequestdevicedate",""+finalapirequestdevicedate);
-            mpairslist.put("sequencelist",array);
+            mpairslist.put("html", "0");
+            mpairslist.put("key", "" + finalvideokey);
+            mpairslist.put("devicetimeoffset", "" + finaldevicetimeoffset);
+            mpairslist.put("apirequestdevicedate", "" + finalapirequestdevicedate);
+            mpairslist.put("sequencelist", array);
 
             final String finalSequenceno = sequenceno;
             String actiontype = "";
 
-            if(type.equalsIgnoreCase("video"))
-            {
+            if (type.equalsIgnoreCase("video")) {
                 actiontype = config.type_video_update;
-                mpairslist.put("videotoken",finaltoken);
-                mpairslist.put("videoupdatedevicedate",""+videoupdatedevicedate);
-            }
-            else if(type.equalsIgnoreCase("audio"))
-            {
+                mpairslist.put("videotoken", finaltoken);
+                mpairslist.put("videoupdatedevicedate", "" + videoupdatedevicedate);
+            } else if (type.equalsIgnoreCase("audio")) {
                 actiontype = config.type_audio_update;
-                mpairslist.put("audiotoken",finaltoken);
-                mpairslist.put("audioupdatedevicedate",""+videoupdatedevicedate);
-            }
-            else if(type.equalsIgnoreCase("image"))
-            {
+                mpairslist.put("audiotoken", finaltoken);
+                mpairslist.put("audioupdatedevicedate", "" + videoupdatedevicedate);
+            } else if (type.equalsIgnoreCase("image")) {
                 actiontype = config.type_image_update;
-                mpairslist.put("imagetoken",finaltoken);
-                mpairslist.put("imageupdatedevicedate",""+videoupdatedevicedate);
+                mpairslist.put("imagetoken", finaltoken);
+                mpairslist.put("imageupdatedevicedate", "" + videoupdatedevicedate);
             }
 
             // api calling for video_update or audio_update
             final String finalDictionaryhashvalue = dictionaryhashvalue;
-            xapipost_sendjson(locationawareactivity.this,actiontype, mpairslist, new apiresponselistener() {
+            xapipost_sendjson(locationawareactivity.this, actiontype, mpairslist, new apiresponselistener() {
                 @Override
-                public void onResponse(taskresult response)
-                {
-                    if(response.isSuccess())
-                    {
+                public void onResponse(taskresult response) {
+                    if (response.isSuccess()) {
                         try {
 
                             JSONObject object = (JSONObject) response.getData();
                             JSONObject jsonObject = object.getJSONObject("sequences");
-                            String sequenceid =  "",color="",latency="", mediaframetransactionid = "",serverdictionaryhash="",sequencekey = "";
+                            String sequenceid = "", color = "", latency = "", mediaframetransactionid = "", serverdictionaryhash = "", sequencekey = "";
 
                             Iterator itr = jsonObject.keys();
-                            while(itr.hasNext()){
-                                sequencekey = (String)itr.next();
+                            while (itr.hasNext()) {
+                                sequencekey = (String) itr.next();
                                 JSONObject jobject = jsonObject.getJSONObject(sequencekey);
 
                                 //  get id from  issue
                                 sequenceid = jobject.getString("sequenceid");
 
-                                if(jobject.has("videoframetransactionid"))
+                                if (jobject.has("videoframetransactionid"))
                                     mediaframetransactionid = jobject.getString("videoframetransactionid");
 
-                                if(jobject.has("audioframetransactionid"))
+                                if (jobject.has("audioframetransactionid"))
                                     mediaframetransactionid = jobject.getString("audioframetransactionid");
 
-                                if(jobject.has("imageframetransactionid"))
+                                if (jobject.has("imageframetransactionid"))
                                     mediaframetransactionid = jobject.getString("imageframetransactionid");
 
-                                if(jobject.has("color"))
+                                if (jobject.has("color"))
                                     color = jobject.getString("color");
 
-                                if(jobject.has("latency"))
+                                if (jobject.has("latency"))
                                     latency = jobject.getString("latency");
 
                                 serverdictionaryhash = jobject.getString("serverdictionaryhash");
                             }
 
                             String serverdate = object.getString("serverdate");
-                            updatevideoupdateapiresponse(finalselectedid,sequencekey,serverdate,serverdictionaryhash,
-                                    sequenceid,mediaframetransactionid,color,latency, finalDictionaryhashvalue);
+                            updatevideoupdateapiresponse(finalselectedid, sequencekey, serverdate, serverdictionaryhash,
+                                    sequenceid, mediaframetransactionid, color, latency, finalDictionaryhashvalue);
 
-                        }catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -2488,22 +2378,21 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 }
             });
             mdbhelper.close();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void callvideocompletedapi(String startselectedid,String finalheader,String finallocalkey,String finalapirequestdevicedate,
-                                      String finalvideokey,String finaldevicetimeoffset,String finaltoken,
-                                      String finalvideocompletedevicedate,String finalsync,String type){
+    public void callvideocompletedapi(String startselectedid, String finalheader, String finallocalkey, String finalapirequestdevicedate,
+                                      String finalvideokey, String finaldevicetimeoffset, String finaltoken,
+                                      String finalvideocompletedevicedate, String finalsync, String type) {
 
-        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
+        HashMap<String, Object> mpairslist = new HashMap<String, Object>();
         final String localkey = finallocalkey;
-        final String header = finalheader,sync =finalsync;
+        final String header = finalheader, sync = finalsync;
         String synchdefaultversion = "1", synchstatus = "completed", synchcompletedate = "", synchlastsequence = "";
 
-        String framecount="",videocompletedevicedate="",videoduration="",hassync="",synccurrentdate = "";
+        String framecount = "", videocompletedevicedate = "", videoduration = "", hassync = "", synccurrentdate = "";
 
         String currentdate[] = common.getcurrentdatewithtimezone();
         String Lastdate = currentdate[0];
@@ -2514,8 +2403,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             JSONObject objheader = new JSONObject(header);
 
 
-            framecount  = objheader.getString("framecounts");
-            videoduration  = objheader.getString("duration");
+            framecount = objheader.getString("framecounts");
+            videoduration = objheader.getString("duration");
 
             synccurrentdate = obj.getString("firstdate");
 
@@ -2524,72 +2413,64 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
 
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put("version",synchdefaultversion);
-        map.put("firstdate",synccurrentdate);
-        map.put("lastdate",Lastdate);
-        map.put("lastsequence",framecount);
-        map.put("status",synchstatus);
-        map.put("completedate",finalvideocompletedevicedate);
+        map.put("version", synchdefaultversion);
+        map.put("firstdate", synccurrentdate);
+        map.put("lastdate", Lastdate);
+        map.put("lastsequence", framecount);
+        map.put("status", synchstatus);
+        map.put("completedate", finalvideocompletedevicedate);
 
         Gson gson = new Gson();
         String json = gson.toJson(map);
-        Log.e("json",""+json);
+        Log.e("json", "" + json);
 
-        updatedatasync(json,startselectedid);
+        updatedatasync(json, startselectedid);
 
-        mpairslist.put("html","0");
-        mpairslist.put("key",""+finalvideokey);
-        mpairslist.put("devicetimeoffset",""+finaldevicetimeoffset);
-        mpairslist.put("apirequestdevicedate",""+finalapirequestdevicedate);
+        mpairslist.put("html", "0");
+        mpairslist.put("key", "" + finalvideokey);
+        mpairslist.put("devicetimeoffset", "" + finaldevicetimeoffset);
+        mpairslist.put("apirequestdevicedate", "" + finalapirequestdevicedate);
         mpairslist.put("framecount", framecount);
 
-        String actiontype="";
-        if(type.equalsIgnoreCase("video"))
-        {
+        String actiontype = "";
+        if (type.equalsIgnoreCase("video")) {
             actiontype = config.type_video_complete;
-            mpairslist.put("videocompletedevicedate",""+finalvideocompletedevicedate);
-            mpairslist.put("videotoken",finaltoken);
+            mpairslist.put("videocompletedevicedate", "" + finalvideocompletedevicedate);
+            mpairslist.put("videotoken", finaltoken);
             mpairslist.put("videoduration", videoduration);
-        }
-        else if(type.equalsIgnoreCase("audio"))
-        {
+        } else if (type.equalsIgnoreCase("audio")) {
             actiontype = config.type_audio_complete;
-            mpairslist.put("audiocompletedevicedate",""+finalvideocompletedevicedate);
-            mpairslist.put("audiotoken",finaltoken);
+            mpairslist.put("audiocompletedevicedate", "" + finalvideocompletedevicedate);
+            mpairslist.put("audiotoken", finaltoken);
             mpairslist.put("audioduration", videoduration);
-        }
-        else if(type.equalsIgnoreCase("image"))
-        {
+        } else if (type.equalsIgnoreCase("image")) {
             actiontype = config.type_image_complete;
-            mpairslist.put("imagecompletedevicedate",""+finalvideocompletedevicedate);
-            mpairslist.put("imagetoken",finaltoken);
+            mpairslist.put("imagecompletedevicedate", "" + finalvideocompletedevicedate);
+            mpairslist.put("imagetoken", finaltoken);
             mpairslist.put("imageduration", videoduration);
         }
 
-        xapipost_sendjson(locationawareactivity.this,actiontype, mpairslist, new apiresponselistener() {
+        xapipost_sendjson(locationawareactivity.this, actiontype, mpairslist, new apiresponselistener() {
             @Override
-            public void onResponse(taskresult response)
-            {
-                if(response.isSuccess())
-                {
+            public void onResponse(taskresult response) {
+                if (response.isSuccess()) {
                     try {
 
                         JSONObject object = (JSONObject) response.getData();
-                        String valuehash = "",color="";
+                        String valuehash = "", color = "";
 
-                        if(object.has("hashvalue"))
+                        if (object.has("hashvalue"))
                             valuehash = object.getString("hashvalue");
 
-                        if(object.has("color"))
+                        if (object.has("color"))
                             color = object.getString("color");
 
-                        updatecompletehashvalue(localkey,valuehash);
-                        updatedatasyncdate(localkey,common.getCurrentDate(),config.sync_complete,color);
+                        updatecompletehashvalue(localkey, valuehash);
+                        updatedatasyncdate(localkey, common.getCurrentDate(), config.sync_complete, color);
 
                         sendbroadcastreader();
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -2599,122 +2480,105 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     //* Broadcast for notify medialist controller to get data from database
-    public void sendbroadcastreader()
-    {
+    public void sendbroadcastreader() {
         Intent i = new Intent(config.composer_service_getencryptionmetadata);
         sendBroadcast(i);
     }
 
-    public void updatemediaattempt(String location,int totalattempt,String status)
-    {
+    public void updatemediaattempt(String location, int totalattempt, String status) {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
             mdbhelper.createDatabase();
         }
         try {
             mdbhelper.open();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatemediaattempt(location,""+totalattempt,status);
+            mdbhelper.updatemediaattempt(location, "" + totalattempt, status);
             mdbhelper.close();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updatedatasync(String sync,String selectedid)
-    {
+    public void updatedatasync(String sync, String selectedid) {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
             mdbhelper.createDatabase();
         }
         try {
             mdbhelper.open();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatesyncvalue(sync,selectedid);
+            mdbhelper.updatesyncvalue(sync, selectedid);
             mdbhelper.close();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updatedatasyncdate(String localkey,String syncdate,String syncstatus,String color)
-    {
+    public void updatedatasyncdate(String localkey, String syncdate, String syncstatus, String color) {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
             mdbhelper.createDatabase();
         }
         try {
             mdbhelper.open();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatevideosyncdate(localkey,syncdate,syncstatus,color);
+            mdbhelper.updatevideosyncdate(localkey, syncdate, syncstatus, color);
             mdbhelper.close();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    public void updatecompletehashvalue(String localkey,String valuehash)
-    {
+    public void updatecompletehashvalue(String localkey, String valuehash) {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
             mdbhelper.createDatabase();
         }
         try {
             mdbhelper.open();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatecompletehashvalue(localkey,valuehash);
+            mdbhelper.updatecompletehashvalue(localkey, valuehash);
             mdbhelper.close();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updatevideokeytoken(String videoid,String videokey,String tokan,String transactionid)
-    {
+    public void updatevideokeytoken(String videoid, String videokey, String tokan, String transactionid) {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
             mdbhelper.createDatabase();
         }
         try {
             mdbhelper.open();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatevideokeytoken(videoid,videokey,tokan,transactionid);
+            mdbhelper.updatevideokeytoken(videoid, videokey, tokan, transactionid);
             mdbhelper.close();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
     public void updatevideoupdateapiresponse(String selectedid, String sequence, String serverdate, String serverdictionaryhash,
-                                             String sequenceid, String videoframetransactionid,String color,String latency,String dictionaryhashvalue)
-    {
+                                             String sequenceid, String videoframetransactionid, String color, String latency, String dictionaryhashvalue) {
 
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
@@ -2722,19 +2586,36 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         try {
             mdbhelper.open();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatevideoupdateapiresponse(selectedid,sequence,serverdate,
-                    serverdictionaryhash,sequenceid,videoframetransactionid,color,latency,dictionaryhashvalue);
+            mdbhelper.updatevideoupdateapiresponse(selectedid, sequence, serverdate,
+                    serverdictionaryhash, sequenceid, videoframetransactionid, color, latency, dictionaryhashvalue);
             mdbhelper.close();
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
     //** end code of media composer sync process
 
+    BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String avilablewifiname = "";
+            results = wifiManager.getScanResults();
+            unregisterReceiver(this);
+
+            for (ScanResult scanResult : results) {
+
+                if (avilablewifiname.isEmpty()) {
+                    avilablewifiname = "" + scanResult.SSID;
+                } else {
+                    avilablewifiname = avilablewifiname + ", " + scanResult.SSID;
+                }
+            }
+            xdata.getinstance().saveSetting(config.availablewifinetwork, avilablewifiname);
+            Log.e("avilablenetworks",""+avilablewifiname);
+        }
+    };
 }

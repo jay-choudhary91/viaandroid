@@ -244,6 +244,7 @@
     <string name="caution">Caution</string>
     <string name="invalid">Invalid</string>
     <string name="unsent">Unsent</string>
+    <string name="availablewifinetwork">Available Wifi Networks</string>
     <string name="metadata">Meta Data</string>
     <string name="video_audio_data">Video/Audio Data</string>
 

@@ -3,6 +3,7 @@ package com.deeptruth.app.android.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
@@ -183,6 +184,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     customfonttextview tvdataletency;
     @BindView(R.id.txt_degree)
     customfonttextview txtdegree;
+    @BindView(R.id.txt_availablewifinetwork)
+    customfonttextview txt_availablewifinetwork;
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
@@ -291,6 +294,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           msensormanager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
           scrollview_meta = (ScrollView) findViewById(R.id.scrollview_meta);
 
+          txt_availablewifinetwork.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvaddress.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvlatitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
           tvlongitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
@@ -567,6 +571,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
+            common.setdrawabledata(config.availablewifinetwork,"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.availablewifinetwork)), txt_availablewifinetwork);
 
             String latitude=xdata.getinstance().getSetting(config.Latitude);
             String longitude=xdata.getinstance().getSetting(config.Longitude);
