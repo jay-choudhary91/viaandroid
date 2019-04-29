@@ -280,10 +280,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private String[] transparentarray=common.gettransparencyvalues();
     int navigationbarheight = 0;
     arraycontainer arraycontainerformetric =null;
-    //
-    private Circle lastUserCircle;
-    private long pulseDuration = 1000;
-    private ValueAnimator lastPulseAnimator;
 
     @Override
     public int getlayoutid() {
@@ -1938,81 +1934,4 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         data.setDrawValues(false);
         piechart.setData(data);
     }
-
-    /*private void addPulsatingEffect(final LatLng userLatlng){
-        if(lastPulseAnimator != null){
-            lastPulseAnimator.cancel();
-            Log.d("onLocationUpdated: ","cancelled" );
-        }
-        Log.e("onLocationgpsaccuracy: ",xdata.getinstance().getSetting("gpsaccuracy"));
-        if(lastUserCircle != null)
-            lastUserCircle.setCenter(userLatlng);
-
-        lastPulseAnimator = valueAnimate(getDisplayPulseRadius(Float.parseFloat(xdata.getinstance().getSetting("gpsaccuracy"))), pulseDuration, new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                if(lastUserCircle != null) {
-                    lastUserCircle.setRadius((Float) animation.getAnimatedValue());
-                }
-                else {
-                  //  lastUserCircle.setFillColor(adjustAlpha(Color.GREEN, 1 - animation.getAnimatedFraction()));
-                    lastUserCircle = mgooglemap.addCircle(new CircleOptions()
-                            .center(userLatlng)
-                            .radius(getDisplayPulseRadius((Float) animation.getAnimatedValue()))
-                            .strokeColor(Color.RED)
-                            .fillColor(Color.GREEN));
-                }
-            }
-        });
-
-    }
-    protected ValueAnimator valueAnimate(float accuracy,long duration, ValueAnimator.AnimatorUpdateListener updateListener){
-        Log.d( "valueAnimate: ", "called");
-        ValueAnimator va = ValueAnimator.ofFloat(0,accuracy);
-        va.setDuration(duration);
-        va.addUpdateListener(updateListener);
-        va.setRepeatCount(ValueAnimator.INFINITE);
-        va.setRepeatMode(ValueAnimator.RESTART);
-
-        va.start();
-        return va;
-    }
-
-    protected float getDisplayPulseRadius(float radius) {
-        float diff = (mgooglemap.getMaxZoomLevel() - mgooglemap.getCameraPosition().zoom);
-        if (diff < 3)
-            return radius;
-        if (diff < 3.7)
-            return radius * (diff / 2);
-        if (diff < 4.5)
-            return (radius * diff);
-        if (diff < 5.5)
-            return (radius * diff) * 1.5f;
-        if (diff < 7)
-            return (radius * diff) * 2f;
-        if (diff < 7.8)
-            return (radius * diff) * 3.5f;
-        if (diff < 8.5)
-            return (float) (radius * diff) * 5;
-        if (diff < 10)
-            return (radius * diff) * 10f;
-        if (diff < 12)
-            return (radius * diff) * 18f;
-        if (diff < 13)
-            return (radius * diff) * 28f;
-        if (diff < 16)
-            return (radius * diff) * 40f;
-        if (diff < 18)
-            return (radius * diff) * 60;
-        return (radius * diff) * 80;
-    }
-
-
-    private int adjustAlpha(int color, float factor) {
-        int alpha = Math.round(Color.alpha(color) * factor);
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
-        return Color.argb(alpha, red, green, blue);
-    }*/
 }
