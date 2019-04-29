@@ -369,7 +369,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     public boolean ismediaplayer = false,islastdragarrow = false;
     String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            lastsavedangle="";
+            lastsavedangle="",mediatoken="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver;
     int targetheight=0,previousheight=0,targetwidth=0,previouswidth=0, previouswidthpercentage=0,scrubberviewwidth=0;
@@ -1452,7 +1452,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                     }, 1500);
                     if (mediafilepath != null && (!mediafilepath.isEmpty())){
-                        gethelper().showsharepopupsub(mediafilepath,"video",xdata.getinstance().getSetting(config.selectedvideotoken));
+                        gethelper().showsharepopupsub(mediafilepath,"video",mediatoken);
                     }
                    // common.sharevideo(getActivity(), mediafilepath);
                     break;
@@ -1925,6 +1925,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             //mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
                             mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                             medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
+                            mediatoken = "" + cur.getString(cur.getColumnIndex("token"));
                             medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
                             mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
                             mediaduration =  "" + cur.getString(cur.getColumnIndex("mediaduration"));

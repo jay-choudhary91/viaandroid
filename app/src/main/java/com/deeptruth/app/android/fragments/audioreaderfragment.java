@@ -327,7 +327,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private float currentDegree = 0f;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="";
+            mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="",mediatoken="";
     adapteritemclick mcontrollernavigator;
     arraycontainer arraycontainerformetric =null;
     int currentprocessframe=0;
@@ -833,7 +833,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 }, 1500);
                 if (audiourl != null && (!audiourl.isEmpty()))
-                    gethelper().showsharepopupsub(audiourl,"audio",xdata.getinstance().getSetting(config.selectedaudiourl));
+                    gethelper().showsharepopupsub(audiourl,"audio",mediatoken);
                     //common.shareaudio(getActivity(), audiourl);
                 break;
 
@@ -1838,6 +1838,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                     medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                     medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
+                    mediatoken = "" + cur.getString(cur.getColumnIndex("token"));
                     mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
                     mediaduration =  "" + cur.getString(cur.getColumnIndex("mediaduration"));
                     mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
