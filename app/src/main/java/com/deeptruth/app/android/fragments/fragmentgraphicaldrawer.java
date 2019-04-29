@@ -605,7 +605,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 else
                 {
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                            "\n"+ 0 +" feet", tvgpsaccuracy);
+                            "\n"+ gpsaccuracy , tvgpsaccuracy);
                 }
 
                 if(phone_time_clock != null)
