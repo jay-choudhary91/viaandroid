@@ -1437,11 +1437,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     imn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                     break;
                 case R.id.img_share_media:
-                    if(! gethelper().isuserlogin())
+                    /*if(! gethelper().isuserlogin())
                     {
                         gethelper().redirecttologin();
                         return;
-                    }
+                    }*/
 
                     img_share_media.setEnabled(false);
                     new Handler().postDelayed(new Runnable()

@@ -618,11 +618,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 break;
             case R.id.img_share_media:
-                if(! gethelper().isuserlogin())
+               /* if(! gethelper().isuserlogin())
                 {
                     gethelper().redirecttologin();
                     return;
-                }
+                }*/
 
                 img_share_media.setEnabled(false);
                 new Handler().postDelayed(new Runnable()

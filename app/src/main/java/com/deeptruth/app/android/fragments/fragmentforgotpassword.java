@@ -1,15 +1,20 @@
-package com.deeptruth.app.android.activity;
+package com.deeptruth.app.android.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.fragments.registrationbasefragment;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.customedittext;
 import com.deeptruth.app.android.utils.common;
@@ -29,7 +34,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class forgotpassword extends registrationbaseactivity implements View.OnClickListener {
+public class fragmentforgotpassword extends registrationbasefragment implements View.OnClickListener {
 
     @BindView(R.id.tv_forgotpassword)
     customfonttextview tvforgotpassword;
@@ -39,13 +44,23 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
     customfonttextview tv_next;
     @BindView(R.id.layout_forgotpass)
     RelativeLayout layout_forgotpass;
+    View contaionerview = null;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(contaionerview ==null){
+            contaionerview = super.onCreateView(inflater, container, savedInstanceState);
+            ButterKnife.bind(this, contaionerview);
+
+            tv_next.setOnClickListener(this);
+        }
+        return contaionerview;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgotpassword);
-        ButterKnife.bind(forgotpassword.this);
-        tv_next.setOnClickListener(this);
+    public int getlayoutid() {
+        return R.layout.activity_forgotpassword;
     }
 
     @Override
@@ -68,8 +83,8 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
         requestparams.put("type","client");
         requestparams.put("action","forgotpassword");
         requestparams.put("email",edtusername.getText().toString().trim());
-        progressdialog.showwaitingdialog(forgotpassword.this);
-        xapipost_send(forgotpassword.this,requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(getActivity());
+        getHelper().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -84,14 +99,18 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                Intent intent=new Intent(forgotpassword.this,verifyuser.class);
-                                intent.putExtra("activityname",config.forgotpassword);
-                                startActivity(intent);
+                                fragmentverifyuser fragverifyuser = new fragmentverifyuser();
+                                fragverifyuser.setdata(config.forgotpassword);
+                                getHelper().addFragment(fragverifyuser,false,true);
+
+                                /*Intent intent=new Intent(fragmentforgotpassword.this,fragmentverifyuser.class);
+                                intent.putExtra("activityname",config.fragmentforgotpassword);
+                                startActivity(intent);*/
                             }
                             else
                             {
                                 if(object.has("error"))
-                                    Toast.makeText(forgotpassword.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -109,7 +128,7 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(forgotpassword.this, error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e)
                     {
@@ -118,7 +137,7 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
                 }
                 else
                 {
-                    Toast.makeText(forgotpassword.this, getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });

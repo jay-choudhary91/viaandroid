@@ -1,18 +1,24 @@
-package com.deeptruth.app.android.activity;
+package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.fragments.registrationbasefragment;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
+import com.goodiebag.pinview.Pinview;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,7 +28,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class changepassword extends registrationbaseactivity implements View.OnClickListener{
+public class fragmentchangepassword extends registrationbasefragment implements View.OnClickListener{
 
 
     @BindView(R.id.edt_password)
@@ -32,12 +38,24 @@ public class changepassword extends registrationbaseactivity implements View.OnC
     @BindView(R.id.tv_submit)
     TextView tv_submit;
 
+    View contaionerview = null;
+
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_changepassword);
-        ButterKnife.bind(changepassword.this);
-        tv_submit.setOnClickListener(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(contaionerview ==null){
+            contaionerview = super.onCreateView(inflater, container, savedInstanceState);
+            ButterKnife.bind(this, contaionerview);
+
+            tv_submit.setOnClickListener(this);
+        }
+        return contaionerview;
+    }
+
+    @Override
+    public int getlayoutid() {
+        return R.layout.activity_changepassword;
     }
 
     @Override
@@ -60,8 +78,8 @@ public class changepassword extends registrationbaseactivity implements View.OnC
         requestparams.put("password",""+edt_password.getText().toString().trim());
         requestparams.put("confirmpassword",""+edt_confirmpassword.getText().toString().trim());
         requestparams.put("reset_authtoken",""+xdata.getinstance().getSetting(config.reset_authtoken).toString().trim());
-        progressdialog.showwaitingdialog(changepassword.this);
-        xapipost_send(changepassword.this,requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(getActivity());
+        getHelper().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -76,16 +94,16 @@ public class changepassword extends registrationbaseactivity implements View.OnC
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                Intent i = new Intent(changepassword.this, signinactivity.class);
-                                hidekeyboard();
+                               /* Intent i = new Intent(fragmentchangepassword.this, fragmentsigninactivity.class);
+                                 getHelper().hidekeyboard();
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(i);
-                                finish();
+                                finish();*/
                             }
                             else
                             {
                                 if(object.has("error"))
-                                    Toast.makeText(changepassword.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -103,7 +121,7 @@ public class changepassword extends registrationbaseactivity implements View.OnC
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(changepassword.this, error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e)
                     {
@@ -112,7 +130,7 @@ public class changepassword extends registrationbaseactivity implements View.OnC
                 }
                 else
                 {
-                    Toast.makeText(changepassword.this, getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });

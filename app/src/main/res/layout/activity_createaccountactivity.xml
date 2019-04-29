@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@color/forgotpassword_bg"
-    tools:context="com.deeptruth.app.android.activity.createaccount">
+    tools:context="com.deeptruth.app.android.fragments.fragmentcreateaccount">
 
 
     <RelativeLayout

@@ -818,11 +818,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 break;
             case R.id.img_share_media:
-                if(! gethelper().isuserlogin())
+                /*if(! gethelper().isuserlogin())
                 {
                     gethelper().redirecttologin();
                     return;
-                }
+                }*/
 
                 img_share_media.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
