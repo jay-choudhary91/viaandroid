@@ -2658,32 +2658,35 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
     //** end code of media composer sync process
     public void getwifinetworks(){
-         wifiReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String availablewifiname = "";
-                if((xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0"))){
-                    xdata.getinstance().saveSetting(config.availablewifis, "");
-                }
-                else{
-                    results = wifiManager.getScanResults();
-                    //  unregisterReceiver(this);
-
-                    for (ScanResult scanResult : results) {
-
-                        if (availablewifiname.isEmpty()) {
-                            availablewifiname = "" + scanResult.SSID;
-                        } else {
-                            availablewifiname = availablewifiname + ", " + scanResult.SSID;
-                        }
+        if(wifiReceiver == null)
+        {
+            wifiReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String availablewifiname = "";
+                    if((xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0"))){
+                        xdata.getinstance().saveSetting(config.availablewifis, "");
                     }
-                    //  availablewifinetwork = availablewifiname;
-                    xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
-                    Log.e("availablenetworks",""+availablewifiname);
+                    else{
+                        results = wifiManager.getScanResults();
+                        //  unregisterReceiver(this);
+
+                        for (ScanResult scanResult : results) {
+
+                            if (availablewifiname.isEmpty()) {
+                                availablewifiname = "" + scanResult.SSID;
+                            } else {
+                                availablewifiname = availablewifiname + ", " + scanResult.SSID;
+                            }
+                        }
+                        //  availablewifinetwork = availablewifiname;
+                        xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
+                        Log.e("availablenetworks",""+availablewifiname);
+                    }
                 }
-            }
-        };
-        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            };
+            registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        }
         wifiManager.startScan();
     }
 }
