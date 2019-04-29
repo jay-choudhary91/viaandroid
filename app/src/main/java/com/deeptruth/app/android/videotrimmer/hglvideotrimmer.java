@@ -345,6 +345,8 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
             mplayview.setVisibility(View.VISIBLE);
             mvideoview.pause();
 
+            progressdialog.showwaitingdialog(context);
+
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
             mediaMetadataRetriever.setDataSource(getContext(), msrc);
             long METADATA_KEY_DURATION = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
@@ -720,16 +722,6 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         switch (view.getId()){
 
             case R.id.img_share_icon:
-
-                img_share_icon.setEnabled(false);
-                new Handler().postDelayed(new Runnable()
-                {
-                    public void run()
-                    {
-                        img_share_icon.setEnabled(true);
-                    }
-                }, 1500);
-
                 onSaveClicked();
                 break;
 
