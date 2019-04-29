@@ -343,15 +343,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
           TimeZone timezone = TimeZone.getDefault();
-          final String timezoneid=timezone.getID();
+          String timezoneid=timezone.getID();
           phone_time_clock.setTimeZone(timezoneid, new itemupdatelistener() {
                 @Override
-                public void onitemupdate(Object object) {
+                public void onitemupdate(Object object,Object timezoneobject) {
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
                         txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
-                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneid);
+                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneobject.toString());
                         //txt_phone_time.setText(common.currenttime_analogclock()+" MST");
                     }
                 }
@@ -363,7 +363,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             });
           world_time_clock.setTimeZone("GMT", new itemupdatelistener() {
                 @Override
-                public void onitemupdate(Object object) {
+                public void onitemupdate(Object object,Object timezoneobject) {
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;

@@ -179,7 +179,7 @@ public class AnalogClock extends View {
                 mSecondHand.draw(canvas);
             }
             if(itemupdator != null)
-                itemupdator.onitemupdate(mTime);
+                itemupdator.onitemupdate(mTime,common.gettimezoneshortname());
         }
         else
         {
@@ -211,7 +211,17 @@ public class AnalogClock extends View {
                             mSecondHand.draw(canvas);
                         }
                         if(itemupdator != null)
-                            itemupdator.onitemupdate(calendar);
+                        {
+                            if(arrayitem.length > 1)
+                            {
+                                itemupdator.onitemupdate(calendar,arrayitem[1]);
+                            }
+                            else
+                            {
+                                itemupdator.onitemupdate(calendar,"");
+                            }
+                        }
+
 
                     }catch (Exception e)
                     {

@@ -144,8 +144,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", connectionspeed = "",
             connectiondatadelay = "",availablewifinetwork="";
     MyPhoneStateListener mPhoneStatelistener;
-    int mSignalStrength = 0, dbtoxapiupdatecounter = 0, servermetricsgetupdatecounter = 0;
-
+    int mSignalStrength = 0, dbtoxapiupdatecounter = 0, servermetricsgetupdatecounter = 0,currentsatellitecounter=-1;
     noise mNoise;
     private static final int PERMISSION_RECORD_AUDIO = 92;
     public static final int my_permission_read_phone_state = 90;
@@ -337,6 +336,36 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             if (metricobject.has("remote_ip"))
                                 xdata.getinstance().saveSetting(config.remoteip, metricobject.getString("remote_ip"));
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public void getcurrentsatellitesget() {
+        HashMap<String, String> requestparams = new HashMap<>();
+        requestparams.put("action", "currentsatellites_get");
+        xapipost_send(locationawareactivity.this, requestparams, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response) {
+                if (response.isSuccess()) {
+                    try {
+                        JSONObject object = new JSONObject(response.getData().toString());
+                        /*if (object.has("metrics"))
+                        {
+                            xdata.getinstance().saveSetting(config.sister_metric, object.getJSONObject("metrics").toString());
+                            JSONObject metricobject = object.getJSONObject("metrics");
+                            if (metricobject.has("satellitedate"))
+                                xdata.getinstance().saveSetting(config.satellitedate, metricobject.getString("satellitedate"));
+
+                            if (metricobject.has("satellites"))
+                                xdata.getinstance().saveSetting(config.satellitesdata, metricobject.getJSONArray("satellites").toString());
+
+                            if (metricobject.has("remote_ip"))
+                                xdata.getinstance().saveSetting(config.remoteip, metricobject.getString("remote_ip"));
+                        }*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -765,10 +794,18 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             }
 
                             servermetricsgetupdatecounter++;
-                            if ((servermetricsgetupdatecounter >= 20 && common.isnetworkconnected(locationawareactivity.this)) ||
+                            if ((servermetricsgetupdatecounter >= 60 && common.isnetworkconnected(locationawareactivity.this)) ||
                                     (xdata.getinstance().getSetting(config.satellitedate).trim().isEmpty())) {
                                 servermetricsgetupdatecounter = 0;
+                                currentsatellitecounter++;
                                 getsistermetric();
+                            }
+
+                            if ((currentsatellitecounter == -1 || (common.isnetworkconnected(locationawareactivity.this) &&
+                                    currentsatellitecounter == 5)))
+                            {
+                                currentsatellitecounter = 0;
+                                getcurrentsatellitesget();
                             }
                         }
                         timercounterhandler++;
@@ -886,7 +923,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
             String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
                     + ":" + common.appendzero(calendar.get(Calendar.SECOND));
-            metricItemValue = time;
+            metricItemValue = time+" "+common.gettimezoneshortname();;
         } else if (key.equalsIgnoreCase(config.worldclocktime)) {
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
             String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))

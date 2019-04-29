@@ -1569,6 +1569,16 @@ public class common {
       return time;
     }
 
+    public static String gettimezoneshortname() {
+        String tz = TimeZone.getDefault().getDisplayName();
+        String[] stz = tz.split(" ");
+        StringBuilder sName = new StringBuilder();
+        for (int i = 0; i < stz.length; i++) {
+            sName.append(stz[i].charAt(0));
+        }
+        return sName.toString();
+    }
+
     public static String convertlatitude(double latitude) {
         StringBuilder builder = new StringBuilder();
 
