@@ -1524,14 +1524,6 @@ public class common {
         return value;
     }
 
-    public static void phoneAnalytics(final TextView txt_phonetype, final TextView txt_cellprovider, final TextView txt_connection_speed, final TextView txt_osversion,
-                                      final TextView txt_wifinetwork, final TextView txt_gps_accuracy, final TextView txt_screensize, final TextView txt_country,
-                                      final TextView txt_cpuusage, final TextView txt_brightness, final TextView txt_timezone, final TextView txt_memoryusage, final TextView txt_bluetooth,
-                                      final TextView txt_localtime, final TextView txt_storageavailable, final TextView txt_language,
-                                      final TextView txt_systemuptime, final TextView txt_battery) {
-
-    }
-
     public static String systemuptime(long uptime) {
 
         String time="";
@@ -2259,6 +2251,9 @@ public class common {
     }
     public static double convertmilestometer(float miles) {
         return miles*1609.344;
+    }
+    public static int convertmetertofeet(float meter) {
+        return (int)(meter / 0.3048);
     }
 
 

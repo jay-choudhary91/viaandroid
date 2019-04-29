@@ -333,7 +333,7 @@ public class locationservice extends Service implements LocationListener, GpsSta
         if(common.isnetworkconnected(getApplicationContext()))
             fetchcompleteaddress(location);
 
-        xdata.getinstance().saveSetting("gpsaccuracy", "" + location.getAccuracy());
+        xdata.getinstance().saveSetting(config.itemgpsaccuracy, "" + common.convertmetertofeet(location.getAccuracy()));
         xdata.getinstance().saveSetting("strengthofsatellites", "" + location.getAccuracy());
         oldlocation = location;
     }

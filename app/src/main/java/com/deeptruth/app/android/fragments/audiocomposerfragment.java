@@ -1577,15 +1577,19 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             if(xdata.getinstance().getSetting(config.GPSAccuracy)!= null && (! xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty())
                     && (! xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA")))
             {
-                Double  gpsvalue = Double.valueOf(xdata.getinstance().getSetting(config.GPSAccuracy));
-                if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")){
-                    txt_weakgps.setVisibility(View.GONE);
-                }else {
-                    if ((gpsvalue <= 50 && gpsvalue != 0)) {
-                        txt_weakgps.setVisibility(View.VISIBLE);
-                        txt_weakgps.setText(getResources().getString(R.string.weak_gps));
-                    } else {
+                String[] arrayitem=xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
+                if(arrayitem.length > 0)
+                {
+                    Double  gpsvalue = Double.valueOf(xdata.getinstance().getSetting(config.GPSAccuracy));
+                    if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")){
                         txt_weakgps.setVisibility(View.GONE);
+                    }else {
+                        if ((gpsvalue <= 50 && gpsvalue != 0)) {
+                            txt_weakgps.setVisibility(View.VISIBLE);
+                            txt_weakgps.setText(getResources().getString(R.string.weak_gps));
+                        } else {
+                            txt_weakgps.setVisibility(View.GONE);
+                        }
                     }
                 }
             }
