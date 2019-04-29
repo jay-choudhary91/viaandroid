@@ -1435,7 +1435,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if(videoobj.getmimetype().startsWith("image"))
             {
                 xdata.getinstance().saveSetting(config.selectedphotourl,""+videoobj.getPath());
-                xdata.getinstance().saveSetting(config.selectedphototoken,""+videoobj.getVideotoken());
                 imagereaderfragment fragmentimagereader = new imagereaderfragment();
                 fragmentimagereader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentimagereader, false, true);
@@ -1443,7 +1442,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }else if(videoobj.getmimetype().startsWith("audio"))
             {
                 xdata.getinstance().saveSetting(config.selectedaudiourl,""+videoobj.getPath());
-                xdata.getinstance().saveSetting(config.selectedaudiotoken,""+videoobj.getVideotoken());
                 audioreaderfragment fragmentaudioreader = new audioreaderfragment();
                 fragmentaudioreader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentaudioreader, false, true);
@@ -1451,7 +1449,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }else if(videoobj.getmimetype().startsWith("video"))
             {
                 xdata.getinstance().saveSetting(config.selectedvideourl,""+videoobj.getPath());
-                xdata.getinstance().saveSetting(config.selectedvideotoken,""+videoobj.getVideotoken());
                 videoreaderfragment fragmentvideoreader=new videoreaderfragment();
                 fragmentvideoreader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentvideoreader, false, true);

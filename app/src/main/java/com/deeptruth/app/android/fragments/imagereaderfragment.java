@@ -215,7 +215,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
             tvmemoryusage,tvbluetooth,tvlocaltime,tvstoragefree,tvlanguage,tvuptime,tvbattery,tvdegree;
     private String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",
-            screenheight = "",screenwidth = "",lastsavedangle="";
+            screenheight = "",screenwidth = "",lastsavedangle="",mediatoken="";
     private float currentDegree = 0f;
     private ImageView img_niddle;
     private adapteritemclick mcontrollernavigator;
@@ -633,7 +633,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
                 }, 1500);
                 if (imageurl != null && (!imageurl.isEmpty()))
-                    gethelper().showsharepopupsub(imageurl,"image",xdata.getinstance().getSetting(config.selectedphototoken));
+                    gethelper().showsharepopupsub(imageurl,"image",mediatoken);
                     //common.shareimage(getActivity(), imageurl);
 
                 break;
@@ -890,6 +890,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                             medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                             medianotes = "" + cur.getString(cur.getColumnIndex("media_notes"));
+                            mediatoken = "" + cur.getString(cur.getColumnIndex("token"));
                             mediafolder = "" + cur.getString(cur.getColumnIndex("media_folder"));
                             mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
                         } while (cur.moveToNext());

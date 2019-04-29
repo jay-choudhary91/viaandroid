@@ -94,6 +94,7 @@ public class config {
     public static final String cpuusageirq = "cpuusageirq";
     public static final String barometer = "barometer";
     public static final String gpsaltitude = "gpsaltitude";
+    public static final String itemgpsaccuracy = "gpsaccuracy";
     public static final String wifinetworkavailable = "wifinetworkavailable";
     public static final String acceleration_x = "acceleration.x";
     public static final String acceleration_y = "acceleration.y";
@@ -217,9 +218,6 @@ public class config {
     public static final String selectedphotourl="selectedphotourl";
     public static final String selectedaudiourl="selectedaudiourl";
     public static final String selectedvideourl="selectedvideourl";
-    public static final String selectedaudiotoken="selectedaudiotoken";
-    public static final String selectedvideotoken="selectedvideotoken";
-    public static final String selectedphototoken="selectedphototoken";
 
     public static final String latency = "latency";
     public static final String currentlatency = "currentlatency";

@@ -144,8 +144,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", connectionspeed = "",
             connectiondatadelay = "",availablewifinetwork="";
     MyPhoneStateListener mPhoneStatelistener;
-    int mSignalStrength = 0, dbtoxapiupdatecounter = 0, servermetricsgetupdatecounter = 0;
-
+    int mSignalStrength = 0, dbtoxapiupdatecounter = 0, servermetricsgetupdatecounter = 0,currentsatellitecounter=-1;
     noise mNoise;
     private static final int PERMISSION_RECORD_AUDIO = 92;
     public static final int my_permission_read_phone_state = 90;
@@ -238,13 +237,26 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     updatelocationsparams(location);
                                 }
 
-                                if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true")) {
+                                if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
+                                {
                                     if (oldlocation == null)
                                         oldlocation = location;
 
                                     long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(), oldlocation.getLatitude(),
                                             oldlocation.getLongitude());
                                     double miles = common.convertmetertomiles(meter);
+                                    if(! xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
+                                    {
+                                        try
+                                        {
+                                            double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
+                                            miles=miles+value;
+                                        }catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
                                     DecimalFormat precision = new DecimalFormat("0.0");
                                     xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
                                 } else {
@@ -337,6 +349,36 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             if (metricobject.has("remote_ip"))
                                 xdata.getinstance().saveSetting(config.remoteip, metricobject.getString("remote_ip"));
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public void getcurrentsatellitesget() {
+        HashMap<String, String> requestparams = new HashMap<>();
+        requestparams.put("action", "currentsatellites_get");
+        xapipost_send(locationawareactivity.this, requestparams, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response) {
+                if (response.isSuccess()) {
+                    try {
+                        JSONObject object = new JSONObject(response.getData().toString());
+                        /*if (object.has("metrics"))
+                        {
+                            xdata.getinstance().saveSetting(config.sister_metric, object.getJSONObject("metrics").toString());
+                            JSONObject metricobject = object.getJSONObject("metrics");
+                            if (metricobject.has("satellitedate"))
+                                xdata.getinstance().saveSetting(config.satellitedate, metricobject.getString("satellitedate"));
+
+                            if (metricobject.has("satellites"))
+                                xdata.getinstance().saveSetting(config.satellitesdata, metricobject.getJSONArray("satellites").toString());
+
+                            if (metricobject.has("remote_ip"))
+                                xdata.getinstance().saveSetting(config.remoteip, metricobject.getString("remote_ip"));
+                        }*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -765,10 +807,18 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             }
 
                             servermetricsgetupdatecounter++;
-                            if ((servermetricsgetupdatecounter >= 20 && common.isnetworkconnected(locationawareactivity.this)) ||
+                            if ((servermetricsgetupdatecounter >= 60 && common.isnetworkconnected(locationawareactivity.this)) ||
                                     (xdata.getinstance().getSetting(config.satellitedate).trim().isEmpty())) {
                                 servermetricsgetupdatecounter = 0;
+                                currentsatellitecounter++;
                                 getsistermetric();
+                            }
+
+                            if ((currentsatellitecounter == -1 || (common.isnetworkconnected(locationawareactivity.this) &&
+                                    currentsatellitecounter == 5)))
+                            {
+                                currentsatellitecounter = 0;
+                                getcurrentsatellitesget();
                             }
                         }
                         timercounterhandler++;
@@ -886,7 +936,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
             String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
                     + ":" + common.appendzero(calendar.get(Calendar.SECOND));
-            metricItemValue = time;
+            metricItemValue = time+" "+common.gettimezoneshortname();;
         } else if (key.equalsIgnoreCase(config.worldclocktime)) {
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
             String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
@@ -1463,24 +1513,25 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         ay = sensorEvent.values[1];
                         az = sensorEvent.values[2];
 
-                        int inclination = (int) Math.round(Math.toDegrees(Math.acos(ay)));
+                        /*int inclination = (int) Math.round(Math.toDegrees(Math.acos(ay)));
                         if (inclination != lastinclination) {
-                            double xAngle = Math.atan(ax / (Math.sqrt(Math.pow(ay, 2) + Math.pow(az, 2))));
-                            double yAngle = Math.atan(ay / (Math.sqrt(Math.pow(ax, 2) + Math.pow(az, 2))));
-                            double zAngle = Math.atan(Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2)) / az);
 
-                            xAngle *= 180.00;
-                            yAngle *= 180.00;
-                            zAngle *= 180.00;
-                            xAngle /= 3.141592;
-                            yAngle /= 3.141592;
-                            zAngle /= 3.141592;
+                        }*/
+                        double xAngle = Math.atan(ax / (Math.sqrt(Math.pow(ay, 2) + Math.pow(az, 2))));
+                        double yAngle = Math.atan(ay / (Math.sqrt(Math.pow(ax, 2) + Math.pow(az, 2))));
+                        double zAngle = Math.atan(Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2)) / az);
 
-                            updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(Math.abs(xAngle)) + "° ");
-                            updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(Math.abs(yAngle)) + "° ");
-                            updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(Math.abs(zAngle)) + "° ");
-                        }
-                        lastinclination = inclination;
+                        xAngle *= 180.00;
+                        yAngle *= 180.00;
+                        zAngle *= 180.00;
+                        xAngle /= 3.141592;
+                        yAngle /= 3.141592;
+                        zAngle /= 3.141592;
+
+                        updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(Math.abs(xAngle)) + "° ");
+                        updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(Math.abs(yAngle)) + "° ");
+                        updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(Math.abs(zAngle)) + "° ");
+                        //lastinclination = inclination;
                         // Source link of degree conversion http://wizmoz.blogspot.com/2013/01/simple-accelerometer-data-conversion-to.html
                     }
                 }
@@ -1831,8 +1882,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 if (xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
                     metricitemarraylist.get(i).setMetricTrackValue("0" + " " + "miles");
             }
-            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
-                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("gpsaccuracy"));
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy)) {
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting(config.itemgpsaccuracy));
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")) {
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("currentaddress"));
@@ -2607,32 +2658,35 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
     //** end code of media composer sync process
     public void getwifinetworks(){
-         wifiReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String availablewifiname = "";
-                if((xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0"))){
-                    xdata.getinstance().saveSetting(config.availablewifis, "");
-                }
-                else{
-                    results = wifiManager.getScanResults();
-                    //  unregisterReceiver(this);
-
-                    for (ScanResult scanResult : results) {
-
-                        if (availablewifiname.isEmpty()) {
-                            availablewifiname = "" + scanResult.SSID;
-                        } else {
-                            availablewifiname = availablewifiname + ", " + scanResult.SSID;
-                        }
+        if(wifiReceiver == null)
+        {
+            wifiReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String availablewifiname = "";
+                    if((xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0"))){
+                        xdata.getinstance().saveSetting(config.availablewifis, "");
                     }
-                    //  availablewifinetwork = availablewifiname;
-                    xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
-                    Log.e("availablenetworks",""+availablewifiname);
+                    else{
+                        results = wifiManager.getScanResults();
+                        //  unregisterReceiver(this);
+
+                        for (ScanResult scanResult : results) {
+
+                            if (availablewifiname.isEmpty()) {
+                                availablewifiname = "" + scanResult.SSID;
+                            } else {
+                                availablewifiname = availablewifiname + ", " + scanResult.SSID;
+                            }
+                        }
+                        //  availablewifinetwork = availablewifiname;
+                        xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
+                        Log.e("availablenetworks",""+availablewifiname);
+                    }
                 }
-            }
-        };
-        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            };
+            registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        }
         wifiManager.startScan();
     }
 }

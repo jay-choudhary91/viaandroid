@@ -347,15 +347,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
           TimeZone timezone = TimeZone.getDefault();
-          final String timezoneid=timezone.getID();
+          String timezoneid=timezone.getID();
           phone_time_clock.setTimeZone(timezoneid, new itemupdatelistener() {
                 @Override
-                public void onitemupdate(Object object) {
+                public void onitemupdate(Object object,Object timezoneobject) {
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
                         txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
-                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneid);
+                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneobject.toString());
                         //txt_phone_time.setText(common.currenttime_analogclock()+" MST");
                     }
                 }
@@ -367,7 +367,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             });
           world_time_clock.setTimeZone("GMT", new itemupdatelistener() {
                 @Override
-                public void onitemupdate(Object object) {
+                public void onitemupdate(Object object,Object timezoneobject) {
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
@@ -595,13 +595,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(isdatacomposing)
             {
-                if(!common.getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)).equals("NA"))
+                String gpsaccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
+                if((! gpsaccuracy.trim().isEmpty()) && (! gpsaccuracy.equalsIgnoreCase("NA"))
+                        && (! gpsaccuracy.equalsIgnoreCase("null")))
                 {
-                    DecimalFormat precision=new DecimalFormat("0.0");
-                    double gpsaccuracy = Double.parseDouble(common.getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)));
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),"\n"+precision.format(gpsaccuracy)+ " feet", tvgpsaccuracy);
-                }else{
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)), tvgpsaccuracy);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                            "\n"+gpsaccuracy+" feet", tvgpsaccuracy);
+                }
+                else
+                {
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                            "\n"+gpsaccuracy, tvgpsaccuracy);
                 }
 
                 if(phone_time_clock != null)
@@ -609,7 +613,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 if(world_time_clock != null)
                     world_time_clock.setPostRecordData(true,"");
-
 
                 common.setdrawabledata("",common.getdate(), tvdate);
                 common.setdrawabledata("",common.gettime(), tvtime);
@@ -1259,6 +1262,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                     "\n"+metricItemArraylist.get(j).getMetricTrackValue() , txt_datatimedelay);
                         }
 
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))
+                        {
+                            String value=metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
+                                    && (! value.equalsIgnoreCase("null")))
+                            {
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                                        "\n"+value+" feet", tvgpsaccuracy);
+                            }
+                            else
+                            {
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                                        "\n"+value, tvgpsaccuracy);
+                            }
+                        }
                     }
                     tvblockchainid.setText(arraycontainerformetric.getVideostarttransactionid());
                     tvblockid.setText(arraycontainerformetric.getHashmethod());
