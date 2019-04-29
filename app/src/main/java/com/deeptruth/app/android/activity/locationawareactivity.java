@@ -930,8 +930,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("deviceregion") || (key.equalsIgnoreCase("country"))) {
             metricItemValue = "" + Locale.getDefault().getCountry();
         } else if (key.equalsIgnoreCase("timezone")) {
-            TimeZone timezone = TimeZone.getDefault();
-            metricItemValue = timezone.getID();
+            //TimeZone timezone = TimeZone.getDefault();
+            //metricItemValue = timezone.getID();
+            metricItemValue = common.gettimezoneshortname();
         } else if (key.equalsIgnoreCase(config.phoneclocktime)) {
             Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
             String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
