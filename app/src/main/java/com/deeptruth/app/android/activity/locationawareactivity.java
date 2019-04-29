@@ -237,13 +237,26 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     updatelocationsparams(location);
                                 }
 
-                                if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true")) {
+                                if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
+                                {
                                     if (oldlocation == null)
                                         oldlocation = location;
 
                                     long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(), oldlocation.getLatitude(),
                                             oldlocation.getLongitude());
                                     double miles = common.convertmetertomiles(meter);
+                                    if(! xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
+                                    {
+                                        try
+                                        {
+                                            double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
+                                            miles=miles+value;
+                                        }catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
                                     DecimalFormat precision = new DecimalFormat("0.0");
                                     xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
                                 } else {
