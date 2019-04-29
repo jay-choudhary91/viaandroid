@@ -1,10 +1,13 @@
-package com.deeptruth.app.android.activity;
+package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -27,7 +30,7 @@ import br.com.sapereaude.maskedEditText.MaskedEditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class createaccount extends registrationbaseactivity implements View.OnClickListener  {
+public class fragmentcreateaccount extends registrationbasefragment implements View.OnClickListener  {
 
 
     @BindView(R.id.edt_username)
@@ -45,28 +48,36 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
     @BindView(R.id.layout_userdeatils)
     RelativeLayout layout_userdeatils;
 
-    @Override
-    protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
 
+    View contaionerview = null;
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(contaionerview ==null){
+            contaionerview = super.onCreateView(inflater, container, savedInstanceState);
+            ButterKnife.bind(this, contaionerview);
+            getHelper().onUserLeaveHint();
+
+            txt_submit.setOnClickListener(this);
+            edt_phonenumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
+                        getHelper().hidekeyboard();
+                    }
+                    return false;
+                }
+            });
+
+        }
+        return contaionerview;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        setContentView(R.layout.activity_createaccountactivity);
-        ButterKnife.bind(this);
-        txt_submit.setOnClickListener(this);
-        edt_phonenumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
-                    hidekeyboard();
-                }
-                return false;
-            }
-        });
+    public int getlayoutid() {
+        return R.layout.activity_createaccountactivity;
     }
 
     @Override
@@ -87,8 +98,8 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
             requestparams.put("email",edt_email.getText().toString().trim());
             requestparams.put("password",edt_password.getText().toString().trim());
             requestparams.put("confirmpassword",edt_confirmpassword.getText().toString().trim());
-            progressdialog.showwaitingdialog(createaccount.this);
-            xapipost_send(createaccount.this,requestparams, new apiresponselistener() {
+            progressdialog.showwaitingdialog(getActivity());
+            getHelper().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
                 @Override
                 public void onResponse(taskresult response) {
                     progressdialog.dismisswaitdialog();
@@ -103,14 +114,19 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                                     if(object.has(config.clientid))
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                    Intent intent=new Intent(createaccount.this,verifyuser.class);
+                                    fragmentverifyuser fragverifyuser = new fragmentverifyuser();
+                                    fragverifyuser.setdata(config.createaccount);
+                                    getHelper().addFragment(fragverifyuser,false,true);
+
+
+                                   /* Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
                                     intent.putExtra("activityname",config.createaccount);
-                                    startActivity(intent);
+                                    startActivity(intent);*/
                                 }
                                 else
                                 {
                                     if(object.has("error"))
-                                        Toast.makeText(createaccount.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                                 }
                             }
                             if(object.has("errors"))
@@ -128,7 +144,7 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                                         error=error+"\n"+errorarray.get(i).toString();
                                     }
                                 }
-                                Toast.makeText(createaccount.this, error, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                             }
 
                             if(object.has("not_verified"))
@@ -138,9 +154,9 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                                     if(object.has(config.clientid))
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                    Intent intent=new Intent(createaccount.this,verifyuser.class);
-                                    intent.putExtra("activityname",config.createaccount);
-                                    startActivity(intent);
+                                   /* Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
+                                    intent.putExtra("activityname",config.fragmentcreateaccount);
+                                    startActivity(intent);*/
                                 }
                             }
 
@@ -151,7 +167,7 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                     }
                     else
                     {
-                        Toast.makeText(createaccount.this, getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

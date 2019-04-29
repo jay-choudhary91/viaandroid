@@ -122,8 +122,8 @@ public class config {
     public static final String hashformula = "hashformula";
     public static final String datahash = "datahash";
     public static final String matrichash = "matrichash";
-    public static final String createaccount = "createaccount";
-    public static final String forgotpassword = "forgotpassword";
+    public static final String createaccount = "fragmentcreateaccount";
+    public static final String forgotpassword = "fragmentforgotpassword";
     public static final String loginpage = "loginpage";
 
 

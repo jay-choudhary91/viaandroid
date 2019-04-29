@@ -1,16 +1,20 @@
-package com.deeptruth.app.android.activity;
+package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.introscreenactivity;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
@@ -25,7 +29,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class signinactivity extends registrationbaseactivity implements View.OnClickListener{
+public class fragmentsignin extends registrationbasefragment implements View.OnClickListener{
 
 
     @BindView(R.id.edt_username)
@@ -45,36 +49,52 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
     @BindView(R.id.layout_logindetails)
     LinearLayout layout_logindetails;
     int rootviewheight,imageviewheight,userloginheight;
+    View contaionerview = null;
+
+    @Override
+    public int getlayoutid() {
+        return R.layout.activity_loginactivity;
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(contaionerview ==null){
+            contaionerview = super.onCreateView(inflater, container, savedInstanceState);
+            ButterKnife.bind(this, contaionerview);
+
+            rootview.post(new Runnable() {
+                @Override
+                public void run() {
+                    rootviewheight = rootview.getHeight();
+                    imageviewheight = ((rootviewheight *55)/100);
+                    layout_image.getLayoutParams().height = imageviewheight;
+                    layout_image.setVisibility(View.VISIBLE);
+                    layout_image.requestLayout();
+
+                    userloginheight = (rootviewheight -imageviewheight);
+                    layout_logindetails.getLayoutParams().height = userloginheight;
+                    layout_logindetails.setVisibility(View.VISIBLE);
+                    layout_logindetails.requestLayout();
+
+                }
+            });
+
+            txt_login.setOnClickListener(this);
+            txt_createaccount.setOnClickListener(this);
+            txt_forgotpassword.setOnClickListener(this);
+            rootview.setOnClickListener(this);
+        }
+        return contaionerview;
+    }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_loginactivity);
-        ButterKnife.bind(this);
-
-        rootview.post(new Runnable() {
-            @Override
-            public void run() {
-                rootviewheight = rootview.getHeight();
-                imageviewheight = ((rootviewheight *55)/100);
-                layout_image.getLayoutParams().height = imageviewheight;
-                layout_image.setVisibility(View.VISIBLE);
-                layout_image.requestLayout();
-
-                userloginheight = (rootviewheight -imageviewheight);
-                layout_logindetails.getLayoutParams().height = userloginheight;
-                layout_logindetails.setVisibility(View.VISIBLE);
-                layout_logindetails.requestLayout();
-
-
-            }
-        });
-
-        txt_login.setOnClickListener(this);
-        txt_createaccount.setOnClickListener(this);
-        txt_forgotpassword.setOnClickListener(this);
-        rootview.setOnClickListener(this);
-
+        ButterKnife.bind(getActivity());
     }
 
     @Override
@@ -84,12 +104,20 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
                 isvalidated();
                 break;
             case R.id.createaccount:
-                Intent intent=new Intent(signinactivity.this,createaccount.class);
-                startActivity(intent);
+
+                fragmentcreateaccount fragcreateaccount = new fragmentcreateaccount();
+                getHelper().addFragment(fragcreateaccount,false,true);
+
+               /* Intent intent=new Intent(fragmentsignin.this,fragmentcreateaccount.class);
+                startActivity(intent);*/
                 break;
             case R.id.forgot_password:
-                intent = new Intent(signinactivity.this, forgotpassword.class);
-                startActivity(intent);
+
+                fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
+                getHelper().addFragment(fragforgotpassword,false,true);
+
+                /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
+                startActivity(intent);*/
                 break;
         }
     }
@@ -100,15 +128,17 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
             if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
                 xdata.getinstance().saveSetting(config.enableintroscreen,"no");
 
-            Intent intent=new Intent(signinactivity.this,introscreenactivity.class);
+            Intent intent=new Intent(getActivity(),introscreenactivity.class);
             startActivity(intent);
-            finish();
+            getHelper().onBack();
 
         }else{
-            Intent intent=new Intent(signinactivity.this,homeactivity.class);
+            /*Intent intent=new Intent(fragmentsignin.this,homeactivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
-            finish();
+            overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);*/
+            getHelper().onBack();
+
+            //finish();
         }
     }
 
@@ -128,8 +158,8 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
         requestparams.put("action","authorize");
         requestparams.put("email",edt_username.getText().toString().trim());
         requestparams.put("password",edt_password.getText().toString().trim());
-        progressdialog.showwaitingdialog(signinactivity.this);
-        xapipost_send(signinactivity.this,requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(getActivity());
+        getHelper().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -152,7 +182,7 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
                             else
                             {
                                 if(object.has("error"))
-                                    Toast.makeText(signinactivity.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -170,7 +200,7 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(signinactivity.this, error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                         }
 
                         if(object.has("not_verified"))
@@ -180,7 +210,7 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                Intent intent=new Intent(signinactivity.this,verifyuser.class);
+                                Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
                                 intent.putExtra("activityname",config.loginpage);
                                 startActivity(intent);
                             }
@@ -193,7 +223,7 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
                 }
                 else
                 {
-                    Toast.makeText(signinactivity.this, getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -109,17 +109,9 @@
             android:name=".activity.introscreenactivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.signinactivity"
+            android:name=".activity.registrationcontaineractivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".activity.createaccount"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".activity.forgotpassword"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity
-            android:name=".activity.verifyuser"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".activity.changepassword"
-            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+
     </application>
 
 </manifest>

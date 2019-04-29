@@ -1,9 +1,12 @@
-package com.deeptruth.app.android.activity;
+package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -25,7 +28,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class verifyuser extends registrationbaseactivity implements View.OnClickListener {
+public class fragmentverifyuser extends registrationbasefragment implements View.OnClickListener {
 
     @BindView(R.id.pinview)
     Pinview pinview;
@@ -40,37 +43,49 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
     @BindView(R.id.layout_top)
     LinearLayout layout_top;
     int topviewheight,bottomviewheight,rootviewheight;
+    View contaionerview = null;
+    String createaccount = "";
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(contaionerview ==null){
+            contaionerview = super.onCreateView(inflater, container, savedInstanceState);
+            ButterKnife.bind(this, contaionerview);
+
+            rootview.post(new Runnable() {
+                @Override
+                public void run() {
+                    rootviewheight = rootview.getHeight();
+                    topviewheight = ((rootviewheight *55)/100);
+                    layout_top.getLayoutParams().height = topviewheight;
+                    layout_top.setVisibility(View.VISIBLE);
+                    layout_top.requestLayout();
+
+                    bottomviewheight = (rootviewheight -topviewheight);
+                    layout_bottom.getLayoutParams().height = bottomviewheight;
+                    layout_bottom.setVisibility(View.VISIBLE);
+                    layout_bottom.requestLayout();
+                }
+            });
+
+
+            tvcomplete.setOnClickListener(this);
+            tvcancel.setOnClickListener(this);
+            pinview.setPinViewEventListener(new Pinview.PinViewEventListener() {
+                @Override
+                public void onDataEntered(Pinview pinview, boolean fromUser) {
+                   getHelper().hidekeyboard();
+                }
+            });
+        }
+        return contaionerview;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verifyuser);
-        ButterKnife.bind(verifyuser.this);
-        rootview.post(new Runnable() {
-            @Override
-            public void run() {
-                rootviewheight = rootview.getHeight();
-                topviewheight = ((rootviewheight *55)/100);
-                layout_top.getLayoutParams().height = topviewheight;
-                layout_top.setVisibility(View.VISIBLE);
-                layout_top.requestLayout();
-
-                bottomviewheight = (rootviewheight -topviewheight);
-                layout_bottom.getLayoutParams().height = bottomviewheight;
-                layout_bottom.setVisibility(View.VISIBLE);
-                layout_bottom.requestLayout();
-            }
-        });
-
-
-        tvcomplete.setOnClickListener(this);
-        tvcancel.setOnClickListener(this);
-        pinview.setPinViewEventListener(new Pinview.PinViewEventListener() {
-            @Override
-            public void onDataEntered(Pinview pinview, boolean fromUser) {
-                hidekeyboard();
-            }
-        });
+    public int getlayoutid() {
+        return R.layout.activity_verifyuser;
     }
 
     @Override
@@ -92,18 +107,18 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
     {
         String value=pinview.getValue();
         String clientid= xdata.getinstance().getSetting(config.clientid);
-        String activityname = getIntent().getExtras().getString("activityname");
+       // String activityname = getgetIntent().getExtras().getString("activityname");
 
         HashMap<String,String> requestparams=new HashMap<>();
         requestparams.put("type","client");
         requestparams.put("action","verify");
-        if(activityname.equals(config.forgotpassword))
-            requestparams.put("action","verifyforgotten");
+        if(!createaccount.isEmpty() && createaccount.equalsIgnoreCase(config.forgotpassword))
+                requestparams.put("action","verifyforgotten");
 
         requestparams.put("clientid",clientid);
         requestparams.put("code",value);
-        progressdialog.showwaitingdialog(verifyuser.this);
-        xapipost_send(verifyuser.this,requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(getActivity());
+        getHelper().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -128,7 +143,7 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
                             else
                             {
                                 if(object.has("error"))
-                                    Toast.makeText(verifyuser.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -146,7 +161,7 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(verifyuser.this, error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e)
                     {
@@ -155,7 +170,7 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
                 }
                 else
                 {
-                    Toast.makeText(verifyuser.this, getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -165,9 +180,13 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
     {
         if(xdata.getinstance().getSetting(config.reset_authtoken).toString().trim().length() > 0)
         {
-            Intent i = new Intent(verifyuser.this, changepassword.class);
-            hidekeyboard();
-            startActivity(i);
+
+            fragmentchangepassword fragchangepassword = new fragmentchangepassword();
+            getHelper().addFragment(fragchangepassword,false,true);
+
+           /* Intent i = new Intent(getActivity(), fragmentchangepassword.class);
+            getHelper().hidekeyboard();
+            startActivity(i);*/
         }
         else
         {
@@ -175,11 +194,19 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
         }
     }
 
+    public void setdata(String createaccount){
+        this.createaccount = createaccount;
+
+    }
+
     public void gotologin(){
-        Intent i = new Intent(verifyuser.this, signinactivity.class);
+        fragmentsignin fragverifyuser = new fragmentsignin();
+        getHelper().addFragment(fragverifyuser,true,true);
+
+       /* Intent i = new Intent(getActivity(), fragmentsignin.class);
         hidekeyboard();
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
-        finish();
+        finish();*/
     }
 }

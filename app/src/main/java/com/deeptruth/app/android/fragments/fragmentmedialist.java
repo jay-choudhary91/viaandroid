@@ -1368,11 +1368,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     {
         if(type == 1)   // Media shairing
         {
-            if(! gethelper().isuserlogin())
+            /*if(! gethelper().isuserlogin())
             {
                 gethelper().redirecttologin();
                 return;
-            }
+            }*/
             if(videoobj.getmimetype().startsWith("image")){
                 String imagepath = videoobj.getPath();
 

@@ -300,7 +300,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     @Override
     public void redirecttologin() {
-        Intent intent=new Intent(locationawareactivity.this,signinactivity.class);
+        Intent intent=new Intent(locationawareactivity.this,registrationcontaineractivity.class);
         startActivity(intent);
     }
 

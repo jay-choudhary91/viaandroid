@@ -8,7 +8,7 @@
     android:id="@+id/rootview"
     android:layout_height="match_parent"
     android:background="@drawable/splashscrn"
-    tools:context="com.deeptruth.app.android.activity.verifyuser">
+    tools:context="com.deeptruth.app.android.fragments.fragmentverifyuser">
 
         <RelativeLayout
             android:layout_width="match_parent"
