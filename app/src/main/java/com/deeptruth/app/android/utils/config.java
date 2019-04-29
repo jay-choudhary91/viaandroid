@@ -187,6 +187,8 @@ public class config {
     public static final String color_code_gray="#b1afaa";
     public static final String color_code_yellow="#FDD012";
     public static final String color_code_green="#4CD964";
+    public static final String color_code_transparent="#50a9a9a9";
+
 
     public static final String item_valid="Valid";
     public static final String item_caution="Caution";
