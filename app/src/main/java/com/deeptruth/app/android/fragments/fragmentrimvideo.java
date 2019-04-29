@@ -89,6 +89,7 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
             @Override
             public void run() {
 
+                progressdialog.dismisswaitdialog();
                 if(filePath != null){
                     //progressdialog.showwaitingdialog(getActivity());
                     String selectedvideopath = filePath;
