@@ -1416,7 +1416,7 @@ public class common {
         }
         return format;
     }
-    public static String getvideoextension(String path) {
+    public static String getfileextension(String path) {
         String format = "";
         if (!path.trim().isEmpty()) {
             int extIndex = path.lastIndexOf(".");

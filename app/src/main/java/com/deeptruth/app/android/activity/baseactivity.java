@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
-import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +21,8 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import com.android.internal.http.multipart.MultipartEntity;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
@@ -45,7 +41,7 @@ import com.deeptruth.app.android.netutils.connectivityreceiver;
 import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
 import com.deeptruth.app.android.netutils.xapipostjson;
-import com.deeptruth.app.android.netutils.xapiuploadfile;
+import com.deeptruth.app.android.netutils.xapipostfile;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.homewatcher;
@@ -53,26 +49,10 @@ import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -467,7 +447,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     @Override
     public void xapi_uploadfile(Context mContext, String serverurl, String filepath, apiresponselistener mListener) {
-        xapiuploadfile xapiupload = new xapiuploadfile(mContext,serverurl,filepath,mListener);
+        xapipostfile xapiupload = new xapipostfile(mContext,serverurl,filepath,mListener);
         xapiupload.execute();
     }
 
@@ -496,35 +476,30 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             TextView txt_title2 = (TextView) subdialogshare.findViewById(R.id.txt_title2);
             ImageView img_cancel = subdialogshare.findViewById(R.id.img_cancelicon);
 
-            if (type.equalsIgnoreCase("video")) {
+            txt_share_btn4.setVisibility(View.GONE);
+            if(type.equalsIgnoreCase(config.item_video))
                 txt_share_btn4.setVisibility(View.VISIBLE);
-            } else {
-                txt_share_btn4.setVisibility(View.GONE);
-            }
 
             txt_share_btn1.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
-                    //callshareapi(type, videotoken, path, txt_share_btn1.getText().toString());
+                    callshareapi(type, videotoken, path, txt_share_btn1.getText().toString());
                 }
             });
 
             txt_share_btn2.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
-                    //callshareapi(type, videotoken, path, txt_share_btn2.getText().toString());
+                    callshareapi(type, videotoken, path, txt_share_btn2.getText().toString());
                 }
             });
 
             txt_share_btn3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //callshareapi(type, videotoken, path, txt_share_btn3.getText().toString());
+                    callshareapi(type, videotoken, path, txt_share_btn3.getText().toString());
                 }
             });
-
 
             txt_share_btn4.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -575,8 +550,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         requestparams.put("action", "share");
         requestparams.put("videotoken", videotoken);
         requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
-        requestparams.put("sharemethod", "private");
-        requestparams.put("fileextension","mp4");
+        requestparams.put("sharemethod", method);
+        requestparams.put("fileextension",common.getfileextension(path));
 
         progressdialog.showwaitingdialog(getinstance());
         xapipost_send(getinstance(), requestparams, new apiresponselistener() {
@@ -588,18 +563,28 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 if(response.isSuccess())
                 {
                     JSONObject object= null;
+                    String storageurl="";
                     try {
                         object = new JSONObject(response.getData().toString());
                         if(object.has("success"))
                         {
+                            if(object.has("storageurl"))
+                                storageurl=object.getString("storageurl");
 
-                            /*xapi_uploadfile(getinstance(),serverpath,path, new apiresponselistener() {
-                                @Override
-                                public void onResponse(taskresult response) {
+                            if(! storageurl.trim().isEmpty())
+                            {
+                                xapi_uploadfile(getinstance(),storageurl,path, new apiresponselistener() {
+                                    @Override
+                                    public void onResponse(taskresult response) {
+                                        if(response.isSuccess())
+                                        {
+                                            //callvideostoreapi(videotoken,storedkey);
 
-                                    //callvideostoreapi(videotoken,storedkey);
-                                }
-                            });*/
+                                        }
+                                    }
+                                });
+                            }
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

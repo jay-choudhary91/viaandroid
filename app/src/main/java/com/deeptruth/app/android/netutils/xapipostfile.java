@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class xapiuploadfile extends AsyncTask<Void, Void, String> {
+public class xapipostfile extends AsyncTask<Void, Void, String> {
 
     String serverurl;
     Context mContext;
@@ -50,21 +50,12 @@ public class xapiuploadfile extends AsyncTask<Void, Void, String> {
     int serverresponsecode = 0;
 
 
-    public xapiuploadfile(Context context, String serverurl, String filepath ,apiresponselistener responseListner) {
+    public xapipostfile(Context context, String serverurl, String filepath , apiresponselistener responseListner) {
         this.serverurl = serverurl;
         this.filepath = filepath;
         this.mContext = context;
         this.listner = responseListner;
     }
-
-    /*public boolean add(String key, String value) {
-        try {
-            nameValuePairList.add(new BasicNameValuePair(key, value));
-        } catch (Exception e) {
-            ;
-        }
-        return true;
-    }*/
 
     @Override
     protected String doInBackground(Void... voids) {
