@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.android.internal.http.multipart.MultipartEntity;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
@@ -50,10 +52,26 @@ import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -68,6 +86,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     static Dialog subdialogshare = null;
     private Stack<Fragment> mfragments = new Stack<Fragment>();
     private static final int permission_location_request_code = 91;
+    String serverResponseMessage = "";
+    int serverResponseCode = 0;
 
     public boolean isisapprunning() {
         return isapprunning;
@@ -540,7 +560,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         subdialogshare.show();
     }
 
-    public void callshareapi(String type, String videotoken, String path, String method) {
+    public void callshareapi(String type, String videotoken, final String path, String method) {
 
         HashMap<String, String> requestparams = new HashMap<>();
         requestparams.put("type", type);
@@ -565,6 +585,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(object.has("success"))
                         {
 
+                            //int result = upLoad2Server(remoteurl,path);
+                            //callvideostoreapi();
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -573,6 +596,131 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
     }
+
+    public void callvideostoreapi(String videotoken,String storedkey){
+
+        HashMap<String, String> requestparams = new HashMap<>();
+        requestparams.put("type", "video");
+        requestparams.put("action", "stored");
+        requestparams.put("videotoken", videotoken);
+        requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
+        requestparams.put("sharemethod", "storedkey");
+
+        progressdialog.showwaitingdialog(getinstance());
+        xapipost_send(getinstance(), requestparams, new apiresponselistener() {
+
+            @Override
+            public void onResponse(taskresult response) {
+
+                progressdialog.dismisswaitdialog();
+                if(response.isSuccess())
+                {
+                    JSONObject object= null;
+                    try {
+                        object = new JSONObject(response.getData().toString());
+                        if(object.has("success"))
+                        {
+                            //upLoad2Server();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public int upfileonserver(String remoteurl, String sourcefileuri) {
+        String upLoadServerUri = remoteurl;
+        // String [] string = sourceFileUri;
+        String fileName = sourcefileuri;
+
+        HttpURLConnection conn = null;
+        DataOutputStream dos = null;
+        DataInputStream inStream = null;
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024;
+        String responseFromServer = "";
+
+        File sourceFile = new File(sourcefileuri);
+        if (!sourceFile.isFile()) {
+            Log.e("Huzza", "Source File Does not exist");
+            return 0;
+        }
+        try { // open a URL connection to the Servlet
+            FileInputStream fileInputStream = new FileInputStream(sourceFile);
+            URL url = new URL(upLoadServerUri);
+            conn = (HttpURLConnection) url.openConnection(); // Open a HTTP  connection to  the URL
+            conn.setDoInput(true); // Allow Inputs
+            conn.setDoOutput(true); // Allow Outputs
+            conn.setUseCaches(false); // Don't use a Cached Copy
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+            conn.setRequestProperty("uploaded_file", fileName);
+            dos = new DataOutputStream(conn.getOutputStream());
+
+            dos.writeBytes(twoHyphens + boundary + lineEnd);
+            dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""+ fileName + "\"" + lineEnd);
+            dos.writeBytes(lineEnd);
+
+            bytesAvailable = fileInputStream.available(); // create a buffer of  maximum size
+            Log.i("Huzza", "Initial .available : " + bytesAvailable);
+
+            bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            buffer = new byte[bufferSize];
+
+            // read file and write it into form...
+            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+            while (bytesRead > 0) {
+                dos.write(buffer, 0, bufferSize);
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            }
+
+            // send multipart form data necesssary after file data...
+            dos.writeBytes(lineEnd);
+            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+            // Responses from the server (code and message)
+            serverResponseCode = conn.getResponseCode();
+            String serverResponseMessage = conn.getResponseMessage();
+
+            Log.i("Upload file to server", "HTTP Response is : " + serverResponseMessage + ": " + serverResponseCode);
+            // close streams
+            Log.i("Upload file to server", fileName + " File is written");
+            fileInputStream.close();
+            dos.flush();
+            dos.close();
+        } catch (MalformedURLException ex) {
+            ex.printStackTrace();
+            Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//this block will give the response of upload link
+        try {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn
+                    .getInputStream()));
+            String line;
+            while ((line = rd.readLine()) != null) {
+                Log.i("Huzza", "RES Message: " + line);
+            }
+            rd.close();
+        } catch (IOException ioex) {
+            Log.e("Huzza", "error: " + ioex.getMessage(), ioex);
+        }
+        return serverResponseCode;  // like 200 (Ok)
+
+    } // end upLoad2Server
+
 }
 
 
