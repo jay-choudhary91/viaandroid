@@ -93,7 +93,8 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
                 if(filePath != null){
                     //progressdialog.showwaitingdialog(getActivity());
                     String selectedvideopath = filePath;
-                    common.sharevideo(getActivity(),selectedvideopath);
+                    gethelper().showsharepopupsub(selectedvideopath,"video",videotoken);
+                    //common.sharevideo(getActivity(),selectedvideopath);
                 }
             }
         });
