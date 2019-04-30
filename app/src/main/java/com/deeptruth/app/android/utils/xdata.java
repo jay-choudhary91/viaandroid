@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 
 public class xdata {
     public final String prefname = "prefname";
-    public static String keybaseurl = "keybaseurl";
+    public static String xapi_url = "xapi_url";
+    public static String app_paid_level = "app_paid_level";
+    public static String developer_mode = "developer_mode";
     public static String developermode = "developermode";
 
     private static xdata ourInstance;

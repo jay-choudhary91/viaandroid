@@ -2420,5 +2420,21 @@ public class common {
         String formattedDate = formatted.format(date);
         return formattedDate;
     }
+
+    public static void setting_check(String key,String defaultvalue)
+    {
+        if(setting_get(key).trim().isEmpty())
+            setting_set(key,defaultvalue);
+    }
+
+    public static void setting_set(String key,String keyvalue)
+    {
+        xdata.getinstance().saveSetting(key,keyvalue);
+    }
+
+    public static String setting_get(String key)
+    {
+        return xdata.getinstance().getSetting(key);
+    }
 }
 

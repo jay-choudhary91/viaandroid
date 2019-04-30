@@ -20,6 +20,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class xapi extends AsyncTask<Void, Void, String> {
@@ -33,7 +34,7 @@ public class xapi extends AsyncTask<Void, Void, String> {
     public xapi(Context context, apiresponselistener responseListner) {
         this.mcontext = context;
         this.listner = responseListner;
-        this.useurl = xdata.getinstance().getSetting(xdata.keybaseurl);
+        this.useurl = common.setting_get(xdata.xapi_url);
     }
 
     public boolean add(String key, String value) {
@@ -105,6 +106,16 @@ public class xapi extends AsyncTask<Void, Void, String> {
             if (jsonObject != null && jsonObject.has("result"))
             {
                 JSONObject object = jsonObject.optJSONObject("result");
+                if(object.has("settings_set"))
+                {
+                    JSONObject saveSetting = object.getJSONObject("settings_set");
+                    Iterator<String> myIter = saveSetting.keys();
+                    while (myIter.hasNext()) {
+                        String key = myIter.next();
+                        String value = saveSetting.optString(key);
+                        common.setting_set(key, value);
+                    }
+                }
                 result.success(true);
                 result.setData(object);
             }
