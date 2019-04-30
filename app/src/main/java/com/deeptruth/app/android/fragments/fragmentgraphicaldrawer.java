@@ -1,13 +1,10 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -18,11 +15,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -71,15 +63,11 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -91,7 +79,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -102,8 +89,6 @@ import butterknife.ButterKnife;
 
 public class fragmentgraphicaldrawer extends basefragment implements OnChartValueSelectedListener,
         OnChartGestureListener,SensorEventListener, Orientation.Listener {
-
-
 
     @BindView(R.id.txt_address)
     customfonttextview tvaddress;
@@ -281,10 +266,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ArrayList<Entry> connectiondatadelayvalues = new ArrayList<Entry>();
     ArrayList<Entry> gpsaccuracyvalues = new ArrayList<Entry>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    private boolean isinbackground=false,ismediaplayer = false,isgraphicopen=false,isdatacomposing=false,isrecodrunning=false;
-    String latitude = "", longitude = "",screenheight = "",screenwidth = "",lastsavedangle="";
+    private boolean isdatacomposing=false,isrecodrunning=false;
+    String lastsavedangle="";
     private float currentDegree = 0f;
-    String hashmethod= "",videostarttransactionid = "",valuehash = "",metahash = "";
     private Orientation mOrientation;
     private String[] transparentarray=common.gettransparencyvalues();
     int navigationbarheight = 0;
@@ -370,7 +354,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         Calendar calendar=(Calendar)object;
                         txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
                                 +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneobject.toString());
-                        //txt_phone_time.setText(common.currenttime_analogclock()+" MST");
                     }
                 }
 
@@ -449,12 +432,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             setchartdata(linechart_traveled);
             setchartdata(linechart_altitude);
 
-            initconnectionchart(linechart_connectionspeed);
-            initconnectionchart(linechart_datatimedelay);
-            initconnectionchart(linechart_gpsaccuracy);
-
-          //  emptymediapiechartdata(pie_videoaudiochart);
-          //  emptymediapiechartdata(pie_metadatachart);
+            initlinechart(linechart_connectionspeed);
+            initlinechart(linechart_datatimedelay);
+            initlinechart(linechart_gpsaccuracy);
 
             linechart_speed.setVisibility(View.GONE);
             linechart_traveled.setVisibility(View.GONE);
@@ -670,7 +650,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             if(array.length >0)
                                 connectionspeed=Float.parseFloat(array[0]);
                         }
-                        setconnectionchartdata(linechart_connectionspeed,connectionspeed,connectionspeedvalues);
+                        setlinechartdata(linechart_connectionspeed,connectionspeed,connectionspeedvalues);
                     }
 
                     {
@@ -683,7 +663,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             if(array.length >0)
                                 connectiondelay=Float.parseFloat(array[0]);
                         }
-                        setconnectionchartdata(linechart_datatimedelay,connectiondelay,connectiondatadelayvalues);
+                        setlinechartdata(linechart_datatimedelay,connectiondelay,connectiondatadelayvalues);
                     }
 
                     {
@@ -696,7 +676,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             if(array.length >0)
                                 gpsaccuracydata=Float.parseFloat(array[0]);
                         }
-                        setconnectionchartdata(linechart_gpsaccuracy,gpsaccuracydata,gpsaccuracyvalues);
+                        setlinechartdata(linechart_gpsaccuracy,gpsaccuracydata,gpsaccuracyvalues);
                     }
 
                     /*if(! speed.isEmpty() && (! speed.equalsIgnoreCase("NA")))
@@ -1137,13 +1117,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
 
         if(connectionspeedvalues.size() > 0)
-            setconnectionchartdata(linechart_connectionspeed,-1f,connectionspeedvalues);
+            setlinechartdata(linechart_connectionspeed,-1f,connectionspeedvalues);
 
         if(connectiondatadelayvalues.size() > 0)
-            setconnectionchartdata(linechart_datatimedelay,-1f,connectiondatadelayvalues);
+            setlinechartdata(linechart_datatimedelay,-1f,connectiondatadelayvalues);
 
         if(gpsaccuracyvalues.size() > 0)
-            setconnectionchartdata(linechart_gpsaccuracy,-1f,gpsaccuracyvalues);
+            setlinechartdata(linechart_gpsaccuracy,-1f,gpsaccuracyvalues);
 
         if(arrayspeed.size() > 0)
         {
@@ -1510,7 +1490,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     @Override
     public void onStop() {
         super.onStop();
-        isinbackground=true;
         if(mOrientation != null)
             mOrientation.stopListening();
     }
@@ -1518,8 +1497,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     @Override
     public void onResume() {
         super.onResume();
-        isinbackground=false;
-        // for the system's orientation sensor registered listeners
         msensormanager.registerListener(this, msensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                 SensorManager.SENSOR_DELAY_GAME);
 
@@ -1534,12 +1511,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         super.onPause();
         msensormanager.unregisterListener(this);
     }
-
-    public void setdrawerproperty(boolean isgraphicopen)
-    {
-        this.isgraphicopen=isgraphicopen;
-    }
-
 
     private void loadmap() {
         SupportMapFragment mapFragment = new SupportMapFragment();
@@ -1754,7 +1725,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         linechart.setPinchZoom(false);
     }
 
-    public  void initconnectionchart(LineChart chart)
+    public  void initlinechart(LineChart chart)
     {
         chart.setNoDataText("");
         // background color
@@ -1802,7 +1773,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     }
 
 
-    public void setconnectionchartdata(final LineChart chart,Float value,ArrayList<Entry> gpsaccuracyvalues)
+    public void setlinechartdata(final LineChart chart, Float value, ArrayList<Entry> gpsaccuracyvalues)
     {
         if(gpsaccuracyvalues.size() > 0)
         {
