@@ -1176,6 +1176,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         mediapiechartdata(pie_videoaudiochart,validcount,cautioncount,invalidcount,unsent);
         mediapiechartdata(pie_metadatachart,validcount,cautioncount,invalidcount,unsent);
 
+        seekbar_mediavideoaudio.setPadding(0,0,0,0);
+        seekbar_mediametadata.setPadding(0,0,0,0);
         seekbar_mediavideoaudio.setMax(metricmainarraylist.size());
         seekbar_mediametadata.setMax(metricmainarraylist.size());
     }
