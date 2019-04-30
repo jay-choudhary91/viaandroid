@@ -585,8 +585,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(object.has("success"))
                         {
 
-                            //int result = upLoad2Server(remoteurl,path);
-                            //callvideostoreapi();
+                            //int result = callvideostoreapi(remoteurl,path);
+                            //callvideostoreapi(videotoken,storedkey);
 
                         }
                     } catch (JSONException e) {
