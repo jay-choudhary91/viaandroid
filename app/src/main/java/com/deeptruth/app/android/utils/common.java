@@ -601,6 +601,8 @@ public class common {
             xdata.getinstance().saveSetting(config.acceleration_z,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("connectionspeed")) {
             xdata.getinstance().saveSetting(config.Connectionspeed,((ismetricsselected)?value:"NA"));
+        }else if (keyname.equalsIgnoreCase(config.connectiondatadelay)) {
+            xdata.getinstance().saveSetting(config.connectiondatadelay,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("distancetravelled")) {
             xdata.getinstance().saveSetting(config.distancetravelled,((ismetricsselected)?value:"NA"));
         }else if (keyname.equalsIgnoreCase("attitude")) {
@@ -1414,7 +1416,7 @@ public class common {
         }
         return format;
     }
-    public static String getvideoextension(String path) {
+    public static String getfileextension(String path) {
         String format = "";
         if (!path.trim().isEmpty()) {
             int extIndex = path.lastIndexOf(".");
@@ -2419,6 +2421,22 @@ public class common {
         SimpleDateFormat formatted = new SimpleDateFormat("hh:mm:ss",Locale.ENGLISH);
         String formattedDate = formatted.format(date);
         return formattedDate;
+    }
+
+    public static void setting_check(String key,String defaultvalue)
+    {
+        if(setting_get(key).trim().isEmpty())
+            setting_set(key,defaultvalue);
+    }
+
+    public static void setting_set(String key,String keyvalue)
+    {
+        xdata.getinstance().saveSetting(key,keyvalue);
+    }
+
+    public static String setting_get(String key)
+    {
+        return xdata.getinstance().getSetting(key);
     }
 }
 

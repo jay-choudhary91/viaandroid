@@ -277,6 +277,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ArrayList<Entry> speedgraphitems = new ArrayList<Entry>();
     ArrayList<Entry> travelledgraphitems = new ArrayList<Entry>();
     ArrayList<Entry> altitudegraphitems = new ArrayList<Entry>();
+    ArrayList<Entry> connectionspeedvalues = new ArrayList<Entry>();
+    ArrayList<Entry> connectiondatadelayvalues = new ArrayList<Entry>();
+    ArrayList<Entry> gpsaccuracyvalues = new ArrayList<Entry>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private boolean isinbackground=false,ismediaplayer = false,isgraphicopen=false,isdatacomposing=false,isrecodrunning=false;
     String latitude = "", longitude = "",screenheight = "",screenwidth = "",lastsavedangle="";
@@ -531,14 +534,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void setmetricesdata()
     {
-        /*if(isinbackground)
-            return;
 
-        if(! isgraphicopen && (! ismediaplayer))
-            return;*/
         String latitudedegree  = xdata.getinstance().getSetting(config.Latitude);
         String longitudedegree = xdata.getinstance().getSetting(config.Longitude);
-        String value=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
 
         if(! latitudedegree.isEmpty() && (! latitudedegree.equalsIgnoreCase("NA")))
         {
@@ -587,7 +585,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
-            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.availablewifinetwork),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.availablewifis)), txt_availablewifinetwork);
 
             String latitude=xdata.getinstance().getSetting(config.Latitude);
             String longitude=xdata.getinstance().getSetting(config.Longitude);
@@ -606,6 +603,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(isdatacomposing)
             {
+
                 String gpsaccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
                 if((! gpsaccuracy.trim().isEmpty()) && (! gpsaccuracy.equalsIgnoreCase("NA"))
                         && (! gpsaccuracy.equalsIgnoreCase("null")))
@@ -633,7 +631,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
                 common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
-
+                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.availablewifinetwork),"\n"+
+                        common.getxdatavalue(xdata.getinstance().getSetting(config.availablewifis)), txt_availablewifinetwork);
                 if(chart_memoeyusage!= null)
                     sethalfpaichartData(chart_memoeyusage,common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
 
@@ -653,6 +652,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 if(isrecodrunning)
                 {
+
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),"\n"+
                             common.getxdatavalue(xdata.getinstance().getSetting(config.Connectionspeed)), tvconnection);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
@@ -660,6 +660,44 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),
                             "\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
 
+                    {
+                        String connection=xdata.getinstance().getSetting(config.Connectionspeed);
+                        Float connectionspeed=0.0f;
+                        if((! connection.trim().isEmpty()) && (! connection.equalsIgnoreCase("null")) &&
+                                (! connection.equalsIgnoreCase("NA")))
+                        {
+                            String[] array=connection.split(" ");
+                            if(array.length >0)
+                                connectionspeed=Float.parseFloat(array[0]);
+                        }
+                        setconnectionchartdata(linechart_connectionspeed,connectionspeed,connectionspeedvalues);
+                    }
+
+                    {
+                        String connection=xdata.getinstance().getSetting(config.connectiondatadelay);
+                        Float connectiondelay=0.0f;
+                        if((! connection.trim().isEmpty()) && (! connection.equalsIgnoreCase("null")) &&
+                                (! connection.equalsIgnoreCase("NA")))
+                        {
+                            String[] array=connection.split(" ");
+                            if(array.length >0)
+                                connectiondelay=Float.parseFloat(array[0]);
+                        }
+                        setconnectionchartdata(linechart_datatimedelay,connectiondelay,connectiondatadelayvalues);
+                    }
+
+                    {
+                        String gps=xdata.getinstance().getSetting(config.GPSAccuracy);
+                        Float gpsaccuracydata=0.0f;
+                        if((! gps.trim().isEmpty()) && (! gps.equalsIgnoreCase("null")) &&
+                                (! gps.equalsIgnoreCase("NA")))
+                        {
+                            String[] array=gps.split(" ");
+                            if(array.length >0)
+                                gpsaccuracydata=Float.parseFloat(array[0]);
+                        }
+                        setconnectionchartdata(linechart_gpsaccuracy,gpsaccuracydata,gpsaccuracyvalues);
+                    }
 
                     /*if(! speed.isEmpty() && (! speed.equalsIgnoreCase("NA")))
                     {
@@ -716,6 +754,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         linechart_traveled.clear();
                         linechart_altitude.clear();
                     }
+
+                    if(connectionspeedvalues.size() > 0 || connectiondatadelayvalues.size() > 0 || gpsaccuracyvalues.size() > 0)
+                        clearlinegraphs();
 
                     tvblockchainid.setText("");
                     tvblockid.setText("");
@@ -803,6 +844,23 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
+
+    public void clearlinegraphs()
+    {
+        if(linechart_connectionspeed != null)
+            linechart_connectionspeed.clear();
+
+        if(linechart_datatimedelay != null)
+            linechart_datatimedelay.clear();
+
+        if(linechart_gpsaccuracy != null)
+            linechart_gpsaccuracy.clear();
+
+        connectionspeedvalues.clear();
+        connectiondatadelayvalues.clear();
+        gpsaccuracyvalues.clear();
+    }
+
     public void setrecordrunning(boolean isrecodrunning)
     {
         this.isrecodrunning=isrecodrunning;
@@ -861,14 +919,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
             linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
-            if(linechart_connectionspeed != null)
-                linechart_connectionspeed.clear();
-
-            if(linechart_datatimedelay != null)
-                linechart_datatimedelay.clear();
-
-            if(linechart_gpsaccuracy != null)
-                linechart_gpsaccuracy.clear();
+            clearlinegraphs();
 
             if(linechart_speed != null)
             {
@@ -913,9 +964,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void drawmappath()
     {
-        ArrayList<Float> arrayconnectionspeed=new ArrayList<>();
-        ArrayList<Float> arrayconnectiondatadelay=new ArrayList<>();
-        ArrayList<Float> arraygpsaccuracy=new ArrayList<>();
+        linechart_connectionspeed.clear();
+        linechart_datatimedelay.clear();
+        linechart_gpsaccuracy.clear();
+        connectionspeedvalues.clear();
+        connectiondatadelayvalues.clear();
+        gpsaccuracyvalues.clear();
         ArrayList<Float> arrayspeed=new ArrayList<>();
         ArrayList<Float> arraytravelled=new ArrayList<>();
         ArrayList<Float> arrayaltitude=new ArrayList<>();
@@ -950,7 +1004,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            arrayconnectionspeed.add(Float.parseFloat(speedarray[0]));
+                            if(connectionspeedvalues.size() > 0)
+                            {
+                                if(connectionspeedvalues.get(connectionspeedvalues.size()-1).getY() != Float.parseFloat(speedarray[0]))
+                                    connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
+                            }
+                            else
+                            {
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
+                            }
                         }
                         catch (Exception e)
                         {
@@ -963,12 +1025,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
                 {
                     String connectiondatadelay=model.getMetricTrackValue();
-                    String[] speedarray=connectiondatadelay.split(" ");
-                    if(speedarray.length > 0)
+                    String[] array=connectiondatadelay.split(" ");
+                    if(array.length > 0)
                     {
                         try
                         {
-                            arrayconnectiondatadelay.add(Float.parseFloat(speedarray[0]));
+                            if(connectiondatadelayvalues.size() > 0)
+                            {
+                                if(connectiondatadelayvalues.get(connectiondatadelayvalues.size()-1).getY() != Float.parseFloat(array[0]))
+                                    connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), Float.parseFloat(array[0]), 0));
+                            }
+                            else
+                            {
+                                connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(array[0]), 0));
+                            }
                         }
                         catch (Exception e)
                         {
@@ -987,7 +1057,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            arraygpsaccuracy.add(Float.parseFloat(itemarray[0]));
+                            if(gpsaccuracyvalues.size() > 0)
+                            {
+                                if(gpsaccuracyvalues.get(gpsaccuracyvalues.size()-1).getY() != Float.parseFloat(itemarray[0]))
+                                    gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
+                            }
+                            else
+                            {
+                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
+                            }
                         }
                         catch (Exception e)
                         {
@@ -1058,14 +1136,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             mgooglemap.addPolyline(options);
             // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
 
-        if(arrayconnectionspeed.size() > 0)
-            setconnectionchartdata(linechart_connectionspeed,arrayconnectionspeed);
+        if(connectionspeedvalues.size() > 0)
+            setconnectionchartdata(linechart_connectionspeed,-1f,connectionspeedvalues);
 
-        if(arrayconnectiondatadelay.size() > 0)
-            setconnectionchartdata(linechart_datatimedelay,arrayconnectiondatadelay);
+        if(connectiondatadelayvalues.size() > 0)
+            setconnectionchartdata(linechart_datatimedelay,-1f,connectiondatadelayvalues);
 
-        if(arraygpsaccuracy.size() > 0)
-            setconnectionchartdata(linechart_gpsaccuracy,arraygpsaccuracy);
+        if(gpsaccuracyvalues.size() > 0)
+            setconnectionchartdata(linechart_gpsaccuracy,-1f,gpsaccuracyvalues);
 
         if(arrayspeed.size() > 0)
         {
@@ -1278,7 +1356,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.connectiondatadelay))
                         {
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay),
-                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue() , txt_datatimedelay);
+                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue() ,txt_datatimedelay);
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.availablewifinetwork))
+                        {
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.availablewifinetwork),"\n"+
+                                    metricItemArraylist.get(j).getMetricTrackValue(), txt_availablewifinetwork);
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))
@@ -1717,34 +1801,30 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.setPinchZoom(false);
     }
 
-    public void setconnectionchartdata(final LineChart chart,ArrayList<Float> arrayitems)
+
+    public void setconnectionchartdata(final LineChart chart,Float value,ArrayList<Entry> gpsaccuracyvalues)
     {
-        ArrayList<Entry> values = new ArrayList<>();
-        for (int i = 0; i < arrayitems.size(); i++)
+        if(gpsaccuracyvalues.size() > 0)
         {
-            float val = arrayitems.get(i);
-            values.add(new Entry(i, val, 0));
+            if(gpsaccuracyvalues.get(gpsaccuracyvalues.size()-1).getY() == value)
+                return;
         }
 
-        /*int[] itemarray={4,5,4,8,9,10,4,6,9,8,5,5,7,4,8,5,9,4,5,8,9,6,4,5,4,5,6,4,8,9,10,5,6,9,8,5,5,7,4,8,5,9,5,5,8,9,6,4,6,4};
-        for (int i = 0; i < itemarray.length; i++) {
-
-            float val = itemarray[i];
-            values.add(new Entry(i, val, 0));
-        }*/
+        if(value != -1)
+            gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), value, 0));
 
         LineDataSet set1;
 
         if (chart.getData() != null &&
                 chart.getData().getDataSetCount() > 0) {
             set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-            set1.setValues(values);
+            set1.setValues(gpsaccuracyvalues);
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
         } else {
             // create a dataset and give it a type
-            set1 = new LineDataSet(values, "");
+            set1 = new LineDataSet(gpsaccuracyvalues, "");
 
             set1.setDrawIcons(false);
             set1.setColor(Color.WHITE);
@@ -1774,7 +1854,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             chart.setData(data);
         }
 
-        chart.animateX(1500);
+        chart.animateX(0);
         Legend l = chart.getLegend();
         l.setForm(Legend.LegendForm.LINE);
     }

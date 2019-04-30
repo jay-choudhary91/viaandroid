@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.xdata;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
@@ -19,7 +20,9 @@ public class applicationviavideocomposer extends Application {
         Fabric.with(this, new Crashlytics());
         mcontext = this;
         xdata.getinstance().init(this);
-        xdata.getinstance().saveSetting(xdata.keybaseurl, "http://console.dev.crypto-servers.com/xapi.php?");
+        common.setting_check(xdata.xapi_url, "http://console.dev.crypto-servers.com/xapi.php?");
+        common.setting_check(xdata.app_paid_level, "0");
+        common.setting_check(xdata.developer_mode, "1");// 0 - false, 1 - true
     }
 
     @Override

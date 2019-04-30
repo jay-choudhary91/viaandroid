@@ -121,6 +121,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static android.net.wifi.WifiInfo.LINK_SPEED_UNITS;
+
 public abstract class locationawareactivity extends baseactivity implements GpsStatus.Listener,LocationListener, Orientation.Listener {
 
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "requesting_location_update_key";
@@ -1048,6 +1050,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         metricItemValue = connectionInfo.getSSID();
                         xdata.getinstance().saveSetting("wificonnected", "1");
                     }
+
+                    //String connectionspeed=""+connectionInfo.getLinkSpeed()+" "+LINK_SPEED_UNITS;
+                    //Log.e("Connection speed",connectionspeed);
 
                     metricItemValue = metricItemValue.replace("\"", "");
                     if (key.equalsIgnoreCase("connectedwifiquality")) {
@@ -2682,7 +2687,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         }
                         //  availablewifinetwork = availablewifiname;
                         xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
-                        Log.e("availablenetworks",""+availablewifiname);
                     }
                 }
             };

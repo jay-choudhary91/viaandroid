@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -39,7 +40,7 @@ public class xapipost extends AsyncTask<Void, Void, String> {
     public xapipost(Context context, apiresponselistener responseListner) {
         this.mContext = context;
         this.listner = responseListner;
-        this.useurl = xdata.getinstance().getSetting(xdata.keybaseurl);
+        this.useurl = common.setting_get(xdata.xapi_url);
     }
 
     public boolean add(String key, String value) {
@@ -99,6 +100,16 @@ public class xapipost extends AsyncTask<Void, Void, String> {
             if (jsonObject != null && jsonObject.has("result"))
             {
                 JSONObject object = jsonObject.optJSONObject("result");
+                if(object.has("settings_set"))
+                {
+                    JSONObject saveSetting = object.getJSONObject("settings_set");
+                    Iterator<String> myIter = saveSetting.keys();
+                    while (myIter.hasNext()) {
+                        String key = myIter.next();
+                        String value = saveSetting.optString(key);
+                        common.setting_set(key, value);
+                    }
+                }
                 result.success(true);
                 result.setData(object);
             }
