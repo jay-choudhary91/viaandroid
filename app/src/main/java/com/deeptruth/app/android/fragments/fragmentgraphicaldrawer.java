@@ -1405,18 +1405,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void rotatecompass(int degree)
     {
-        RotateAnimation ra = new RotateAnimation(
-                currentDegree,
-                -degree,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f);
+        if(degree>0){
+            RotateAnimation ra = new RotateAnimation(
+                    currentDegree,
+                    -degree,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF,
+                    0.5f);
 
-        // how long the animation will take place
-        ra.setDuration(250);
-        ra.setFillAfter(true);
-        img_niddle.startAnimation(ra);
-        currentDegree = -degree;
+            // how long the animation will take place
+            ra.setDuration(250);
+            ra.setFillAfter(true);
+            img_niddle.startAnimation(ra);
+            currentDegree = -degree;
+        }
     }
 
     @Override
