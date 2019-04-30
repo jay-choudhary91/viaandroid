@@ -45,6 +45,7 @@ import com.deeptruth.app.android.netutils.connectivityreceiver;
 import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
 import com.deeptruth.app.android.netutils.xapipostjson;
+import com.deeptruth.app.android.netutils.xapiuploadfile;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.homewatcher;
@@ -463,6 +464,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         api.execute();
     }
 
+
+    @Override
+    public void xapi_uploadfile(Context mContext, String serverurl, String filepath, apiresponselistener mListener) {
+        xapiuploadfile xapiupload = new xapiuploadfile(mContext,serverurl,filepath,mListener);
+        xapiupload.execute();
+    }
+
     @Override
     public void showsharepopupsub(final String path, final String type, final String videotoken) {
         if (subdialogshare != null && subdialogshare.isShowing())
@@ -585,9 +593,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(object.has("success"))
                         {
 
-                            //int result = callvideostoreapi(remoteurl,path);
-                            //callvideostoreapi(videotoken,storedkey);
+                            /*xapi_uploadfile(getinstance(),serverpath,path, new apiresponselistener() {
+                                @Override
+                                public void onResponse(taskresult response) {
 
+                                    //callvideostoreapi(videotoken,storedkey);
+                                }
+                            });*/
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -629,98 +641,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
     }
-
-    public int upfileonserver(String remoteurl, String sourcefileuri) {
-        String upLoadServerUri = remoteurl;
-        // String [] string = sourceFileUri;
-        String fileName = sourcefileuri;
-
-        HttpURLConnection conn = null;
-        DataOutputStream dos = null;
-        DataInputStream inStream = null;
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****";
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
-        String responseFromServer = "";
-
-        File sourceFile = new File(sourcefileuri);
-        if (!sourceFile.isFile()) {
-            Log.e("Huzza", "Source File Does not exist");
-            return 0;
-        }
-        try { // open a URL connection to the Servlet
-            FileInputStream fileInputStream = new FileInputStream(sourceFile);
-            URL url = new URL(upLoadServerUri);
-            conn = (HttpURLConnection) url.openConnection(); // Open a HTTP  connection to  the URL
-            conn.setDoInput(true); // Allow Inputs
-            conn.setDoOutput(true); // Allow Outputs
-            conn.setUseCaches(false); // Don't use a Cached Copy
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-            conn.setRequestProperty("uploaded_file", fileName);
-            dos = new DataOutputStream(conn.getOutputStream());
-
-            dos.writeBytes(twoHyphens + boundary + lineEnd);
-            dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""+ fileName + "\"" + lineEnd);
-            dos.writeBytes(lineEnd);
-
-            bytesAvailable = fileInputStream.available(); // create a buffer of  maximum size
-            Log.i("Huzza", "Initial .available : " + bytesAvailable);
-
-            bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            buffer = new byte[bufferSize];
-
-            // read file and write it into form...
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-            while (bytesRead > 0) {
-                dos.write(buffer, 0, bufferSize);
-                bytesAvailable = fileInputStream.available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-            }
-
-            // send multipart form data necesssary after file data...
-            dos.writeBytes(lineEnd);
-            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-
-            // Responses from the server (code and message)
-            serverresponsecode = conn.getResponseCode();
-            serverresponsemessage = conn.getResponseMessage();
-
-            Log.i("Upload file to server", "HTTP Response is : " + serverresponsemessage + ": " + serverresponsecode);
-            // close streams
-            Log.i("Upload file to server", fileName + " File is written");
-            fileInputStream.close();
-            dos.flush();
-            dos.close();
-        } catch (MalformedURLException ex) {
-            ex.printStackTrace();
-            Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//this block will give the response of upload link
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(conn
-                    .getInputStream()));
-            String line;
-            while ((line = rd.readLine()) != null) {
-                Log.i("Huzza", "RES Message: " + line);
-            }
-            rd.close();
-        } catch (IOException ioex) {
-            Log.e("Huzza", "error: " + ioex.getMessage(), ioex);
-        }
-        return serverresponsecode;  // like 200 (Ok)
-
-    } // end upLoad2Server
-
 }
 
 
