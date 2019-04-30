@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.android.internal.http.multipart.MultipartEntity;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
@@ -43,6 +45,7 @@ import com.deeptruth.app.android.netutils.connectivityreceiver;
 import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
 import com.deeptruth.app.android.netutils.xapipostjson;
+import com.deeptruth.app.android.netutils.xapiuploadfile;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.homewatcher;
@@ -50,10 +53,26 @@ import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -68,6 +87,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     static Dialog subdialogshare = null;
     private Stack<Fragment> mfragments = new Stack<Fragment>();
     private static final int permission_location_request_code = 91;
+    String serverresponsemessage = "";
+    int serverresponsecode = 0;
 
     public boolean isisapprunning() {
         return isapprunning;
@@ -443,6 +464,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         api.execute();
     }
 
+
+    @Override
+    public void xapi_uploadfile(Context mContext, String serverurl, String filepath, apiresponselistener mListener) {
+        xapiuploadfile xapiupload = new xapiuploadfile(mContext,serverurl,filepath,mListener);
+        xapiupload.execute();
+    }
+
     @Override
     public void showsharepopupsub(final String path, final String type, final String videotoken) {
         if (subdialogshare != null && subdialogshare.isShowing())
@@ -540,7 +568,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         subdialogshare.show();
     }
 
-    public void callshareapi(String type, String videotoken, String path, String method) {
+    public void callshareapi(String type, String videotoken, final String path, String method) {
 
         HashMap<String, String> requestparams = new HashMap<>();
         requestparams.put("type", type);
@@ -565,6 +593,46 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(object.has("success"))
                         {
 
+                            /*xapi_uploadfile(getinstance(),serverpath,path, new apiresponselistener() {
+                                @Override
+                                public void onResponse(taskresult response) {
+
+                                    //callvideostoreapi(videotoken,storedkey);
+                                }
+                            });*/
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public void callvideostoreapi(String videotoken,String storedkey){
+
+        HashMap<String, String> requestparams = new HashMap<>();
+        requestparams.put("type", "video");
+        requestparams.put("action", "stored");
+        requestparams.put("videotoken", videotoken);
+        requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
+        requestparams.put("sharemethod", "storedkey");
+
+        progressdialog.showwaitingdialog(getinstance());
+        xapipost_send(getinstance(), requestparams, new apiresponselistener() {
+
+            @Override
+            public void onResponse(taskresult response) {
+
+                progressdialog.dismisswaitdialog();
+                if(response.isSuccess())
+                {
+                    JSONObject object= null;
+                    try {
+                        object = new JSONObject(response.getData().toString());
+                        if(object.has("success"))
+                        {
+                            //upLoad2Server();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
