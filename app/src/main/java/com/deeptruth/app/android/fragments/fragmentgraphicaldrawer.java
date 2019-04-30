@@ -262,6 +262,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     TextView txt_datatimedelay;
     @BindView(R.id.linechart_gpsaccuracy)
     LineChart linechart_gpsaccuracy;
+    @BindView(R.id.txt_mediainformation)
+    TextView txt_mediainformation;
+    @BindView(R.id.layout_videoaudiodata)
+    LinearLayout layout_videoaudiodata;
+    @BindView(R.id.layout_mediametadata)
+    LinearLayout layout_mediametadata;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -345,6 +351,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           seekbar_mediametadata.setEnabled(false);
           linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
           linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
+
+          //visiblity gone of media information
+            layout_videoaudiodata.setVisibility(View.GONE);
+            layout_mediametadata.setVisibility(View.GONE);
+            txt_mediainformation.setVisibility(View.GONE);
 
           TimeZone timezone = TimeZone.getDefault();
           String timezoneid=timezone.getID();
@@ -439,8 +450,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             initconnectionchart(linechart_datatimedelay);
             initconnectionchart(linechart_gpsaccuracy);
 
-            emptymediapiechartdata(pie_videoaudiochart);
-            emptymediapiechartdata(pie_metadatachart);
+          //  emptymediapiechartdata(pie_videoaudiochart);
+          //  emptymediapiechartdata(pie_metadatachart);
 
             linechart_speed.setVisibility(View.GONE);
             linechart_traveled.setVisibility(View.GONE);
@@ -809,12 +820,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             fetchmetadatafromdb(mediafilepath);
             if(metricmainarraylist != null && metricmainarraylist.size() > 0)
             {
+                layout_videoaudiodata.setVisibility(View.VISIBLE);
+                layout_mediametadata.setVisibility(View.VISIBLE);
+                txt_mediainformation.setVisibility(View.VISIBLE);
                 drawmappath();
                 drawmediainformation();
             }
         }
         else
         {
+            layout_videoaudiodata.setVisibility(View.GONE);
+            layout_mediametadata.setVisibility(View.GONE);
+            txt_mediainformation.setVisibility(View.GONE);
             resetmediainformation();
         }
     }
@@ -831,8 +848,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             txt_meta_cautionframes.setText("0 Frames");
             txt_meta_invalidframes.setText("0 Frames");
 
-            emptymediapiechartdata(pie_videoaudiochart);
-            emptymediapiechartdata(pie_metadatachart);
+            // emptymediapiechartdata(pie_videoaudiochart);
+          //  emptymediapiechartdata(pie_metadatachart);
+
 
             if(seekbar_mediametadata != null)
                 seekbar_mediametadata.setProgress(0);
@@ -1127,7 +1145,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         {
             e.printStackTrace();
         }
-
         linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
         linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 

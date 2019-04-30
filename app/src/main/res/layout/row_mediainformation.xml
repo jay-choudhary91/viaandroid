@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:id="@+id/layout_videoaudiodata"
         android:layout_height="wrap_content">
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -212,6 +213,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:id="@+id/layout_mediametadata"
         android:layout_height="match_parent">
 
         <com.deeptruth.app.android.views.customfonttextview
