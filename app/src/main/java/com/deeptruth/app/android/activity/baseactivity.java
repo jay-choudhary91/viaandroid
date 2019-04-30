@@ -86,8 +86,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     static Dialog subdialogshare = null;
     private Stack<Fragment> mfragments = new Stack<Fragment>();
     private static final int permission_location_request_code = 91;
-    String serverResponseMessage = "";
-    int serverResponseCode = 0;
+    String serverresponsemessage = "";
+    int serverresponsecode = 0;
 
     public boolean isisapprunning() {
         return isapprunning;
@@ -690,10 +690,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
             // Responses from the server (code and message)
-            serverResponseCode = conn.getResponseCode();
-            String serverResponseMessage = conn.getResponseMessage();
+            serverresponsecode = conn.getResponseCode();
+            serverresponsemessage = conn.getResponseMessage();
 
-            Log.i("Upload file to server", "HTTP Response is : " + serverResponseMessage + ": " + serverResponseCode);
+            Log.i("Upload file to server", "HTTP Response is : " + serverresponsemessage + ": " + serverresponsecode);
             // close streams
             Log.i("Upload file to server", fileName + " File is written");
             fileInputStream.close();
@@ -717,7 +717,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         } catch (IOException ioex) {
             Log.e("Huzza", "error: " + ioex.getMessage(), ioex);
         }
-        return serverResponseCode;  // like 200 (Ok)
+        return serverresponsecode;  // like 200 (Ok)
 
     } // end upLoad2Server
 
