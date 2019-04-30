@@ -1479,6 +1479,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
                     common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
                 }
+
+                ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                getselectedmetrics(mlocalarraylist);
+
                 myhandler.postDelayed(this, 1000);
             }
         };

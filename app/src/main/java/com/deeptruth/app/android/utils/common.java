@@ -601,6 +601,8 @@ public class common {
             xdata.getinstance().saveSetting(config.acceleration_z,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("connectionspeed")) {
             xdata.getinstance().saveSetting(config.Connectionspeed,((ismetricsselected)?value:"NA"));
+        }else if (keyname.equalsIgnoreCase(config.connectiondatadelay)) {
+            xdata.getinstance().saveSetting(config.connectiondatadelay,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("distancetravelled")) {
             xdata.getinstance().saveSetting(config.distancetravelled,((ismetricsselected)?value:"NA"));
         }else if (keyname.equalsIgnoreCase("attitude")) {
