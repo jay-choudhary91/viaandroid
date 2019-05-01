@@ -44,7 +44,7 @@ public class fragmentverifyuser extends registrationbasefragment implements View
     LinearLayout layout_top;
     int topviewheight,bottomviewheight,rootviewheight;
     View contaionerview = null;
-    String createaccount = "";
+    String forgotpassword = "";
 
 
     @Nullable
@@ -112,7 +112,7 @@ public class fragmentverifyuser extends registrationbasefragment implements View
         HashMap<String,String> requestparams=new HashMap<>();
         requestparams.put("type","client");
         requestparams.put("action","verify");
-        if(!createaccount.isEmpty() && createaccount.equalsIgnoreCase(config.forgotpassword))
+        if(!forgotpassword.isEmpty() && forgotpassword.equalsIgnoreCase(config.forgotpassword))
                 requestparams.put("action","verifyforgotten");
 
         requestparams.put("clientid",clientid);
@@ -128,7 +128,7 @@ public class fragmentverifyuser extends registrationbasefragment implements View
                         JSONObject object=new JSONObject(response.getData().toString());
                         if(object.has("success"))
                         {
-                            if(object.getString("success").equalsIgnoreCase("true"))
+                            if(object.getString("success").equalsIgnoreCase("true") || object.getString("success").equalsIgnoreCase("1"))
                             {
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
@@ -183,10 +183,6 @@ public class fragmentverifyuser extends registrationbasefragment implements View
 
             fragmentchangepassword fragchangepassword = new fragmentchangepassword();
             getHelper().addFragment(fragchangepassword,false,true);
-
-           /* Intent i = new Intent(getActivity(), fragmentchangepassword.class);
-            getHelper().hidekeyboard();
-            startActivity(i);*/
         }
         else
         {
@@ -194,19 +190,13 @@ public class fragmentverifyuser extends registrationbasefragment implements View
         }
     }
 
-    public void setdata(String createaccount){
-        this.createaccount = createaccount;
+    public void setdata(String forgotpassword){
+        this.forgotpassword = forgotpassword;
 
     }
 
     public void gotologin(){
         fragmentsignin fragverifyuser = new fragmentsignin();
         getHelper().addFragment(fragverifyuser,true,true);
-
-       /* Intent i = new Intent(getActivity(), fragmentsignin.class);
-        hidekeyboard();
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
-        finish();*/
     }
 }

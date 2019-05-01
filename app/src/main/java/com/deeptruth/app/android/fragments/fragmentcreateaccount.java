@@ -109,7 +109,7 @@ public class fragmentcreateaccount extends registrationbasefragment implements V
                             JSONObject object=new JSONObject(response.getData().toString());
                             if(object.has("success"))
                             {
-                                if(object.getString("success").equalsIgnoreCase("true"))
+                                if(object.getString("success").equalsIgnoreCase("true") || object.getString("success").equalsIgnoreCase("1"))
                                 {
                                     if(object.has(config.clientid))
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));

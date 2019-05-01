@@ -94,7 +94,7 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
                         JSONObject object=new JSONObject(response.getData().toString());
                         if(object.has("success"))
                         {
-                            if(object.getString("success").equalsIgnoreCase("true"))
+                            if(object.getString("success").equalsIgnoreCase("true") || object.getString("success").equalsIgnoreCase("1"))
                             {
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
@@ -102,10 +102,6 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
                                 fragmentverifyuser fragverifyuser = new fragmentverifyuser();
                                 fragverifyuser.setdata(config.forgotpassword);
                                 getHelper().addFragment(fragverifyuser,false,true);
-
-                                /*Intent intent=new Intent(fragmentforgotpassword.this,fragmentverifyuser.class);
-                                intent.putExtra("activityname",config.fragmentforgotpassword);
-                                startActivity(intent);*/
                             }
                             else
                             {

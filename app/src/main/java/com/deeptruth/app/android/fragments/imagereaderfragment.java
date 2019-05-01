@@ -564,6 +564,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
         fetchmetadatafromdb();
         loadmap();
+        gethelper().setcurrentmediaposition(0);
     }
 
     @Override
