@@ -953,7 +953,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             Cursor cursor2 = mdbhelper.getmediacolor(localkey);
                             if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
                             {
-                                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                                LayoutInflater inflater = LayoutInflater.from(applicationviavideocomposer.getactivity());
                                 View viewparent = inflater.inflate(R.layout.row_mediacolor, null, false);
                                 LinearLayout layout=(LinearLayout)viewparent.findViewById(R.id.linear_seekbarcolorview);
                                 ArrayList<String> arrayList=new ArrayList<>();
