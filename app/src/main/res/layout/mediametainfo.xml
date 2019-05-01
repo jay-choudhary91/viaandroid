@@ -202,14 +202,62 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="12sp"
+                        android:lines="2"
                         android:text="Speed"/>
 
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/linechart_speed"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:layout_height="70dp"/>
+                        android:layout_height="70dp"
+                        android:orientation="horizontal">
 
+                        <LinearLayout
+                            android:layout_width="20dp"
+                            android:gravity="center"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:layout_width="4dp"
+                                android:layout_height="70dp"
+                                android:background="@color/white"
+                                android:layout_marginBottom="10dp"
+                                android:layout_alignParentBottom="true"></View>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:background="@color/white"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_alignParentBottom="true"></View>
+
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/linechart_speed"
+                            android:layout_width="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="-5dp"
+                            android:layout_marginBottom="-5dp"
+                            android:layout_height="70dp"/>
+
+                        <com.deeptruth.app.android.views.verticalseekbar
+                            android:id="@+id/vertical_slider_speed"
+                            android:layout_width="20dp"
+                            android:layout_height="match_parent"
+                            android:max="100"
+                            android:thumb="@drawable/circle"
+                            android:thumbTint="@color/blue_button"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:progressDrawable="@drawable/verticalseekbarprogress"
+                            android:splitTrack="false"
+                            android:min="0"/>
+
+
+
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -227,14 +275,59 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
+                        android:lines="2"
                         android:gravity="center"
                         android:text="Traveled"/>
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="70dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="20dp"
+                            android:gravity="center"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:layout_width="4dp"
+                                android:layout_height="70dp"
+                                android:background="@color/white"
+                                android:layout_marginBottom="10dp"
+                                android:layout_alignParentBottom="true"></View>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:background="@color/white"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_alignParentBottom="true"></View>
 
                     <com.github.mikephil.charting.charts.LineChart
                         android:id="@+id/linechart_traveled"
                         android:layout_width="match_parent"
+                        android:layout_marginLeft="-5dp"
+                        android:layout_marginBottom="-5dp"
                         android:layout_gravity="center_vertical"
-                        android:layout_height="70dp"/>
+                        android:layout_height="match_parent"/>
+
+                        <com.deeptruth.app.android.views.verticalseekbar
+                            android:id="@+id/vertical_slider_traveled"
+                            android:layout_width="20dp"
+                            android:layout_height="match_parent"
+                            android:thumb="@drawable/circle"
+                            android:thumbTint="@color/blue_button"
+                            android:max="100"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:progressDrawable="@drawable/verticalseekbarprogress"
+                            android:min="0"/>
+
+                    </RelativeLayout>
 
 
                 </LinearLayout>
@@ -254,13 +347,58 @@
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
                         android:gravity="center"
+                        android:lines="2"
                         android:text="Altitude"/>
 
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/linechart_altitude"
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:layout_height="70dp"/>
+                        android:layout_height="70dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="20dp"
+                            android:gravity="center"
+                            android:layout_height="wrap_content">
+
+                            <View
+                                android:layout_width="4dp"
+                                android:layout_height="70dp"
+                                android:background="@color/white"
+                                android:layout_marginBottom="10dp"
+                                android:layout_alignParentBottom="true"></View>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="3dp"
+                            android:background="@color/white"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_alignParentBottom="true"></View>
+
+                        <com.github.mikephil.charting.charts.LineChart
+                            android:id="@+id/linechart_altitude"
+                            android:layout_width="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="-5dp"
+                            android:layout_marginBottom="-5dp"
+                            android:layout_height="match_parent"/>
+
+                        <com.deeptruth.app.android.views.verticalseekbar
+                            android:id="@+id/vertical_slider_altitude"
+                            android:layout_width="20dp"
+                            android:layout_height="match_parent"
+                            android:thumb="@drawable/circle"
+                            android:thumbTint="@color/blue_button"
+                            android:max="100"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:progressDrawable="@drawable/verticalseekbarprogress"
+                            android:min="0"/>
+
+
+                    </RelativeLayout>
 
 
                 </LinearLayout>
