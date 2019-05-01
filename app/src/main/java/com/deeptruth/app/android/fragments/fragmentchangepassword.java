@@ -89,16 +89,14 @@ public class fragmentchangepassword extends registrationbasefragment implements 
                         JSONObject object=new JSONObject(response.getData().toString());
                         if(object.has("success"))
                         {
-                            if(object.getString("success").equalsIgnoreCase("true"))
+                            if(object.getString("success").equalsIgnoreCase("1"))
                             {
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                               /* Intent i = new Intent(fragmentchangepassword.this, fragmentsigninactivity.class);
-                                 getHelper().hidekeyboard();
-                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(i);
-                                finish();*/
+                                fragmentsignin fragsignin = new fragmentsignin();
+                                getHelper().addFragment(fragsignin,true,true);
+
                             }
                             else
                             {
