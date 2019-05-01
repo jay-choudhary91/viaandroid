@@ -3,6 +3,7 @@ package com.deeptruth.app.android.netutils;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
@@ -21,11 +22,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +41,9 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
     String filepath = "";
     apiresponselistener listner;
 
+
     HttpURLConnection conn = null;
     DataOutputStream dos = null;
-    DataInputStream inStream = null;
     String lineEnd = "\r\n";
     String twoHyphens = "--";
     String boundary = "*****";
@@ -48,6 +52,14 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
     int maxBufferSize = 1 * 1024 * 1024;
     String serverresponsemessage = "";
     int serverresponsecode = 0;
+
+
+    //private final String boundary;
+    private static final String LINE_FEED = "\r\n";
+    private HttpURLConnection httpConn;
+    private String charset;
+    private OutputStream outputStream;
+    private PrintWriter writer;
 
 
     public xapipostfile(Context context, String serverurl, String filepath , apiresponselistener responseListner) {
@@ -70,73 +82,158 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
             return "";
         }
         try { // open a URL connection to the Servlet
-            FileInputStream fileInputStream = new FileInputStream(sourceFile);
-            URL url = new URL(serverurl);
-            conn = (HttpURLConnection) url.openConnection(); // Open a HTTP  connection to  the URL
-            conn.setDoInput(true); // Allow Inputs
-            conn.setDoOutput(true); // Allow Outputs
-            conn.setUseCaches(false); // Don't use a Cached Copy
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-            conn.setRequestProperty("uploaded_file", filepath);
-            dos = new DataOutputStream(conn.getOutputStream());
 
-            dos.writeBytes(twoHyphens + boundary + lineEnd);
-            dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""+ filepath + "\"" + lineEnd);
-            dos.writeBytes(lineEnd);
+                    // open a URL connection to the Servlet
+                    FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                    URL url = new URL(serverurl);
 
-            bytesAvailable = fileInputStream.available(); // create a buffer of  maximum size
-            Log.i("Huzza", "Initial .available : " + bytesAvailable);
+                    boundary = "===" + System.currentTimeMillis() + "===";
+                    httpConn = (HttpURLConnection) url.openConnection();
+                    httpConn.setUseCaches(false);
+                    httpConn.setDoOutput(true);    // indicates POST method
+                    httpConn.setDoInput(true);
+                    httpConn.setRequestMethod("PUT");
+                    httpConn.setRequestProperty("Content-Type",
+                            "multipart/form-data; boundary=" + boundary);
+                    outputStream = httpConn.getOutputStream();
+                    writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"),
+                    true);
 
-            bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            buffer = new byte[bufferSize];
+                    writer.append("--" + boundary).append(LINE_FEED);
+                    writer.append("Content-Disposition: form-data; name=\"" + common.getfilename(filepath) + "\"")
+                            .append(LINE_FEED);
+                    writer.append("Content-Type: text/plain; charset=" + charset).append(
+                            LINE_FEED);
+                    writer.append(LINE_FEED);
+                    writer.append("video").append(LINE_FEED);
+                    writer.flush();
 
-            // read file and write it into form...
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
-            while (bytesRead > 0) {
-                dos.write(buffer, 0, bufferSize);
-                bytesAvailable = fileInputStream.available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            writer.append("--" + boundary).append(LINE_FEED);
+            writer.append(
+                    "Content-Disposition: form-data; name=\"" + common.getfilename(filepath)
+                            + "\"; filename=\"" + common.getfilename(filepath) + "\"")
+                    .append(LINE_FEED);
+            writer.append(
+                    "Content-Type: "
+                            + URLConnection.guessContentTypeFromName(common.getfilename(filepath)))
+                    .append(LINE_FEED);
+            writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
+            writer.append(LINE_FEED);
+            writer.flush();
+
+            FileInputStream inputStream = new FileInputStream(sourceFile);
+            byte[] buffer = new byte[4096];
+            int bytesRead = -1;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            outputStream.flush();
+            inputStream.close();
+            writer.append(LINE_FEED);
+            writer.flush();
+
+            List<String> response = new ArrayList<String>();
+            writer.append(LINE_FEED).flush();
+            writer.append("--" + boundary + "--").append(LINE_FEED);
+            writer.close();
+
+            // checks server's status code first
+            int status = httpConn.getResponseCode();
+
+            if (status == HttpURLConnection.HTTP_OK) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        httpConn.getInputStream()));
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    response.add(line);
+                }
+                reader.close();
+                httpConn.disconnect();
+            } else {
+                throw new IOException("Server returned non-OK status: " + status);
             }
 
-            // send multipart form data necesssary after file data...
-            dos.writeBytes(lineEnd);
-            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+            serverresponsemessage =  response.toString();
 
-            // Responses from the server (code and message)
-            serverresponsecode = conn.getResponseCode();
-            serverresponsemessage = conn.getResponseMessage();
+                   /* // Open a HTTP  connection to  the URL
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoInput(true); // Allow Inputs
+                    conn.setDoOutput(true); // Allow Outputs
+                    conn.setUseCaches(false); // Don't use a Cached Copy
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Connection", "Keep-Alive");
+                    conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                    conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                    conn.setRequestProperty("uploaded_file", common.getfilename(serverurl));
 
-            Log.i("Upload file to server", "HTTP Response is : " + serverresponsemessage + ": " + serverresponsecode);
-            // close streams
-            Log.i("Upload file to server", filepath + " File is written");
-            fileInputStream.close();
-            dos.flush();
-            dos.close();
-        } catch (MalformedURLException ex) {
-            ex.printStackTrace();
-            Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//this block will give the response of upload link
-        try {
-            BufferedReader rd = new BufferedReader(new InputStreamReader(conn
-                    .getInputStream()));
-            String line;
-            while ((line = rd.readLine()) != null) {
-                Log.i("Huzza", "RES Message: " + line);
+                    dos = new DataOutputStream(conn.getOutputStream());
+
+                    dos.writeBytes(twoHyphens + boundary + lineEnd);
+                    dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""+ common.getfilename(serverurl) + "\"" + lineEnd);
+                            dos.writeBytes(lineEnd);
+
+                    // create a buffer of  maximum size
+                    bytesAvailable = fileInputStream.available();
+
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    buffer = new byte[bufferSize];
+
+                    // read file and write it into form...
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    while (bytesRead > 0) {
+
+                        dos.write(buffer, 0, bufferSize);
+                        bytesAvailable = fileInputStream.available();
+                        bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    }
+
+                    // send multipart form data necesssary after file data...
+                    dos.writeBytes(lineEnd);
+                    dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+                    // Responses from the server (code and message)
+                    serverresponsecode = conn.getResponseCode();
+                   serverresponsemessage = conn.getResponseMessage();
+
+                    Log.i("uploadFile", "HTTP Response is : "
+                            + serverresponsemessage + ": " + serverresponsecode);
+
+                    if(serverresponsecode == 200){
+
+                        *//*runOnUiThread(new Runnable() {
+                            public void run() {
+
+                                String msg = "File Upload Completed.\n\n See uploaded file here : \n\n"
+                                        +" http://www.androidexample.com/media/uploads/"
+                                        +uploadFileName;
+
+                                messageText.setText(msg);
+                                Toast.makeText(UploadToServer.this, "File Upload Complete.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });*//*
+                    }
+
+                    //close the streams //
+                    fileInputStream.close();
+                    dos.flush();
+                    dos.close();*/
+
+                } catch (MalformedURLException ex) {
+
+                    ex.printStackTrace();
+
+                    Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+                return serverresponsemessage;
             }
-            rd.close();
-        } catch (IOException ioex) {
-            Log.e("Huzza", "error: " + ioex.getMessage(), ioex);
-        }
-        return serverresponsemessage;  // like 200 (Ok)
-    }
 
     @Override
     protected void onPostExecute(String aVoid) {

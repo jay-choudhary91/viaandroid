@@ -49,6 +49,7 @@ public class config {
     public static final String composer_service_getencryptionmetadata = "composer_service_getencryptionmetadata";
     public static final String ismediadataservicerunning = "ismediadataservicerunning";
     public static final String broadcast_medialistnewitem = "broadcast_medialistnewitem";
+    public static final String broadcast_callshareapi = "broadcast_callshareapi";
 
     public static final String drawer_transparency = "drawer_transparency";
 
@@ -195,6 +196,10 @@ public class config {
     public static final String item_caution="Caution";
     public static final String item_unsent="Unsent";
     public static final String item_invalid="Invalid";
+
+    public static final String type_public="public";
+    public static final String type_private="private";
+    public static final String type_linkinvite="linkinvite";
 
     public static final String caution="CAUTION";
     public static final String verified="VERIFIED";

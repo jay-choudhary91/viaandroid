@@ -670,4 +670,15 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         //  graphicaldrawerfragment.setdrawerheight(drawerheight);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+
+                callsharapiafterlogin();
+            }
+        }
+    }
 }
