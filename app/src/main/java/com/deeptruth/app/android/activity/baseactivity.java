@@ -494,9 +494,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             txt_share_btn1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mediamethod = config.type_private;
                     if(!isuserlogin()){
                         //callloginscreen();
-                        mediamethod = config.type_private;
                         redirecttologin();
                         return;
                     }
@@ -507,9 +507,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             txt_share_btn2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mediamethod = config.type_public;
                     if(!isuserlogin()){
                         //callloginscreen();
-                        mediamethod = config.type_public;
                         redirecttologin();
                         return;
                     }
@@ -520,9 +520,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             txt_share_btn3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mediamethod = config.type_linkinvite;
                     if(!isuserlogin()){
                         //callloginscreen();
-                        mediamethod = config.type_linkinvite;
                         redirecttologin();
                         return;
                     }
