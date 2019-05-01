@@ -602,12 +602,15 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                             if(! storageurl.trim().isEmpty())
                             {
+                                progressdialog.showwaitingdialog(getinstance());
                                 xapi_uploadfile(getinstance(),storageurl,path, new apiresponselistener() {
                                     @Override
                                     public void onResponse(taskresult response) {
                                         if(response.isSuccess())
                                         {
                                             //callvideostoreapi(videotoken,storedkey);
+                                        }else{
+                                            progressdialog.dismisswaitdialog();
                                         }
                                     }
                                 });
