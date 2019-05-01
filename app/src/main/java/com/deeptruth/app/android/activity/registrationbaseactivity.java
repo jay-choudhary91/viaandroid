@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -176,16 +177,14 @@ public abstract class registrationbaseactivity extends AppCompatActivity impleme
     @Override
     public void onBack() {
 
-        int a = getSupportFragmentManager().getBackStackEntryCount();
-        int b = getMinNumberOfFragments();
-
-        int size = mfragments.size();
-        if (getSupportFragmentManager().getBackStackEntryCount() <= getMinNumberOfFragments()) {
+        /*if (getSupportFragmentManager().getBackStackEntryCount() <= getMinNumberOfFragments()) {
             finish();
             return;
-        }
+        }*/
 
         if (getcurrentfragment() instanceof fragmentsignin) {
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
             finish();
             return;
         }else{

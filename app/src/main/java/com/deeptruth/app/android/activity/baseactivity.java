@@ -2,8 +2,10 @@ package com.deeptruth.app.android.activity;
 
 import android.app.Dialog;
 import android.arch.lifecycle.Lifecycle;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
@@ -69,6 +71,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     private static final int permission_location_request_code = 91;
     String serverresponsemessage = "";
     int serverresponsecode = 0;
+    private BroadcastReceiver broadcastshareapiafterlogin;
+    String mediapath = "";
+    String mediatype = "";
+    String mediavideotoken = "",mediamethod = "";
+
 
     public boolean isisapprunning() {
         return isapprunning;
@@ -456,6 +463,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if (subdialogshare != null && subdialogshare.isShowing())
             subdialogshare.dismiss();
 
+             mediapath = path;
+             mediatype = type;
+             mediavideotoken = videotoken;
+
             subdialogshare = new Dialog(applicationviavideocomposer.getactivity());
             subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
             subdialogshare.setCanceledOnTouchOutside(true);
@@ -483,21 +494,33 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             txt_share_btn1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callshareapi(type, videotoken, path, txt_share_btn1.getText().toString());
+                    if(!isuserlogin())
+                        callloginscreen();
+
+                    mediamethod = config.type_private;
+                    callshareapi(mediatype, mediavideotoken, mediapath, mediamethod);
                 }
             });
 
             txt_share_btn2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callshareapi(type, videotoken, path, txt_share_btn2.getText().toString());
+                    if(!isuserlogin())
+                        callloginscreen();
+
+                    mediamethod = config.type_public;
+                    callshareapi(mediatype , mediavideotoken, mediapath, mediamethod);
                 }
             });
 
             txt_share_btn3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callshareapi(type, videotoken, path, txt_share_btn3.getText().toString());
+                    if(!isuserlogin())
+                        callloginscreen();
+
+                    mediamethod = config.type_linkinvite;
+                    callshareapi(mediatype, mediavideotoken, mediapath, mediamethod);
                 }
             });
 
@@ -506,12 +529,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 public void onClick(View v) {
 
                     //callshareapi(type, videotoken, path, txt_share_btn4.getText().toString());
-
                     if(!isuserlogin())
-                    {
-                        redirecttologin();
-                        return;
-                    }
+                        callloginscreen();
 
                     if (subdialogshare != null && subdialogshare.isShowing())
                           subdialogshare.dismiss();
@@ -525,7 +544,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             public void onPrepared(MediaPlayer mediaPlayer) {
                                 int duration = mp.getDuration();
                                 fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
-                                fragtrimvideo.setdata(path, duration,videotoken);
+                                fragtrimvideo.setdata(mediapath, duration,videotoken);
                                 addFragment(fragtrimvideo, false, true);
                             }
                         });
@@ -548,7 +567,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         HashMap<String, String> requestparams = new HashMap<>();
         requestparams.put("type", type);
         requestparams.put("action", "share");
-        requestparams.put("videotoken", videotoken);
+        if(type.equalsIgnoreCase("image")){
+            requestparams.put("imagetoken", videotoken);
+        }else if(type.equalsIgnoreCase("audio")){
+            requestparams.put("audiotoken", videotoken);
+        }if(type.equalsIgnoreCase("video")){
+            requestparams.put("videotoken", videotoken);
+        }
         requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
         requestparams.put("sharemethod", method);
         requestparams.put("fileextension",common.getfileextension(path));
@@ -566,10 +591,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     String storageurl="";
                     try {
                         object = new JSONObject(response.getData().toString());
-                        if(object.has("success"))
-                        {
-                            if(object.has("storageurl"))
-                                storageurl=object.getString("storageurl");
+                            if(object.has("storageuploadurl"))
+                                storageurl=object.getString("storageuploadurl");
 
                             if(! storageurl.trim().isEmpty())
                             {
@@ -579,13 +602,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                         if(response.isSuccess())
                                         {
                                             //callvideostoreapi(videotoken,storedkey);
-
                                         }
                                     }
                                 });
                             }
-
-                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -625,6 +645,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }
             }
         });
+    }
+
+    public void callsharapiafterlogin()
+    {
+        callshareapi(mediatype , mediavideotoken, mediapath, mediamethod);
+    }
+
+    public void callloginscreen(){
+        redirecttologin();
+        return;
     }
 }
 
