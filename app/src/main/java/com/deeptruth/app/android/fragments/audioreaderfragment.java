@@ -292,6 +292,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     RecyclerView recycler_encryption;
     @BindView(R.id.layoutcompass)
     ImageView layoutcompass;
+    @BindView(R.id.layoutmetainfo)
+    RelativeLayout layoutmetainfo;
+    @BindView(R.id.metainfocontainer)
+    FrameLayout metainfocontainer;
 
     private String audiourl = null,latency="";
 
@@ -509,6 +513,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         gethelper().setrecordingrunning(false);
 
         layout_item_encryption.setVisibility(View.GONE);
+        metainfocontainer.setVisibility(VISIBLE);
+        layoutmetainfo.setVisibility(View.GONE);
         recycler_encryption.setVisibility(View.VISIBLE);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());

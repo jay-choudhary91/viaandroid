@@ -361,6 +361,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             text_meta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
             txt_connectioninformation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
             txt_datatimedelay.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+            txt_world_time.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+            txt_phone_time.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
 
             seekbar_mediavideoaudio.setEnabled(false);
             seekbar_mediametadata.setEnabled(false);
