@@ -450,7 +450,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             halfpaichartdate(chart_battery);
 
             setchartdata(linechart_speed,60);
-            setchartdata(linechart_traveled,30);
+            setchartdata(linechart_traveled,100);
             setchartdata(linechart_altitude,2000);
 
             initlinechart(linechart_connectionspeed,25f);
@@ -466,7 +466,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             vertical_slider_speed.setMax(60);
             vertical_slider_altitude.setMax(2000);
-            vertical_slider_traveled.setMax(30);
+            vertical_slider_traveled.setMax(100);
 
         }
         return rootview;
@@ -763,7 +763,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 else
                 {
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
-                            "\n"+"0.0 miles", tvtraveled);
+                            "\n"+"0.0 feets", tvtraveled);
 
                     if(altitudegraphitems.size() > 0 || speedgraphitems.size() > 0 || travelledgraphitems.size() > 0)
                     {

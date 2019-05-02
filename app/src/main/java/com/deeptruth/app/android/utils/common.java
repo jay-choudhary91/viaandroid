@@ -2244,7 +2244,9 @@ public class common {
         return 2;
     }
 
-
+    public static double convertmetertofeets(double meter) {
+        return meter / 0.305;
+    }
     public static double convertmpstomph(double mps) {
         return  mps * 2.236936 ;
     }
