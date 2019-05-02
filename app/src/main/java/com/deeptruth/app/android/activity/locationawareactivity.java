@@ -54,6 +54,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -225,6 +226,24 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     DecimalFormat precision = new DecimalFormat("0.0");
                                     //xdata.getinstance().saveSetting("gpsspeed", "" +mps+" "+ mph);
                                     xdata.getinstance().saveSetting("gpsspeed", "" + precision.format(mph));
+
+                                    if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
+                                    {
+                                        double feets = common.convertmetertofeets(mps);
+                                        if(! xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
+                                        {
+                                            try
+                                            {
+                                                double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
+                                                feets=feets+value;
+                                            }catch (Exception e)
+                                            {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                        xdata.getinstance().saveSetting("travelleddistance", "" + (int)feets);
+                                    }
+
                                 }
 
                                 if (location.hasAltitude()) {
@@ -245,24 +264,24 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     if (oldlocation == null)
                                         oldlocation = location;
 
-                                    long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(), oldlocation.getLatitude(),
+                                    /*long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(), oldlocation.getLatitude(),
                                             oldlocation.getLongitude());
-                                    double miles = common.convertmetertomiles(meter);
+                                    double feets = common.convertmetertofeets(meter);
                                     if(! xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
                                     {
                                         try
                                         {
                                             double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
-                                            miles=miles+value;
+                                            feets=feets+value;
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
                                         }
                                     }
-
                                     DecimalFormat precision = new DecimalFormat("0.0");
-                                    xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
-                                } else {
+                                    xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(feets));*/
+                                } else
+                                {
                                     xdata.getinstance().saveSetting("travelleddistance", "0.0");
                                     oldlocation = null;
                                 }
@@ -1887,9 +1906,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricitemarraylist.get(i).setMetricTrackValue("" + degree);
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
-                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("travelleddistance") + " " + "miles");
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("travelleddistance") + " " + "feets");
                 if (xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
-                    metricitemarraylist.get(i).setMetricTrackValue("0" + " " + "miles");
+                    metricitemarraylist.get(i).setMetricTrackValue("0" + " " + "feets");
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy)) {
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting(config.itemgpsaccuracy));
