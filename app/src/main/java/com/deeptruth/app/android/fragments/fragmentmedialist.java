@@ -1181,6 +1181,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         arraymediaitemlist.get(i).setMediacolor(color);
                         arraymediaitemlist.get(i).setLocalkey(localkey);
                         arraymediaitemlist.get(i).setMediastatus(status);
+                        arraymediaitemlist.get(i).setVideotoken(token);
 
                         if(! mediaduration.trim().isEmpty())
                             arraymediaitemlist.get(i).setDuration(mediaduration);
