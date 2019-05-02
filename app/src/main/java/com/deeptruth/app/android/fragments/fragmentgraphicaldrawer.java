@@ -1022,7 +1022,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         gpsaccuracyvalues.clear();
         speedgraphitems.clear();
         travelledgraphitems.clear();
-        speedgraphitems.clear();
+        altitudegraphitems.clear();
+        linechart_speed.clear();
+        linechart_traveled.clear();
+        linechart_altitude.clear();
 
         ArrayList<Float> arrayspeed=new ArrayList<>();
         ArrayList<Float> arraytravelled=new ArrayList<>();
@@ -1189,7 +1192,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            if(altitudegraphitems.size() > 0)
+                            /*if(altitudegraphitems.size() > 0)
                             {
                                 if(altitudegraphitems.get(altitudegraphitems.size()-1).getY() != Float.parseFloat(itemarray[0]))
                                     altitudegraphitems.add(new Entry(altitudegraphitems.size(), Float.parseFloat(itemarray[0]), 0));
@@ -1197,7 +1200,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             else
                             {
                                 altitudegraphitems.add(new Entry(altitudegraphitems.size(), Float.parseFloat(itemarray[0]), 0));
-                            }
+                            }*/
+                            altitudegraphitems.add(new Entry(altitudegraphitems.size(), Float.parseFloat(itemarray[0]), 0));
                         }
                         catch (Exception e)
                         {
@@ -1267,19 +1271,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
                 lastsequenceno=sequenceno;   // 15  30   45
 
-                if(! metricmainarraylist.get(i).getColor().trim().isEmpty())
+                sectioncount++;
+                if(metricmainarraylist.get(i).getColor().trim().isEmpty())
+                    metricmainarraylist.get(i).setColor(config.color_gray);
+
+                if(! lastcolor.equalsIgnoreCase(metricmainarraylist.get(i).getColor()))
                 {
+                    sectioncount=0;
                     sectioncount++;
-                    if(! lastcolor.equalsIgnoreCase(metricmainarraylist.get(i).getColor()))
-                    {
-                        colorsectioncount.add(metricmainarraylist.get(i).getColor()+","+sectioncount);
-                    }
-                    else
-                    {
-                        colorsectioncount.set(colorsectioncount.size()-1,metricmainarraylist.get(i).getColor()+","+sectioncount);
-                    }
-                    lastcolor=metricmainarraylist.get(i).getColor();
+                    colorsectioncount.add(metricmainarraylist.get(i).getColor()+","+sectioncount);
                 }
+                else
+                {
+                    colorsectioncount.set(colorsectioncount.size()-1,metricmainarraylist.get(i).getColor()+","+sectioncount);
+                }
+                lastcolor=metricmainarraylist.get(i).getColor();
             }
         }
 
@@ -1331,23 +1337,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         seekbar_mediametadata.setPadding(0,0,0,0);
         seekbar_mediavideoaudio.setMax(metricmainarraylist.size());
         seekbar_mediametadata.setMax(metricmainarraylist.size());
-    }
-
-    public View getmediaseekbarbackgroundview(String weight,String color)
-    {
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
-        View view = new View(applicationviavideocomposer.getactivity());
-        view.setLayoutParams(param);
-        if((! color.isEmpty()))
-        {
-            view.setBackgroundColor(Color.parseColor(common.getcolorbystring(color)));
-        }
-        else
-        {
-            view.setBackgroundColor(Color.parseColor(config.color_code_gray));
-        }
-        return view;
     }
 
     public void setcurrentmediaposition(int currentmediaposition)

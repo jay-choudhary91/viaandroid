@@ -2329,6 +2329,10 @@ public class common {
         {
             color=config.color_code_gray;
         }
+        else if(colorname.equalsIgnoreCase("white"))
+        {
+            color=config.color_code_white;
+        }
         return color;
     }
 
