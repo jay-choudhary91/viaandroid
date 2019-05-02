@@ -511,9 +511,16 @@
         android:visibility="gone"
         >
 
-        <include layout="@layout/layout_metainfo"/>
-
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:id="@+id/metainfocontainer"
+            android:layout_height="match_parent">
+            <include layout="@layout/layout_metainfo"
+                android:visibility="gone"/>
+        </FrameLayout>
     </ScrollView>
+
+
 
     <ScrollView
         android:layout_width="match_parent"

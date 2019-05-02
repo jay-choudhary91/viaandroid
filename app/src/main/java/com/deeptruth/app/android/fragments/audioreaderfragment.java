@@ -339,6 +339,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     int navigationbarheight = 0;
     GestureDetector detector;
     public boolean islastdragarrow = false,isplaypauswebtnshow = false;
+    metainformationfragment fragmentmetainformation;
 
     public audioreaderfragment() {
     }
@@ -358,6 +359,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             navigationbarheight =  common.getnavigationbarheight();
             setfooterlayout();
             gethelper().setdatacomposing(false);
+
             gethelper().setwindowfitxy(true);
             loadviewdata();
 
@@ -480,6 +482,24 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             }
             );
+
+            if(fragmentmetainformation == null)
+            {
+                fragmentmetainformation=new metainformationfragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.metainfocontainer,fragmentmetainformation);
+                transaction.commit();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        fragmentmetainformation.setdatacomposing(false);
+                        if(fragmentmetainformation!=null)
+                            fragmentmetainformation.setdatacomposing(false,xdata.getinstance().getSetting(config.selectedaudiourl));
+                    }
+                },2000);
+
+            }
         }
         return rootview;
     }
@@ -615,6 +635,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
 
                     gethelper().setcurrentmediaposition(currentprocessframe);
+                    if(fragmentmetainformation != null)
+                        fragmentmetainformation.setcurrentmediaposition(currentprocessframe);
                 }
             }
 
@@ -798,6 +820,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 scrollview_meta.setVisibility(View.VISIBLE);
                 scrollView_encyrption.setVisibility(View.INVISIBLE);
                 scrollview_detail.setVisibility(View.INVISIBLE);
+                //metainfo fragment
+
                 break;
             case R.id.txt_slot6:
                 showaudioplayer();
@@ -2384,6 +2408,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
         xdata.getinstance().saveSetting(config.latency,latency);
         gethelper().setdatacomposing(false);
+        if(fragmentmetainformation != null)
+            fragmentmetainformation.setdatacomposing(false);
     }
 
     public void recenterplaypause()
