@@ -402,7 +402,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     String latency = "";
     int mheightview = 0;
     int viewheight = 0;
-    View view = null;
     int navigationbarheight = 0;
     GestureDetector detector;
 
@@ -3167,32 +3166,56 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             e.printStackTrace();
         }
 
+        int sectioncount=0;
+        String lastcolor="";
+        ArrayList<String> colorsectioncount=new ArrayList<>();
+
         for(int i=0 ; i<metricmainarraylist.size();i++)
         {
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
-                param.leftMargin=0;
+            String color=metricmainarraylist.get(i).getColor();
+            sectioncount++;
+            if(color.trim().isEmpty())
+                color=config.color_white;
 
-                View view = new View(applicationviavideocomposer.getactivity());
-                view.setLayoutParams(param);
+            if(! lastcolor.equalsIgnoreCase(color))
+            {
+                sectioncount=0;
+                sectioncount++;
+                colorsectioncount.add(color+","+sectioncount);
+            }
+            else
+            {
+                colorsectioncount.set(colorsectioncount.size()-1,color+","+sectioncount);
+            }
+            lastcolor=color;
 
-
-                if(!metricmainarraylist.get(i).getColor().isEmpty() && metricmainarraylist.get(i).getColor() != null){
-                    view.setBackgroundColor(Color.parseColor(metricmainarraylist.get(i).getColor()));
-                }else{
-                    view.setBackgroundColor(Color.parseColor("white"));
-                }
-
-
-                if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
-                   if(latency.isEmpty()){
-                       latency = metricmainarraylist.get(i).getLatency();
-                   }else{
-                       latency = latency + "," + metricmainarraylist.get(i).getLatency();
-                   }
-                }
-                linearseekbarcolorview.addView(view);
+            if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
+               if(latency.isEmpty()){
+                   latency = metricmainarraylist.get(i).getLatency();
+               }else{
+                   latency = latency + "," + metricmainarraylist.get(i).getLatency();
+               }
+            }
         }
+
+        for(int i=0;i<colorsectioncount.size();i++)
+        {
+            String item=colorsectioncount.get(i);
+            if(! item.trim().isEmpty())
+            {
+                String[] itemarray=item.split(",");
+                if(itemarray.length >= 2)
+                {
+                    String writecolor=itemarray[0];
+                    String weight=itemarray[1];
+                    if(! weight.trim().isEmpty())
+                    {
+                        linearseekbarcolorview.addView(getmediaseekbarbackgroundview(weight,writecolor));
+                    }
+                }
+            }
+        }
+
         xdata.getinstance().saveSetting(config.latency,latency);
         gethelper().setdatacomposing(false);
     }
