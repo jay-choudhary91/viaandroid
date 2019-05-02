@@ -15,6 +15,7 @@
             style="@style/txt_normalview"
             android:text="@string/video_audio_data"
             android:paddingLeft="@dimen/margin_10dp"
+            android:id="@+id/txt_videoaudiodata"
             app:fontType="Comfortaa-Regular"
             android:textColor="@color/white"
             />
@@ -116,6 +117,7 @@
                                 style="@style/txt_pieview"
                                 android:gravity="bottom"
                                 android:layout_gravity="left"
+                                android:id="@+id/txt_valid"
                                 android:layout_marginBottom="8dp"
                                 app:fontType="Comfortaa-Regular"
                                 android:text="@string/valid"
@@ -124,6 +126,7 @@
                             <com.deeptruth.app.android.views.customfonttextview
                                 style="@style/txt_pieview"
                                 android:gravity="center"
+                                android:id="@+id/txt_caution"
                                 app:fontType="Comfortaa-Regular"
                                 android:text="@string/caution"
                                 />
@@ -133,6 +136,7 @@
                                 android:layout_gravity="left"
                                 app:fontType="Comfortaa-Regular"
                                 android:layout_marginTop="8dp"
+                                android:id="@+id/txt_invalid"
                                 android:text="@string/invalid"
                                 />
 
@@ -220,6 +224,7 @@
             style="@style/txt_normalview"
             android:text="@string/metadata"
             android:paddingLeft="@dimen/margin_10dp"
+            android:id="@+id/text_meta"
             app:fontType="Comfortaa-Regular"
             android:textColor="@color/white"
             />
@@ -321,6 +326,7 @@
                                 style="@style/txt_pieview"
                                 android:gravity="bottom"
                                 android:layout_gravity="left"
+                                android:id="@+id/txt_validmeta"
                                 app:fontType="Comfortaa-Regular"
                                 android:layout_marginBottom="8dp"
                                 android:text="@string/valid"
@@ -329,6 +335,7 @@
                             <com.deeptruth.app.android.views.customfonttextview
                                 style="@style/txt_pieview"
                                 android:gravity="center"
+                                android:id="@+id/txt_cautionmeta"
                                 app:fontType="Comfortaa-Regular"
                                 android:text="@string/caution"
                                 />
@@ -338,6 +345,7 @@
                                 android:layout_gravity="left"
                                 app:fontType="Comfortaa-Regular"
                                 android:layout_marginTop="8dp"
+                                android:id="@+id/txt_invalidmeta"
                                 android:layout_marginBottom="@dimen/margin_5dp"
                                 android:text="@string/invalid"
                                 />

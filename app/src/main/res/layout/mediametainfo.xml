@@ -447,6 +447,7 @@
                         style="@style/txt_normalview"
                         android:textColor="@color/white"
                         android:gravity="center"
+                        android:id="@+id/txt_phonetime"
                         android:text="@string/phone_time"/>
 
                     <com.deeptruth.app.android.utils.AnalogClock
@@ -481,6 +482,7 @@
                         style="@style/txt_normalview"
                         android:textColor="@color/white"
                         android:gravity="center"
+                        android:id="@+id/txt_worldclocktime"
                         android:text="@string/world_clock_time"/>
 
                     <com.deeptruth.app.android.utils.AnalogClock
