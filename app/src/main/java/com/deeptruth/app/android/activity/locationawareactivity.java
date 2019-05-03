@@ -245,6 +245,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     }
 
                                 }
+                                else
+                                {
+                                    xdata.getinstance().saveSetting("gpsspeed", "0.0");
+                                }
 
                                 if (location.hasAltitude()) {
                                     int altitudefeet = (int) (location.getAltitude() / 0.3048);
