@@ -422,6 +422,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     private Orientation mOrientation;
     boolean isplaypauswebtnshow = false;
     int layoutpauseheight = 0;
+    metainformationfragment fragmentmetainformation;
 
     @Override
     public int getlayoutid() {
@@ -465,8 +466,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             });
 
-            metainfocontainer.setVisibility(View.GONE);
-            layoutmetainfo.setVisibility(View.VISIBLE);
+            metainfocontainer.setVisibility(View.VISIBLE);
+            layoutmetainfo.setVisibility(View.GONE);
 
             recyview_frames.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -674,6 +675,24 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             });
         }
+        if(fragmentmetainformation == null)
+        {
+            fragmentmetainformation=new metainformationfragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.metainfocontainer,fragmentmetainformation);
+            transaction.commit();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fragmentmetainformation.setdatacomposing(false);
+                    if(fragmentmetainformation!=null)
+                        fragmentmetainformation.setdatacomposing(false,xdata.getinstance().getSetting(config.selectedaudiourl));
+                        fragmentmetainformation.setcurrentmediaposition(0);
+                }
+            },2000);
+
+        }
 
         return rootview;
     }
@@ -806,6 +825,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    }
 
                    gethelper().setcurrentmediaposition(currentprocessframe);
+                   if(fragmentmetainformation != null)
+                       fragmentmetainformation.setcurrentmediaposition(currentprocessframe);
 
                    layout_progressline.setVisibility(View.VISIBLE);
                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(

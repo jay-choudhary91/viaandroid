@@ -442,6 +442,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         fragmentmetainformation.setdatacomposing(false);
                         if(fragmentmetainformation!=null)
                             fragmentmetainformation.setdatacomposing(false,xdata.getinstance().getSetting(config.selectedaudiourl));
+                            fragmentmetainformation.setcurrentmediaposition(0);
                     }
                 },2000);
 
