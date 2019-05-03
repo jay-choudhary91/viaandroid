@@ -342,7 +342,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
             TimeZone timezone = TimeZone.getDefault();
             String timezoneid=timezone.getID();
-            
+
             phone_time_clock.setTimeZone(timezoneid, new itemupdatelistener() {
                 @Override
                 public void onitemupdate(Object object,Object timezoneobject) {
