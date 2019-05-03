@@ -19,6 +19,7 @@
     <color name="green">#0EAE3E</color>
     <color name="yellow">#F6A724</color>
     <color name="blue_button">#007BFF</color>
+    <color name="map_radius_color">#50007BFF</color>
     <color name="share_a">#007CFF</color>
     <color name="share_b">#F7A923</color>
     <color name="share_c">#11AE3C</color>
