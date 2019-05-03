@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -70,6 +72,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -291,6 +295,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     String screenwidth,screenheight;
     private Marker locationindicatemarker=null;
 
+    ValueAnimator lastPulseAnimator=null;
+    Circle lastUserCircle=null;
+    LatLng usercurrentlocation=null;
+    int pulsatinglocationcounter=0;
     @Override
     public int getlayoutid() {
         return R.layout.frag_graphicaldrawer;
@@ -507,14 +515,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(mgooglemap != null)
         {
             try {
-         //       addPulsatingEffect(latlng);
                 if(isdatacomposing)
                 {
                     if(locationindicatemarker != null)
                     {
-                        mgooglemap.clear();
+                       // mgooglemap.clear();
                         locationindicatemarker.remove();
                         locationindicatemarker=null;
+                        locationindicatemarker=null;
+
                     }
                 }
                 else
@@ -939,6 +948,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         this.isdatacomposing=isdatacomposing;
         if(! isdatacomposing)
         {
+
+            if(lastPulseAnimator != null)
+                lastPulseAnimator.cancel();
+
+            if(lastUserCircle != null && mgooglemap != null)
+            {
+                lastUserCircle.remove();
+                lastUserCircle=null;
+            }
+
             metricmainarraylist.clear();
             if(mgooglemap != null)
                 mgooglemap.clear();
@@ -1746,9 +1765,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if (mgooglemap == null)
             return;
 
+        usercurrentlocation=location;
         googlemap.setVisibility(View.VISIBLE);
 
         zoomgooglemap(location.latitude,location.longitude);
+
+        if(pulsatinglocationcounter == 0 || pulsatinglocationcounter >= 3)
+        {
+            pulsatinglocationcounter=0;
+            addPulsatingEffect(location);
+        }
+        pulsatinglocationcounter++;
+
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -1772,6 +1800,133 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             mgooglemap.getUiSettings().setZoomControlsEnabled(true);
             mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
         }
+    }
+
+    private void addPulsatingEffect(final LatLng userLatlng){
+
+        String gpsaccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
+        if((! gpsaccuracy.trim().isEmpty()) && (! gpsaccuracy.equalsIgnoreCase("NA"))
+                && (! gpsaccuracy.equalsIgnoreCase("null")))
+        {
+            try {
+                if(lastPulseAnimator != null)
+                    lastPulseAnimator.cancel();
+
+                if(lastUserCircle != null)
+                    lastUserCircle.setCenter(userLatlng);
+
+                lastPulseAnimator = valueAnimate(getDisplayPulseRadius(), 3000,
+                        new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        if(lastUserCircle != null)
+                            lastUserCircle.setRadius((Float) animation.getAnimatedValue());
+                        else {
+                            lastUserCircle = mgooglemap.addCircle(new CircleOptions()
+                                .center(userLatlng)
+                                .radius((Float) animation.getAnimatedValue())
+                                .strokeWidth(0)
+                                .fillColor(adjustAlpha(Color.BLUE, 1 - animation.getAnimatedFraction())));
+                        }
+                    }
+                });
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private int adjustAlpha(int color, float factor) {
+        int alpha = Math.round(Color.alpha(color) * factor);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        return Color.argb(40, red, green, blue);
+    }
+
+    protected float getDisplayPulseRadius() {
+        if(mgooglemap == null)
+            return 0.0f;
+
+        float currentzoomlevel=mgooglemap.getCameraPosition().zoom;
+        Log.e("zoom level ",""+currentzoomlevel);
+
+        if(currentzoomlevel >= 20)
+        {
+            return 30f;
+        }
+        else if(currentzoomlevel >= 18)
+        {
+            return 30f;
+        }
+        else if(currentzoomlevel >= 16)
+        {
+            return 50f;
+        }
+        else if(currentzoomlevel >= 15)
+        {
+            return 100f;
+        }
+        else if(currentzoomlevel >= 14)
+        {
+            return 300f;
+        }
+        else if(currentzoomlevel >= 13)
+        {
+            return 400f;
+        }
+        else if(currentzoomlevel >= 12)
+        {
+            return 500f;
+        }
+        else if(currentzoomlevel >= 11)
+        {
+            return 600f;
+        }
+        else if(currentzoomlevel >= 10)
+        {
+            return 700f;
+        }
+        return 500f;
+        /*float diff = (mgooglemap.getMaxZoomLevel() - mgooglemap.getCameraPosition().zoom);
+        if (diff < 3)
+            return radius;
+        if (diff < 3.7)
+            return radius * (diff / 2);
+        if (diff < 4.5)
+            return (radius * diff);
+        if (diff < 5.5)
+            return (radius * diff) * 1.5f;
+        if (diff < 7)
+            return (radius * diff) * 2f;
+        if (diff < 7.8)
+            return (radius * diff) * 3.5f;
+        if (diff < 8.5)
+            return (float) (radius * diff) * 5;
+        if (diff < 10)
+            return (radius * diff) * 10f;
+        if (diff < 12)
+            return (radius * diff) * 18f;
+        if (diff < 13)
+            return (radius * diff) * 28f;
+        if (diff < 16)
+            return (radius * diff) * 40f;
+        if (diff < 18)
+            return (radius * diff) * 60;
+        return (radius * diff) * 80;*/
+    }
+
+    protected ValueAnimator valueAnimate(float accuracy,long duration, ValueAnimator.AnimatorUpdateListener updateListener){
+        Log.d( "valueAnimate: ", "called");
+        ValueAnimator va = ValueAnimator.ofFloat(0,accuracy);
+        va.setDuration(duration);
+        va.addUpdateListener(updateListener);
+        va.setRepeatCount(ValueAnimator.INFINITE);
+        va.setRepeatMode(ValueAnimator.RESTART);
+
+        va.start();
+        return va;
     }
 
 

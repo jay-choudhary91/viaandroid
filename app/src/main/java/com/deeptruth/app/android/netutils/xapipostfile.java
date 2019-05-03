@@ -13,6 +13,8 @@ import com.deeptruth.app.android.utils.xdata;
 import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -76,15 +78,82 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
             return taskresult.NO_INTERNET;
         }
 
+        // reference link -> https://gist.github.com/luankevinferreira/5221ea62e874a9b29d86b13a2637517b
         File sourceFile = new File(filepath);
         if (!sourceFile.isFile()) {
-            Log.e("Huzza", "Source File Does not exist");
+            Log.e("xapipostfile", "Source file doesn't exist!");
             return "";
         }
+
+        URLConnection urlconnection = null;
+        try {
+            File file = new File(filepath);
+            URL url = new URL(serverurl);
+            urlconnection = url.openConnection();
+            urlconnection.setDoOutput(true);
+            urlconnection.setDoInput(true);
+
+            if (urlconnection instanceof HttpURLConnection) {
+                ((HttpURLConnection) urlconnection).setRequestMethod("PUT");
+                ((HttpURLConnection) urlconnection).setRequestProperty("Content-type", "text/plain");
+                ((HttpURLConnection) urlconnection).connect();
+            }
+
+            BufferedOutputStream bos = new BufferedOutputStream(urlconnection.getOutputStream());
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+            int i;
+            // read byte by byte until end of stream
+            while ((i = bis.read()) > 0) {
+                bos.write(i);
+            }
+            bis.close();
+            bos.close();
+            System.out.println(((HttpURLConnection) urlconnection).getResponseMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+
+            InputStream inputStream;
+            int responseCode = ((HttpURLConnection) urlconnection).getResponseCode();
+            if (responseCode == 200)
+            {
+                inputStream = ((HttpURLConnection) urlconnection).getInputStream();
+                int j;
+                while ((j = inputStream.read()) > 0) {
+                    System.out.println(j);
+                }
+
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    return null;
+                }
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String inputLine;
+                while ((inputLine = reader.readLine()) != null)
+                    buffer.append(inputLine + "\n");
+
+                serverresponsemessage = buffer.toString();
+
+            } else {
+                inputStream = ((HttpURLConnection) urlconnection).getErrorStream();
+            }
+            ((HttpURLConnection) urlconnection).disconnect();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         try { // open a URL connection to the Servlet
 
+
+
+
+
+
                     // open a URL connection to the Servlet
-                    FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                    /*FileInputStream fileInputStream = new FileInputStream(sourceFile);
                     URL url = new URL(serverurl);
 
                     boundary = "===" + System.currentTimeMillis() + "===";
@@ -109,52 +178,52 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
                     writer.flush();
 
 
-            writer.append("--" + boundary).append(LINE_FEED);
-            writer.append(
-                    "Content-Disposition: form-data; name=\"" + common.getfilename(filepath)
-                            + "\"; filename=\"" + common.getfilename(filepath) + "\"")
-                    .append(LINE_FEED);
-            writer.append(
-                    "Content-Type: "
-                            + URLConnection.guessContentTypeFromName(common.getfilename(filepath)))
-                    .append(LINE_FEED);
-            writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
-            writer.append(LINE_FEED);
-            writer.flush();
+                    writer.append("--" + boundary).append(LINE_FEED);
+                    writer.append(
+                            "Content-Disposition: form-data; name=\"" + common.getfilename(filepath)
+                                    + "\"; filename=\"" + common.getfilename(filepath) + "\"")
+                            .append(LINE_FEED);
+                    writer.append(
+                            "Content-Type: "
+                                    + URLConnection.guessContentTypeFromName(common.getfilename(filepath)))
+                            .append(LINE_FEED);
+                    writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
+                    writer.append(LINE_FEED);
+                    writer.flush();
 
-            FileInputStream inputStream = new FileInputStream(sourceFile);
-            byte[] buffer = new byte[4096];
-            int bytesRead = -1;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-            outputStream.flush();
-            inputStream.close();
-            writer.append(LINE_FEED);
-            writer.flush();
+                    FileInputStream inputStream = new FileInputStream(sourceFile);
+                    byte[] buffer = new byte[4096];
+                    int bytesRead = -1;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+                    outputStream.flush();
+                    inputStream.close();
+                    writer.append(LINE_FEED);
+                    writer.flush();
 
-            List<String> response = new ArrayList<String>();
-            writer.append(LINE_FEED).flush();
-            writer.append("--" + boundary + "--").append(LINE_FEED);
-            writer.close();
+                    List<String> response = new ArrayList<String>();
+                    writer.append(LINE_FEED).flush();
+                    writer.append("--" + boundary + "--").append(LINE_FEED);
+                    writer.close();
 
-            // checks server's status code first
-            int status = httpConn.getResponseCode();
+                    // checks server's status code first
+                    int status = httpConn.getResponseCode();
 
-            if (status == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        httpConn.getInputStream()));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    response.add(line);
-                }
-                reader.close();
-                httpConn.disconnect();
-            } else {
-                throw new IOException("Server returned non-OK status: " + status);
-            }
+                    if (status == HttpURLConnection.HTTP_OK) {
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                                httpConn.getInputStream()));
+                        String line = null;
+                        while ((line = reader.readLine()) != null) {
+                            response.add(line);
+                        }
+                        reader.close();
+                        httpConn.disconnect();
+                    } else {
+                        throw new IOException("Server returned non-OK status: " + status);
+                    }
 
-            serverresponsemessage =  response.toString();
+                    serverresponsemessage =  response.toString();*/
 
                    /* // Open a HTTP  connection to  the URL
                     conn = (HttpURLConnection) url.openConnection();
@@ -223,11 +292,6 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
                     dos.flush();
                     dos.close();*/
 
-                } catch (MalformedURLException ex) {
-
-                    ex.printStackTrace();
-
-                    Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
                 } catch (Exception e) {
 
                     e.printStackTrace();
@@ -243,14 +307,16 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
         //Log.d("Response>> ", aVoid);
         try {
             result.success(false);
-            jsonObject=new JSONObject(aVoid);
-            if (jsonObject != null && jsonObject.has("result"))
+            if(aVoid.trim().length() > 0)
             {
-                JSONObject object = jsonObject.optJSONObject("result");
-                result.success(true);
-                result.setData(object);
+                jsonObject=new JSONObject(aVoid);
+                if (jsonObject != null && jsonObject.has("result"))
+                {
+                    JSONObject object = jsonObject.optJSONObject("result");
+                    result.success(true);
+                    result.setData(object);
+                }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
