@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
@@ -165,6 +166,10 @@ public class AnalogClock extends View {
         mDial.draw(canvas);
         if(isdatacomposing)
         {
+            mDial.setTint(Color.WHITE);
+            mHourHand.setTint(Color.WHITE);
+            mMinuteHand.setTint(Color.WHITE);
+
             final float hourAngle = mTime.get(Calendar.HOUR) * 30f;
             canvas.rotate(hourAngle, 0f, 0f);
             mHourHand.draw(canvas);
@@ -183,6 +188,10 @@ public class AnalogClock extends View {
         }
         else
         {
+            mDial.setTint(Color.BLACK);
+            mHourHand.setTint(Color.BLACK);
+            mMinuteHand.setTint(Color.BLACK);
+
             if(! serverdate.trim().isEmpty() && (! serverdate.equalsIgnoreCase("NA")) && (! serverdate.equalsIgnoreCase("null")))
             {
                 String[] arrayitem=serverdate.split(" ");
