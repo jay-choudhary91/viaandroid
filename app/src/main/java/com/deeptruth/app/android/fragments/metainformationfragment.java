@@ -340,8 +340,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
             linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
-           /* TimeZone timezone = TimeZone.getDefault();
+            TimeZone timezone = TimeZone.getDefault();
             String timezoneid=timezone.getID();
+            
             phone_time_clock.setTimeZone(timezoneid, new itemupdatelistener() {
                 @Override
                 public void onitemupdate(Object object,Object timezoneobject) {
@@ -373,7 +374,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 public void onitemupdate(Object object, int type) {
 
                 }
-            });*/
+            });
 
             navigationbarheight =  common.getnavigationbarheight();
 
