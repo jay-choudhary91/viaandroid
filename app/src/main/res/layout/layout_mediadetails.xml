@@ -510,14 +510,20 @@
         android:nestedScrollingEnabled="true"
         android:visibility="gone"
         >
-
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:id="@+id/metainfocontainer"
             android:layout_height="match_parent">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:id="@+id/metainfocontainer"
+                android:visibility="gone"
+                android:layout_height="match_parent">
+
+            </FrameLayout>
             <include layout="@layout/layout_metainfo"
                 android:visibility="gone"/>
-        </FrameLayout>
+        </RelativeLayout>
+
     </ScrollView>
 
 

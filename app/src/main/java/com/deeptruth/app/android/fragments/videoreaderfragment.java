@@ -30,6 +30,7 @@ import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -356,6 +357,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     @BindView(R.id.rl_video_downwordarrow)
     RelativeLayout rl_video_downwordarrow;
+    @BindView(R.id.metainfocontainer)
+    FrameLayout metainfocontainer;
+    @BindView(R.id.layoutmetainfo)
+    RelativeLayout layoutmetainfo;
 
     int footerheight ,bottompadding ,actionbarheight;
     int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0, lastrotatedangle =-1,videorotatedangle=-1;
@@ -459,6 +464,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     int bottommargin= imageview.bottomMargin;
                 }
             });
+
+            metainfocontainer.setVisibility(View.GONE);
+            layoutmetainfo.setVisibility(View.VISIBLE);
 
             recyview_frames.setOnTouchListener(new View.OnTouchListener() {
                 @Override

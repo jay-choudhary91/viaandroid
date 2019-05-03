@@ -103,6 +103,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -942,10 +943,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("osversion")) {
             metricItemValue = Build.VERSION.RELEASE;
         } else if (key.equalsIgnoreCase("devicedate")) {
-            Calendar calander = Calendar.getInstance();
+            Date date = new Date();
+            DateFormat.getDateInstance().format(date);
+            /*Calendar calander = Calendar.getInstance();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(config.date_format);
-            String date = simpleDateFormat.format(calander.getTime());
-            metricItemValue = date;
+            String date = simpleDateFormat.format(calander.getTime());*/
+            metricItemValue = DateFormat.getDateInstance().format(date);;
         } else if (key.equalsIgnoreCase("softwareversion")) {
             metricItemValue = "" + telephonymanager.getDeviceSoftwareVersion();
         } else if (key.equalsIgnoreCase("deviceregion") || (key.equalsIgnoreCase("country"))) {

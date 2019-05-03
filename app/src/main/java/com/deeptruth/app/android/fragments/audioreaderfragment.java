@@ -131,6 +131,19 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.linear_seekbarcolorview)
     LinearLayout linearseekbarcolorview;
 
+    @BindView(R.id.txt_videoupdatetransactionid)
+    TextView txt_blockchainid;
+    @BindView(R.id.txt_hash_formula)
+    TextView txt_blockid;
+    @BindView(R.id.txt_data_hash)
+    TextView txt_blocknumber;
+    @BindView(R.id.txt_dictionary_hash)
+    TextView txt_metahash;
+    @BindView(R.id.scrollview_encyption)
+    ScrollView scrollView_encyrption;
+    @BindView(R.id.scrollview_meta)
+    ScrollView scrollview_meta;
+
     @BindView(R.id.spinner)
     Spinner spinnermediafolder;
     @BindView(R.id.txt_slot4)
@@ -159,18 +172,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     customedittext edt_medianotes;
     @BindView(R.id.tab_layout)
     LinearLayout tab_layout;
-    @BindView(R.id.scrollview_encyption)
-    ScrollView scrollView_encyrption;
-    @BindView(R.id.scrollview_meta)
-    ScrollView scrollview_meta;
-    @BindView(R.id.txt_videoupdatetransactionid)
-    TextView txt_blockchainid;
-    @BindView(R.id.txt_hash_formula)
-    TextView txt_blockid;
-    @BindView(R.id.txt_data_hash)
-    TextView txt_blocknumber;
-    @BindView(R.id.txt_dictionary_hash)
-    TextView txt_metahash;
+    @BindView(R.id.txt_title_actionbarcomposer)
+    TextView txt_title_actionbarcomposer;
     @BindView(R.id.txt_size)
     TextView tvsize;
     @BindView(R.id.txt_date)
@@ -195,67 +198,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     TextView txt_starttime;
     @BindView(R.id.layout_photoreader)
     RelativeLayout layout_photoreader;
-
-    @BindView(R.id.txt_address)
-    customfonttextview tvaddress;
-    @BindView(R.id.txt_degree)
-    customfonttextview tvdegree;
-    @BindView(R.id.txt_latitude)
-    customfonttextview tvlatitude;
-    @BindView(R.id.txt_longitude)
-    customfonttextview tvlongitude;
-    @BindView(R.id.txt_altitude)
-    customfonttextview tvaltitude;
-    @BindView(R.id.txt_speed)
-    customfonttextview tvspeed;
-    @BindView(R.id.txt_heading)
-    customfonttextview tvheading;
-    @BindView(R.id.txt_traveled)
-    customfonttextview tvtraveled;
-    @BindView(R.id.txt_xaxis)
-    customfonttextview tvxaxis;
-    @BindView(R.id.txt_yaxis)
-    customfonttextview tvyaxis;
-    @BindView(R.id.txt_zaxis)
-    customfonttextview tvzaxis;
-    @BindView(R.id.txt_phone)
-    customfonttextview tvphone;
-    @BindView(R.id.txt_network)
-    customfonttextview tvnetwork;
-    @BindView(R.id.txt_connection)
-    customfonttextview tvconnection;
-    @BindView(R.id.txt_version)
-    customfonttextview tvversion;
-    @BindView(R.id.txt_wifi)
-    customfonttextview tvwifi;
-    @BindView(R.id.txt_gps_accuracy)
-    customfonttextview tvgpsaccuracy;
-    @BindView(R.id.txt_screen)
-    customfonttextview tvscreen;
-    @BindView(R.id.txt_country)
-    customfonttextview tvcountry;
-    @BindView(R.id.txt_cpu_usage)
-    customfonttextview tvcpuusage;
-    @BindView(R.id.txt_brightness)
-    customfonttextview tvbrightness;
-    @BindView(R.id.txt_timezone)
-    customfonttextview tvtimezone;
-    @BindView(R.id.txt_memoryusage)
-    customfonttextview tvmemoryusage;
-    @BindView(R.id.txt_bluetooth)
-    customfonttextview tvbluetooth;
-    @BindView(R.id.txt_localtime)
-    customfonttextview tvlocaltime;
-    @BindView(R.id.txt_storagefree)
-    customfonttextview tvstoragefree;
-    @BindView(R.id.txt_language)
-    customfonttextview tvlanguage;
-    @BindView(R.id.txt_uptime)
-    customfonttextview tvuptime;
-    @BindView(R.id.txt_battery)
-    customfonttextview tvbattery;
-    @BindView(R.id.txt_title_actionbarcomposer)
-    TextView txt_title_actionbarcomposer;
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
@@ -292,6 +234,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     RecyclerView recycler_encryption;
     @BindView(R.id.layoutcompass)
     ImageView layoutcompass;
+    @BindView(R.id.layoutmetainfo)
+    RelativeLayout layoutmetainfo;
+    @BindView(R.id.metainfocontainer)
+    FrameLayout metainfocontainer;
 
     private String audiourl = null,latency="";
 
@@ -509,6 +455,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         gethelper().setrecordingrunning(false);
 
         layout_item_encryption.setVisibility(View.GONE);
+        metainfocontainer.setVisibility(VISIBLE);
+        layoutmetainfo.setVisibility(View.GONE);
         recycler_encryption.setVisibility(View.VISIBLE);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
@@ -1581,34 +1529,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     common.setspannable(getResources().getString(R.string.mediahash), " " + arraycontainerformetric.getValuehash(), txt_blocknumber);
                     common.setspannable(getResources().getString(R.string.metrichash), " " + arraycontainerformetric.getMetahash(), txt_metahash);
 
-                    ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
-                    for(int j=0;j<metricItemArraylist.size();j++)
-                    {
-                        common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                metricItemArraylist.get(j).getMetricTrackValue(),true);
-
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
-                            latitude = metricItemArraylist.get(j).getMetricTrackValue();
-                        }else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
-                            longitude = metricItemArraylist.get(j).getMetricTrackValue();
-                        }
-
-                        if(scrollview_meta.getVisibility() == View.VISIBLE)
-                            setmetadatavalue(metricItemArraylist.get(j));
-                    }
-
-                    if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                            (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
                 }
-
-                if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                        (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                {
-                    if(! ismapzoomed)
-                        populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                }
-
                 if(currentprocessframe > 0 && metricmainarraylist.size() > 0 && currentprocessframe < metricmainarraylist.size())
                 {
                     String data="",location="";
@@ -1629,35 +1550,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
         };
         myHandler.post(myRunnable);
-    }
-
-    public void setmetricesgraphicaldata()
-    {
-        long currentduration=maxincreasevideoduration;
-        currentduration=currentduration/1000;
-
-        if(metricmainarraylist.size() == 0 || currentduration == 0)
-            return;
-
-        currentduration=(currentduration*30);
-        currentduration=currentduration/frameduration;
-
-        int n=(int)currentduration;
-        if(n> metricmainarraylist.size() || ismediacompleted)
-            n=metricmainarraylist.size();
-
-        for(int i=0; i < n ;i++)
-        {
-            if (! metricmainarraylist.get(i).isIsupdated())
-            {
-                arraycontainerformetric = new arraycontainer();
-                arraycontainerformetric = metricmainarraylist.get(i);
-                selectedmetrics = selectedmetrics + "\n";
-            }
-        }
-        if (((!latitude.trim().isEmpty()) && (!latitude.equalsIgnoreCase("NA"))) &&
-                (!longitude.trim().isEmpty()) && (!longitude.equalsIgnoreCase("NA")))
-            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));
     }
 
     @Override
@@ -2121,131 +2013,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-    public void setmetadatavalue(metricmodel metricItemArraylist){
-
-        if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
-            latitude = metricItemArraylist.getMetricTrackValue();
-            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA"))){
-                common.setspannable(getResources().getString(R.string.latitude),"\n"+common.convertlatitude(Double.parseDouble(latitude)), tvlatitude);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
-            longitude = metricItemArraylist.getMetricTrackValue();
-            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA"))){
-                common.setspannable(getResources().getString(R.string.longitude),"\n"+common.convertlongitude(Double.parseDouble(longitude)), tvlongitude);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)){
-            common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
-            common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
-            if((! metricItemArraylist.getMetricTrackValue().trim().isEmpty()) && (! metricItemArraylist.getMetricTrackValue().
-                    equalsIgnoreCase("NA")))
-            {
-                common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
-                common.setdrawabledata(getResources().getString(R.string.heading),"\n"+ (metricItemArraylist.getMetricTrackValue()+"°"), tvheading);
-            }else{
-                common.setdrawabledata("","NA" , tvdegree);
-                common.setspannable(getResources().getString(R.string.heading),"\n"+"NA", tvheading);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.distancetravelled))){
-            common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.address))){
-            common.setspannable("",metricItemArraylist.getMetricTrackValue(), tvaddress);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_x)){
-            common.setspannable(getResources().getString(R.string.xaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvxaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_y)){
-            common.setspannable(getResources().getString(R.string.yaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvyaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_z)){
-            common.setspannable(getResources().getString(R.string.zaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvzaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("phonetype")){
-            common.setspannable(getResources().getString(R.string.phone),"\n"+metricItemArraylist.getMetricTrackValue(), tvphone);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("carrier")){
-            common.setspannable(getResources().getString(R.string.network),"\n"+metricItemArraylist.getMetricTrackValue(), tvnetwork);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed")){
-            common.setspannable(getResources().getString(R.string.connection),"\n"+metricItemArraylist.getMetricTrackValue(), tvconnection);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("osversion")){
-            common.setspannable(getResources().getString(R.string.version),"\n"+metricItemArraylist.getMetricTrackValue(), tvversion);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
-            common.setspannable(getResources().getString(R.string.wifi),"\n"+metricItemArraylist.getMetricTrackValue(), tvwifi);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
-            if(!metricItemArraylist.getMetricTrackValue().equals("NA")){
-                DecimalFormat precision=new DecimalFormat("0.0");
-                double gpsaccuracy = Double.parseDouble(metricItemArraylist.getMetricTrackValue());
-                common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+precision.format(gpsaccuracy) + " feet", tvgpsaccuracy);
-            }else{
-                common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+metricItemArraylist.getMetricTrackValue(), tvgpsaccuracy);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
-            screenwidth = metricItemArraylist.getMetricTrackValue();
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenheight")){
-            screenheight = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("country")){
-            common.setspannable(getResources().getString(R.string.country),"\n"+metricItemArraylist.getMetricTrackValue(), tvcountry);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("cpuusagesystem")){
-            common.setspannable(getResources().getString(R.string.cpuusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvcpuusage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("brightness")){
-            common.setspannable(getResources().getString(R.string.brightness),"\n"+metricItemArraylist.getMetricTrackValue(), tvbrightness);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("timezone")){
-            common.setspannable(getResources().getString(R.string.timezone),"\n"+metricItemArraylist.getMetricTrackValue(), tvtimezone);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("memoryusage")){
-            common.setspannable(getResources().getString(R.string.memoryusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvmemoryusage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("bluetoothonoff")){
-            common.setspannable(getResources().getString(R.string.bluetooth),"\n"+metricItemArraylist.getMetricTrackValue(), tvbluetooth);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicetime")){
-            common.setspannable(getResources().getString(R.string.localtime),"\n"+metricItemArraylist.getMetricTrackValue(), tvlocaltime);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("freespace")){
-            common.setspannable(getResources().getString(R.string.storagefree),"\n"+metricItemArraylist.getMetricTrackValue(), tvstoragefree);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")){
-            common.setspannable(getResources().getString(R.string.language),"\n"+metricItemArraylist.getMetricTrackValue(), tvlanguage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("systemuptime")){
-            common.setspannable(getResources().getString(R.string.uptime),"\n"+metricItemArraylist.getMetricTrackValue(), tvuptime);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("battery")){
-            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("deviceorientation")){
-
-            String strdegree=xdata.getinstance().getSetting(config.orientation);
-            if(! strdegree.equals(lastsavedangle))
-            {
-                if(strdegree.equalsIgnoreCase("NA"))
-                    strdegree="0.0";
-
-                int degree = Math.abs((int)Double.parseDouble(strdegree));
-                rotatecompass(degree);
-            }
-            lastsavedangle=strdegree;
-        }
-        else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("attitude"))
-        {
-            if(! metricItemArraylist.getMetricTrackValue().trim().isEmpty())
-            {
-                try {
-                    float[] adjustedRotationMatrix = new float[9];
-                    String attitude = metricItemArraylist.getMetricTrackValue().toString();
-                    String[] attitudearray = attitude.split(",");
-                    for(int i = 0 ;i< attitudearray.length;i++){
-                        //float val = (float) (Math.random() * 20) + 3;
-                        adjustedRotationMatrix[i]=Float.parseFloat(attitudearray[i]);
-                    }
-                    // Transform rotation matrix into azimuth/pitch/roll
-                    float[] orientation = new float[3];
-                    SensorManager.getOrientation(adjustedRotationMatrix, orientation);
-
-                    float pitch = orientation[1] * -57;
-                    float roll = orientation[2] * -57;
-                    if(img_phone_orientation != null)
-                        img_phone_orientation.setRotation(roll);
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-
-
-    }
-
     private void loadmap() {
         SupportMapFragment mapFragment = new SupportMapFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -2270,7 +2037,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
 
-    private void populateUserCurrentLocation(final LatLng location) {
+   /* private void populateUserCurrentLocation(final LatLng location) {
         // DeviceUser user = DeviceUserManager.getInstance().getUser();
         if (mgooglemap == null)
             return;
@@ -2294,7 +2061,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
             ismapzoomed=true;
         }
-    }
+    }*/
 
 
     public void drawmappoints(LatLng latlng)

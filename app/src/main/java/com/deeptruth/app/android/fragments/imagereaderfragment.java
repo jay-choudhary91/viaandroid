@@ -205,6 +205,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     AttitudeIndicator attitudeindicator;
     @BindView(R.id.tab_photoreader)
     ImageView tab_photoreader;
+    @BindView(R.id.metainfocontainer)
+    FrameLayout metainfocontainer;
+    @BindView(R.id.layoutmetainfo)
+    RelativeLayout layoutmetainfo;
 
     private String imageurl = null,selectedmetrices = "";
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
@@ -335,6 +339,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 validationbaranimation.setAnimationListener(translatelistener);
 
                 setupimagedata();
+                metainfocontainer.setVisibility(View.GONE);
+                layoutmetainfo.setVisibility(View.VISIBLE);
             }
         });
         gethelper().drawerenabledisable(false);
