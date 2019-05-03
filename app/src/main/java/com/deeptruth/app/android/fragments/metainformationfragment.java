@@ -17,6 +17,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -282,6 +284,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     customfonttextview text_encryption;
     @BindView(R.id.layout_encryptioninfo)
     LinearLayout layout_encryptioninfo;
+    @BindView(R.id.layoutcompass)
+    ImageView layoutcompass;
 
 
     GoogleMap mgooglemap;
@@ -317,6 +321,13 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             msensormanager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
             scrollview_meta = (ScrollView) findViewById(R.id.scrollview_meta);
             img_phone_orientation.setImageResource(R.drawable.img_phoneorientation);
+            try {
+                DrawableCompat.setTint(layoutcompass.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.uvv_gray));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             settextviewcolor();
             layout_encryptioninfo.setVisibility(View.GONE);
@@ -512,10 +523,10 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.timezone),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvtimezone);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.address)){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.address),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvaddress);
+                            common.setdrawabledata("","\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvaddress);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.address),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvwifi);
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvwifi);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.blockchainid)){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.blockchain_id),
