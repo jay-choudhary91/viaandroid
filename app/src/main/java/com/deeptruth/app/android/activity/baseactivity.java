@@ -165,6 +165,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if (requestCode == 101) {
             progressdialog.dismisswaitdialog();
         }
+        else if (requestCode == config.requestcode_login)
+        {
+            if(resultCode == RESULT_OK) {
+                callsharapiafterlogin();
+            }
+        }
     }
 
     @Override
@@ -536,7 +542,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                     //callshareapi(type, videotoken, path, txt_share_btn4.getText().toString());
                     if(!isuserlogin())
+                    {
                         callloginscreen();
+                        return;
+                    }
+
 
                     if (subdialogshare != null && subdialogshare.isShowing())
                           subdialogshare.dismiss();
@@ -597,24 +607,37 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     String storageurl="";
                     try {
                         object = new JSONObject(response.getData().toString());
-                            if(object.has("storageuploadurl"))
-                                storageurl=object.getString("storageuploadurl");
 
-                            if(! storageurl.trim().isEmpty())
+                        /*if(object.has("storagestatus"))
+                        {
+                            String storagestatus=object.getString("storagestatus");
+                            if(storagestatus.equalsIgnoreCase("pendingupload"))
                             {
-                                progressdialog.showwaitingdialog(getinstance());
-                                xapi_uploadfile(getinstance(),storageurl,path, new apiresponselistener() {
-                                    @Override
-                                    public void onResponse(taskresult response) {
-                                        if(response.isSuccess())
-                                        {
-                                            //callvideostoreapi(videotoken,storedkey);
-                                        }else{
-                                            progressdialog.dismisswaitdialog();
-                                        }
-                                    }
-                                });
+
                             }
+                        }*/
+
+                        if(object.has("storageuploadurl"))
+                            storageurl=object.getString("storageuploadurl");
+
+                        if(! storageurl.trim().isEmpty())
+                        {
+                            progressdialog.showwaitingdialog(getinstance());
+                            xapi_uploadfile(getinstance(),storageurl,path, new apiresponselistener() {
+                                @Override
+                                public void onResponse(taskresult response) {
+                                    if(response.isSuccess())
+                                    {
+                                        //callvideostoreapi(videotoken,storedkey);
+                                    }
+                                    else
+                                    {
+                                        progressdialog.dismisswaitdialog();
+                                    }
+                                }
+                            });
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

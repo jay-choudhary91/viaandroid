@@ -10,6 +10,7 @@ import java.io.File;
 
 public class config {
 
+    public static int requestcode_login=11;
     public static String allmedia="All Media";
     public static String media="media";
     public static String cachefolder="cache";

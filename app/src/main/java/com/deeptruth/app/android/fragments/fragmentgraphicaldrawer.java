@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -71,7 +72,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.warkiz.widget.IndicatorSeekBar;
@@ -319,7 +323,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     int navigationbarheight = 0;
     arraycontainer arraycontainerformetric =null;
     String screenwidth,screenheight;
+    private Marker locationindicatemarker=null;
 
+    ValueAnimator lastPulseAnimator=null;
+    Circle lastUserCircle=null;
+    LatLng usercurrentlocation=null;
+    int pulsatinglocationcounter=0;
     @Override
     public int getlayoutid() {
         return R.layout.frag_graphicaldrawer;
@@ -446,8 +455,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             initlinechart(linechart_connectionspeed,25f);
             initlinechart(linechart_datatimedelay,10f);
-            initlinechart(linechart_gpsaccuracy,150f);
-            vertical_slider_gpsaccuracy.setMax(150);
+            initlinechart(linechart_gpsaccuracy,100f);
+            vertical_slider_gpsaccuracy.setMax(100);
             vertical_slider_connectionspeed.setMax(25);
             vertical_slider_connectiondatatimedely.setMax(10);
 
@@ -495,17 +504,30 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(mgooglemap != null)
         {
             try {
-         //       addPulsatingEffect(latlng);
                 if(isdatacomposing)
                 {
-                    mgooglemap.clear();
+                    if(locationindicatemarker != null)
+                    {
+                       // mgooglemap.clear();
+                        locationindicatemarker.remove();
+                        locationindicatemarker=null;
+                        locationindicatemarker=null;
+
+                    }
                 }
                 else
                 {
-                    mgooglemap.addMarker(new MarkerOptions()
-                            .position(latlng)
-                            .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),
-                                    R.drawable.rounded_gps_dot)));
+                    if(locationindicatemarker == null)
+                    {
+                        locationindicatemarker=mgooglemap.addMarker(new MarkerOptions()
+                                .position(latlng)
+                                .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),
+                                        R.drawable.rounded_gps_dot)));
+                    }
+                    else
+                    {
+                        locationindicatemarker.setPosition(latlng);
+                    }
                 }
             }catch (Exception e)
             {
@@ -656,6 +678,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 if(chart_memoeyusage!= null)
                     sethalfpaichartData(chart_memoeyusage,common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
 
+                if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                        (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                {
+                    populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                    drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                }
+
                 if(chart_cpuusage!= null){
                     String cpuusagevalue = common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage));
                     cpuusagevalue = cpuusagevalue.substring(cpuusagevalue.lastIndexOf(" ")+1);
@@ -775,13 +804,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     tvmetahash.setText("");
 
                 }
-            }
-
-            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-            {
-                populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
             }
 
             if(! isdatacomposing)
@@ -915,6 +937,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         this.isdatacomposing=isdatacomposing;
         if(! isdatacomposing)
         {
+
+            if(lastPulseAnimator != null)
+                lastPulseAnimator.cancel();
+
+            if(lastUserCircle != null && mgooglemap != null)
+            {
+                lastUserCircle.remove();
+                lastUserCircle=null;
+            }
+
             metricmainarraylist.clear();
             if(mgooglemap != null)
                 mgooglemap.clear();
@@ -1024,7 +1056,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         ArrayList<Float> arrayspeed=new ArrayList<>();
         ArrayList<Float> arraytravelled=new ArrayList<>();
         ArrayList<Float> arrayaltitude=new ArrayList<>();
-        PolylineOptions options = new PolylineOptions().width(7).color(Color.RED).geodesic(true);
+        PolylineOptions options = new PolylineOptions().width(7).color(Color.BLUE).geodesic(true);
         for (int i = 0; i < metricmainarraylist.size(); i++)
         {
             arraycontainer container=metricmainarraylist.get(i);
@@ -1344,15 +1376,29 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     arraycontainerformetric = metricmainarraylist.get(currentmediaposition);
 
                     ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
+                    String latitude="",longitude="";
                     for (int j = 0; j < metricItemArraylist.size(); j++)
                     {
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.heading)){
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude))
+                        {
+                            latitude=metricItemArraylist.get(j).getMetricTrackValue();
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude))
+                        {
+                            longitude=metricItemArraylist.get(j).getMetricTrackValue();
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.heading))
+                        {
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvheading);
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitudedegree)){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlatitude);
-                        }else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitudedegree)){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlongitude);
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitudedegree))
+                        {
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude)
+                                    ,"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlatitude);
+                        }else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitudedegree))
+                        {
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude)
+                                    ,"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlongitude);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_x)){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.xaxis),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvxaxis);
@@ -1535,6 +1581,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         }
 
                     }
+
+                    if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                            (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                    {
+                        populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                    }
+
                     tvblockchainid.setText(arraycontainerformetric.getVideostarttransactionid());
                     tvblockid.setText(arraycontainerformetric.getHashmethod());
                     tvblocknumber.setText(arraycontainerformetric.getValuehash());
@@ -1712,9 +1766,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if (mgooglemap == null)
             return;
 
+        usercurrentlocation=location;
         googlemap.setVisibility(View.VISIBLE);
 
         zoomgooglemap(location.latitude,location.longitude);
+
+        if(pulsatinglocationcounter == 0 || pulsatinglocationcounter >= 3)
+        {
+            pulsatinglocationcounter=0;
+            addPulsatingEffect(location);
+        }
+        pulsatinglocationcounter++;
+
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -1738,6 +1801,133 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             mgooglemap.getUiSettings().setZoomControlsEnabled(true);
             mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
         }
+    }
+
+    private void addPulsatingEffect(final LatLng userLatlng){
+
+        String gpsaccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
+        if((! gpsaccuracy.trim().isEmpty()) && (! gpsaccuracy.equalsIgnoreCase("NA"))
+                && (! gpsaccuracy.equalsIgnoreCase("null")))
+        {
+            try {
+                if(lastPulseAnimator != null)
+                    lastPulseAnimator.cancel();
+
+                if(lastUserCircle != null)
+                    lastUserCircle.setCenter(userLatlng);
+
+                lastPulseAnimator = valueAnimate(getDisplayPulseRadius(), 3000,
+                        new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        if(lastUserCircle != null)
+                            lastUserCircle.setRadius((Float) animation.getAnimatedValue());
+                        else {
+                            lastUserCircle = mgooglemap.addCircle(new CircleOptions()
+                                .center(userLatlng)
+                                .radius((Float) animation.getAnimatedValue())
+                                .strokeWidth(0)
+                                .fillColor(adjustAlpha(Color.BLUE, 1 - animation.getAnimatedFraction())));
+                        }
+                    }
+                });
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private int adjustAlpha(int color, float factor) {
+        int alpha = Math.round(Color.alpha(color) * factor);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        return Color.argb(40, red, green, blue);
+    }
+
+    protected float getDisplayPulseRadius() {
+        if(mgooglemap == null)
+            return 0.0f;
+
+        float currentzoomlevel=mgooglemap.getCameraPosition().zoom;
+        Log.e("zoom level ",""+currentzoomlevel);
+
+        if(currentzoomlevel >= 20)
+        {
+            return 30f;
+        }
+        else if(currentzoomlevel >= 18)
+        {
+            return 30f;
+        }
+        else if(currentzoomlevel >= 16)
+        {
+            return 50f;
+        }
+        else if(currentzoomlevel >= 15)
+        {
+            return 100f;
+        }
+        else if(currentzoomlevel >= 14)
+        {
+            return 300f;
+        }
+        else if(currentzoomlevel >= 13)
+        {
+            return 400f;
+        }
+        else if(currentzoomlevel >= 12)
+        {
+            return 500f;
+        }
+        else if(currentzoomlevel >= 11)
+        {
+            return 600f;
+        }
+        else if(currentzoomlevel >= 10)
+        {
+            return 700f;
+        }
+        return 500f;
+        /*float diff = (mgooglemap.getMaxZoomLevel() - mgooglemap.getCameraPosition().zoom);
+        if (diff < 3)
+            return radius;
+        if (diff < 3.7)
+            return radius * (diff / 2);
+        if (diff < 4.5)
+            return (radius * diff);
+        if (diff < 5.5)
+            return (radius * diff) * 1.5f;
+        if (diff < 7)
+            return (radius * diff) * 2f;
+        if (diff < 7.8)
+            return (radius * diff) * 3.5f;
+        if (diff < 8.5)
+            return (float) (radius * diff) * 5;
+        if (diff < 10)
+            return (radius * diff) * 10f;
+        if (diff < 12)
+            return (radius * diff) * 18f;
+        if (diff < 13)
+            return (radius * diff) * 28f;
+        if (diff < 16)
+            return (radius * diff) * 40f;
+        if (diff < 18)
+            return (radius * diff) * 60;
+        return (radius * diff) * 80;*/
+    }
+
+    protected ValueAnimator valueAnimate(float accuracy,long duration, ValueAnimator.AnimatorUpdateListener updateListener){
+        Log.d( "valueAnimate: ", "called");
+        ValueAnimator va = ValueAnimator.ofFloat(0,accuracy);
+        va.setDuration(duration);
+        va.addUpdateListener(updateListener);
+        va.setRepeatCount(ValueAnimator.INFINITE);
+        va.setRepeatMode(ValueAnimator.RESTART);
+
+        va.start();
+        return va;
     }
 
 
