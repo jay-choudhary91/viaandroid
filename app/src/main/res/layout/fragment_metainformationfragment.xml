@@ -5,4 +5,6 @@
     tools:context="com.deeptruth.app.android.fragments.metainformationfragment">
 
     <include layout="@layout/mediametainfo" />
+
+    <include layout="@layout/mediadrawerencryptioninfo" />
 </RelativeLayout>

@@ -270,6 +270,18 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     TextView text_meta;
     @BindView(R.id.txt_connectioninformation)
     TextView txt_connectioninformation;
+    @BindView(R.id.txt_videoupdatetransactionid)
+    customfonttextview tvblockchainid;
+    @BindView(R.id.txt_hash_formula)
+    customfonttextview tvblockid;
+    @BindView(R.id.txt_data_hash)
+    customfonttextview tvblocknumber;
+    @BindView(R.id.txt_dictionary_hash)
+    customfonttextview tvmetahash;
+    @BindView(R.id.text_encryption)
+    customfonttextview text_encryption;
+    @BindView(R.id.layout_encryptioninfo)
+    LinearLayout layout_encryptioninfo;
 
 
     GoogleMap mgooglemap;
@@ -306,64 +318,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             scrollview_meta = (ScrollView) findViewById(R.id.scrollview_meta);
             img_phone_orientation.setImageResource(R.drawable.img_phoneorientation);
 
-            txt_availablewifinetwork.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvaddress.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvlatitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvlongitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvaltitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvspeed.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvheading.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvtraveled.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvxaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvyaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvzaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvphone.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvnetwork.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvconnection.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvversion.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvwifi.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvgpsaccuracy.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvscreen.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvcountry.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvcpuusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvbrightness.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvtimezone.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvmemoryusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvbluetooth.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvlocaltime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvstoragefree.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvlanguage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvuptime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvbattery.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvlocationanalytics.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvlocationtracking.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvorientation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            tvPhoneanalytics.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_meta_cautionframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_meta_validframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_meta_invalidframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_Memory.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_mediainformation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_videoaudio_cautionframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_videoaudio_invalidframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_videoaudio_validframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_videoaudiodata.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_cpuusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_phonetime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txtbattery.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_valid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_caution.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_invalid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_timeinformation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_validmeta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_invalidmeta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_cautionmeta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_worldclocktime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            text_meta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_connectioninformation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_datatimedelay.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_world_time.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-            txt_phone_time.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+            settextviewcolor();
+            layout_encryptioninfo.setVisibility(View.GONE);
 
             seekbar_mediavideoaudio.setEnabled(false);
             seekbar_mediametadata.setEnabled(false);
@@ -560,6 +516,22 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.address),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvwifi);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.blockchainid)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.blockchain_id),
+                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblockchainid);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.hashformula)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.hash_formula),
+                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblockid);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.datahash)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.metadata),
+                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblocknumber);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.matrichash)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.mediahash),
+                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvmetahash);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
                             screenwidth = metricItemArraylist.get(j).getMetricTrackValue();
@@ -1738,5 +1710,76 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 e.printStackTrace();
             }
         }
+    }
+
+    public void settextviewcolor(){
+        txt_availablewifinetwork.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvaddress.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvlatitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvlongitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvaltitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvspeed.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvheading.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvtraveled.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvxaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvyaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvzaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvphone.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvnetwork.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvconnection.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvversion.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvwifi.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvgpsaccuracy.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvscreen.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvcountry.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvcpuusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvbrightness.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvtimezone.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvmemoryusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvbluetooth.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvlocaltime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvstoragefree.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvlanguage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvuptime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvbattery.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvlocationanalytics.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvlocationtracking.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvorientation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvPhoneanalytics.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_meta_cautionframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_meta_validframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_meta_invalidframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_Memory.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_mediainformation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_videoaudio_cautionframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_videoaudio_invalidframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_videoaudio_validframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_videoaudiodata.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_cpuusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_phonetime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txtbattery.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_valid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_caution.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_invalid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_timeinformation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_validmeta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_invalidmeta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_cautionmeta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_worldclocktime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        text_meta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_connectioninformation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_datatimedelay.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_world_time.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_phone_time.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvblockchainid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvblockchainid.setVisibility(View.GONE);
+        tvblockid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvblockid.setVisibility(View.GONE);
+        tvblocknumber.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvblocknumber.setVisibility(View.GONE);
+        tvmetahash.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        tvmetahash.setVisibility(View.GONE);
+        text_encryption.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        text_encryption.setVisibility(View.GONE);
     }
 }

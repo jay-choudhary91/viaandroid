@@ -45,6 +45,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -1061,5 +1062,9 @@ public abstract class basefragment extends Fragment {
                 stop();
             }
         });
+    }
+
+    public void settextviewcolor(TextView view, int color){
+        view.setTextColor(color);
     }
 }

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -176,6 +177,36 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     customfonttextview txtdegree;
     @BindView(R.id.txt_availablewifinetwork)
     customfonttextview txt_availablewifinetwork;
+    @BindView(R.id.txt_Memory)
+    TextView txt_Memory;
+    @BindView(R.id.txt_cpuusage)
+    TextView txt_cpuusage;
+    @BindView(R.id.txtbattery)
+    TextView txtbattery;
+    @BindView(R.id.txt_videoaudiodata)
+    TextView txt_videoaudiodata;
+    @BindView(R.id.txt_valid)
+    TextView txt_valid;
+    @BindView(R.id.txt_caution)
+    TextView txt_caution;
+    @BindView(R.id.txt_invalid)
+    TextView txt_invalid;
+    @BindView(R.id.txt_validmeta)
+    TextView txt_validmeta;
+    @BindView(R.id.txt_cautionmeta)
+    TextView txt_cautionmeta;
+    @BindView(R.id.txt_invalidmeta)
+    TextView txt_invalidmeta;
+    @BindView(R.id.text_meta)
+    TextView text_meta;
+    @BindView(R.id.txt_connectioninformation)
+    TextView txt_connectioninformation;
+    @BindView(R.id.txt_timeinformation)
+    TextView txt_timeinformation;
+    @BindView(R.id.txt_phonetime)
+    TextView txt_phonetime;
+    @BindView(R.id.txt_worldclocktime)
+    TextView txt_worldclocktime;
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
@@ -306,48 +337,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           msensormanager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
           scrollview_meta = (ScrollView) findViewById(R.id.scrollview_meta);
 
-          txt_availablewifinetwork.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvaddress.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvlatitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvlongitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvaltitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvspeed.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvheading.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvtraveled.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvxaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvyaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvzaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvphone.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvnetwork.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvconnection.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvversion.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvwifi.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvgpsaccuracy.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvscreen.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvcountry.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvcpuusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvbrightness.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvtimezone.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvmemoryusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvbluetooth.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvlocaltime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvstoragefree.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvlanguage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvuptime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvbattery.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvdate.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvtime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvblockchainid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvblockid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvblocknumber.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvmetahash.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvlocationanalytics.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvlocationtracking.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvorientation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvPhoneanalytics.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvencryption.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          tvdataletency.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-          txtdegree.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          setcolorontextview();
 
           seekbar_mediavideoaudio.setEnabled(false);
           seekbar_mediametadata.setEnabled(false);
@@ -1414,6 +1404,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             screenheight = metricItemArraylist.get(j).getMetricTrackValue();
                             common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
                         }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.blockchainid)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.blockchain_id),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblockchainid);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.hashformula)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.hash_formula),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblockid);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.datahash)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.metadata),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblocknumber);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.matrichash)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.mediahash),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvmetahash);
+                        }
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.Battery))
                         {
                             if(chart_battery!= null)
@@ -2197,5 +2199,81 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         PieData data = new PieData(dataSet);
         data.setDrawValues(false);
         piechart.setData(data);
+    }
+
+    public void setcolorontextview() {
+        settextviewcolor(txt_availablewifinetwork, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvaddress, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvlatitude, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvlongitude, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvaltitude, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvspeed, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvheading, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvtraveled, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvxaxis, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvyaxis, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvzaxis, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvphone, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvnetwork, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvconnection, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvversion, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvwifi, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvgpsaccuracy, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvscreen, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvcountry, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvcpuusage, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvbrightness, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvtimezone, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvmemoryusage, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvbluetooth, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvlocaltime, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_availablewifinetwork, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvstoragefree, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_availablewifinetwork, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvlanguage, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_availablewifinetwork, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvuptime, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvbattery, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvdate, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvtime, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvblockchainid, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvblockid, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvblocknumber, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvmetahash, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvlocationanalytics, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvlocationtracking, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvbattery, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvorientation, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvPhoneanalytics, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvencryption, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvdataletency, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txtdegree, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_meta_cautionframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_meta_validframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_meta_invalidframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_Memory, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_mediainformation, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_videoaudio_cautionframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_videoaudio_invalidframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_videoaudio_validframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_videoaudiodata, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_cpuusage, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_phonetime, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txtbattery, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_valid, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txtdegree, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_caution, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_invalid, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_timeinformation, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_validmeta, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_invalidmeta, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_cautionmeta, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_worldclocktime, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(text_meta, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_connectioninformation, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_datatimedelay, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_world_time, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_phone_time, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+
     }
 }
