@@ -586,15 +586,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             }
                         }
 
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicedate"))
-                       //     tvdate.setText(metricItemArraylist.get(j).getMetricTrackValue());
-
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequencestarttime"))
-                    //        tvtime.setText(metricItemArraylist.get(j).getMetricTrackValue());
-
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequenceendtime"))
-                    //        tvtime.setText(tvtime.getText()+" - "+metricItemArraylist.get(j).getMetricTrackValue());
-
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclocktime))
                         {
                             String time=metricItemArraylist.get(j).getMetricTrackValue();

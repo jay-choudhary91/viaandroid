@@ -508,11 +508,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 {
                     if(locationindicatemarker != null)
                     {
-                       // mgooglemap.clear();
+                        mgooglemap.clear();
                         locationindicatemarker.remove();
                         locationindicatemarker=null;
-                        locationindicatemarker=null;
-
                     }
                 }
                 else
@@ -935,21 +933,28 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void setdatacomposing(boolean isdatacomposing,String mediafilepath)
     {
         this.isdatacomposing=isdatacomposing;
+
+        if(lastPulseAnimator != null)
+            lastPulseAnimator.cancel();
+
+        if(lastUserCircle != null && mgooglemap != null)
+        {
+            lastUserCircle.remove();
+            lastUserCircle=null;
+        }
+
+        if(locationindicatemarker != null)
+        {
+            locationindicatemarker.remove();
+            locationindicatemarker=null;
+        }
+
+        metricmainarraylist.clear();
+        if(mgooglemap != null)
+            mgooglemap.clear();
+
         if(! isdatacomposing)
         {
-
-            if(lastPulseAnimator != null)
-                lastPulseAnimator.cancel();
-
-            if(lastUserCircle != null && mgooglemap != null)
-            {
-                lastUserCircle.remove();
-                lastUserCircle=null;
-            }
-
-            metricmainarraylist.clear();
-            if(mgooglemap != null)
-                mgooglemap.clear();
 
             fetchmetadatafromdb(mediafilepath);
             if(metricmainarraylist != null && metricmainarraylist.size() > 0)
@@ -1828,6 +1833,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 .radius((Float) animation.getAnimatedValue())
                                 .strokeWidth(0)
                                 .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
+                        }
+
+                        if(! isdatacomposing)
+                        {
+                            if(lastPulseAnimator != null)
+                                lastPulseAnimator.cancel();
+
+                            if(lastUserCircle != null && mgooglemap != null)
+                            {
+                                lastUserCircle.remove();
+                                lastUserCircle=null;
+                            }
                         }
                     }
                 });
