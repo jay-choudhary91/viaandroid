@@ -1815,7 +1815,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 if(lastUserCircle != null)
                     lastUserCircle.setCenter(userLatlng);
 
-                lastPulseAnimator = valueAnimate(getDisplayPulseRadius(), 3000,
+                lastPulseAnimator = valueAnimate(getDisplayPulseRadius(), 2500,
                         new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
@@ -1826,7 +1826,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 .center(userLatlng)
                                 .radius((Float) animation.getAnimatedValue())
                                 .strokeWidth(0)
-                                .fillColor(adjustAlpha(Color.BLUE, 1 - animation.getAnimatedFraction())));
+                                .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
                         }
                     }
                 });
@@ -1924,7 +1924,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         va.addUpdateListener(updateListener);
         va.setRepeatCount(ValueAnimator.INFINITE);
         va.setRepeatMode(ValueAnimator.RESTART);
-
+        va.setStartDelay(1000);
         va.start();
         return va;
     }
