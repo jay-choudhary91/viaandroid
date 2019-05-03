@@ -2926,19 +2926,29 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                endtime = player.getDuration();
-                Log.e("endtime",""+endtime);
-                videostarttime = player.getCurrentPosition();
-                Log.e("videostarttime",""+videostarttime);
+                if(player != null)
+                {
+                    try
+                    {
+                        endtime = player.getDuration();
+                        Log.e("endtime",""+endtime);
+                        videostarttime = player.getCurrentPosition();
+                        Log.e("videostarttime",""+videostarttime);
 
-                if (totalduration != null)
-                    totalduration.setText(common.gettimestring(endtime));
+                        if (totalduration != null)
+                            totalduration.setText(common.gettimestring(endtime));
 
-                if  (time_current != null)
-                    time_current.setText(common.gettimestring(videostarttime));
+                        if  (time_current != null)
+                            time_current.setText(common.gettimestring(videostarttime));
 
-                mediaseekbar.setMax(endtime);
-                mediaseekbar.setProgress(videostarttime);
+                        mediaseekbar.setMax(endtime);
+                        mediaseekbar.setProgress(videostarttime);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
             }
         },10);
     }
