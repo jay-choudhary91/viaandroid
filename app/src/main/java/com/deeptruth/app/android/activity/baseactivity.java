@@ -536,7 +536,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                     //callshareapi(type, videotoken, path, txt_share_btn4.getText().toString());
                     if(!isuserlogin())
+                    {
                         callloginscreen();
+                        return;
+                    }
+
 
                     if (subdialogshare != null && subdialogshare.isShowing())
                           subdialogshare.dismiss();
