@@ -30,6 +30,7 @@ import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -356,6 +357,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     @BindView(R.id.rl_video_downwordarrow)
     RelativeLayout rl_video_downwordarrow;
+    @BindView(R.id.metainfocontainer)
+    FrameLayout metainfocontainer;
+    @BindView(R.id.layoutmetainfo)
+    RelativeLayout layoutmetainfo;
 
     int footerheight ,bottompadding ,actionbarheight;
     int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0, lastrotatedangle =-1,videorotatedangle=-1;
@@ -402,7 +407,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     String latency = "";
     int mheightview = 0;
     int viewheight = 0;
-    View view = null;
     int navigationbarheight = 0;
     GestureDetector detector;
 
@@ -418,6 +422,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     private Orientation mOrientation;
     boolean isplaypauswebtnshow = false;
     int layoutpauseheight = 0;
+    metainformationfragment fragmentmetainformation;
 
     @Override
     public int getlayoutid() {
@@ -460,6 +465,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     int bottommargin= imageview.bottomMargin;
                 }
             });
+
+            metainfocontainer.setVisibility(View.VISIBLE);
+            layoutmetainfo.setVisibility(View.GONE);
 
             recyview_frames.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -667,6 +675,24 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             });
         }
+        if(fragmentmetainformation == null)
+        {
+            fragmentmetainformation=new metainformationfragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.metainfocontainer,fragmentmetainformation);
+            transaction.commit();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fragmentmetainformation.setdatacomposing(false);
+                    if(fragmentmetainformation!=null)
+                        fragmentmetainformation.setdatacomposing(false,xdata.getinstance().getSetting(config.selectedaudiourl));
+                        fragmentmetainformation.setcurrentmediaposition(0);
+                }
+            },2000);
+
+        }
 
         return rootview;
     }
@@ -799,6 +825,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    }
 
                    gethelper().setcurrentmediaposition(currentprocessframe);
+                   if(fragmentmetainformation != null)
+                       fragmentmetainformation.setcurrentmediaposition(currentprocessframe);
 
                    layout_progressline.setVisibility(View.VISIBLE);
                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
@@ -2898,19 +2926,29 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                endtime = player.getDuration();
-                Log.e("endtime",""+endtime);
-                videostarttime = player.getCurrentPosition();
-                Log.e("videostarttime",""+videostarttime);
+                if(player != null)
+                {
+                    try
+                    {
+                        endtime = player.getDuration();
+                        Log.e("endtime",""+endtime);
+                        videostarttime = player.getCurrentPosition();
+                        Log.e("videostarttime",""+videostarttime);
 
-                if (totalduration != null)
-                    totalduration.setText(common.gettimestring(endtime));
+                        if (totalduration != null)
+                            totalduration.setText(common.gettimestring(endtime));
 
-                if  (time_current != null)
-                    time_current.setText(common.gettimestring(videostarttime));
+                        if  (time_current != null)
+                            time_current.setText(common.gettimestring(videostarttime));
 
-                mediaseekbar.setMax(endtime);
-                mediaseekbar.setProgress(videostarttime);
+                        mediaseekbar.setMax(endtime);
+                        mediaseekbar.setProgress(videostarttime);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
             }
         },10);
     }
@@ -3167,32 +3205,56 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             e.printStackTrace();
         }
 
+        int sectioncount=0;
+        String lastcolor="";
+        ArrayList<String> colorsectioncount=new ArrayList<>();
+
         for(int i=0 ; i<metricmainarraylist.size();i++)
         {
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
-                param.leftMargin=0;
+            String color=metricmainarraylist.get(i).getColor();
+            sectioncount++;
+            if(color.trim().isEmpty())
+                color=config.color_white;
 
-                View view = new View(applicationviavideocomposer.getactivity());
-                view.setLayoutParams(param);
+            if(! lastcolor.equalsIgnoreCase(color))
+            {
+                sectioncount=0;
+                sectioncount++;
+                colorsectioncount.add(color+","+sectioncount);
+            }
+            else
+            {
+                colorsectioncount.set(colorsectioncount.size()-1,color+","+sectioncount);
+            }
+            lastcolor=color;
 
-
-                if(!metricmainarraylist.get(i).getColor().isEmpty() && metricmainarraylist.get(i).getColor() != null){
-                    view.setBackgroundColor(Color.parseColor(metricmainarraylist.get(i).getColor()));
-                }else{
-                    view.setBackgroundColor(Color.parseColor("white"));
-                }
-
-
-                if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
-                   if(latency.isEmpty()){
-                       latency = metricmainarraylist.get(i).getLatency();
-                   }else{
-                       latency = latency + "," + metricmainarraylist.get(i).getLatency();
-                   }
-                }
-                linearseekbarcolorview.addView(view);
+            if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
+               if(latency.isEmpty()){
+                   latency = metricmainarraylist.get(i).getLatency();
+               }else{
+                   latency = latency + "," + metricmainarraylist.get(i).getLatency();
+               }
+            }
         }
+
+        for(int i=0;i<colorsectioncount.size();i++)
+        {
+            String item=colorsectioncount.get(i);
+            if(! item.trim().isEmpty())
+            {
+                String[] itemarray=item.split(",");
+                if(itemarray.length >= 2)
+                {
+                    String writecolor=itemarray[0];
+                    String weight=itemarray[1];
+                    if(! weight.trim().isEmpty())
+                    {
+                        linearseekbarcolorview.addView(getmediaseekbarbackgroundview(weight,writecolor));
+                    }
+                }
+            }
+        }
+
         xdata.getinstance().saveSetting(config.latency,latency);
         gethelper().setdatacomposing(false);
     }

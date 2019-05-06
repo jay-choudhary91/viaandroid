@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -44,6 +45,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -212,6 +214,23 @@ public abstract class basefragment extends Fragment {
         } else {
             return false;
         }
+    }
+
+    public View getmediaseekbarbackgroundview(String weight,String color)
+    {
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,Float.parseFloat(weight));
+        View view = new View(applicationviavideocomposer.getactivity());
+        view.setLayoutParams(param);
+        if((! color.isEmpty()))
+        {
+            view.setBackgroundColor(Color.parseColor(common.getcolorbystring(color)));
+        }
+        else
+        {
+            view.setBackgroundColor(Color.parseColor(config.color_code_transparent));
+        }
+        return view;
     }
 
     public View findViewById(int id) {
@@ -1043,5 +1062,9 @@ public abstract class basefragment extends Fragment {
                 stop();
             }
         });
+    }
+
+    public void settextviewcolor(TextView view, int color){
+        view.setTextColor(color);
     }
 }

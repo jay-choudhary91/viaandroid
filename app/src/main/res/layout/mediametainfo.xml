@@ -246,16 +246,12 @@
                             android:layout_width="20dp"
                             android:layout_height="match_parent"
                             android:max="100"
-                            android:thumb="@drawable/circle"
-                            android:thumbTint="@color/blue_button"
+                            android:thumb="@drawable/blue_black_ball"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:progressDrawable="@drawable/verticalseekbarprogress"
                             android:splitTrack="false"
                             android:min="0"/>
-
-
-
 
                     </RelativeLayout>
 
@@ -268,7 +264,6 @@
                     android:layout_margin="5dp"
                     android:orientation="vertical">
 
-
                     <com.deeptruth.app.android.views.customfonttextview
                         android:id="@+id/txt_traveled"
                         app:fontType="OpenSans_Regular"
@@ -278,7 +273,6 @@
                         android:lines="2"
                         android:gravity="center"
                         android:text="Traveled"/>
-
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -319,8 +313,7 @@
                             android:id="@+id/vertical_slider_traveled"
                             android:layout_width="20dp"
                             android:layout_height="match_parent"
-                            android:thumb="@drawable/circle"
-                            android:thumbTint="@color/blue_button"
+                            android:thumb="@drawable/blue_black_ball"
                             android:max="100"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
@@ -329,9 +322,7 @@
 
                     </RelativeLayout>
 
-
                 </LinearLayout>
-
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -389,17 +380,14 @@
                             android:id="@+id/vertical_slider_altitude"
                             android:layout_width="20dp"
                             android:layout_height="match_parent"
-                            android:thumb="@drawable/circle"
-                            android:thumbTint="@color/blue_button"
+                            android:thumb="@drawable/blue_black_ball"
                             android:max="100"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:progressDrawable="@drawable/verticalseekbarprogress"
                             android:min="0"/>
 
-
                     </RelativeLayout>
-
 
                 </LinearLayout>
 
@@ -447,7 +435,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="0.4"
@@ -460,6 +447,7 @@
                         style="@style/txt_normalview"
                         android:textColor="@color/white"
                         android:gravity="center"
+                        android:id="@+id/txt_phonetime"
                         android:text="@string/phone_time"/>
 
                     <com.deeptruth.app.android.utils.AnalogClock
@@ -494,6 +482,7 @@
                         style="@style/txt_normalview"
                         android:textColor="@color/white"
                         android:gravity="center"
+                        android:id="@+id/txt_worldclocktime"
                         android:text="@string/world_clock_time"/>
 
                     <com.deeptruth.app.android.utils.AnalogClock

@@ -979,6 +979,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                                 }while (cursor2.moveToNext());
 
+                                int sectioncount=0;
+                                String lastcolor="";
+                                ArrayList<String> colorsectioncount=new ArrayList<>();
+
                                 if(validcount != videoobject.getValidcount() || cautioncount != videoobject.getCautioncount()
                                         || unsentcount != videoobject.getUnsentcount())
                                 {
@@ -986,22 +990,42 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     do{
                                         String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
 
-                                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                                LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
-                                        View view = new View(applicationviavideocomposer.getactivity());
-                                        view.setLayoutParams(param);
-                                        if(framecolor != null && (! framecolor.isEmpty()))
+                                        sectioncount++;
+                                        if(framecolor.trim().isEmpty())
+                                            framecolor=config.color_gray;
+
+                                        if(! lastcolor.equalsIgnoreCase(framecolor))
                                         {
-                                            view.setBackgroundColor(Color.parseColor(common.getcolorbystring( framecolor)));
+                                            sectioncount=0;
+                                            sectioncount++;
+                                            colorsectioncount.add(framecolor+","+sectioncount);
                                         }
                                         else
                                         {
-                                            view.setBackgroundColor(Color.parseColor(config.color_code_gray));
+                                            colorsectioncount.set(colorsectioncount.size()-1,framecolor+","+sectioncount);
                                         }
-                                        layout.addView(view);
+                                        lastcolor=framecolor;
                                     }while (cursor2.moveToNext());
-                                    videoobject.setColorbarview(layout);
                                 }
+
+                                for(int i=0;i<colorsectioncount.size();i++)
+                                {
+                                    String item=colorsectioncount.get(i);
+                                    if(! item.trim().isEmpty())
+                                    {
+                                        String[] itemarray=item.split(",");
+                                        if(itemarray.length >= 2)
+                                        {
+                                            String writecolor=itemarray[0];
+                                            String weight=itemarray[1];
+                                            if(! weight.trim().isEmpty())
+                                            {
+                                                layout.addView(getmediaseekbarbackgroundview(weight,writecolor));
+                                            }
+                                        }
+                                    }
+                                }
+                                videoobject.setColorbarview(layout);
                                 videoobject.setMediabarcolor(arrayList);
                                 videoobject.setValidcount(validcount);
                                 videoobject.setCautioncount(cautioncount);

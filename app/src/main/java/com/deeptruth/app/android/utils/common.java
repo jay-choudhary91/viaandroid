@@ -2244,7 +2244,9 @@ public class common {
         return 2;
     }
 
-
+    public static double convertmetertofeets(double meter) {
+        return meter / 0.305;
+    }
     public static double convertmpstomph(double mps) {
         return  mps * 2.236936 ;
     }
@@ -2329,6 +2331,10 @@ public class common {
         {
             color=config.color_code_gray;
         }
+        else if(colorname.equalsIgnoreCase("white"))
+        {
+            color=config.color_code_white;
+        }
         return color;
     }
 
@@ -2400,11 +2406,8 @@ public class common {
         return percentageheight;
     }
     public static String getdate(){
-        Calendar calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-        SimpleDateFormat formatted = new SimpleDateFormat("MM/dd/yyyy ",Locale.ENGLISH);
-        String formattedDate = formatted.format(date);
-        return formattedDate;
+        Date date = new Date();
+        return DateFormat.getDateInstance().format(date);
     }
 
     public static String gettime(){

@@ -205,6 +205,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     AttitudeIndicator attitudeindicator;
     @BindView(R.id.tab_photoreader)
     ImageView tab_photoreader;
+    @BindView(R.id.metainfocontainer)
+    FrameLayout metainfocontainer;
+    @BindView(R.id.layoutmetainfo)
+    RelativeLayout layoutmetainfo;
+    metainformationfragment fragmentmetainformation;
 
     private String imageurl = null,selectedmetrices = "";
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
@@ -335,6 +340,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 validationbaranimation.setAnimationListener(translatelistener);
 
                 setupimagedata();
+                metainfocontainer.setVisibility(View.VISIBLE);
+                layoutmetainfo.setVisibility(View.GONE);
             }
         });
         gethelper().drawerenabledisable(false);
@@ -561,6 +568,25 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
             }
         });
+        if(fragmentmetainformation == null)
+        {
+            fragmentmetainformation=new metainformationfragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.metainfocontainer,fragmentmetainformation);
+            transaction.commit();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fragmentmetainformation.setdatacomposing(false);
+                    if(fragmentmetainformation!=null)
+                        fragmentmetainformation.setdatacomposing(false,xdata.getinstance().getSetting(config.selectedaudiourl));
+                    if(fragmentmetainformation != null)
+                        fragmentmetainformation.setcurrentmediaposition(0);
+                }
+            },2000);
+
+        }
 
         fetchmetadatafromdb();
         loadmap();

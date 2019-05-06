@@ -5,27 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/txt_connection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:fontType="OpenSans_Regular"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text=""/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="5dp"
+        android:layout_height="120dp">
 
-        <com.deeptruth.app.android.views.customfonttextview
-            android:id="@+id/txt_connection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:fontType="OpenSans_Regular"
-            android:layout_marginTop="5dp"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:text=""/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_below="@id/txt_connection"
-            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -45,39 +46,70 @@
         </LinearLayout>
 
 
-
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/linechart_connectionspeed"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_below="@id/txt_connection"
             android:layout_marginTop="5dp"/>
+
+        <LinearLayout
+            android:layout_width="20dp"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="120dp"
+                android:background="@color/white"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentBottom="true"></View>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"></View>
+
+        <com.deeptruth.app.android.views.verticalseekbar
+            android:id="@+id/vertical_slider_connectionspeed"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:thumb="@drawable/blue_black_ball"
+            android:max="100"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:progressDrawable="@drawable/verticalseekbarprogress"
+            android:min="0"/>
 
 
     </RelativeLayout>
 
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/txt_datatimedelay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:fontType="OpenSans_Regular"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text=""/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content">
-
-        <com.deeptruth.app.android.views.customfonttextview
-            android:id="@+id/txt_datatimedelay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:fontType="OpenSans_Regular"
-            android:layout_marginTop="5dp"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:text=""/>
+        android:layout_marginTop="5dp"
+        android:layout_height="120dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/txt_datatimedelay"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -102,8 +134,40 @@
         android:id="@+id/linechart_datatimedelay"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:layout_below="@id/txt_datatimedelay"
         android:layout_marginTop="5dp"/>
+
+        <LinearLayout
+            android:layout_width="20dp"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="120dp"
+                android:background="@color/white"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentBottom="true"></View>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"></View>
+
+        <com.deeptruth.app.android.views.verticalseekbar
+            android:id="@+id/vertical_slider_connectiondatatimedely"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:thumb="@drawable/blue_black_ball"
+            android:max="100"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:progressDrawable="@drawable/verticalseekbarprogress"
+            android:min="0"/>
 
     </RelativeLayout>
 
