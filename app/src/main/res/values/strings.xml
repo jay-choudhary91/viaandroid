@@ -249,4 +249,14 @@
     <string name="video_audio_data">Video/Audio Data</string>
 
 
+    <string name="setting">Settings</string>
+    <string name="add_setting">Add Settings</string>
+    <string name="app_managment">AppManagment</string>
+    <string name="input_text">Input text here....</string>
+    <string name="ok">Ok</string>
+    <string name="save_setting">Save Setting</string>
+    <string name="enter_url">Enter URL</string>
+    <string name="enter_complete_url">Enter Complete URL</string>
+
+
 </resources>

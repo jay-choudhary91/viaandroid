@@ -53,6 +53,15 @@
             android:layout_centerVertical="true"
             android:src="@drawable/icon_cancel" />
 
+        <ImageView
+            android:id="@+id/img_appmanagement"
+            android:layout_width="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="25dp"
+            android:layout_toLeftOf="@+id/img_cancel"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_nav_management" />
+
     </RelativeLayout>
 
 

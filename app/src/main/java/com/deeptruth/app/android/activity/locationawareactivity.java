@@ -226,6 +226,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     DecimalFormat precision = new DecimalFormat("0.0");
                                     //xdata.getinstance().saveSetting("gpsspeed", "" +mps+" "+ mph);
                                     xdata.getinstance().saveSetting("gpsspeed", "" + precision.format(mph));
+                                    xdata.getinstance().saveSettingArray("gpsspeed", "" + precision.format(mph));
 
                                     if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
                                     {
@@ -242,17 +243,20 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                             }
                                         }
                                         xdata.getinstance().saveSetting("travelleddistance", "" + (int)feets);
+                                        xdata.getinstance().saveSettingArray("travelleddistance", "" + (int)feets);
                                     }
 
                                 }
                                 else
                                 {
                                     xdata.getinstance().saveSetting("gpsspeed", "0.0");
+                                    xdata.getinstance().saveSettingArray("gpsspeed", "0.0");
                                 }
 
                                 if (location.hasAltitude()) {
                                     int altitudefeet = (int) (location.getAltitude() / 0.3048);
                                     xdata.getinstance().saveSetting(config.gpsaltitude, "" + altitudefeet);
+                                    xdata.getinstance().saveSettingArray(config.gpsaltitude, "" + altitudefeet);
                                 }
 
                                 if (location == null || location.getLatitude() == 0.0)
@@ -287,6 +291,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 } else
                                 {
                                     xdata.getinstance().saveSetting("travelleddistance", "0.0");
+                                    xdata.getinstance().saveSettingArray("travelleddistance", "0.0");
                                     oldlocation = null;
                                 }
                             } catch (Exception e) {
@@ -349,6 +354,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 }
             }
             xdata.getinstance().saveSetting(config.phone_attitude, datavalue);
+            xdata.getinstance().saveSettingArray(config.phone_attitude, datavalue);
         }
 
         // Log.e("Pitch roll cases ",xdata.getinstance().getSetting(config.phone_attitude));
@@ -368,12 +374,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             JSONObject metricobject = object.getJSONObject("metrics");
                             if (metricobject.has("satellitedate"))
                                 xdata.getinstance().saveSetting(config.satellitedate, metricobject.getString("satellitedate"));
+                                xdata.getinstance().saveSettingArray(config.satellitedate, metricobject.getString("satellitedate"));
 
                             if (metricobject.has("satellites"))
                                 xdata.getinstance().saveSetting(config.satellitesdata, metricobject.getJSONArray("satellites").toString());
+                                xdata.getinstance().saveSettingArray(config.satellitesdata, metricobject.getJSONArray("satellites").toString());
 
                             if (metricobject.has("remote_ip"))
                                 xdata.getinstance().saveSetting(config.remoteip, metricobject.getString("remote_ip"));
+                                xdata.getinstance().saveSettingArray(config.remoteip, metricobject.getString("remote_ip"));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -798,8 +807,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
                                 try {
                                     xdata.getinstance().saveSetting("gpsenabled", "1");
-                                    if (!locationawareactivity.checkLocationEnable(locationawareactivity.this))
+                                    xdata.getinstance().saveSettingArray("gpsenabled", "1");
+                                    if (!locationawareactivity.checkLocationEnable(locationawareactivity.this)){
                                         xdata.getinstance().saveSetting("gpsenabled", "0");
+                                        xdata.getinstance().saveSettingArray("gpsenabled", "0");
+                                    }
 
                                     if (getcurrentfragment() != null)
                                         getcurrentfragment().updatewifigpsstatus();
@@ -1075,6 +1087,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     if (key.equalsIgnoreCase("wifiname")) {
                         metricItemValue = connectionInfo.getSSID();
                         xdata.getinstance().saveSetting("wificonnected", "1");
+                        xdata.getinstance().saveSettingArray("wificonnected", "1");
                     }
 
                     //String connectionspeed=""+connectionInfo.getLinkSpeed()+" "+LINK_SPEED_UNITS;
@@ -1097,7 +1110,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             } else {
                 metricItemValue = "NO";
                 xdata.getinstance().saveSetting("wificonnected", "0");
+                xdata.getinstance().saveSettingArray("wificonnected", "0");
                 xdata.getinstance().saveSetting(config.availablewifis, "");
+                xdata.getinstance().saveSettingArray(config.availablewifis, "");
             }
             return metricItemValue;
         } else if (key.equalsIgnoreCase("bluetoothonoff")) {
@@ -1810,8 +1825,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
 
             xdata.getinstance().saveSetting("CALL_STATUS", (CALL_STATUS.isEmpty()) ? "None" : CALL_STATUS);
+            xdata.getinstance().saveSettingArray("CALL_STATUS", (CALL_STATUS.isEmpty()) ? "None" : CALL_STATUS);
             xdata.getinstance().saveSetting("CALL_DURATION", (duration.isEmpty()) ? "None" : duration);
+            xdata.getinstance().saveSettingArray("CALL_DURATION", (duration.isEmpty()) ? "None" : duration);
             xdata.getinstance().saveSetting("CALL_REMOTE_NUMBER", (CALL_REMOTE_NUMBER.isEmpty()) ? "None" : CALL_REMOTE_NUMBER);
+            xdata.getinstance().saveSettingArray("CALL_REMOTE_NUMBER", (CALL_REMOTE_NUMBER.isEmpty()) ? "None" : CALL_REMOTE_NUMBER);
 
             updatearrayitem(config.currentcallinprogress, xdata.getinstance().getSetting("CALL_STATUS"));
             updatearrayitem(config.currentcalldurationseconds, xdata.getinstance().getSetting("CALL_STATUS"));
@@ -2173,6 +2191,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         initialdate = new Date();
         xdata.getinstance().saveSetting("initialdatereaderapi", "" + initialdate.getTime());
+        xdata.getinstance().saveSettingArray("initialdatereaderapi", "" + initialdate.getTime());
         applicationviavideocomposer.getactivity().startService(intent);
     }
     //** end code of media reader sync process
@@ -2698,6 +2717,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     String availablewifiname = "";
                     if((xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0"))){
                         xdata.getinstance().saveSetting(config.availablewifis, "");
+                        xdata.getinstance().saveSettingArray(config.availablewifis, "");
                     }
                     else{
                         results = wifiManager.getScanResults();
@@ -2713,6 +2733,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         }
                         //  availablewifinetwork = availablewifiname;
                         xdata.getinstance().saveSetting(config.availablewifis, availablewifiname);
+                        xdata.getinstance().saveSettingArray(config.availablewifis, availablewifiname);
                     }
                 }
             };

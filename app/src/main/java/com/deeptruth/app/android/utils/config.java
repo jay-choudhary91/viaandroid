@@ -242,4 +242,13 @@ public class config {
         LOCATION, STORAGE, CAMERA, AUDIO
     }
 
+    public static final String PREFS_NAME = "main_prefs";
+    public static final String LIST_XAPI = "Xapi";
+    public static final String LIST_In_APP_PURCHASE = "In App purchase";
+    public static final String LIST_IMAGES = "images";
+    public static final String LIST_CONFIGACTION = "configaction";
+    public static final String LIST_SETTINGS = "Settings";
+    public static final String XAPI_URL = "api_fullurl";
+    public static final String XAPI_BASE_URL = "http://console.dev.crypto-servers.com/xapi.php?";
+
 }

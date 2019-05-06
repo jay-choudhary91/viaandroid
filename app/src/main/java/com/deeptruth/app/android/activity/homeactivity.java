@@ -26,10 +26,12 @@ import android.widget.ScrollView;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.fragments.appmanagementfragment;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
+import com.deeptruth.app.android.fragments.fatchsettingvaluefragment;
 import com.deeptruth.app.android.fragments.fragmentgraphicaldrawer;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.fragmentrimvideo;
@@ -481,6 +483,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          {
 
          }else if(fragment instanceof fragmentrimvideo)
+         {
+
+         }else if(fragment instanceof appmanagementfragment)
+         {
+
+         }else if(fragment instanceof fatchsettingvaluefragment)
          {
 
          }

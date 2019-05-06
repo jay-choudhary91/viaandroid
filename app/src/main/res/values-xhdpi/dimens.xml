@@ -32,4 +32,6 @@
     <dimen name="textsize11sp">11sp</dimen>
     <dimen name="textsize12sp">12sp</dimen>
 
+    <dimen name="header_text_size_18">18sp</dimen>
+    <dimen name="bottom_nav_title_txt_size_14">14dp</dimen>
 </resources>

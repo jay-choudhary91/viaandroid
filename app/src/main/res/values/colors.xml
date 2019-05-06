@@ -90,4 +90,7 @@
     <color name="wave_pink">#9c3776</color>
     <color name="forgotpassword_bg">#0B384F</color>
     <color name="transparent_gray">#50ABB0B1</color>
+
+    <color name="heading_color">#143a64</color>
+    <color name="divider_line">#cfcfcf</color>
 </resources>

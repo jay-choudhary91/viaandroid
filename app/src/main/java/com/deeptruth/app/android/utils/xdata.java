@@ -3,6 +3,9 @@ package com.deeptruth.app.android.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class xdata {
     public final String prefname = "prefname";
@@ -10,6 +13,7 @@ public class xdata {
     public static String app_paid_level = "app_paid_level";
     public static String developer_mode = "developer_mode";
     public static String developermode = "developermode";
+    private static final String PREF_SETTINGS_PAIR = "pref_settings_pair";
 
     private static xdata ourInstance;
     private Context mContext;
@@ -36,5 +40,22 @@ public class xdata {
         SharedPreferences prefs = mContext.getSharedPreferences(prefname, Context.MODE_PRIVATE);
         String data = prefs.getString(key, "");
         return data;
+    }
+
+
+    public String saveSettingArray(String key, String value) {
+        SharedPreferences editor = this.mContext.getSharedPreferences(PREF_SETTINGS_PAIR, Context.MODE_PRIVATE);
+        editor.edit().putString(key, value).apply();
+        return value;
+    }
+
+    public HashMap<String, String> getSettingArray() {
+        HashMap<String, String> map=new HashMap<String, String>();
+
+        SharedPreferences prefs = this.mContext.getSharedPreferences(PREF_SETTINGS_PAIR, Context.MODE_PRIVATE);
+        for( Map.Entry entry : prefs.getAll().entrySet() )
+            map.put( ""+entry.getKey(), entry.getValue().toString() );
+
+        return map;
     }
 }

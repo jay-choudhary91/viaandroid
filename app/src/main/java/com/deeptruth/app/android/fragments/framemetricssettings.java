@@ -65,6 +65,7 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
     ImageView img_sha_salt;
     ImageView img_arrow_back;
     ImageView img_cancel;
+    ImageView img_appmanagement;
 
     EditText edt_md_salt;
     EditText edt_sha_salt;
@@ -96,6 +97,7 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
             img_sha_salt =(ImageView)rootview.findViewById(R.id.img_sha_salt);
             img_arrow_back =(ImageView)rootview.findViewById(R.id.img_arrow_back);
             img_cancel =(ImageView)rootview.findViewById(R.id.img_cancel);
+            img_appmanagement =(ImageView)rootview.findViewById(R.id.img_appmanagement);
 
             edt_update_every =(EditText) rootview.findViewById(R.id.edt_update_every);
             edt_framescount =(EditText) rootview.findViewById(R.id.edt_framescount);
@@ -113,6 +115,7 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
             layout_sha_salt.setOnClickListener(this);
             img_arrow_back.setOnClickListener(this);
             img_cancel.setOnClickListener(this);
+            img_appmanagement.setOnClickListener(this);
             layout_view.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -259,6 +262,11 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
 
             case R.id.img_cancel:
                 gethelper().onBack();
+                break;
+
+            case R.id.img_appmanagement:
+                appmanagementfragment appmangfrag = new appmanagementfragment();
+                gethelper().addFragment(appmangfrag,false,true);
                 break;
         }
     }
