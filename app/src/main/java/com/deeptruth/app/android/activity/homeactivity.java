@@ -32,6 +32,7 @@ import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
 import com.deeptruth.app.android.fragments.fatchsettingvaluefragment;
+import com.deeptruth.app.android.fragments.fatchxapivaluefragment;
 import com.deeptruth.app.android.fragments.fragmentgraphicaldrawer;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.fragmentrimvideo;
@@ -491,6 +492,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          }else if(fragment instanceof fatchsettingvaluefragment)
          {
 
+         }else if(fragment instanceof fatchxapivaluefragment)
+         {
+
          }
         else
         {
@@ -672,8 +676,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     public void setdrawerheightonfullscreen(int drawerheight) {
         if(drawerheight!=0){
             navigation_drawer.setPadding(0,0,0,drawerheight);
+            imglefthandle.setPadding(0,0,0,drawerheight);
         }else{
             navigation_drawer.setPadding(0,0,0,0);
+            imglefthandle.setPadding(0,0,0,0);
         }
         //  graphicaldrawerfragment.setdrawerheight(drawerheight);
     }

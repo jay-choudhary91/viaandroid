@@ -6,9 +6,12 @@ import android.util.Log;
 
 
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.models.pair;
 import com.deeptruth.app.android.utils.common;
+import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
+import com.google.gson.Gson;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -24,7 +27,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,11 +46,16 @@ public class xapipost extends AsyncTask<Void, Void, String> {
     String useurl = "";
     apiresponselistener listner;
 
+    String actiontype = "";
+    Date starttime,endtime;
+    int count = 0;
+
 
     public xapipost(Context context, apiresponselistener responseListner) {
         this.mContext = context;
         this.listner = responseListner;
         this.useurl = common.setting_get(xdata.xapi_url);
+        starttime = Calendar.getInstance().getTime();
     }
 
     public boolean add(String key, String value) {
@@ -91,6 +106,8 @@ public class xapipost extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String aVoid) {
         super.onPostExecute(aVoid);
+        endtime = Calendar.getInstance().getTime();
+
         taskresult result = new taskresult();
         JSONObject jsonObject = null;
       //  Log.d("Response>> ", aVoid);
@@ -99,7 +116,9 @@ public class xapipost extends AsyncTask<Void, Void, String> {
             jsonObject=new JSONObject(aVoid);
             if (jsonObject != null && jsonObject.has("result"))
             {
-                JSONObject object = jsonObject.optJSONObject("result");
+               JSONObject object = jsonObject.optJSONObject("result");
+               common.setvalue("","",nameValuePairList,useurl,object,starttime,endtime);
+               //xdata.getinstance().saveSettingApiArray(getactiontype(), common.createurl(nameValuePairList,useurl)+"&"+""+object.toString()+"&"+"action"+"="+getactiontype()+"&"+"StartTime"+"="+convertdateintostring(starttime)+"&"+"EndTime"+"="+"");
                 if(object.has("settings_set"))
                 {
                     JSONObject saveSetting = object.getJSONObject("settings_set");

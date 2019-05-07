@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.models;
 
 
+import java.util.HashMap;
 
 /**
  * Created by devesh on 6/7/17.
@@ -14,6 +15,15 @@ public class pair {
     public String KeyValue="";
     public String KeyAction="";
     public String ImageIcon = "";
+    public HashMap<String,String> keyvaluemap;
+
+    public HashMap<String, String> getKeyvaluemap() {
+        return keyvaluemap;
+    }
+
+    public void setKeyvaluemap(HashMap<String, String> keyvaluemap) {
+        this.keyvaluemap = keyvaluemap;
+    }
 
     public String getKeyAction() {
         return KeyAction;
