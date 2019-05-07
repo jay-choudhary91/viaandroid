@@ -479,9 +479,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                 // get the download speed by dividing the file size by time taken to download
                 double speed = fileSize / timeTakenMills;
+                Log.d("speed  ", ""+speed);
                 double speedinmb = kilobytePerSec / 1024;
-                if(speedinmb > 20)
-                    speedinmb=20;
 
                 connectionspeed = speedinmb + " mbps";
                 /*Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
@@ -959,12 +958,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("osversion")) {
             metricItemValue = Build.VERSION.RELEASE;
         } else if (key.equalsIgnoreCase("devicedate")) {
-            Date date = new Date();
-            DateFormat.getDateInstance().format(date);
-            /*Calendar calander = Calendar.getInstance();
+            Calendar calander = Calendar.getInstance();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(config.date_format);
-            String date = simpleDateFormat.format(calander.getTime());*/
-            metricItemValue = DateFormat.getDateInstance().format(date);;
+            String date = simpleDateFormat.format(calander.getTime());
+            metricItemValue = date;
         } else if (key.equalsIgnoreCase("softwareversion")) {
             metricItemValue = "" + telephonymanager.getDeviceSoftwareVersion();
         } else if (key.equalsIgnoreCase("deviceregion") || (key.equalsIgnoreCase("country"))) {

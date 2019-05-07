@@ -428,25 +428,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             }
             );
-
-            if(fragmentmetainformation == null)
-            {
-                fragmentmetainformation=new metainformationfragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.metainfocontainer,fragmentmetainformation);
-                transaction.commit();
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        fragmentmetainformation.setdatacomposing(false);
-                        if(fragmentmetainformation!=null)
-                            fragmentmetainformation.setdatacomposing(false,xdata.getinstance().getSetting(config.selectedaudiourl));
-                            fragmentmetainformation.setcurrentmediaposition(0);
-                    }
-                },2000);
-
-            }
         }
         return rootview;
     }
@@ -770,6 +751,25 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 scrollView_encyrption.setVisibility(View.INVISIBLE);
                 scrollview_detail.setVisibility(View.INVISIBLE);
                 //metainfo fragment
+
+                if(fragmentmetainformation == null)
+                {
+                    fragmentmetainformation=new metainformationfragment();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.metainfocontainer,fragmentmetainformation);
+                    transaction.commit();
+                }
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(fragmentmetainformation != null)
+                        {
+                            fragmentmetainformation.setdatacomposing(false,xdata.getinstance().getSetting(config.selectedaudiourl));
+                            fragmentmetainformation.setcurrentmediaposition(currentprocessframe);
+                        }
+                    }
+                },500);
 
                 break;
             case R.id.txt_slot6:

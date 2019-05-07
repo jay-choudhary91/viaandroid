@@ -77,6 +77,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
@@ -329,6 +330,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     Circle lastUserCircle=null;
     LatLng usercurrentlocation=null;
     int pulsatinglocationcounter=0;
+    private PolylineOptions mappathoptions;
+    private Polyline mappathpolyline;
+    private ArrayList<LatLng> mappathcoordinates=new ArrayList<>();
+
     @Override
     public int getlayoutid() {
         return R.layout.frag_graphicaldrawer;
@@ -346,7 +351,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           msensormanager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
           scrollview_meta = (ScrollView) findViewById(R.id.scrollview_meta);
 
-          setcolorontextview();
+          settextviewcolor();
 
           seekbar_mediavideoaudio.setEnabled(false);
           seekbar_mediametadata.setEnabled(false);
@@ -511,6 +516,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         mgooglemap.clear();
                         locationindicatemarker.remove();
                         locationindicatemarker=null;
+                    }
+                   // mappathoptions
+                    if(isrecodrunning)
+                    {
+                        mappathcoordinates.add(latlng);
+                        if(mappathpolyline == null)
+                        {
+                            mappathpolyline = mgooglemap.addPolyline(new PolylineOptions()
+                                    .add(latlng,latlng).width(7).color(Color.BLUE));
+                        }
+                        else
+                        {
+                            mappathpolyline.setPoints(mappathcoordinates);
+                        }
+
                     }
                 }
                 else
@@ -699,7 +719,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 if(isrecodrunning)
                 {
-
                     {
                         Float connectionspeed=0.0f;
                         if((! strconnectionspeed.trim().isEmpty()) && (! strconnectionspeed.equalsIgnoreCase("null")) &&
@@ -780,6 +799,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
                 else
                 {
+                    if(mappathpolyline != null)
+                        mappathpolyline.remove();
+
+                    mappathpolyline=null;
+                    mappathcoordinates.clear();
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
                             "\n"+"0.0 feets", tvtraveled);
 
@@ -1058,10 +1082,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         linechart_traveled.clear();
         linechart_altitude.clear();
 
-        ArrayList<Float> arrayspeed=new ArrayList<>();
-        ArrayList<Float> arraytravelled=new ArrayList<>();
-        ArrayList<Float> arrayaltitude=new ArrayList<>();
-        PolylineOptions options = new PolylineOptions().width(7).color(Color.BLUE).geodesic(true);
+        mappathoptions = new PolylineOptions().width(7).color(Color.BLUE).geodesic(true);
         for (int i = 0; i < metricmainarraylist.size(); i++)
         {
             arraycontainer container=metricmainarraylist.get(i);
@@ -1223,15 +1244,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            /*if(altitudegraphitems.size() > 0)
-                            {
-                                if(altitudegraphitems.get(altitudegraphitems.size()-1).getY() != Float.parseFloat(itemarray[0]))
-                                    altitudegraphitems.add(new Entry(altitudegraphitems.size(), Float.parseFloat(itemarray[0]), 0));
-                            }
-                            else
-                            {
-                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), Float.parseFloat(itemarray[0]), 0));
-                            }*/
                             altitudegraphitems.add(new Entry(altitudegraphitems.size(), Float.parseFloat(itemarray[0]), 0));
                         }
                         catch (Exception e)
@@ -1243,10 +1255,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
 
             LatLng point = new LatLng(latitude,longitude);
-            options.add(point);
+            mappathoptions.add(point);
         }
         if(mgooglemap != null)
-            mgooglemap.addPolyline(options);
+            mgooglemap.addPolyline(mappathoptions);
+
             // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
 
         linechart_speed.setVisibility(View.VISIBLE);
@@ -1779,7 +1792,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(pulsatinglocationcounter == 0 || pulsatinglocationcounter >= 3)
         {
             pulsatinglocationcounter=0;
-            addPulsatingEffect(location);
+          //  addPulsatingEffect(location);
         }
         pulsatinglocationcounter++;
 
@@ -2408,7 +2421,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         piechart.setData(data);
     }
 
-    public void setcolorontextview() {
+    public void settextviewcolor() {
         settextviewcolor(txt_availablewifinetwork, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(tvaddress, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(tvlatitude, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));

@@ -84,6 +84,7 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.splashactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.fragmentrimvideo;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -2406,16 +2407,22 @@ public class common {
         return percentageheight;
     }
     public static String getdate(){
+        //Date date = new Date();
+        //return DateFormat.getDateInstance().format(date);
         Date date = new Date();
-        return DateFormat.getDateInstance().format(date);
+        DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        return formatter.format(date);
     }
 
     public static String gettime(){
-        Calendar calendar = Calendar.getInstance();
+        DateFormat timeformat=android.text.format.DateFormat.getTimeFormat(applicationviavideocomposer.getactivity());
+        Date date=new Date();
+        return timeformat.format(date);
+        /*Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
         SimpleDateFormat formatted = new SimpleDateFormat("hh:mm:ss.SS",Locale.ENGLISH);
         String formattedDate = formatted.format(date);
-        return formattedDate;
+        return formattedDate;*/
     }
 
     public static String currenttime_analogclock(){

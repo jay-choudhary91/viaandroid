@@ -330,7 +330,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             }
 
             settextviewcolor();
-            layout_encryptioninfo.setVisibility(View.GONE);
 
             seekbar_mediavideoaudio.setEnabled(false);
             seekbar_mediametadata.setEnabled(false);
@@ -725,7 +724,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             if(array.length > 0)
             {
                 try {
-                    seekbar.setProgress(Integer.parseInt(array[0]));
+                    seekbar.setProgress((int)Float.parseFloat(array[0]));
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -824,7 +823,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         ArrayList<Float> arrayspeed=new ArrayList<>();
         ArrayList<Float> arraytravelled=new ArrayList<>();
         ArrayList<Float> arrayaltitude=new ArrayList<>();
-        PolylineOptions options = new PolylineOptions().width(7).color(Color.RED).geodesic(true);
+        PolylineOptions options = new PolylineOptions().width(7).color(Color.BLUE).geodesic(true);
         for (int i = 0; i < metricmainarraylist.size(); i++)
         {
             arraycontainer container=metricmainarraylist.get(i);
@@ -1784,5 +1783,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         tvmetahash.setVisibility(View.GONE);
         text_encryption.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         text_encryption.setVisibility(View.GONE);
+        layout_encryptioninfo.setVisibility(View.GONE);
     }
 }

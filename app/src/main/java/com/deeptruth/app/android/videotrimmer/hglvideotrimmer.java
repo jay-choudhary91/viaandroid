@@ -789,7 +789,10 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
                 Environment.DIRECTORY_MOVIES
         );
 
-        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        if (montrimvideolistener != null)
+            montrimvideolistener.getresult(file.toString());
+
+        /*final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         final String fileName = "MP4_" + timeStamp + ".mp4";
         String filePath = getDestinationPath() + fileName;
 
@@ -808,7 +811,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         String endtime = common.converttimeformate((endMs - startMs));
 
         String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + starttime, "-t", "" + endtime, "-c","copy", filePath};
-        execFFmpegBinary(complexCommand,dest);
+        execFFmpegBinary(complexCommand,dest);*/
     }
 
 

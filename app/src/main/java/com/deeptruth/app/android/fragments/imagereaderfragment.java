@@ -568,25 +568,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
             }
         });
-        if(fragmentmetainformation == null)
-        {
-            fragmentmetainformation=new metainformationfragment();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.metainfocontainer,fragmentmetainformation);
-            transaction.commit();
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    fragmentmetainformation.setdatacomposing(false);
-                    if(fragmentmetainformation!=null)
-                        fragmentmetainformation.setdatacomposing(false,xdata.getinstance().getSetting(config.selectedaudiourl));
-                    if(fragmentmetainformation != null)
-                        fragmentmetainformation.setcurrentmediaposition(0);
-                }
-            },2000);
-
-        }
 
         fetchmetadatafromdb();
         loadmap();
@@ -625,6 +606,25 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 scrollview_meta.setVisibility(View.VISIBLE);
                 scrollView_encyrption.setVisibility(View.INVISIBLE);
                 scrollview_detail.setVisibility(View.INVISIBLE);
+                if(fragmentmetainformation == null)
+                {
+                    fragmentmetainformation=new metainformationfragment();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.metainfocontainer,fragmentmetainformation);
+                    transaction.commit();
+                }
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(fragmentmetainformation != null)
+                        {
+                            fragmentmetainformation.setdatacomposing(false,xdata.getinstance().getSetting(config.selectedphotourl));
+                            fragmentmetainformation.setcurrentmediaposition(0);
+                        }
+                    }
+                },500);
+
                 break;
             case R.id.txt_slot6:
                 showimageview();

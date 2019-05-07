@@ -536,14 +536,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             txt_share_btn4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!isuserlogin())
+                    /*if(!isuserlogin())
                     {
                         callloginscreen();
                         return;
-                    }
+                    }*/
 
                     if (subdialogshare != null && subdialogshare.isShowing())
-                          subdialogshare.dismiss();
+                        subdialogshare.dismiss();
+
+                    if(getcurrentfragment() instanceof fragmentrimvideo)
+                        return;
 
                     if(type.equalsIgnoreCase(config.item_video))
                     {
@@ -553,7 +556,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                                 @Override
                                 public void onPrepared(MediaPlayer mediaPlayer) {
-                                    int duration = mp.getDuration();
+                                    int duration = mediaPlayer.getDuration();
                                     fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
                                     fragtrimvideo.setdata(mediapath, duration,mediatoken);
                                     addFragment(fragtrimvideo, false, true);
@@ -629,9 +632,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         }
                         else if(! shareurl.trim().isEmpty())
                         {
-                            if (subdialogshare != null && subdialogshare.isShowing())
-                                subdialogshare.dismiss();
-
                             common.sharemessagewithapps(shareurl);
                         }
 

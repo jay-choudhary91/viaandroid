@@ -123,7 +123,7 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
     }
     public void login()
     {
-        if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
+        /*if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
         {
             if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
                 xdata.getinstance().saveSetting(config.enableintroscreen,"no");
@@ -132,14 +132,12 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
             startActivity(intent);
             getHelper().onBack();
 
-        }else{
-            /*Intent intent=new Intent(fragmentsignin.this,homeactivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);*/
-            getHelper().onBack();
-
-            //finish();
         }
+        else
+        {
+            getHelper().onBack();
+        }*/
+        getHelper().onBack();
     }
 
     public boolean isvalidated(){
