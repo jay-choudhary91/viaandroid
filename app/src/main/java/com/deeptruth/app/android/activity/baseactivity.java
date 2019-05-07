@@ -574,18 +574,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         subdialogshare.show();
     }
 
-    public void callmediashareapi(final String type, final String videotoken, final String path, String method) {
+    public void callmediashareapi(final String mediatype, final String mediatoken, final String path, String method) {
 
         HashMap<String, String> requestparams = new HashMap<>();
-        requestparams.put("type", type);
+        requestparams.put("type", mediatype);
         requestparams.put("action", "share");
-        if(type.equalsIgnoreCase("image")){
-            requestparams.put("imagetoken", videotoken);
-        }else if(type.equalsIgnoreCase("audio")){
-            requestparams.put("audiotoken", videotoken);
-        }else if(type.equalsIgnoreCase("video")){
-            requestparams.put("videotoken", videotoken);
-        }
+        if(mediatype.equalsIgnoreCase(config.item_image))
+            requestparams.put("imagetoken", mediatoken);
+        else if(mediatype.equalsIgnoreCase(config.item_audio))
+            requestparams.put("audiotoken", mediatoken);
+        else if(mediatype.equalsIgnoreCase(config.item_video))
+            requestparams.put("videotoken", mediatoken);
+
         requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
         requestparams.put("sharemethod", method);
         requestparams.put("fileextension",common.getfileextension(path));
@@ -618,7 +618,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                 public void onResponse(taskresult response) {
                                     if(response.isSuccess())
                                     {
-                                        callmediastoreapi(videotoken,type,path);
+                                        callmediastoreapi(mediatoken,mediatype,path);
                                     }
                                     else
                                     {
@@ -646,19 +646,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
     }
 
-    public void callmediastoreapi(String videotoken, String mediatype, String mediapath){
+    public void callmediastoreapi(String mediatoken, String mediatype, String mediapath){
 
         HashMap<String, String> requestparams = new HashMap<>();
         requestparams.put("action", "stored");
         requestparams.put("type", mediatype);
         requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
         requestparams.put("fileextension",common.getfileextension(mediapath));
-        if(mediatype.equalsIgnoreCase("image"))
-            requestparams.put("imagetoken", videotoken);
-        else if(mediatype.equalsIgnoreCase("audio"))
-            requestparams.put("audiotoken", videotoken);
-        else if(mediatype.equalsIgnoreCase("video"))
-            requestparams.put("videotoken", videotoken);
+        if(mediatype.equalsIgnoreCase(config.item_image))
+            requestparams.put("imagetoken", mediatoken);
+        else if(mediatype.equalsIgnoreCase(config.item_audio))
+            requestparams.put("audiotoken", mediatoken);
+        else if(mediatype.equalsIgnoreCase(config.item_video))
+            requestparams.put("videotoken", mediatoken);
 
         progressdialog.showwaitingdialog(getinstance());
         xapipost_send(getinstance(), requestparams, new apiresponselistener() {
@@ -672,10 +672,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     JSONObject object= null;
                     try {
                         object = new JSONObject(response.getData().toString());
-                        /*if(object.has("success"))
-                        {
-
-                        }*/
 
                         if(object.has("message"))
                             Toast.makeText(baseactivity.this,object.getString("message"),Toast.LENGTH_SHORT).show();
