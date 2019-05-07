@@ -2437,6 +2437,16 @@ public class common {
         xdata.getinstance().saveSetting(key,keyvalue);
     }
 
+    public static void sharemessagewithapps(String sharemessage)
+    {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, sharemessage);
+        sendIntent.setType("text/plain");
+        applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sendIntent,
+                applicationviavideocomposer.getactivity().getResources().getText(R.string.send_to)));
+    }
+
     public static String setting_get(String key)
     {
         return xdata.getinstance().getSetting(key);

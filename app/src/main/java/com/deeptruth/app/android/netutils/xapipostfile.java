@@ -134,7 +134,8 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
                 while ((inputLine = reader.readLine()) != null)
                     buffer.append(inputLine + "\n");
 
-                serverresponsemessage = buffer.toString();
+                //serverresponsemessage = buffer.toString();
+                serverresponsemessage = "200";
 
             } else {
                 inputStream = ((HttpURLConnection) urlconnection).getErrorStream();
@@ -307,7 +308,12 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
         //Log.d("Response>> ", aVoid);
         try {
             result.success(false);
-            if(aVoid.trim().length() > 0)
+            if(aVoid.equalsIgnoreCase("200"))
+            {
+                result.success(true);
+                result.setData("");
+            }
+            else if(aVoid.trim().length() > 0)
             {
                 jsonObject=new JSONObject(aVoid);
                 if (jsonObject != null && jsonObject.has("result"))
