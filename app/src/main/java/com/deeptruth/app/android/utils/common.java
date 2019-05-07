@@ -94,7 +94,9 @@ import com.google.android.gms.common.internal.service.Common;
 import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.gson.Gson;
 
+import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 
 import java.io.BufferedReader;
@@ -162,6 +164,7 @@ public class common {
     static Dialog custompermissiondialog =null;
     static int systemdialogshowrequestcode =110;
     static Dialog subdialogshare = null;
+    static String actiontype = "";
 
     public static boolean isnetworkconnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
@@ -2457,6 +2460,65 @@ public class common {
     public static String setting_get(String key)
     {
         return xdata.getinstance().getSetting(key);
+    }
+
+    public static String createurl(List<NameValuePair> nameValuePairList,String baseurl){
+      String newcreateurl = "";
+
+        for(int i=0;i<nameValuePairList.size();i++){
+            String key = nameValuePairList.get(i).getName();
+            String value = nameValuePairList.get(i).getValue();
+            getactiontype(key,value);
+            if(newcreateurl.isEmpty()){
+                newcreateurl = baseurl +"&"+key+"="+value;
+            }else{
+                newcreateurl = newcreateurl+"&"+key+"="+value;
+            }
+        }
+        Log.e("finalurl",newcreateurl);
+        return newcreateurl;
+    }
+
+    public static void setvalue(String jsonurl,String action,List<NameValuePair> nameValuePairList,String baseurl,Object object,Date starttime,Date endtime){
+        HashMap<String,String> xapivalue = new HashMap<String,String>();
+
+        if(nameValuePairList==null){
+            xapivalue.put(config.API_STORE_URL,jsonurl);
+            xapivalue.put(config.API_ACTION,action);
+        }else{
+            xapivalue.put(config.API_STORE_URL,common.createurl(nameValuePairList,baseurl));
+            xapivalue.put(config.API_ACTION,actiontype);
+        }
+        xapivalue.put(config.API_RESULT,object.toString());
+        xapivalue.put(config.API_START_DATE,convertdateintostring(starttime));
+        xapivalue.put(config.API_RESPONCE_DATE,convertdateintostring(endtime));
+
+        Gson gson = new Gson();
+        String json = gson.toJson(xapivalue);
+
+        for(int i =0; i < Integer.MAX_VALUE;i++){
+            if(xdata.getinstance().getSetting(action+"xapi"+""+i).isEmpty()){
+                xdata.getinstance().saveSetting(action+"xapi"+""+i, json);
+                xdata.getinstance().saveSettingApiArray(action+"xapi"+""+i, json);
+                break;
+            }
+        }
+    }
+
+    public static String convertdateintostring(Date time){
+
+        String pattern = "HH:mm:ss";
+        DateFormat df = new SimpleDateFormat(pattern);
+        /*Date today = Calendar.getInstance().getTime();*/
+        String converttime = df.format(time);
+
+        return converttime;
+    }
+
+    public static void getactiontype(String key,String value) {
+        if (key.equalsIgnoreCase("action")) {
+            actiontype = value;
+        }
     }
 }
 

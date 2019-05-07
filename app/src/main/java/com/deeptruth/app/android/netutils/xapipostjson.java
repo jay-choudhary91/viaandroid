@@ -22,6 +22,8 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,12 +38,16 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
     HttpURLConnection urlConnection = null;
     BufferedReader reader = null;
     String JsonResponse = null;
+    String baseUrl = "";
+    Date starttime,endtime;
 
     public xapipostjson(Context context, String action, apiresponselistener responseListner) {
         this.action = action;
         this.mContext = context;
         this.listner = responseListner;
         this.useurl = common.setting_get(xdata.xapi_url);
+        starttime = Calendar.getInstance().getTime();
+
     }
 
     public boolean add(String key, Object value) {
@@ -59,7 +65,7 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
             return taskresult.NO_INTERNET;
         }
 
-        String baseUrl = useurl+"xapi_body=1&"+"action="+action;
+        baseUrl = useurl+"xapi_body=1&"+"action="+action;
         Log.d("URL>>", baseUrl);
         Log.d("REQUEST >>", valuepairobject.toString());
 
@@ -114,6 +120,7 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String aVoid) {
         super.onPostExecute(aVoid);
+        endtime = Calendar.getInstance().getTime();
         taskresult result = new taskresult();
         try {
             result.success(false);
@@ -121,6 +128,8 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
             if (jsonObject != null && jsonObject.has("result"))
             {
                 JSONObject object = jsonObject.optJSONObject("result");
+
+                common.setvalue(baseUrl+"&"+valuepairobject.toString(),action,null,useurl,object,starttime,endtime);
                 if(object.has("settings_set"))
                 {
                     JSONObject saveSetting = object.getJSONObject("settings_set");

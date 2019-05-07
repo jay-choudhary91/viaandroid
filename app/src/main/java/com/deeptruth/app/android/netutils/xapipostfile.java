@@ -33,6 +33,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -54,6 +56,7 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
     int maxBufferSize = 1 * 1024 * 1024;
     String serverresponsemessage = "";
     int serverresponsecode = 0;
+    Date starttime,endtime;
 
 
     //private final String boundary;
@@ -69,6 +72,7 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
         this.filepath = filepath;
         this.mContext = context;
         this.listner = responseListner;
+        starttime = Calendar.getInstance().getTime();
     }
 
     @Override
@@ -116,6 +120,10 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
 
             InputStream inputStream;
             int responseCode = ((HttpURLConnection) urlconnection).getResponseCode();
+            endtime = Calendar.getInstance().getTime();
+            common.setvalue(serverurl,"",null,"","",starttime,endtime);
+
+
             if (responseCode == 200)
             {
                 inputStream = ((HttpURLConnection) urlconnection).getInputStream();

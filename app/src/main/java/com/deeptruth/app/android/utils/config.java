@@ -251,4 +251,11 @@ public class config {
     public static final String XAPI_URL = "api_fullurl";
     public static final String XAPI_BASE_URL = "http://console.dev.crypto-servers.com/xapi.php?";
 
+
+    public static final String API_STORE_URL = "api_url";
+    public static final String API_START_DATE = "startdate";
+    public static final String API_RESPONCE_DATE = "responcedate";
+    public static final String API_RESULT = "result";
+    public static final String API_ACTION = "api_action";
+
 }

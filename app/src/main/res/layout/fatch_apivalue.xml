@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/llrootlayout"
+    >
+
+    <RelativeLayout
+        android:id="@+id/layout_mediatype"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="18dp"
+        android:background="@color/dark_blue_solid_a"
+        android:orientation="horizontal">
+
+        <include layout="@layout/actionbar_settings"></include>
+
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/edt_inputdata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_edittext"
+        android:layout_margin="@dimen/margin_15dp"
+        android:singleLine="true"
+        android:gravity="center"
+        android:padding="5dp"
+        android:layout_below="@+id/txt_title"
+        />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyview_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

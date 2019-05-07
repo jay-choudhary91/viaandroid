@@ -94,7 +94,9 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
             }
             else if(managecontroller.getTxtName().equals(config.LIST_XAPI) && managecontroller.getAction().isEmpty())
             {
-                mpopupview.showPopupView(getActivity(),getString(R.string.enter_url),getString(R.string.enter_complete_url),managecontroller,mitemchanged);
+                fatchxapivaluefragment  addOfferFragment=new fatchxapivaluefragment();
+                gethelper().addFragment(addOfferFragment, false, true);
+               // mpopupview.showPopupView(getActivity(),getString(R.string.enter_url),getString(R.string.enter_complete_url),managecontroller,mitemchanged);
             }else if(managecontroller.getTxtName().equals(config.LIST_SETTINGS) && managecontroller.getAction().isEmpty())
             {
                 fatchsettingvaluefragment addOfferFragment=new fatchsettingvaluefragment();
