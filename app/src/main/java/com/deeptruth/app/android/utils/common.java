@@ -117,6 +117,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -2416,6 +2417,18 @@ public class common {
         DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
         return formatter.format(date);
     }
+
+    public static String parsedateformat(Date date)
+    {
+        DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        return formatter.format(date);
+    }
+    public static String parsetimeformat(Date date)
+    {
+        DateFormat timeformat=android.text.format.DateFormat.getTimeFormat(applicationviavideocomposer.getactivity());
+        return timeformat.format(date);
+    }
+
 
     public static String gettime(){
         DateFormat timeformat=android.text.format.DateFormat.getTimeFormat(applicationviavideocomposer.getactivity());
