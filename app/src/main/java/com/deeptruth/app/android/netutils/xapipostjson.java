@@ -127,10 +127,10 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
             {
                 JSONObject object = jsonObject.optJSONObject("result");
 
-                common.setxapirequestresponses(baseUrl+"&"+valuepairobject.toString(),action,"xapi_body=1",
+                common.setxapirequestresponses(baseUrl+"&"+valuepairobject.toString(),action,"xapi_body=1"+"&"+valuepairobject.toString(),
                         null,useurl,object,starttime,endtime, config.all_xapi_list);
 
-                common.setxapirequestresponses(baseUrl+"&"+valuepairobject.toString(),action,"xapi_body=1",
+                common.setxapirequestresponses(baseUrl+"&"+valuepairobject.toString(),action,"xapi_body=1+"+"&"+valuepairobject.toString(),
                         null,useurl,object,starttime,endtime, config.sidecar_xapi_actions);
 
                 if(object.has("settings_set"))
