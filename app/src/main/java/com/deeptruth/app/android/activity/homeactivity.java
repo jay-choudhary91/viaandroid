@@ -5,7 +5,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -32,8 +31,8 @@ import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
-import com.deeptruth.app.android.fragments.fatchsettingvaluefragment;
-import com.deeptruth.app.android.fragments.fatchxapivaluefragment;
+import com.deeptruth.app.android.fragments.fetchsettingvaluefragment;
+import com.deeptruth.app.android.fragments.fetchxapivaluefragment;
 import com.deeptruth.app.android.fragments.fragment_xapi_detail;
 import com.deeptruth.app.android.fragments.fragmentgraphicaldrawer;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
@@ -517,10 +516,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          }else if(fragment instanceof appmanagementfragment)
          {
 
-         }else if(fragment instanceof fatchsettingvaluefragment)
+         }else if(fragment instanceof fetchsettingvaluefragment)
          {
 
-         }else if(fragment instanceof fatchxapivaluefragment)
+         }else if(fragment instanceof fetchxapivaluefragment)
          {
 
          }else if(fragment instanceof fragment_xapi_detail)

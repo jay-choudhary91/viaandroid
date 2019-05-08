@@ -258,5 +258,6 @@
     <string name="parameter">Parameter:</string>
     <string name="result">Result:</string>
     <string name="elapsed">Elapsed Time:</string>
+    <string name="request_time">Request Time:</string>
 
 </resources>

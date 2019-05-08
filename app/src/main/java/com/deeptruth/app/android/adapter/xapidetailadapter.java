@@ -26,13 +26,14 @@ public class xapidetailadapter extends RecyclerView.Adapter<xapidetailadapter.My
     adapteritemclick mItemClick;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvKeyValue;
+        public TextView tvKeyValue,tvrequesttime;
         public LinearLayout root_view;
 
 
         public MyViewHolder(View view) {
             super(view);
             tvKeyValue = (TextView) view.findViewById(R.id.tv_key_value);
+            tvrequesttime = (TextView) view.findViewById(R.id.tv_request_time);
             root_view = (LinearLayout) view.findViewById(R.id.root_view);
         }
     }
@@ -71,6 +72,8 @@ public class xapidetailadapter extends RecyclerView.Adapter<xapidetailadapter.My
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
         HashMap<String,String> geturl = mItemList.get(position).getKeyvaluemap();
+
+        holder.tvrequesttime.setText(context.getResources().getString(R.string.request_time)+" "+geturl.get(config.API_START_DATE));
 
         holder.tvKeyValue.setText(geturl.get(config.API_STORE_URL));
 

@@ -13,13 +13,28 @@
         android:layout_height="wrap_content">
 
         <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_request_time"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/setting"
+            android:textSize="@dimen/textsize11sp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:fontType="OpenSans_Regular"
+            android:gravity="left"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/tv_key_value"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/setting"
-            android:textSize="@dimen/textsize12sp"
+            android:textSize="@dimen/textsize11sp"
             android:maxLines="3"
-            android:textColor="@color/black"
+            android:ellipsize="end"
+            android:textColor="@color/wave_color"
             app:fontType="OpenSans_Regular"
             android:gravity="left"/>
 

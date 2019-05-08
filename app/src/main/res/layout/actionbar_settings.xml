@@ -33,15 +33,17 @@
             android:visibility="visible"
             android:background="@drawable/left_arrow"/>
 
-        <ImageView
-            android:id="@+id/img_delete"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="10dp"
+            android:textSize="@dimen/margin_15dp"
+            android:padding="5dp"
+            android:textColor="@color/white"
             android:visibility="gone"
-            android:background="@drawable/delete_icon"/>
+           android:text="@string/clear"/>
 
     </RelativeLayout>
 
