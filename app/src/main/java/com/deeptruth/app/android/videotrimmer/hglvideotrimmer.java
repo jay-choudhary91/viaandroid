@@ -49,6 +49,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.utils.common;
@@ -77,7 +78,6 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
-
 
 
 public class hglvideotrimmer extends FrameLayout implements View.OnClickListener {
@@ -408,7 +408,12 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
 
     private String getDestinationPath() {
         if (mfinalpath == null) {
-            File folder = Environment.getExternalStorageDirectory();
+            File folder = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_MOVIES), BuildConfig.APPLICATION_ID);;
+
+            if (!folder.exists())
+                folder.mkdirs();
+
             mfinalpath = folder.getPath() + File.separator;
             Log.d(tag, "Using default path " + mfinalpath);
         }
@@ -789,10 +794,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
                 Environment.DIRECTORY_MOVIES
         );
 
-        if (montrimvideolistener != null)
-            montrimvideolistener.getresult(file.toString());
-
-        /*final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         final String fileName = "MP4_" + timeStamp + ".mp4";
         String filePath = getDestinationPath() + fileName;
 
@@ -811,47 +813,65 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         String endtime = common.converttimeformate((endMs - startMs));
 
         String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + starttime, "-t", "" + endtime, "-c","copy", filePath};
-        execFFmpegBinary(complexCommand,dest);*/
+        execFFmpegBinary(complexCommand,dest);
     }
 
 
     private void execFFmpegBinary(final String[] command, final File dest) {
         try {
-            ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+
+            new Thread(new Runnable() {
                 @Override
-                public void onFailure(String s) {
-                    Log.e("Failure with output : ","IN onFailure");
+                public void run() {
+
+                    try {
+                        ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                            @Override
+                            public void onFailure(String s) {
+                                Log.e("Failure with output : ","IN onFailure");
+                            }
+
+                            @Override
+                            public void onSuccess(String s) {
+                                Log.e("SUCCESS with output : ","SUCCESS");
+
+                            }
+
+                            @Override
+                            public void onProgress(String s) {
+                                Log.e( "Progress bar : " , "In Progress");
+
+                            }
+
+                            @Override
+                            public void onStart() {
+                                Log.e("Start with output : ","IN START");
+                                Log.d(tag, "Started command : ffmpeg " + command);
+                                //progressdialog.showwaitingdialog(getContext());
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                //  progressDialog.dismiss();
+                                //Toast.makeText(getContext(), "Video save", Toast.LENGTH_SHORT).show();
+
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressdialog.dismisswaitdialog();
+                                        if (montrimvideolistener != null)
+                                            montrimvideolistener.getresult(dest.toString());
+                                    }
+                                });
+                            }
+                        });
+                    } catch (FFmpegCommandAlreadyRunningException e) {
+                        e.printStackTrace();
+                    }
                 }
+            }).start();
 
-                @Override
-                public void onSuccess(String s) {
-                    Log.e("SUCCESS with output : ","SUCCESS");
-
-                }
-
-                @Override
-                public void onProgress(String s) {
-                    Log.e( "Progress bar : " , "In Progress");
-
-                }
-
-                @Override
-                public void onStart() {
-                    Log.e("Start with output : ","IN START");
-                    Log.d(tag, "Started command : ffmpeg " + command);
-                    //progressdialog.showwaitingdialog(getContext());
-                }
-
-                @Override
-                public void onFinish() {
-                      //  progressDialog.dismiss();
-                        //Toast.makeText(getContext(), "Video save", Toast.LENGTH_SHORT).show();
-                    progressdialog.dismisswaitdialog();
-                        if (montrimvideolistener != null)
-                            montrimvideolistener.getresult(dest.toString());
-                }
-            });
-        } catch (FFmpegCommandAlreadyRunningException e) {
+        } catch (Exception e) {
             // do nothing for now
         }
     }

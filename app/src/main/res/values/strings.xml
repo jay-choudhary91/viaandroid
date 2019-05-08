@@ -1,14 +1,8 @@
 <resources>
     <string name="app_name">VideoLock</string>
+    <string name="deep_link_hosturl">videolock.com</string>
     <string name="save_media">Save to gallery</string>
-    <!--  <string name="simply_secure">Simply Secure</string>
-    <string name="modern_security">Modern security methods to keep your data safe and secure.</string>
-    <string name="point_shoot">Point and Shoot</string>
-    <string name="video_manager">Video manager keeps your data videos in your pocket-available anytime!</string>
-    <string name="provable_protection">Provable Protection</string>
-    <string name="varifiable">100% varifiable video documentation.</string>
-    <string name="start_secure_record">START SECURE RECORDING</string>-->
-
+    <string name="no_record">No records found</string>
 
     <string name="username">Username</string>
     <string name="password">Password</string>

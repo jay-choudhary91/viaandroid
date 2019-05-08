@@ -1,13 +1,11 @@
 package com.deeptruth.app.android.activity;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,9 +13,6 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.applicationviavideocomposer;
-import com.deeptruth.app.android.utils.common;
-import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 
 import java.io.File;
@@ -25,7 +20,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 
 public class sharedextensionactivity extends AppCompatActivity {
 

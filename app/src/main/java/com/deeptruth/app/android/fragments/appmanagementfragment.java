@@ -2,26 +2,21 @@ package com.deeptruth.app.android.fragments;
 
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
-import com.akash.revealswitch.OnToggleListener;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.adapter.managementcontrolleradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.appmanagementitemclick;
 import com.deeptruth.app.android.interfaces.itemchanged;
 import com.deeptruth.app.android.models.managementcontroller;
-import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.popupview;
-import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.deeptruth.app.android.views.divideritemdecoration;
 
@@ -89,8 +84,8 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
 
             if(managecontroller.getTxtName().equals(config.LIST_In_APP_PURCHASE) && managecontroller.getAction().isEmpty())
             {
-                /*InAppPurchaseControllerFragment frag=new InAppPurchaseControllerFragment();
-                getHelper().addFragment(frag, false, true);*/
+                inapppurchasecontrollerfragment frag=new inapppurchasecontrollerfragment();
+                gethelper().addFragment(frag, false, true);
             }
             else if(managecontroller.getTxtName().equals(config.LIST_XAPI) && managecontroller.getAction().isEmpty())
             {
@@ -102,7 +97,10 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
                 fatchsettingvaluefragment addOfferFragment=new fatchsettingvaluefragment();
                 gethelper().addFragment(addOfferFragment, false, true);
             }
+            else if(managecontroller.getTxtName().equals(config.LIST_LOGS) && managecontroller.getAction().isEmpty())
+            {
 
+            }
         }
 
         @Override
@@ -124,6 +122,9 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
     public void  getdata(){
 
       managementcontroller managementControllers = new managementcontroller(config.LIST_XAPI,false);
+      managementcontrollers.add(managementControllers);
+
+      managementControllers = new managementcontroller(config.LIST_LOGS,false);
       managementcontrollers.add(managementControllers);
 
       managementControllers = new managementcontroller(config.LIST_SETTINGS,true);

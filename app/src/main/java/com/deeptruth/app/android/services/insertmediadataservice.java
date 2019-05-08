@@ -2,13 +2,9 @@ package com.deeptruth.app.android.services;
 
 import android.app.Service;
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.IBinder;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 
-import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.models.dbitemcontainer;

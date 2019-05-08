@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -40,6 +41,7 @@ import com.deeptruth.app.android.fragments.fragmentrimvideo;
 import com.deeptruth.app.android.fragments.framemetricssettings;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
+import com.deeptruth.app.android.fragments.inapppurchasecontrollerfragment;
 import com.deeptruth.app.android.fragments.myfolderfragment;
 import com.deeptruth.app.android.fragments.settingfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
@@ -101,6 +103,31 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         config.selectedmediatype=0;
         xdata.getinstance().saveSetting(config.selected_folder,config.dirallmedia);
 
+        // Code for deeplink
+        /*Uri data = getIntent().getData();
+        if (data != null){
+
+            try
+            {
+                String scheme = data.toString();
+                String url =scheme.toString();
+                int indexIdStart=url.lastIndexOf("/");
+                int indexPreFixStart=url.indexOf("/",8);
+                String Id = url.substring(indexIdStart+1,url.length());
+                String Prefix = url.substring(indexPreFixStart+1,indexIdStart);
+
+                Id=Id.replace(".","");
+                if(Prefix.equalsIgnoreCase("s"))
+                {
+                    String a=Prefix;
+                    String b=Prefix;
+                }
+
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }*/
         drawertoggle = new ActionBarDrawerToggle(this, navigationdrawer, R.string.drawer_open, R.string.drawer_close){
 
             public void onDrawerClosed(View view) {
@@ -497,6 +524,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          {
 
          }else if(fragment instanceof fragment_xapi_detail)
+         {
+
+         }else if(fragment instanceof inapppurchasecontrollerfragment)
          {
 
          }
