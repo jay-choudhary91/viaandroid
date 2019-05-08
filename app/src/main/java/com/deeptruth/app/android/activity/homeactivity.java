@@ -40,6 +40,7 @@ import com.deeptruth.app.android.fragments.fragmentrimvideo;
 import com.deeptruth.app.android.fragments.framemetricssettings;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
+import com.deeptruth.app.android.fragments.inapppurchasecontrollerfragment;
 import com.deeptruth.app.android.fragments.myfolderfragment;
 import com.deeptruth.app.android.fragments.settingfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
@@ -518,6 +519,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          {
 
          }else if(fragment instanceof fatchxapivaluefragment)
+         {
+
+         }else if(fragment instanceof inapppurchasecontrollerfragment)
          {
 
          }

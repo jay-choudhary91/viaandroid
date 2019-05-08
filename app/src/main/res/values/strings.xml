@@ -2,7 +2,7 @@
     <string name="app_name">VideoLock</string>
     <string name="hosturl">console.dev.crypto-servers.com</string>
     <string name="save_media">Save to gallery</string>
-
+    <string name="no_record">No records found</string>
 
     <string name="username">Username</string>
     <string name="password">Password</string>

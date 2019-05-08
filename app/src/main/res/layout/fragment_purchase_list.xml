@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvContacts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
+
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/txt_no_record"
+        style="@style/tv_basic"
+        android:layout_width="wrap_content"
+        android:text=""
+        android:maxLines="1"
+        android:layout_centerInParent="true"
+        android:textColor="@color/grey_xx"
+        android:textSize="15sp"
+        app:fontType="OpenSans_Regular" />
+
+</RelativeLayout>

@@ -84,8 +84,8 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
 
             if(managecontroller.getTxtName().equals(config.LIST_In_APP_PURCHASE) && managecontroller.getAction().isEmpty())
             {
-                /*InAppPurchaseControllerFragment frag=new InAppPurchaseControllerFragment();
-                getHelper().addFragment(frag, false, true);*/
+                inapppurchasecontrollerfragment frag=new inapppurchasecontrollerfragment();
+                gethelper().addFragment(frag, false, true);
             }
             else if(managecontroller.getTxtName().equals(config.LIST_XAPI) && managecontroller.getAction().isEmpty())
             {
@@ -97,7 +97,10 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
                 fatchsettingvaluefragment addOfferFragment=new fatchsettingvaluefragment();
                 gethelper().addFragment(addOfferFragment, false, true);
             }
+            else if(managecontroller.getTxtName().equals(config.LIST_LOGS) && managecontroller.getAction().isEmpty())
+            {
 
+            }
         }
 
         @Override
@@ -119,6 +122,9 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
     public void  getdata(){
 
       managementcontroller managementControllers = new managementcontroller(config.LIST_XAPI,false);
+      managementcontrollers.add(managementControllers);
+
+      managementControllers = new managementcontroller(config.LIST_LOGS,false);
       managementcontrollers.add(managementControllers);
 
       managementControllers = new managementcontroller(config.LIST_SETTINGS,true);
