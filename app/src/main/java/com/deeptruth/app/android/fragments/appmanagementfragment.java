@@ -84,22 +84,24 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
 
             if(managecontroller.getTxtName().equals(config.LIST_In_APP_PURCHASE) && managecontroller.getAction().isEmpty())
             {
-                inapppurchasecontrollerfragment frag=new inapppurchasecontrollerfragment();
-                gethelper().addFragment(frag, false, true);
+                inapppurchasecontrollerfragment fragment=new inapppurchasecontrollerfragment();
+                gethelper().addFragment(fragment, false, true);
             }
             else if(managecontroller.getTxtName().equals(config.LIST_XAPI) && managecontroller.getAction().isEmpty())
             {
-                fatchxapivaluefragment  addOfferFragment=new fatchxapivaluefragment();
-                gethelper().addFragment(addOfferFragment, false, true);
-               // mpopupview.showPopupView(getActivity(),getString(R.string.enter_url),getString(R.string.enter_complete_url),managecontroller,mitemchanged);
+                fatchxapivaluefragment  fragment=new fatchxapivaluefragment();
+                fragment.setdata(true);
+                gethelper().addFragment(fragment, false, true);
             }else if(managecontroller.getTxtName().equals(config.LIST_SETTINGS) && managecontroller.getAction().isEmpty())
             {
-                fatchsettingvaluefragment addOfferFragment=new fatchsettingvaluefragment();
-                gethelper().addFragment(addOfferFragment, false, true);
+                fatchsettingvaluefragment fragment=new fatchsettingvaluefragment();
+                gethelper().addFragment(fragment, false, true);
             }
-            else if(managecontroller.getTxtName().equals(config.LIST_LOGS) && managecontroller.getAction().isEmpty())
+            else if(managecontroller.getTxtName().equals(config.LIST_SYNC_LOG) && managecontroller.getAction().isEmpty())
             {
-
+                fatchxapivaluefragment  fragment=new fatchxapivaluefragment();
+                fragment.setdata(false);
+                gethelper().addFragment(fragment, false, true);
             }
         }
 
@@ -124,7 +126,7 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
       managementcontroller managementControllers = new managementcontroller(config.LIST_XAPI,false);
       managementcontrollers.add(managementControllers);
 
-      managementControllers = new managementcontroller(config.LIST_LOGS,false);
+      managementControllers = new managementcontroller(config.LIST_SYNC_LOG,false);
       managementcontrollers.add(managementControllers);
 
       managementControllers = new managementcontroller(config.LIST_SETTINGS,true);

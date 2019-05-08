@@ -119,7 +119,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -2498,7 +2497,8 @@ public class common {
         return newcreateurl;
     }
 
-    public static void setvalue(String jsonurl,String action,String parameterxapi,List<NameValuePair> nameValuePairList,String baseurl,Object object,Date starttime,Date endtime){
+    public static void setxapirequestresponses(String jsonurl, String action, String parameterxapi, List<NameValuePair> nameValuePairList,
+                                               String baseurl, Object object, Date starttime, Date endtime,String sharedprefkey){
         HashMap<String,String> xapivalue = new HashMap<String,String>();
 
         if(nameValuePairList==null){
@@ -2520,8 +2520,8 @@ public class common {
         String json = gson.toJson(xapivalue);
 
         for(int i =0; i < Integer.MAX_VALUE;i++){
-            if(xdata.getinstance().getSetting("xapi"+""+i).isEmpty()){
-                xdata.getinstance().saveSetting("xapi"+""+i, json);
+            if(xdata.getinstance().getSetting(sharedprefkey +i).isEmpty()){
+                xdata.getinstance().saveSetting(sharedprefkey +i, json);
                 //xdata.getinstance().saveSettingApiArray("xapi"+""+i, json);
                 break;
             }

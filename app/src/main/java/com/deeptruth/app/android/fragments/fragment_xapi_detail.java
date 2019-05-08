@@ -57,7 +57,7 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-            txt_title_actionbar.setText("Xapi Detail");
+            txt_title_actionbar.setText("Detail");
             navigationbarheight =  common.getnavigationbarheight();
             img_arrow_back.setOnClickListener(this);
             setlayoutmargin();
