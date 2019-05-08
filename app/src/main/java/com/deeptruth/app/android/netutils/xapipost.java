@@ -117,7 +117,7 @@ public class xapipost extends AsyncTask<Void, Void, String> {
             if (jsonObject != null && jsonObject.has("result"))
             {
                JSONObject object = jsonObject.optJSONObject("result");
-               common.setvalue("","",nameValuePairList,useurl,object,starttime,endtime);
+               common.setvalue("","","",nameValuePairList,useurl,object,starttime,endtime);
                //xdata.getinstance().saveSettingApiArray(getactiontype(), common.createurl(nameValuePairList,useurl)+"&"+""+object.toString()+"&"+"action"+"="+getactiontype()+"&"+"StartTime"+"="+convertdateintostring(starttime)+"&"+"EndTime"+"="+"");
                 if(object.has("settings_set"))
                 {

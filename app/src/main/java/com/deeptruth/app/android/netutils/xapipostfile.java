@@ -121,7 +121,7 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
             InputStream inputStream;
             int responseCode = ((HttpURLConnection) urlconnection).getResponseCode();
             endtime = Calendar.getInstance().getTime();
-            common.setvalue(serverurl,"",null,"","",starttime,endtime);
+            common.setvalue(serverurl,"","",null,"","",starttime,endtime);
 
 
             if (responseCode == 200)

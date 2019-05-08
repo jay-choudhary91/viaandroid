@@ -258,5 +258,6 @@ public class config {
     public static final String API_RESPONCE_DATE = "responcedate";
     public static final String API_RESULT = "result";
     public static final String API_ACTION = "api_action";
+    public static final String API_PARAMETER= "api_parameter";
 
 }

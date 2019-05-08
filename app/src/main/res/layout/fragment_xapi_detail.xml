@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/llrootlayout"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/layout_mediatype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="18dp"
+            android:background="@color/dark_blue_solid_a"
+            android:orientation="horizontal">
+
+            <include layout="@layout/actionbar_settings"></include>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:text="@string/start_time"
+                android:paddingLeft="@dimen/margin_10dp"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:layout_weight=".6"
+                />
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:id="@+id/txt_starttime"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:layout_weight=".4"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_x"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:text="@string/elapsed"
+                android:paddingLeft="@dimen/margin_10dp"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:layout_weight=".6"
+                />
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:id="@+id/txt_endtime"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:layout_weight=".4"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_x"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:text="@string/config_action"
+                android:paddingLeft="@dimen/margin_10dp"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:layout_weight=".6"
+                />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:id="@+id/txt_config"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:layout_weight=".4"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_x"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:text="@string/parameter"
+                android:paddingLeft="@dimen/margin_10dp"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:layout_weight=".6"
+                />
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:id="@+id/txt_parameter"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:layout_weight=".4"
+                />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_x"
+            />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:text="@string/result"
+                android:paddingLeft="@dimen/margin_10dp"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                app:fontType="Comfortaa-Regular"
+                android:gravity="center_horizontal"
+                android:textColor="@color/black"
+                />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_x"
+            />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:id="@+id/txt_result"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:layout_gravity="center_horizontal"
+                />
+
+    </LinearLayout>
+</ScrollView>

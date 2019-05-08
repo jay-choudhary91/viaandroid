@@ -139,6 +139,7 @@ public class common {
     static int systemdialogshowrequestcode =110;
     static Dialog subdialogshare = null;
     static String actiontype = "";
+    static String parameter ="";
 
     public static boolean isnetworkconnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
@@ -2450,6 +2451,7 @@ public class common {
 
     public static String createurl(List<NameValuePair> nameValuePairList,String baseurl){
       String newcreateurl = "";
+      parameter ="";
 
         for(int i=0;i<nameValuePairList.size();i++){
             String key = nameValuePairList.get(i).getName();
@@ -2457,35 +2459,41 @@ public class common {
             getactiontype(key,value);
             if(newcreateurl.isEmpty()){
                 newcreateurl = baseurl +"&"+key+"="+value;
+                parameter = key+"="+value;
             }else{
                 newcreateurl = newcreateurl+"&"+key+"="+value;
+                parameter =parameter+"&"+ key+"="+value;
             }
         }
         Log.e("finalurl",newcreateurl);
         return newcreateurl;
     }
 
-    public static void setvalue(String jsonurl,String action,List<NameValuePair> nameValuePairList,String baseurl,Object object,Date starttime,Date endtime){
+    public static void setvalue(String jsonurl,String action,String parameterxapi,List<NameValuePair> nameValuePairList,String baseurl,Object object,Date starttime,Date endtime){
         HashMap<String,String> xapivalue = new HashMap<String,String>();
 
         if(nameValuePairList==null){
             xapivalue.put(config.API_STORE_URL,jsonurl);
             xapivalue.put(config.API_ACTION,action);
+            xapivalue.put(config.API_PARAMETER,parameterxapi);
         }else{
             xapivalue.put(config.API_STORE_URL,common.createurl(nameValuePairList,baseurl));
             xapivalue.put(config.API_ACTION,actiontype);
+            xapivalue.put(config.API_PARAMETER,parameter);
         }
         xapivalue.put(config.API_RESULT,object.toString());
-        xapivalue.put(config.API_START_DATE,convertdateintostring(starttime));
-        xapivalue.put(config.API_RESPONCE_DATE,convertdateintostring(endtime));
+        xapivalue.put(config.API_START_DATE,""+starttime);
+        xapivalue.put(config.API_RESPONCE_DATE,timedifference(starttime,endtime));
+
+        timedifference(starttime,endtime);
 
         Gson gson = new Gson();
         String json = gson.toJson(xapivalue);
 
         for(int i =0; i < Integer.MAX_VALUE;i++){
-            if(xdata.getinstance().getSetting(action+"xapi"+""+i).isEmpty()){
-                xdata.getinstance().saveSetting(action+"xapi"+""+i, json);
-                xdata.getinstance().saveSettingApiArray(action+"xapi"+""+i, json);
+            if(xdata.getinstance().getSetting("xapi"+""+i).isEmpty()){
+                xdata.getinstance().saveSetting("xapi"+""+i, json);
+                //xdata.getinstance().saveSettingApiArray("xapi"+""+i, json);
                 break;
             }
         }
@@ -2505,6 +2513,16 @@ public class common {
         if (key.equalsIgnoreCase("action")) {
             actiontype = value;
         }
+    }
+
+    public static String timedifference(Date starttime, Date endtime){
+
+        long diff = endtime.getTime() - starttime.getTime();
+
+        long seconds = diff / 1000;
+        long milisecond = diff % 1000;
+
+        return (""+ seconds+"."+""+milisecond);
     }
 }
 
