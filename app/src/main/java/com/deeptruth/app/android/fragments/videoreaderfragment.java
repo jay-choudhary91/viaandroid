@@ -1992,16 +1992,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                         String localTime = datee.format(enddate);
                                         Log.e("localtime",localTime);
 
-                                        String startformatteddate=formatted.format(startdate);
+                                    /* String startformatteddate=formatted.format(startdate);
                                         String endformatteddate=formatted.format(enddate);
                                         final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
-                                        final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                                        txt_starttime.setText(startformatteddate +" " +  localTime);
+                                        final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);*/
+                                        txt_starttime.setText(common.parsedateformat(startdate) + " "+ common.parsetimeformat(startdate) +" " +  localTime);
                                         txt_duration.setText(mediaduration);
-                                        txt_endtime.setText(endformatteddate +" " +  localTime);
+                                        txt_endtime.setText(common.parsedateformat(enddate) + " "+ common.parsetimeformat(enddate) +" " +  localTime);
 
                                         //  txt_title_actionbarcomposer.setText(filecreateddate);
-                                        txt_createdtime.setText(createdtime);
+                                        txt_createdtime.setText(common.parsetimeformat(startdate));
                                     }
                                     if(mediafolder.trim().length() > 0)
                                         setfolderspinner();

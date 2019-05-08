@@ -962,10 +962,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                         SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
                                         SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH);
 
-                                        tvdate.setText(formatteddate.format(mediadate));
-                                        tvtime.setText(formattedtime.format(mediadate) + " "+localTime);
+                                        tvdate.setText(common.parsedateformat(mediadate));
+                                        tvtime.setText(common.parsetimeformat(mediadate) + " "+localTime);
                                        // txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
-                                        txt_createdtime.setText(formattedtime.format(mediadate));
+                                        txt_createdtime.setText(common.parsetimeformat(mediadate));
                                         edt_medianame.setText(medianame);
                                         edt_medianotes.setText(medianotes);
 
