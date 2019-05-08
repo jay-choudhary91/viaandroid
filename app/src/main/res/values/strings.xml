@@ -41,7 +41,7 @@
     <string name="size">Size:</string>
     <string name="folder">Folder:</string>
     <string name="notes">Notes:</string>
-    <string name="start_time">Start Time:</string>
+    <string name="start_time">Start Time :</string>
     <string name="end_time">End Time:</string>
     <string name="duration">Duration:</string>
     <string name="meta">Meta</string>
@@ -259,5 +259,9 @@
     <string name="enter_url">Enter URL</string>
     <string name="enter_complete_url">Enter Complete URL</string>
 
+
+    <string name="config_action">Config Action:</string>
+    <string name="parameter">Parameter:</string>
+    <string name="result">Result:</string>
 
 </resources>

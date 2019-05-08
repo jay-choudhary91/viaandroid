@@ -2497,9 +2497,9 @@ public class common {
         String json = gson.toJson(xapivalue);
 
         for(int i =0; i < Integer.MAX_VALUE;i++){
-            if(xdata.getinstance().getSetting(action+"xapi"+""+i).isEmpty()){
-                xdata.getinstance().saveSetting(action+"xapi"+""+i, json);
-                xdata.getinstance().saveSettingApiArray(action+"xapi"+""+i, json);
+            if(xdata.getinstance().getSetting("xapi"+""+i).isEmpty()){
+                xdata.getinstance().saveSetting("xapi"+""+i, json);
+                //xdata.getinstance().saveSettingApiArray("xapi"+""+i, json);
                 break;
             }
         }

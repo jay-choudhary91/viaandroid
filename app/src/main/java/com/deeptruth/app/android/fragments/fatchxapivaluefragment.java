@@ -99,7 +99,17 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
     adapteritemclick mItemClick=new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
-          /*  ManagementController mController=new ManagementController();
+            pair pairdata = (pair) object;
+
+            String key = pairdata.KeyName;
+            HashMap<String,String> xapidatamap = pairdata.getKeyvaluemap();
+
+            fragment_xapi_detail xapi_detail=new fragment_xapi_detail();
+            xapi_detail.setdata(key,xapidatamap);
+            gethelper().addFragment(xapi_detail,false,true);
+
+
+          /* ManagementController mController=new ManagementController();
             mController.setKeyName(pair.getKeyName());
             mController.setKeyValue(pair.getKeyValue());
             mController.setTxtName(Config.LIST_SETTINGS);
@@ -113,10 +123,35 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
     };
 
     private void getData() {
-        HashMap<String, String> map= xdata.getinstance().getSettingApiArray();
+
         mItemList = new ArrayList<>();
         Gson gson = new Gson();
         HashMap<String,String> xapivalue = new HashMap<String,String>();
+
+        for(int i =0; i < Integer.MAX_VALUE;i++){
+
+            if(!xdata.getinstance().getSetting("xapi"+""+i).isEmpty()){
+                pair pair=new pair();
+                pair.setKeyName(""+ "xapi"+""+i);
+                String value = xdata.getinstance().getSetting("xapi"+""+i);;
+
+                if (value.trim().length() > 0) {
+                    Type type = new TypeToken< HashMap<String,String>>() {
+                    }.getType();
+                    xapivalue = gson.fromJson(value, type);
+                }
+
+                pair.setKeyvaluemap(xapivalue);
+
+                mItemList.add(pair);
+
+            }else{
+                break;
+            }
+        }
+
+        /*HashMap<String, String> map= xdata.getinstance().getSettingApiArray();
+
 
         Iterator myVeryOwnIterator = map.keySet().iterator();
         while(myVeryOwnIterator.hasNext())
@@ -135,7 +170,7 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
             pair.setKeyvaluemap(xapivalue);
 
             mItemList.add(pair);
-        }
+        }*/
     }
 
     itemchanged mItemChanged=new itemchanged() {
