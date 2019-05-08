@@ -40,6 +40,8 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
     ScrollView llrootlayout;
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
+    @BindView(R.id.tv_delete)
+    customfonttextview tv_delete;
 
     String key = "";
     HashMap<String,String> xapidatamap;
@@ -58,6 +60,7 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
             ButterKnife.bind(this, rootview);
 
             txt_title_actionbar.setText("Detail");
+            tv_delete.setVisibility(View.GONE);
             navigationbarheight =  common.getnavigationbarheight();
             img_arrow_back.setOnClickListener(this);
             setlayoutmargin();

@@ -2557,8 +2557,8 @@ public class common {
     public static void clearxapidate(xapidetailadapter mControllerAdapter, ArrayList<pair> mItemList){
 
         for(int i =0; i < Integer.MAX_VALUE;i++){
-            if(!xdata.getinstance().getSetting("xapi"+""+i).isEmpty()){
-                xdata.getinstance().clearsharevalue("xapi"+""+i);
+            if(!xdata.getinstance().getSetting(config.all_xapi_list+""+i).isEmpty()){
+                xdata.getinstance().clearsharevalue(config.all_xapi_list+""+i);
             }else{
                 if(mControllerAdapter != null && mItemList !=null){
                     mItemList.clear();

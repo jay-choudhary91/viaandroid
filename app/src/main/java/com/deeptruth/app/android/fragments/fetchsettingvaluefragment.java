@@ -29,7 +29,7 @@ import java.util.Iterator;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class fatchsettingvaluefragment extends basefragment implements itemchanged, View.OnClickListener  {
+public class fetchsettingvaluefragment extends basefragment implements itemchanged, View.OnClickListener  {
 
     View rootview;
     @BindView(R.id.recyview_item)

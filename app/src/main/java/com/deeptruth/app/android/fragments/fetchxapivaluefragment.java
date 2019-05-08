@@ -34,7 +34,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class fatchxapivaluefragment extends basefragment implements itemchanged, View.OnClickListener  {
+public class fetchxapivaluefragment extends basefragment implements itemchanged, View.OnClickListener  {
 
     View rootview;
     @BindView(R.id.recyview_item)
@@ -45,10 +45,10 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
     LinearLayout llrootlayout;
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
-    @BindView(R.id.img_delete)
-    ImageView img_delete;
+    @BindView(R.id.tv_delete)
+    customfonttextview tv_delete;
     @BindView(R.id.txt_inputdata)
-    customfonttextview edt_inputdata;
+    EditText edt_inputdata;
 
     ArrayList<pair> mItemList = new ArrayList<>();
     private xapidetailadapter mControllerAdapter;
@@ -68,21 +68,13 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
             ButterKnife.bind(this, rootview);
 
             txt_title_actionbar.setText("Save Setting");
-            img_delete.setVisibility(View.VISIBLE);
-
-            try {
-                DrawableCompat.setTint(img_delete.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.white));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            tv_delete.setVisibility(View.VISIBLE);
 
             navigationbarheight =  common.getnavigationbarheight();
             setlayoutmargin();
             edt_inputdata.setText(config.XAPI_BASE_URL);
             img_arrow_back.setOnClickListener(this);
-            img_delete.setOnClickListener(this);
+            tv_delete.setOnClickListener(this);
 
             getData();
 
@@ -172,13 +164,26 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.img_arrow_back:
-                img_delete.setVisibility(View.GONE);
+                tv_delete.setVisibility(View.GONE);
                 gethelper().onBack();
                 break;
 
-            case R.id.img_delete:
+            case R.id.tv_delete:
                 common.clearxapidate(mControllerAdapter,mItemList);
                 break;
+        }
+    }
+
+    public void clearxapidate(){
+
+        for(int i =0; i < Integer.MAX_VALUE;i++){
+            if(!xdata.getinstance().getSetting(config.all_xapi_list+""+i).isEmpty()){
+                xdata.getinstance().clearsharevalue(config.all_xapi_list+""+i);
+            }else{
+                mItemList.clear();
+                mControllerAdapter.notifyDataSetChanged();
+                break;
+            }
         }
     }
 }
