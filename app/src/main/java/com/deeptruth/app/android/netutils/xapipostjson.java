@@ -129,7 +129,7 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
             {
                 JSONObject object = jsonObject.optJSONObject("result");
 
-                common.setvalue(baseUrl+"&"+valuepairobject.toString(),action,null,useurl,object,starttime,endtime);
+                common.setvalue(baseUrl+"&"+valuepairobject.toString(),action,"xapi_body=1",null,useurl,object,starttime,endtime);
                 if(object.has("settings_set"))
                 {
                     JSONObject saveSetting = object.getJSONObject("settings_set");

@@ -182,7 +182,7 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
     };
 
     public void setlayoutmargin(){
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         params.setMargins(0,0,0,navigationbarheight);
         llrootlayout.setLayoutParams(params);
         llrootlayout.requestLayout();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/llrootlayout"
@@ -58,7 +58,7 @@
             android:orientation="horizontal">
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_xapi_detail"
-                android:text="@string/end_time"
+                android:text="@string/elapsed"
                 android:paddingLeft="@dimen/margin_10dp"
                 app:fontType="Comfortaa-Regular"
                 android:textColor="@color/black"
@@ -140,13 +140,18 @@
                 style="@style/txt_xapi_detail"
                 android:text="@string/result"
                 android:paddingLeft="@dimen/margin_10dp"
+                android:textSize="17sp"
+                android:textStyle="bold"
                 app:fontType="Comfortaa-Regular"
+                android:gravity="center_horizontal"
                 android:textColor="@color/black"
                 />
 
-
-
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_x"
+            />
 
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_xapi_detail"
@@ -157,4 +162,4 @@
                 />
 
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
