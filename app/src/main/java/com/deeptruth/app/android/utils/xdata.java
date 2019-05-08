@@ -12,7 +12,7 @@ public class xdata {
     public static String xapi_url = "xapi_url";
     public static String app_paid_level = "app_paid_level";
     public static String developer_mode = "developer_mode";
-    public static String developermode = "developermode";
+    public static String unpaid_video_record_length = "unpaid_video_record_length";
     private static final String PREF_SETTINGS_PAIR = "pref_settings_pair";
     private static final String PREF_API_PAIR = "pref_api_pair";
 
