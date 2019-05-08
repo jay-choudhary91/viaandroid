@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.adapter.xapidetailadapter;
@@ -48,7 +49,7 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
     @BindView(R.id.tv_delete)
     customfonttextview tv_delete;
     @BindView(R.id.txt_inputdata)
-    EditText edt_inputdata;
+    TextView edt_inputdata;
 
     ArrayList<pair> mItemList = new ArrayList<>();
     private xapidetailadapter mControllerAdapter;
