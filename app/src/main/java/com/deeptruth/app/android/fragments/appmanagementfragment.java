@@ -97,7 +97,7 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
                 fatchsettingvaluefragment fragment=new fatchsettingvaluefragment();
                 gethelper().addFragment(fragment, false, true);
             }
-            else if(managecontroller.getTxtName().equals(config.LIST_LOGS) && managecontroller.getAction().isEmpty())
+            else if(managecontroller.getTxtName().equals(config.LIST_SYNC_LOG) && managecontroller.getAction().isEmpty())
             {
                 fatchxapivaluefragment  fragment=new fatchxapivaluefragment();
                 fragment.setdata(false);
@@ -126,7 +126,7 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
       managementcontroller managementControllers = new managementcontroller(config.LIST_XAPI,false);
       managementcontrollers.add(managementControllers);
 
-      managementControllers = new managementcontroller(config.LIST_LOGS,false);
+      managementControllers = new managementcontroller(config.LIST_SYNC_LOG,false);
       managementcontrollers.add(managementControllers);
 
       managementControllers = new managementcontroller(config.LIST_SETTINGS,true);
