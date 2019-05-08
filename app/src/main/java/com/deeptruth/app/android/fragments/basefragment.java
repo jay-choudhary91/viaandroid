@@ -42,16 +42,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.metricmodel;
-import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.noise;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;

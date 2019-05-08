@@ -1,25 +1,20 @@
 package com.deeptruth.app.android.fragments;
 
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.hardware.SensorManager;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -80,13 +75,10 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.simpledivideritemdecoration;
 import com.deeptruth.app.android.utils.xdata;
-import com.deeptruth.app.android.views.customfonttextview;
 import com.github.mikephil.charting.utils.Utils;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -97,7 +89,6 @@ import org.json.JSONTokener;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -446,7 +437,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
-        encryptionadapter = new encryptiondataadapter(encryptionarraylist,applicationviavideocomposer.getactivity());
+        encryptionadapter = new encryptiondataadapter(encryptionarraylist, applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
 
         linearLayout=rootview.findViewById(R.id.content);

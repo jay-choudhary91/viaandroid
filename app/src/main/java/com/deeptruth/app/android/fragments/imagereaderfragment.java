@@ -77,7 +77,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -259,7 +258,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
         recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
-        encryptionadapter = new encryptiondataadapter(encryptionarraylist,applicationviavideocomposer.getactivity());
+        encryptionadapter = new encryptiondataadapter(encryptionarraylist, applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
         photorootview.post(new Runnable() {
             @Override

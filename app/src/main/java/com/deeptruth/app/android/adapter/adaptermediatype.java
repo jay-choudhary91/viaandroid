@@ -5,14 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
-import com.deeptruth.app.android.models.frame;
 import com.deeptruth.app.android.models.mediatype;
 
 import java.util.ArrayList;

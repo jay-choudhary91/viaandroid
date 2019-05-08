@@ -50,7 +50,6 @@ import com.deeptruth.app.android.services.insertmediadataservice;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
-import com.deeptruth.app.android.utils.noise;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.sha;
 import com.deeptruth.app.android.utils.visualizeraudiorecorder;

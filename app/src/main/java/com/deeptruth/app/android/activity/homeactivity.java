@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -100,6 +101,30 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         config.selectedmediatype=0;
         xdata.getinstance().saveSetting(config.selected_folder,config.dirallmedia);
 
+        Uri data = getIntent().getData();
+        if (data != null){
+
+            try
+            {
+                String scheme = data.toString();
+                String url =scheme.toString();
+                int indexIdStart=url.lastIndexOf("/");
+                int indexPreFixStart=url.indexOf("/",8);
+                String Id = url.substring(indexIdStart+1,url.length());
+                String Prefix = url.substring(indexPreFixStart+1,indexIdStart);
+
+                Id=Id.replace(".","");
+                if(Prefix.equalsIgnoreCase("s"))
+                {
+                    String a=Prefix;
+                    String b=Prefix;
+                }
+
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
         drawertoggle = new ActionBarDrawerToggle(this, navigationdrawer, R.string.drawer_open, R.string.drawer_close){
 
             public void onDrawerClosed(View view) {

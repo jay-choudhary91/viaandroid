@@ -1454,7 +1454,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void startstopvideo()
     {
         if (isvideorecording) {
-            gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             stopRecordingVideo();
             stopblinkanimation();
@@ -1473,7 +1473,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             currentframenumber = currentframenumber + frameduration;
 
             videoframes.clear();
-            gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
             startRecordingVideo();
         }

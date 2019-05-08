@@ -51,7 +51,6 @@ import android.widget.VideoView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
-import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.videotrimmer.interfaces.onhglvideolistener;
 import com.deeptruth.app.android.videotrimmer.interfaces.onprogressvideolistener;
@@ -71,13 +70,9 @@ import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedExceptio
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
-import java.util.Locale;
-
 
 
 public class hglvideotrimmer extends FrameLayout implements View.OnClickListener {
