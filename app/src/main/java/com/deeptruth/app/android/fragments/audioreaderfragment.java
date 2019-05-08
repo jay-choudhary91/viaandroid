@@ -1792,16 +1792,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             Date enddate = calendar.getTime();
                             DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
                             String localTime = datee.format(enddate);
-                            formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa",Locale.ENGLISH);
+                           /* formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa",Locale.ENGLISH);
                             String startformatteddate=formatted.format(startdate);
                             String endformatteddate=formatted.format(enddate);
                             final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
-                            final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                            txt_starttime.setText(startformatteddate +" " + localTime);
-                            txt_endtime.setText(endformatteddate +" " +  localTime);
+                            final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);*/
+                            txt_starttime.setText(common.parsedateformat(startdate) + " "+ common.parsetimeformat(startdate) +" " + localTime);
+                            txt_endtime.setText(common.parsedateformat(enddate) + " "+ common.parsetimeformat(enddate) +" " +  localTime);
                             txt_duration.setText(mediaduration);
                           //  txt_title_actionbarcomposer.setText(filecreateddate);
-                            txt_createdtime.setText(createdtime);
+                            txt_createdtime.setText(common.parsedateformat(startdate) + " "+ common.parsetimeformat(startdate));
 
                             if(mediafolder.trim().length() > 0)
                                 setfolderspinner();
