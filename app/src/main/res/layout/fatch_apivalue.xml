@@ -19,8 +19,8 @@
 
     </RelativeLayout>
 
-    <EditText
-        android:id="@+id/edt_inputdata"
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/txt_inputdata"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border_edittext"

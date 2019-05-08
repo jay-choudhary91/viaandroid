@@ -47,8 +47,8 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
     ImageView img_arrow_back;
     @BindView(R.id.img_delete)
     ImageView img_delete;
-    @BindView(R.id.edt_inputdata)
-    EditText edt_inputdata;
+    @BindView(R.id.txt_inputdata)
+    customfonttextview edt_inputdata;
 
     ArrayList<pair> mItemList = new ArrayList<>();
     private xapidetailadapter mControllerAdapter;
