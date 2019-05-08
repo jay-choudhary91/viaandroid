@@ -21,8 +21,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http"
-                    android:host="@string/hosturl"
-                    android:pathPrefix="/s" />
+                    android:host="@string/deep_link_hosturl"
+                    android:pathPrefix="/"/>
                 <!-- note that the leading "/" is required for pathPrefix-->
             </intent-filter>
         </activity>

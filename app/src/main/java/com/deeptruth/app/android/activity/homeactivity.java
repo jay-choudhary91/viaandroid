@@ -102,7 +102,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         config.selectedmediatype=0;
         xdata.getinstance().saveSetting(config.selected_folder,config.dirallmedia);
 
-        Uri data = getIntent().getData();
+        // Code for deeplink
+        /*Uri data = getIntent().getData();
         if (data != null){
 
             try
@@ -125,7 +126,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             {
                 e.printStackTrace();
             }
-        }
+        }*/
         drawertoggle = new ActionBarDrawerToggle(this, navigationdrawer, R.string.drawer_open, R.string.drawer_close){
 
             public void onDrawerClosed(View view) {
