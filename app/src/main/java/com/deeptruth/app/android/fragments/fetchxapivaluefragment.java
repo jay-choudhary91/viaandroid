@@ -126,11 +126,11 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
 
         for(int i =0; i < Integer.MAX_VALUE;i++)
         {
-            if(! xdata.getinstance().getSetting(config.all_xapi_list +""+i).trim().isEmpty())
+            if(! xdata.getinstance().getSetting(sharedprefkey +""+i).trim().isEmpty())
             {
                 pair pair=new pair();
-                pair.setKeyName(config.all_xapi_list +""+i);
-                String value = xdata.getinstance().getSetting(config.all_xapi_list +i);;
+                pair.setKeyName(sharedprefkey +""+i);
+                String value = xdata.getinstance().getSetting(sharedprefkey +i);;
                 if (value.trim().length() > 0)
                 {
                     Type type = new TypeToken< HashMap<String,String>>() {
@@ -170,21 +170,8 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
                 break;
 
             case R.id.tv_delete:
-                common.clearxapidate(mControllerAdapter,mItemList);
+                common.clearxapidate(mControllerAdapter,mItemList,sharedprefkey);
                 break;
-        }
-    }
-
-    public void clearxapidate(){
-
-        for(int i =0; i < Integer.MAX_VALUE;i++){
-            if(!xdata.getinstance().getSetting(config.all_xapi_list+""+i).isEmpty()){
-                xdata.getinstance().clearsharevalue(config.all_xapi_list+""+i);
-            }else{
-                mItemList.clear();
-                mControllerAdapter.notifyDataSetChanged();
-                break;
-            }
         }
     }
 }

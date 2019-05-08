@@ -2554,11 +2554,11 @@ public class common {
         return (""+ seconds+"."+""+milisecond);
     }
 
-    public static void clearxapidate(xapidetailadapter mControllerAdapter, ArrayList<pair> mItemList){
+    public static void clearxapidate(xapidetailadapter mControllerAdapter, ArrayList<pair> mItemList,String sharedprefkey){
 
         for(int i =0; i < Integer.MAX_VALUE;i++){
-            if(!xdata.getinstance().getSetting(config.all_xapi_list+""+i).isEmpty()){
-                xdata.getinstance().clearsharevalue(config.all_xapi_list+""+i);
+            if(!xdata.getinstance().getSetting(sharedprefkey+""+i).isEmpty()){
+                xdata.getinstance().clearsharevalue(sharedprefkey+""+i);
             }else{
                 if(mControllerAdapter != null && mItemList !=null){
                     mItemList.clear();
