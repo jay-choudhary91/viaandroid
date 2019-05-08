@@ -1,6 +1,8 @@
 package com.deeptruth.app.android.fragments;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +18,7 @@ import android.widget.LinearLayout;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.adapter.settingsadapter;
 import com.deeptruth.app.android.adapter.xapidetailadapter;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.itemchanged;
 import com.deeptruth.app.android.models.metricmodel;
@@ -49,6 +52,8 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
     LinearLayout llrootlayout;
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
+    @BindView(R.id.img_delete)
+    ImageView img_delete;
     @BindView(R.id.edt_inputdata)
     EditText edt_inputdata;
 
@@ -69,10 +74,21 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
             ButterKnife.bind(this, rootview);
 
             txt_title_actionbar.setText("Save Setting");
+            img_delete.setVisibility(View.VISIBLE);
+
+            try {
+                DrawableCompat.setTint(img_delete.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.white));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
             navigationbarheight =  common.getnavigationbarheight();
             setlayoutmargin();
             edt_inputdata.setText(config.XAPI_BASE_URL);
             img_arrow_back.setOnClickListener(this);
+            img_delete.setOnClickListener(this);
 
             getData();
 
@@ -107,13 +123,6 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
             fragment_xapi_detail xapi_detail=new fragment_xapi_detail();
             xapi_detail.setdata(key,xapidatamap);
             gethelper().addFragment(xapi_detail,false,true);
-
-
-          /* ManagementController mController=new ManagementController();
-            mController.setKeyName(pair.getKeyName());
-            mController.setKeyValue(pair.getKeyValue());
-            mController.setTxtName(Config.LIST_SETTINGS);
-            popupView.showPopupView(getActivity(),getString(R.string.save_setting),"",mController,mItemChanged);*/
         }
 
         @Override
@@ -149,28 +158,6 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
                 break;
             }
         }
-
-        /*HashMap<String, String> map= xdata.getinstance().getSettingApiArray();
-
-
-        Iterator myVeryOwnIterator = map.keySet().iterator();
-        while(myVeryOwnIterator.hasNext())
-        {
-            String key=(String)myVeryOwnIterator.next();
-            pair pair=new pair();
-            pair.setKeyName(""+ key);
-            String value = map.get(key);
-
-            if (value.trim().length() > 0) {
-                Type type = new TypeToken< HashMap<String,String>>() {
-                }.getType();
-                xapivalue = gson.fromJson(value, type);
-            }
-
-            pair.setKeyvaluemap(xapivalue);
-
-            mItemList.add(pair);
-        }*/
     }
 
     itemchanged mItemChanged=new itemchanged() {
@@ -192,17 +179,13 @@ public class fatchxapivaluefragment extends basefragment implements itemchanged,
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.img_arrow_back:
+                img_delete.setVisibility(View.GONE);
                 gethelper().onBack();
                 break;
+
+            case R.id.img_delete:
+                common.clearxapidate(mControllerAdapter,mItemList);
+                break;
         }
-    }
-
-
-    public String[] splitapistring(String fullstring){
-
-        String[] separated = fullstring.split("$");
-        Log.e("fullstring",fullstring);
-
-        return separated;
     }
 }

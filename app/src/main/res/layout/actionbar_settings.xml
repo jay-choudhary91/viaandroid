@@ -33,6 +33,16 @@
             android:visibility="visible"
             android:background="@drawable/left_arrow"/>
 
+        <ImageView
+            android:id="@+id/img_delete"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:background="@drawable/delete_icon"/>
+
     </RelativeLayout>
 
 </LinearLayout>

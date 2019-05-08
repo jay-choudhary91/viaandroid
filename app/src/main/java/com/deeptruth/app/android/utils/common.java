@@ -7,13 +7,17 @@ import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -21,7 +25,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -35,6 +44,7 @@ import android.media.AudioManager;
 import android.media.ExifInterface;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -44,6 +54,7 @@ import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -64,24 +75,34 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.splashactivity;
+import com.deeptruth.app.android.adapter.xapidetailadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.fragments.fragmentrimvideo;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.folder;
+import com.deeptruth.app.android.models.pair;
 import com.deeptruth.app.android.views.customfontedittext;
+import com.google.android.gms.common.internal.service.Common;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.gson.Gson;
 
 import org.apache.http.NameValuePair;
+import org.json.JSONArray;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -91,8 +112,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -103,12 +127,17 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static android.content.Context.USB_SERVICE;
 import static android.content.Context.WIFI_SERVICE;
 
 /**
@@ -2524,5 +2553,20 @@ public class common {
 
         return (""+ seconds+"."+""+milisecond);
     }
+
+    public static void clearxapidate(xapidetailadapter mControllerAdapter, ArrayList<pair> mItemList){
+
+        for(int i =0; i < Integer.MAX_VALUE;i++){
+            if(!xdata.getinstance().getSetting("xapi"+""+i).isEmpty()){
+                xdata.getinstance().clearsharevalue("xapi"+""+i);
+            }else{
+                if(mControllerAdapter != null && mItemList !=null){
+                    mItemList.clear();
+                    mControllerAdapter.notifyDataSetChanged();
+                }
+                break;
+            }
+            }
+        }
 }
 
