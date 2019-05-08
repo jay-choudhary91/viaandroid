@@ -242,6 +242,9 @@ public class config {
         LOCATION, STORAGE, CAMERA, AUDIO
     }
 
+    public static final String all_xapi_list = "xapi_list_item_";
+    public static final String sidecar_xapi_actions = "sidecar_xapi_actions_item_";
+
     public static final String PREFS_NAME = "main_prefs";
     public static final String LIST_XAPI = "Xapi";
     public static final String LIST_LOGS = "Logs";

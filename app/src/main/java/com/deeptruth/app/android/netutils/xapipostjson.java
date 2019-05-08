@@ -6,10 +6,10 @@ import android.util.Log;
 
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
+import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 
-import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -21,11 +21,9 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 
 public class xapipostjson extends AsyncTask<Void, Void, String> {
@@ -129,7 +127,12 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
             {
                 JSONObject object = jsonObject.optJSONObject("result");
 
-                common.setvalue(baseUrl+"&"+valuepairobject.toString(),action,"xapi_body=1",null,useurl,object,starttime,endtime);
+                common.setxapirequestresponses(baseUrl+"&"+valuepairobject.toString(),action,"xapi_body=1",
+                        null,useurl,object,starttime,endtime, config.all_xapi_list);
+
+                common.setxapirequestresponses(baseUrl+"&"+valuepairobject.toString(),action,"xapi_body=1",
+                        null,useurl,object,starttime,endtime, config.sidecar_xapi_actions);
+
                 if(object.has("settings_set"))
                 {
                     JSONObject saveSetting = object.getJSONObject("settings_set");
