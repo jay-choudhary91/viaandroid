@@ -97,6 +97,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
     imagecomposerfragment fragimgcapture=null;
+    boolean isfragmentload = false;
 
     View rootview=null;
     int currentselectedcomposer=0,layoutbottomheight=0,layoutmediatypeheight=0;
@@ -187,6 +188,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                     currentselectedcomposer=position;
                     int currentpagerpos=position;
+                    isfragmentload = false;
                     if(currentpagerpos == 0)
                         currentpagerpos=2;
                     else if(currentpagerpos == 1)
@@ -492,12 +494,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 if(currentselectedcomposer == 0)
                 {
-                    if(fragvideocomposer != null)
+                    if(fragvideocomposer != null  && isfragmentload)
                         fragvideocomposer.startstopvideo();
                 }
                 else if(currentselectedcomposer == 1)
                 {
-                    if(fragimgcapture != null)
+                    if(fragimgcapture != null  && isfragmentload)
                     {
                         if(fragimgcapture != null && (! fragimgcapture.isimagecaptureprocessing))
                         {
@@ -538,8 +540,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 else if(currentselectedcomposer == 2)
                 {
                     try {
-                        if(fragaudiocomposer != null)
-                            fragaudiocomposer.startstopaudiorecording();
+                        if(fragaudiocomposer != null && isfragmentload)
+                             fragaudiocomposer.startstopaudiorecording();
                     }catch (Exception e)
                     {
                         e.printStackTrace();
@@ -677,6 +679,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_seekbarzoom);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
+                isfragmentload = true;
             break;
 
             case 1:
@@ -688,6 +691,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 fragimgcapture.setData(mitemclick,layoutbottom,layout_seekbarzoom);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
+                isfragmentload = true;
             break;
 
             case 2:
@@ -697,8 +701,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
 
-                fragaudiocomposer.setData(mitemclick,layoutbottom);
+                fragaudiocomposer.setData(mitemclick,layoutbottom,layoutbottomheight);
                 gethelper().replacetabfragment(fragaudiocomposer,false,true);
+                isfragmentload = true;
             break;
         }
 
@@ -963,12 +968,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             if(txt_encrypting != null)
             {
-                if( fragvideocomposer != null && (! fragvideocomposer.isvideorecording)){
+                if( fragvideocomposer != null && (! fragvideocomposer.isvideorecording) && currentselectedcomposer == 0){
                     layout_encryption.setRotation(rotateangle);
                     layout_seekbarzoom.setRotation(rotateangle);
                 }
 
-                if(fragaudiocomposer != null && currentselectedcomposer == 2){
+                if(fragaudiocomposer != null && currentselectedcomposer == 2 && !fragaudiocomposer.isaudiorecording){
                     layout_encryption.setRotation(rotateangle);
                     layout_seekbarzoom.setRotation(rotateangle);
                 }

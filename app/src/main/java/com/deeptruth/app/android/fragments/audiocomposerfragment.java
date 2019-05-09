@@ -112,6 +112,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     ImageView img_close;
     @BindView(R.id.actionbar)
     RelativeLayout actionbar;
+    @BindView(R.id.rl_visulizerview)
+    RelativeLayout rlvisulizerview;
 
     private TranslateAnimation validationbaranimation;
     LinearLayout layout_drawer;
@@ -153,6 +155,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     FragmentManager fragmentmanager;
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
+    int layoutmediatypeheight = 0;
     FFmpeg ffmpeg;
     RelativeLayout layoutbottom;
     @BindView(R.id.img_roundblink)
@@ -210,6 +213,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
             e.printStackTrace();
         }
+
+        linearheader.post(new Runnable() {
+            @Override
+            public void run() {
+               int linearheaderheight = linearheader.getHeight();
+                setlayoutmargin(linearheaderheight);
+            }
+        });
 
         final AlphaAnimation fadeout_animation = new AlphaAnimation(1.0f, 0.0f);
         fadeout_animation.setDuration(2000); //You can manage the time of the blink with this parameter
@@ -1497,9 +1508,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
 
-    public void setData(adapteritemclick madapterclick,RelativeLayout layoutbottom) {
+    public void setData(adapteritemclick madapterclick,RelativeLayout layoutbottom, int layoutbottomheight) {
         this.madapterclick = madapterclick;
         this.layoutbottom = layoutbottom;
+        this.layoutmediatypeheight = layoutbottomheight;
     }
 
     @Override
@@ -1594,5 +1606,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
         }
 
+    }
+
+    public void setlayoutmargin(int linearheaderheight){
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+        params.setMargins(0,(linearheaderheight*2),0,layoutmediatypeheight);
+        rlvisulizerview.setLayoutParams(params);
+        rlvisulizerview.requestLayout();
     }
 }
