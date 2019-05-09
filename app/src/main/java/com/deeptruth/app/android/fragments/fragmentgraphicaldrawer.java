@@ -782,7 +782,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     mappathpolyline=null;
                     mappathcoordinates.clear();
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
-                            "\n"+"0.0 feets", tvtraveled);
+                            "\n"+common.travelleddistanceformatter("0.0"), tvtraveled);
 
                     if(altitudegraphitems.size() > 0 || speedgraphitems.size() > 0 || travelledgraphitems.size() > 0)
                     {
