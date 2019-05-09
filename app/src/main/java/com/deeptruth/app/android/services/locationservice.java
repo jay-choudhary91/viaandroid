@@ -360,7 +360,7 @@ public class locationservice extends Service implements LocationListener, GpsSta
                         StringBuilder strReturnedAddress = new StringBuilder("");
                         for (int i = 0; i < addressitems.size(); i++)
                         {
-                            if((! addressitems.get(i).trim().isEmpty()) || addressitems.get(i).equalsIgnoreCase("null"))
+                            if((! addressitems.get(i).trim().isEmpty()) && (! addressitems.get(i).equalsIgnoreCase("null")))
                                 if(strReturnedAddress.toString().trim().isEmpty())
                                 {
                                     strReturnedAddress.append(addressitems.get(i));
