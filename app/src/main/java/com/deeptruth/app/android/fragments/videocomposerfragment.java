@@ -194,27 +194,25 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                           {
                               if(mframetorecordcount == currentframenumber || (mediakey.trim().isEmpty()))
                               {
-                                  Bitmap bitmap = textureview.getBitmap(10,10);
+                                  /*Bitmap bitmap = textureview.getBitmap(10,10);
                                   bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(),
                                           bitmap.getHeight(), textureview.getTransform( null ), true );
                                   ByteArrayOutputStream stream = new ByteArrayOutputStream();
                                   bitmap.compress(Bitmap.CompressFormat.PNG, 5, stream);
-                                  byte[] byteArray = stream.toByteArray();
+                                  byte[] byteArray = stream.toByteArray();*/
 
                                   if(mediakey.trim().isEmpty())
                                   {
                                       sequencestarttime = Calendar.getInstance();
                                       String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                                      //randomstring gen = new randomstring(20, ThreadLocalRandom.current());
                                       mediakey=currenttimestamp;
-                                      String keyvalue= getkeyvalue(byteArray);
                                       savestartmediainfo();
                                   }
 
                                   if(mframetorecordcount == currentframenumber)
                                   {
                                       sequenceendtime = Calendar.getInstance();
-                                      updatelistitemnotify(byteArray,currentframenumber,"Frame");
+                                      updatelistitemnotify(currentframenumber,"Frame");
                                       currentframenumber = currentframenumber + frameduration;
                                   }
                                   //bitmap.recycle();
@@ -1819,15 +1817,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         selectedmetrices=builder.toString();
     }
 
-    public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
+    public void updatelistitemnotify(final long framenumber, final String message)
     {
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                if(array == null || array.length == 0)
+                /*if(array == null || array.length == 0)
                     return;
-                final String keyvalue= getkeyvalue(array);
+                final String keyvalue= getkeyvalue(array);*/
+                final String keyvalue= "";
                 currenthashvalue=keyvalue;
                 apicurrentduration++;
 
