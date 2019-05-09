@@ -10,8 +10,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -29,6 +27,7 @@ import static android.text.format.DateUtils.SECOND_IN_MILLIS;
 public class AnalogClock extends View {
 
     boolean isdatacomposing=true;
+    boolean isdrawercontroller=true;
     String serverdate="";
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
@@ -37,14 +36,14 @@ public class AnalogClock extends View {
                 final String tz = intent.getStringExtra("time-zone");
                 mTime = Calendar.getInstance(TimeZone.getTimeZone(tz));
             }
-            onTimeChanged();
+            ontimechanged();
         }
     };
 
     private final Runnable mClockTick = new Runnable() {
         @Override
         public void run() {
-            onTimeChanged();
+            ontimechanged();
 
             if (mEnableSeconds) {
                 final long now = System.currentTimeMillis();
@@ -112,10 +111,10 @@ public class AnalogClock extends View {
                 mSecondHand = r.getDrawable(R.drawable.second);
             }
         }
-        initDrawable(context, mDial);
-        initDrawable(context, mHourHand);
-        initDrawable(context, mMinuteHand);
-        initDrawable(context, mSecondHand);
+        initdrawable(context, mDial);
+        initdrawable(context, mHourHand);
+        initdrawable(context, mMinuteHand);
+        initdrawable(context, mSecondHand);
     }
 
     @Override
@@ -128,7 +127,7 @@ public class AnalogClock extends View {
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         getContext().registerReceiver(mIntentReceiver, filter);
         mTime = Calendar.getInstance(mTimeZone != null ? mTimeZone : TimeZone.getDefault());
-        onTimeChanged();
+        ontimechanged();
         if (mEnableSeconds) {
             mClockTick.run();
         }
@@ -164,12 +163,22 @@ public class AnalogClock extends View {
             canvas.scale(scale, scale, 0f, 0f);
         }
         mDial.draw(canvas);
-        if(isdatacomposing)
+
+        if(isdrawercontroller)
         {
             mDial.setTint(Color.WHITE);
             mHourHand.setTint(Color.WHITE);
             mMinuteHand.setTint(Color.WHITE);
+        }
+        else
+        {
+            mDial.setTint(Color.BLACK);
+            mHourHand.setTint(Color.BLACK);
+            mMinuteHand.setTint(Color.BLACK);
+        }
 
+        if(isdatacomposing)
+        {
             final float hourAngle = mTime.get(Calendar.HOUR) * 30f;
             canvas.rotate(hourAngle, 0f, 0f);
             mHourHand.draw(canvas);
@@ -188,10 +197,6 @@ public class AnalogClock extends View {
         }
         else
         {
-            mDial.setTint(Color.BLACK);
-            mHourHand.setTint(Color.BLACK);
-            mMinuteHand.setTint(Color.BLACK);
-
             if(! serverdate.trim().isEmpty() && (! serverdate.equalsIgnoreCase("NA")) && (! serverdate.equalsIgnoreCase("null")))
             {
                 String[] arrayitem=serverdate.split(" ");
@@ -252,28 +257,48 @@ public class AnalogClock extends View {
                 || super.verifyDrawable(who);
     }
 
-    private void initDrawable(Context context, Drawable drawable) {
+    private void initdrawable(Context context, Drawable drawable) {
         final int midX = drawable.getIntrinsicWidth() / 2;
         final int midY = drawable.getIntrinsicHeight() / 2;
         drawable.setBounds(-midX, -midY, midX, midY);
     }
 
-    private void onTimeChanged() {
+    private void ontimechanged() {
         mTime.setTimeInMillis(System.currentTimeMillis());
         setContentDescription(DateFormat.format(mDescFormat, mTime));
         invalidate();
     }
 
-    public void setTimeZone(String id, itemupdatelistener itemupdate) {
+    public void settimezone(String id, itemupdatelistener itemupdate) {
         itemupdator=itemupdate;
         mTimeZone = TimeZone.getTimeZone(id);
         mTime.setTimeZone(mTimeZone);
-        onTimeChanged();
+        ontimechanged();
     }
 
-    public void setPostRecordData(boolean isdatacomposing,String serverdate)
+    public void setpostrecorddata(boolean isdatacomposing, String serverdate)
     {
         this.isdatacomposing=isdatacomposing;
         this.serverdate=serverdate;
+    }
+
+    public void setfromdrawercontroller(boolean isdrawercontroller)
+    {
+        this.isdrawercontroller=isdrawercontroller;
+        if(mDial != null && mHourHand != null && mMinuteHand != null)
+        {
+            if(isdrawercontroller)
+            {
+                mDial.setTint(Color.WHITE);
+                mHourHand.setTint(Color.WHITE);
+                mMinuteHand.setTint(Color.WHITE);
+            }
+            else
+            {
+                mDial.setTint(Color.BLACK);
+                mHourHand.setTint(Color.BLACK);
+                mMinuteHand.setTint(Color.BLACK);
+            }
+        }
     }
 }

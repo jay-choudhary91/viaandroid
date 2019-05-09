@@ -326,9 +326,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private Marker locationindicatemarker=null;
 
     ValueAnimator lastPulseAnimator=null;
-    Circle lastUserCircle=null;
+    Circle mappulsatecircle =null;
+    Circle userlocationcircle =null;
     LatLng usercurrentlocation=null;
-    int pulsatinglocationcounter=0;
     private PolylineOptions mappathoptions;
     private Polyline mappathpolyline;
     private ArrayList<LatLng> mappathcoordinates=new ArrayList<>();
@@ -370,7 +370,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
           TimeZone timezone = TimeZone.getDefault();
           String timezoneid=timezone.getID();
-          phone_time_clock.setTimeZone(timezoneid, new itemupdatelistener() {
+          phone_time_clock.settimezone(timezoneid, new itemupdatelistener() {
                 @Override
                 public void onitemupdate(Object object,Object timezoneobject) {
                     if(object != null)
@@ -386,7 +386,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 }
             });
-          world_time_clock.setTimeZone("GMT", new itemupdatelistener() {
+          world_time_clock.settimezone("GMT", new itemupdatelistener() {
                 @Override
                 public void onitemupdate(Object object,Object timezoneobject) {
                     if(object != null)
@@ -509,13 +509,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             try {
                 if(isdatacomposing)
                 {
-                    if(locationindicatemarker != null)
-                    {
-                        mgooglemap.clear();
-                        locationindicatemarker.remove();
-                        locationindicatemarker=null;
-                    }
-                   // mappathoptions
                     if(isrecodrunning)
                     {
                         mappathcoordinates.add(latlng);
@@ -529,20 +522,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             mappathpolyline.setPoints(mappathcoordinates);
                         }
 
-                    }
-                }
-                else
-                {
-                    if(locationindicatemarker == null)
-                    {
-                        locationindicatemarker=mgooglemap.addMarker(new MarkerOptions()
-                                .position(latlng)
-                                .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),
-                                        R.drawable.rounded_gps_dot)));
-                    }
-                    else
-                    {
-                        locationindicatemarker.setPosition(latlng);
                     }
                 }
             }catch (Exception e)
@@ -562,7 +541,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         float zoomlevel = mgooglemap.getCameraPosition().zoom;
         if(zoomlevel <= 3)
         {
-            mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));
+            mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
         }
         else
         {
@@ -622,11 +601,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
 
-            String latitude=xdata.getinstance().getSetting(config.Latitude);
-            String longitude=xdata.getinstance().getSetting(config.Longitude);
             String altitude=xdata.getinstance().getSetting(config.Altitude);
-            String speed=common.getxdatavalue(xdata.getinstance().getSetting(config.Speed));
-            String traveled=xdata.getinstance().getSetting(config.distancetravelled);
+            String speed=common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
+
+            String traveled=common.travelleddistanceformatter(xdata.getinstance().getSetting(config.distancetravelled));
             String strconnectionspeed=xdata.getinstance().getSetting(config.Connectionspeed);
             String gpsaccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
             String connectiontimedelaystr=xdata.getinstance().getSetting(config.connectiondatadelay);
@@ -644,7 +622,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             {
 
                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),
-                        "\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
+                        "\n"+ common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)))
+                        , tvspeed);
 
                 updateverticalsliderlocationdata(speed,vertical_slider_speed);
                 updateverticalsliderlocationdata(altitude,vertical_slider_altitude);
@@ -676,16 +655,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         "\n"+connectiontimedelaystr, txt_datatimedelay);
 
                 if(phone_time_clock != null)
-                    phone_time_clock.setPostRecordData(true,"");
+                    phone_time_clock.setpostrecorddata(true,"");
 
                 if(world_time_clock != null)
-                    world_time_clock.setPostRecordData(true,"");
+                    world_time_clock.setpostrecorddata(true,"");
 
                 common.setdrawabledata("",common.getdate(), tvdate);
                 common.setdrawabledata("",common.gettime(), tvtime);
 
-                latitude=xdata.getinstance().getSetting("lat");
-                longitude=xdata.getinstance().getSetting("lng");
+                String latitude=xdata.getinstance().getSetting("lat");
+                String longitude=xdata.getinstance().getSetting("lng");
 
                 common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
                 common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
@@ -952,19 +931,32 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         this.isrecodrunning=isrecodrunning;
     }
 
+    public void cleargooglemap()
+    {
+        if(mgooglemap != null)
+        {
+            mgooglemap.clear();
+
+            if(lastPulseAnimator != null)
+                lastPulseAnimator.cancel();
+
+            if(mappulsatecircle != null && mgooglemap != null)
+            {
+                mappulsatecircle.remove();
+                mappulsatecircle=null;
+            }
+
+            if(userlocationcircle != null && mgooglemap != null)
+            {
+                userlocationcircle.remove();
+                userlocationcircle=null;
+            }
+        }
+    }
+
     public void setdatacomposing(boolean isdatacomposing,String mediafilepath)
     {
         this.isdatacomposing=isdatacomposing;
-
-        if(lastPulseAnimator != null)
-            lastPulseAnimator.cancel();
-
-        if(lastUserCircle != null && mgooglemap != null)
-        {
-            lastUserCircle.remove();
-            lastUserCircle=null;
-        }
-
         if(locationindicatemarker != null)
         {
             locationindicatemarker.remove();
@@ -972,8 +964,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
 
         metricmainarraylist.clear();
-        if(mgooglemap != null)
-            mgooglemap.clear();
+        cleargooglemap();
 
         if(! isdatacomposing)
         {
@@ -1184,7 +1175,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 if(model.getMetricTrackKeyName().equalsIgnoreCase("speed") && (! model.getMetricTrackValue().trim().isEmpty()) && (! model.getMetricTrackValue().equalsIgnoreCase("NA"))
                         && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
                 {
-                    String speed=model.getMetricTrackValue();
+                    String speed=common.speedformatter(model.getMetricTrackValue());
                     String[] itemarray=speed.split(" ");
                     if(itemarray.length > 0)
                     {
@@ -1210,7 +1201,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 if(model.getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled) && (! model.getMetricTrackValue().trim().isEmpty()) && (! model.getMetricTrackValue().equalsIgnoreCase("NA"))
                         && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
                 {
-                    String travelled=model.getMetricTrackValue();
+                    String travelled=common.travelleddistanceformatter(model.getMetricTrackValue());
                     String[] itemarray=travelled.split(" ");
                     if(itemarray.length > 0)
                     {
@@ -1405,8 +1396,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.heading))
                         {
-                            int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), tvheading);
+                            String value=metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
+                                    && (! value.equalsIgnoreCase("null")))
+                            {
+                                int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),
+                                        "\n"+metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), tvheading);
+                            }
+                            else
+                            {
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"NA", tvheading);
+                            }
+
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitudedegree))
                         {
@@ -1527,15 +1529,25 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclocktime))
                         {
                             String time=metricItemArraylist.get(j).getMetricTrackValue();
-                            if(phone_time_clock != null && (! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
-                                phone_time_clock.setPostRecordData(false,time);
-                        }
+                            if(phone_time_clock != null)
+                            {
+                                if((! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
+                                    phone_time_clock.setpostrecorddata(false,time);
 
+                                phone_time_clock.setfromdrawercontroller(true);
+                            }
+                        }
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.worldclocktime))
                         {
                             String time=metricItemArraylist.get(j).getMetricTrackValue();
-                            if(world_time_clock != null && (! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
-                                world_time_clock.setPostRecordData(false,time);
+                            if(world_time_clock != null)
+                            {
+                                if(world_time_clock != null && (! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
+                                    world_time_clock.setpostrecorddata(false,time);
+
+                                world_time_clock.setfromdrawercontroller(true);
+                            }
+
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.availablewifinetwork))
@@ -1546,7 +1558,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.speed))
                         {
-                            String value = metricItemArraylist.get(j).getMetricTrackValue();
+                            String value = common.speedformatter(metricItemArraylist.get(j).getMetricTrackValue());
                             updateverticalsliderlocationdata(value,vertical_slider_speed);
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed)
                                     ,"\n"+ value, tvspeed);
@@ -1561,7 +1573,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled))
                         {
-                            String value = metricItemArraylist.get(j).getMetricTrackValue();
+                            String value = common.travelleddistanceformatter(metricItemArraylist.get(j).getMetricTrackValue());
                             updateverticalsliderlocationdata(value,vertical_slider_traveled);
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),"\n"+value, tvtraveled);
                         }
@@ -1790,12 +1802,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         zoomgooglemap(location.latitude,location.longitude);
 
-        if(pulsatinglocationcounter == 0 || pulsatinglocationcounter >= 3)
-        {
-            pulsatinglocationcounter=0;
-          //  addPulsatingEffect(location);
-        }
-        pulsatinglocationcounter++;
+        if(lastPulseAnimator == null)
+            addPulsatingEffect();
+        else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
+            addPulsatingEffect();
 
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -1810,62 +1820,65 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(isdatacomposing)
             {
-                mgooglemap.setMyLocationEnabled(true);
+                mgooglemap.setMyLocationEnabled(false);
             }
             else
             {
                 mgooglemap.setMyLocationEnabled(false);
             }
 
-            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
+            mgooglemap.getUiSettings().setZoomControlsEnabled(false);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
         }
     }
 
-    private void addPulsatingEffect(final LatLng userLatlng){
+    private void addPulsatingEffect(){
 
-        String gpsaccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
-        if((! gpsaccuracy.trim().isEmpty()) && (! gpsaccuracy.equalsIgnoreCase("NA"))
-                && (! gpsaccuracy.equalsIgnoreCase("null")))
-        {
-            try {
-                if(lastPulseAnimator != null)
-                    lastPulseAnimator.cancel();
+        try {
+            if(lastPulseAnimator != null)
+                lastPulseAnimator.cancel();
 
-                if(lastUserCircle != null)
-                    lastUserCircle.setCenter(userLatlng);
+            lastPulseAnimator = valueAnimate(getDisplayPulseRadius(), 3500,
+                    new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            if(mappulsatecircle != null)
+                                mappulsatecircle.setRadius((Float) animation.getAnimatedValue());
+                            else {
+                                mappulsatecircle = mgooglemap.addCircle(new CircleOptions()
+                                        .center(usercurrentlocation)
+                                        .radius((Float) animation.getAnimatedValue())
+                                        .strokeWidth(0)
+                                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
 
-                lastPulseAnimator = valueAnimate(getDisplayPulseRadius(), 2500,
-                        new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        if(lastUserCircle != null)
-                            lastUserCircle.setRadius((Float) animation.getAnimatedValue());
-                        else {
-                            lastUserCircle = mgooglemap.addCircle(new CircleOptions()
-                                .center(userLatlng)
-                                .radius((Float) animation.getAnimatedValue())
-                                .strokeWidth(0)
-                                .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
-                        }
+                                userlocationcircle= mgooglemap.addCircle(new CircleOptions()
+                                        .center(usercurrentlocation)
+                                        .radius(15)
+                                        .strokeWidth(0)
+                                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.selectedimagehash)));
+                            }
+                            if(mappulsatecircle != null)
+                                mappulsatecircle.setCenter(usercurrentlocation);
 
-                        if(! isdatacomposing)
+                            if(userlocationcircle != null)
+                                userlocationcircle.setCenter(usercurrentlocation);
+
+                        /*if(! isdatacomposing)
                         {
                             if(lastPulseAnimator != null)
                                 lastPulseAnimator.cancel();
 
-                            if(lastUserCircle != null && mgooglemap != null)
+                            if(mappulsatecircle != null && mgooglemap != null)
                             {
-                                lastUserCircle.remove();
-                                lastUserCircle=null;
+                                mappulsatecircle.remove();
+                                mappulsatecircle=null;
                             }
+                        }*/
                         }
-                    }
-                });
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+                    });
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -1956,7 +1969,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         va.addUpdateListener(updateListener);
         va.setRepeatCount(ValueAnimator.INFINITE);
         va.setRepeatMode(ValueAnimator.RESTART);
-        va.setStartDelay(1000);
+        va.setStartDelay(200);
         va.start();
         return va;
     }
