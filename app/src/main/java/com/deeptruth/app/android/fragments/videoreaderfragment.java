@@ -2648,19 +2648,23 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     float[] adjustedRotationMatrix = new float[9];
                     String attitude = metricItemArraylist.getMetricTrackValue().toString();
                     Log.e("attitude ",attitude);
-                    String[] attitudearray = attitude.split(",");
-                    for(int i = 0 ;i< attitudearray.length;i++){
-                        //float val = (float) (Math.random() * 20) + 3;
-                        adjustedRotationMatrix[i]=Float.parseFloat(attitudearray[i]);
-                    }
-                    // Transform rotation matrix into azimuth/pitch/roll
-                    float[] orientation = new float[3];
-                    SensorManager.getOrientation(adjustedRotationMatrix, orientation);
+                    if((! attitude.trim().isEmpty()) && (! attitude.equalsIgnoreCase("NA"))
+                            && (! attitude.equalsIgnoreCase("null")))
+                    {
+                        String[] attitudearray = attitude.split(",");
+                        for(int i = 0 ;i< attitudearray.length;i++){
+                            //float val = (float) (Math.random() * 20) + 3;
+                            adjustedRotationMatrix[i]=Float.parseFloat(attitudearray[i]);
+                        }
+                        // Transform rotation matrix into azimuth/pitch/roll
+                        float[] orientation = new float[3];
+                        SensorManager.getOrientation(adjustedRotationMatrix, orientation);
 
-                    float pitch = orientation[1] * -57;
-                    float roll = orientation[2] * -57;
-                    if(img_phone_orientation != null)
-                        img_phone_orientation.setRotation(roll);
+                        float pitch = orientation[1] * -57;
+                        float roll = orientation[2] * -57;
+                        if(img_phone_orientation != null)
+                            img_phone_orientation.setRotation(roll);
+                    }
                 }catch (Exception e)
                 {
                     e.printStackTrace();

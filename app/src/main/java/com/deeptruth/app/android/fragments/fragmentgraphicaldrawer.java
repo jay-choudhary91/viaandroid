@@ -371,7 +371,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
           TimeZone timezone = TimeZone.getDefault();
           String timezoneid=timezone.getID();
-          phone_time_clock.setTimeZone(timezoneid, new itemupdatelistener() {
+          phone_time_clock.settimezone(timezoneid, new itemupdatelistener() {
                 @Override
                 public void onitemupdate(Object object,Object timezoneobject) {
                     if(object != null)
@@ -387,7 +387,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 }
             });
-          world_time_clock.setTimeZone("GMT", new itemupdatelistener() {
+          world_time_clock.settimezone("GMT", new itemupdatelistener() {
                 @Override
                 public void onitemupdate(Object object,Object timezoneobject) {
                     if(object != null)
@@ -677,10 +677,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         "\n"+connectiontimedelaystr, txt_datatimedelay);
 
                 if(phone_time_clock != null)
-                    phone_time_clock.setPostRecordData(true,"");
+                    phone_time_clock.setpostrecorddata(true,"");
 
                 if(world_time_clock != null)
-                    world_time_clock.setPostRecordData(true,"");
+                    world_time_clock.setpostrecorddata(true,"");
 
                 common.setdrawabledata("",common.getdate(), tvdate);
                 common.setdrawabledata("",common.gettime(), tvtime);
@@ -1406,8 +1406,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.heading))
                         {
-                            int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), tvheading);
+                            String value=metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
+                                    && (! value.equalsIgnoreCase("null")))
+                            {
+                                int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),
+                                        "\n"+metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), tvheading);
+                            }
+                            else
+                            {
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"NA", tvheading);
+                            }
+
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitudedegree))
                         {
@@ -1526,15 +1537,25 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclocktime))
                         {
                             String time=metricItemArraylist.get(j).getMetricTrackValue();
-                            if(phone_time_clock != null && (! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
-                                phone_time_clock.setPostRecordData(false,time);
-                        }
+                            if(phone_time_clock != null)
+                            {
+                                if((! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
+                                    phone_time_clock.setpostrecorddata(false,time);
 
+                                phone_time_clock.setfromdrawercontroller(true);
+                            }
+                        }
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.worldclocktime))
                         {
                             String time=metricItemArraylist.get(j).getMetricTrackValue();
-                            if(world_time_clock != null && (! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
-                                world_time_clock.setPostRecordData(false,time);
+                            if(world_time_clock != null)
+                            {
+                                if(world_time_clock != null && (! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
+                                    world_time_clock.setpostrecorddata(false,time);
+
+                                world_time_clock.setfromdrawercontroller(true);
+                            }
+
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.availablewifinetwork))
