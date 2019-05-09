@@ -602,11 +602,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
 
-            String latitude=xdata.getinstance().getSetting(config.Latitude);
-            String longitude=xdata.getinstance().getSetting(config.Longitude);
             String altitude=xdata.getinstance().getSetting(config.Altitude);
-            String speed=common.getxdatavalue(xdata.getinstance().getSetting(config.Speed));
-            String traveled=xdata.getinstance().getSetting(config.distancetravelled);
+            String speed=common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
+
+            String traveled=common.travelleddistanceformatter(xdata.getinstance().getSetting(config.distancetravelled));
             String strconnectionspeed=xdata.getinstance().getSetting(config.Connectionspeed);
             String gpsaccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
             String connectiontimedelaystr=xdata.getinstance().getSetting(config.connectiondatadelay);
@@ -624,7 +623,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             {
 
                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),
-                        "\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
+                        "\n"+ common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)))
+                        , tvspeed);
 
                 updateverticalsliderlocationdata(speed,vertical_slider_speed);
                 updateverticalsliderlocationdata(altitude,vertical_slider_altitude);
@@ -664,8 +664,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 common.setdrawabledata("",common.getdate(), tvdate);
                 common.setdrawabledata("",common.gettime(), tvtime);
 
-                latitude=xdata.getinstance().getSetting("lat");
-                longitude=xdata.getinstance().getSetting("lng");
+                String latitude=xdata.getinstance().getSetting("lat");
+                String longitude=xdata.getinstance().getSetting("lng");
 
                 common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
                 common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
@@ -1176,7 +1176,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 if(model.getMetricTrackKeyName().equalsIgnoreCase("speed") && (! model.getMetricTrackValue().trim().isEmpty()) && (! model.getMetricTrackValue().equalsIgnoreCase("NA"))
                         && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
                 {
-                    String speed=model.getMetricTrackValue();
+                    String speed=common.speedformatter(model.getMetricTrackValue());
                     String[] itemarray=speed.split(" ");
                     if(itemarray.length > 0)
                     {
@@ -1202,7 +1202,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 if(model.getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled) && (! model.getMetricTrackValue().trim().isEmpty()) && (! model.getMetricTrackValue().equalsIgnoreCase("NA"))
                         && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
                 {
-                    String travelled=model.getMetricTrackValue();
+                    String travelled=common.travelleddistanceformatter(model.getMetricTrackValue());
                     String[] itemarray=travelled.split(" ");
                     if(itemarray.length > 0)
                     {
@@ -1557,7 +1557,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.speed))
                         {
-                            String value = metricItemArraylist.get(j).getMetricTrackValue();
+                            String value = common.speedformatter(metricItemArraylist.get(j).getMetricTrackValue());
                             updateverticalsliderlocationdata(value,vertical_slider_speed);
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed)
                                     ,"\n"+ value, tvspeed);
@@ -1572,7 +1572,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled))
                         {
-                            String value = metricItemArraylist.get(j).getMetricTrackValue();
+                            String value = common.travelleddistanceformatter(metricItemArraylist.get(j).getMetricTrackValue());
                             updateverticalsliderlocationdata(value,vertical_slider_traveled);
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),"\n"+value, tvtraveled);
                         }

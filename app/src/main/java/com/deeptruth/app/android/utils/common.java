@@ -38,6 +38,10 @@ import android.graphics.drawable.GradientDrawable;
 import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.icu.text.MeasureFormat;
+import android.icu.util.Measure;
+import android.icu.util.MeasureUnit;
+import android.icu.util.ULocale;
 import android.location.Location;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
@@ -119,6 +123,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -168,6 +173,10 @@ public class common {
     static Dialog subdialogshare = null;
     static String actiontype = "";
     static String parameter ="";
+
+    public static final double METERS_IN_ONE_MILE = 1609.0;
+    public static final double METERS_IN_ONE_FOOT = 0.3048;
+    public static final double FEET_IN_ONE_MILE = 5280;
 
     public static boolean isnetworkconnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
@@ -2257,8 +2266,14 @@ public class common {
     public static double convertmpstomph(double mps) {
         return  mps * 2.236936 ;
     }
+    public static double convertmpstokmph(double mps) {
+        return  mps * 3.6 ;
+    }
     public static double convertmetertomiles(double meters) {
         return  meters*0.000621371192;
+    }
+    public static double convertmetertokm(double meters) {
+        return  meters/1000;
     }
     public static double convertmilestometer(float miles) {
         return miles*1609.344;
@@ -2568,5 +2583,117 @@ public class common {
             }
             }
         }
+
+
+    public static String speedformatter(String value) {
+        if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
+        {
+            double speedinmps=Double.parseDouble(value);
+            Locale locale = Locale.getDefault();
+            if (useMiles(locale)) {
+                return ""+convertmpstomph(speedinmps)+" mp/h";
+            } else {
+                return ""+convertmpstokmph(speedinmps)+" km/h";
+            }
+        }
+        return "0 km/h";
+    }
+
+
+    public static String travelleddistanceformatter(String value) {
+        if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
+        {
+            double distanceInMeters=common.convertmilestometer(Float.parseFloat(value));
+            Locale locale = Locale.getDefault();
+            if (useMiles(locale)) {
+                return ""+convertmetertomiles(distanceInMeters)+" miles";
+            } else {
+                return ""+convertmetertokm(distanceInMeters)+" km";
+            }
+        }
+        return "0 km";
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static String format(double distanceInMeters, boolean realTime, Locale locale,
+                                String units) {
+
+        DecimalFormat decimalFormat;decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        decimalFormat.applyPattern("#.#");
+
+        if (distanceInMeters == 0) {
+            return "";
+        }
+
+        switch (units) {
+            case "miles":
+                return formatMiles(distanceInMeters, realTime);
+            case "kilometers":
+                return formatKilometers(distanceInMeters, realTime);
+            default:
+                return "";
+        }
+    }
+
+    private static String formatMiles(double distanceInMeters, boolean realTime) {
+        double distanceInFeet = distanceInMeters / METERS_IN_ONE_FOOT;
+        if (distanceInFeet < 10) {
+            return formatDistanceLessThanTenFeet(distanceInFeet, realTime);
+        } else if (distanceInFeet < FEET_IN_ONE_MILE / 10) {
+            return formatDistanceOverTenFeet(distanceInFeet);
+        } else {
+            return formatDistanceInMiles(distanceInMeters);
+        }
+    }
+
+    private static String formatKilometers(double distanceInMeters, boolean realTime) {
+        if (distanceInMeters >= 100) {
+            return "";
+        } else if (distanceInMeters > 10) {
+            return formatDistanceOverTenMeters(distanceInMeters);
+        } else {
+            return formatShortMeters(distanceInMeters, realTime);
+        }
+    }
+
+    private static String formatDistanceInMiles(double distanceInMeters) {
+        Locale locale = Locale.getDefault();
+        DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        return String.format(Locale.getDefault(), "%s mi",
+                decimalFormat.format(distanceInMeters / METERS_IN_ONE_MILE));
+    }
+
+    private static int roundDownToNearestTen(double distance) {
+        return (int) Math.floor(distance / 10) * 10;
+    }
+
+    private static String formatDistanceOverTenMeters(double distanceInMeters) {
+        return String.format(Locale.getDefault(), "%s m", distanceInMeters);
+    }
+
+    private static String formatShortMeters(double distanceInMeters, boolean realTime) {
+        if (realTime) {
+            return "now";
+        } else {
+            return formatDistanceOverTenMeters(distanceInMeters);
+        }
+    }
+
+    private static String formatDistanceLessThanTenFeet(double distanceInFeet, boolean realTime) {
+        if (realTime) {
+            return "now";
+        } else {
+            return String.format(Locale.getDefault(), "%d ft", (int) Math.floor(distanceInFeet));
+        }
+    }
+
+    private static String formatDistanceOverTenFeet(double distanceInFeet) {
+        int roundedDistanceInFeet = roundDownToNearestTen(distanceInFeet);
+        return String.format(Locale.getDefault(), "%d ft", roundedDistanceInFeet);
+    }
+
+    private static boolean useMiles(Locale locale) {
+        return locale.equals(Locale.US) || locale.equals(Locale.UK);
+    }
 }
 
