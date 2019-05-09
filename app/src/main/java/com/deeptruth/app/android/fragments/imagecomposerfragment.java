@@ -634,7 +634,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             try {
                 Calendar sequencetime = Calendar.getInstance();
                 String devicetime = common.get24hourformat();
-                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS aa");
                 String starttime = sdf.format(sequencetime.getTime());
                 String endtime = sdf.format(sequencetime.getTime());
 
