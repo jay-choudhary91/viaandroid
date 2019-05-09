@@ -2516,12 +2516,13 @@ public class common {
     public static String speedformatter(String value) {
         if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
         {
+            DecimalFormat precision = new DecimalFormat("0.0");
             double speedinmps=Double.parseDouble(value);
             Locale locale = Locale.getDefault();
             if (useMiles(locale)) {
-                return ""+convertmpstomph(speedinmps)+" mp/h";
+                return ""+precision.format(convertmpstomph(speedinmps))+" mp/h";
             } else {
-                return ""+convertmpstokmph(speedinmps)+" km/h";
+                return ""+precision.format(convertmpstokmph(speedinmps))+" km/h";
             }
         }
         return "0 km/h";
@@ -2531,12 +2532,13 @@ public class common {
     public static String travelleddistanceformatter(String value) {
         if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
         {
+            DecimalFormat precision = new DecimalFormat("0.0");
             double distanceInMeters=common.convertmilestometer(Float.parseFloat(value));
             Locale locale = Locale.getDefault();
             if (useMiles(locale)) {
-                return ""+convertmetertomiles(distanceInMeters)+" miles";
+                return ""+precision.format(convertmetertomiles(distanceInMeters))+" miles";
             } else {
-                return ""+convertmetertokm(distanceInMeters)+" km";
+                return ""+precision.format(convertmetertokm(distanceInMeters))+" km";
             }
         }
         return "0 km";
@@ -2659,5 +2661,4 @@ public class common {
         return output;
 
     }*/
-
 
