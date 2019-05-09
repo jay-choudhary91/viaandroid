@@ -368,7 +368,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
 
-
           TimeZone timezone = TimeZone.getDefault();
           String timezoneid=timezone.getID();
           phone_time_clock.settimezone(timezoneid, new itemupdatelistener() {
@@ -1516,14 +1515,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             }
                         }
 
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicedate"))
-                            tvdate.setText(metricItemArraylist.get(j).getMetricTrackValue());
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicedate")){
+                            tvdate.setText(common.convertstringintodate(metricItemArraylist.get(j).getMetricTrackValue()));
+                        }
 
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequencestarttime"))
-                            tvtime.setText(metricItemArraylist.get(j).getMetricTrackValue());
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequencestarttime")){
+                            tvtime.setText(common.getFormattedTime(metricItemArraylist.get(j).getMetricTrackValue()));
+                        }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequenceendtime"))
-                            tvtime.setText(tvtime.getText()+" - "+metricItemArraylist.get(j).getMetricTrackValue());
+                            tvtime.setText(tvtime.getText()+" - "+common.getFormattedTime(metricItemArraylist.get(j).getMetricTrackValue()));
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclocktime))
                         {

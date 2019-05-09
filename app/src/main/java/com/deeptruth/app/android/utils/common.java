@@ -60,6 +60,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.os.UserHandle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
@@ -124,6 +125,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -165,14 +167,14 @@ public class common {
     public static final String NETWORK_EHRPD = "EHRPD (3G)";
     public static final String NETWORK_HSPAP = "HSPAP (3G)";
     public static final String NETWORK_UNKOWN = "Unknown";
-    private static final String ACTION_USB_PERMISSION ="com.android.example.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
 
     static AlertDialog alertdialog = null;
-    static Dialog custompermissiondialog =null;
-    static int systemdialogshowrequestcode =110;
+    static Dialog custompermissiondialog = null;
+    static int systemdialogshowrequestcode = 110;
     static Dialog subdialogshare = null;
     static String actiontype = "";
-    static String parameter ="";
+    static String parameter = "";
 
     public static final double METERS_IN_ONE_MILE = 1609.0;
     public static final double METERS_IN_ONE_FOOT = 0.3048;
@@ -320,7 +322,7 @@ public class common {
      * @return The value of the _data column, which is typically a file path.
      */
     private static String getdatacolumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+                                        String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -366,15 +368,15 @@ public class common {
         File file = new File(videoPath);
         if (file.exists()) {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+            Uri uri = FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                     BuildConfig.APPLICATION_ID + ".provider", file);
-          //  Uri uri = Uri.fromFile(file);
+            //  Uri uri = Uri.fromFile(file);
             //Uri uri = Uri.fromFile(file);
             sharingIntent.setType("video/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
             applicationviavideocomposer.getactivity().startActivityForResult
-                    (Intent.createChooser(sharingIntent, "Share video using"),systemdialogshowrequestcode);
+                    (Intent.createChooser(sharingIntent, "Share video using"), systemdialogshowrequestcode);
 
         }
     }
@@ -383,15 +385,15 @@ public class common {
         File file = new File(videoPath);
         if (file.exists()) {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+            Uri uri = FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                     BuildConfig.APPLICATION_ID + ".provider", file);
-           // Uri uri = Uri.fromFile(file);
+            // Uri uri = Uri.fromFile(file);
             //Uri uri = Uri.fromFile(file);
             sharingIntent.setType("audio/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
             applicationviavideocomposer.getactivity().startActivityForResult
-                    (Intent.createChooser(sharingIntent, "Share audio using"),systemdialogshowrequestcode);
+                    (Intent.createChooser(sharingIntent, "Share audio using"), systemdialogshowrequestcode);
 
         }
     }
@@ -400,15 +402,15 @@ public class common {
         File file = new File(videoPath);
         if (file.exists()) {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+            Uri uri = FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                     BuildConfig.APPLICATION_ID + ".provider", file);
-           // Uri uri = Uri.fromFile(file);
+            // Uri uri = Uri.fromFile(file);
             //Uri uri = Uri.fromFile(file);
             sharingIntent.setType("image/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
             applicationviavideocomposer.getactivity().startActivityForResult
-                    (Intent.createChooser(sharingIntent, "Share photo using"),systemdialogshowrequestcode);
+                    (Intent.createChooser(sharingIntent, "Share photo using"), systemdialogshowrequestcode);
 
         }
     }
@@ -457,12 +459,11 @@ public class common {
         }
     }
 
-    public static String refactordegreequotesformat(String meta)
-    {
-        meta=meta.replace("u00b0","°");
-        meta=meta.replace("&#39;","\'");
-        meta=meta.replace("&#36;","\'");
-        meta=meta.replace("&#34;","");
+    public static String refactordegreequotesformat(String meta) {
+        meta = meta.replace("u00b0", "°");
+        meta = meta.replace("&#39;", "\'");
+        meta = meta.replace("&#36;", "\'");
+        meta = meta.replace("&#34;", "");
         return meta;
     }
 
@@ -493,157 +494,150 @@ public class common {
         return returnString;
     }
 
-    public static String removeextension(String str)
-    {
-        if(str.contains("."))
-        {
-            String str1=str.substring(0,str.indexOf("."));
+    public static String removeextension(String str) {
+        if (str.contains(".")) {
+            String str1 = str.substring(0, str.indexOf("."));
             return str1;
         }
         return str;
     }
 
-    public static void resetgraphicaldata()
-    {
-            xdata.getinstance().saveSetting(config.PhoneType,"NA");
-            xdata.getinstance().saveSetting(config.CellProvider,"NA");
-            xdata.getinstance().saveSetting(config.OSversion,"NA");
-            xdata.getinstance().saveSetting(config.WIFINetwork,"NA");
-            xdata.getinstance().saveSetting(config.GPSAccuracy,"NA");
-            xdata.getinstance().saveSetting(config.ScreenWidth,"NA");
-            xdata.getinstance().saveSetting(config.ScreenHeight,"NA");
-            xdata.getinstance().saveSetting(config.Country,"NA");
-            xdata.getinstance().saveSetting(config.Brightness,"NA");
-            xdata.getinstance().saveSetting(config.TimeZone,"NA");
-            xdata.getinstance().saveSetting(config.MemoryUsage,"NA");
-            xdata.getinstance().saveSetting(config.Bluetooth,"NA");
-            xdata.getinstance().saveSetting(config.LocalTime,"NA");
-            xdata.getinstance().saveSetting(config.StorageAvailable,"NA");
-            xdata.getinstance().saveSetting(config.Language,"NA");
-            xdata.getinstance().saveSetting(config.SystemUptime,"NA");
-            xdata.getinstance().saveSetting(config.Battery,"NA");
-            xdata.getinstance().saveSetting(config.CPUUsage,"NA");
-            xdata.getinstance().saveSetting(config.Orientation,"NA");
-            xdata.getinstance().saveSetting(config.Heading,"0");
-            xdata.getinstance().saveSetting(config.orientation,"0");
-            xdata.getinstance().saveSetting(config.Latitude,"");
-            xdata.getinstance().saveSetting(config.Longitude,"");
-            xdata.getinstance().saveSetting(config.LatitudeDegree,"");
-            xdata.getinstance().saveSetting(config.LongitudeDegree,"");
-            xdata.getinstance().saveSetting(config.Altitude,"");
-            xdata.getinstance().saveSetting(config.GPSAccuracy,"NA");
-            xdata.getinstance().saveSetting(config.Address,"NA");
-            xdata.getinstance().saveSetting(config.Speed,"NA");
-            xdata.getinstance().saveSetting(config.acceleration_x,"NA");
-            xdata.getinstance().saveSetting(config.acceleration_y,"NA");
-            xdata.getinstance().saveSetting(config.acceleration_z,"NA");
-            xdata.getinstance().saveSetting(config.Connectionspeed,"NA");
-            xdata.getinstance().saveSetting(config.blockchainid,"NA");
-            xdata.getinstance().saveSetting(config.hashformula,"NA");
-            xdata.getinstance().saveSetting(config.datahash,"NA");
-            xdata.getinstance().saveSetting(config.matrichash,"NA");
-            xdata.getinstance().saveSetting(config.distancetravelled,"NA");
-            xdata.getinstance().saveSetting(config.latency,"");
-            xdata.getinstance().saveSetting(config.currentlatency,"");
-            xdata.getinstance().saveSetting(config.attitude_data,"");
-            xdata.getinstance().saveSetting(config.availablewifinetwork,"");
+    public static void resetgraphicaldata() {
+        xdata.getinstance().saveSetting(config.PhoneType, "NA");
+        xdata.getinstance().saveSetting(config.CellProvider, "NA");
+        xdata.getinstance().saveSetting(config.OSversion, "NA");
+        xdata.getinstance().saveSetting(config.WIFINetwork, "NA");
+        xdata.getinstance().saveSetting(config.GPSAccuracy, "NA");
+        xdata.getinstance().saveSetting(config.ScreenWidth, "NA");
+        xdata.getinstance().saveSetting(config.ScreenHeight, "NA");
+        xdata.getinstance().saveSetting(config.Country, "NA");
+        xdata.getinstance().saveSetting(config.Brightness, "NA");
+        xdata.getinstance().saveSetting(config.TimeZone, "NA");
+        xdata.getinstance().saveSetting(config.MemoryUsage, "NA");
+        xdata.getinstance().saveSetting(config.Bluetooth, "NA");
+        xdata.getinstance().saveSetting(config.LocalTime, "NA");
+        xdata.getinstance().saveSetting(config.StorageAvailable, "NA");
+        xdata.getinstance().saveSetting(config.Language, "NA");
+        xdata.getinstance().saveSetting(config.SystemUptime, "NA");
+        xdata.getinstance().saveSetting(config.Battery, "NA");
+        xdata.getinstance().saveSetting(config.CPUUsage, "NA");
+        xdata.getinstance().saveSetting(config.Orientation, "NA");
+        xdata.getinstance().saveSetting(config.Heading, "0");
+        xdata.getinstance().saveSetting(config.orientation, "0");
+        xdata.getinstance().saveSetting(config.Latitude, "");
+        xdata.getinstance().saveSetting(config.Longitude, "");
+        xdata.getinstance().saveSetting(config.LatitudeDegree, "");
+        xdata.getinstance().saveSetting(config.LongitudeDegree, "");
+        xdata.getinstance().saveSetting(config.Altitude, "");
+        xdata.getinstance().saveSetting(config.GPSAccuracy, "NA");
+        xdata.getinstance().saveSetting(config.Address, "NA");
+        xdata.getinstance().saveSetting(config.Speed, "NA");
+        xdata.getinstance().saveSetting(config.acceleration_x, "NA");
+        xdata.getinstance().saveSetting(config.acceleration_y, "NA");
+        xdata.getinstance().saveSetting(config.acceleration_z, "NA");
+        xdata.getinstance().saveSetting(config.Connectionspeed, "NA");
+        xdata.getinstance().saveSetting(config.blockchainid, "NA");
+        xdata.getinstance().saveSetting(config.hashformula, "NA");
+        xdata.getinstance().saveSetting(config.datahash, "NA");
+        xdata.getinstance().saveSetting(config.matrichash, "NA");
+        xdata.getinstance().saveSetting(config.distancetravelled, "NA");
+        xdata.getinstance().saveSetting(config.latency, "");
+        xdata.getinstance().saveSetting(config.currentlatency, "");
+        xdata.getinstance().saveSetting(config.attitude_data, "");
+        xdata.getinstance().saveSetting(config.availablewifinetwork, "");
     }
 
-    public static void setgraphicalitems(String keyname,String value,boolean ismetricsselected)
-    {
+    public static void setgraphicalitems(String keyname, String value, boolean ismetricsselected) {
         if (keyname.equalsIgnoreCase("model") || keyname.equalsIgnoreCase("phonetype")) {
-            xdata.getinstance().saveSetting(config.PhoneType,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.PhoneType, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("carrier")) {
-            xdata.getinstance().saveSetting(config.CellProvider,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.CellProvider, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("osversion")) {
-            xdata.getinstance().saveSetting(config.OSversion,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.OSversion, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("wifiname")) {
-            xdata.getinstance().saveSetting(config.WIFINetwork,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.WIFINetwork, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("gpsaccuracy") || keyname.equalsIgnoreCase("gpshorizontalaccuracy")) {
-            xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.GPSAccuracy, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("screenwidth")) {
-            xdata.getinstance().saveSetting(config.ScreenWidth,((ismetricsselected)?value:"NA"));
-        }else if (keyname.equalsIgnoreCase("screenheight")) {
-            xdata.getinstance().saveSetting(config.ScreenHeight,((ismetricsselected)?value:"NA"));
-        }else if (keyname.equalsIgnoreCase("deviceregion")) {
-            xdata.getinstance().saveSetting(config.Country,((ismetricsselected)?value:"NA"));
-        }else if (keyname.equalsIgnoreCase("brightness")) {
-            xdata.getinstance().saveSetting(config.Brightness,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.ScreenWidth, ((ismetricsselected) ? value : "NA"));
+        } else if (keyname.equalsIgnoreCase("screenheight")) {
+            xdata.getinstance().saveSetting(config.ScreenHeight, ((ismetricsselected) ? value : "NA"));
+        } else if (keyname.equalsIgnoreCase("deviceregion")) {
+            xdata.getinstance().saveSetting(config.Country, ((ismetricsselected) ? value : "NA"));
+        } else if (keyname.equalsIgnoreCase("brightness")) {
+            xdata.getinstance().saveSetting(config.Brightness, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("timezone")) {
-            xdata.getinstance().saveSetting(config.TimeZone,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.TimeZone, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("memoryusage")) {
-            xdata.getinstance().saveSetting(config.MemoryUsage,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.MemoryUsage, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("bluetoothonoff")) {
-            xdata.getinstance().saveSetting(config.Bluetooth,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.Bluetooth, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("devicetime")) {
-            xdata.getinstance().saveSetting(config.LocalTime,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.LocalTime, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("freespace")) {
-            xdata.getinstance().saveSetting(config.StorageAvailable,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.StorageAvailable, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("devicelanguage")) {
-            xdata.getinstance().saveSetting(config.Language,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.Language, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("systemuptime")) {
-            xdata.getinstance().saveSetting(config.SystemUptime,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.SystemUptime, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("battery")) {
-            xdata.getinstance().saveSetting(config.Battery,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.Battery, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase(config.cpuusageuser)) {
-            xdata.getinstance().saveSetting(config.CPUUsage,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.CPUUsage, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase(config.compass)) {
-            xdata.getinstance().saveSetting(config.Orientation,((ismetricsselected)?value:"NA"));
-        }else if (keyname.equalsIgnoreCase(config.orientation) || keyname.equalsIgnoreCase("heading")) {
-            xdata.getinstance().saveSetting(config.Heading,((ismetricsselected)?value:"0"));
-            xdata.getinstance().saveSetting(config.orientation,((ismetricsselected)?value:"0"));
+            xdata.getinstance().saveSetting(config.Orientation, ((ismetricsselected) ? value : "NA"));
+        } else if (keyname.equalsIgnoreCase(config.orientation) || keyname.equalsIgnoreCase("heading")) {
+            xdata.getinstance().saveSetting(config.Heading, ((ismetricsselected) ? value : "0"));
+            xdata.getinstance().saveSetting(config.orientation, ((ismetricsselected) ? value : "0"));
         } else if (keyname.equalsIgnoreCase("gpslatitude")) {
-            xdata.getinstance().saveSetting(config.Latitude,(ismetricsselected)?value:"");
+            xdata.getinstance().saveSetting(config.Latitude, (ismetricsselected) ? value : "");
         } else if (keyname.equalsIgnoreCase("gpslongitude")) {
-            xdata.getinstance().saveSetting(config.Longitude,(ismetricsselected)?value:"");
-        }else if (keyname.equalsIgnoreCase(config.gpslatitudedegree)) {
-            xdata.getinstance().saveSetting(config.LatitudeDegree,(ismetricsselected)?value:"");
+            xdata.getinstance().saveSetting(config.Longitude, (ismetricsselected) ? value : "");
+        } else if (keyname.equalsIgnoreCase(config.gpslatitudedegree)) {
+            xdata.getinstance().saveSetting(config.LatitudeDegree, (ismetricsselected) ? value : "");
         } else if (keyname.equalsIgnoreCase(config.gpslongitudedegree)) {
-            xdata.getinstance().saveSetting(config.LongitudeDegree,(ismetricsselected)?value:"");
-        }
-        else if (keyname.equalsIgnoreCase(config.gpsaltitude)) {
-            xdata.getinstance().saveSetting(config.Altitude,(ismetricsselected)?value:"");
-        } else if(keyname.equalsIgnoreCase("gpsaccuracy")){
-            xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"NA"));
-        } else if(keyname.equalsIgnoreCase("address")){
-            xdata.getinstance().saveSetting(config.Address,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.LongitudeDegree, (ismetricsselected) ? value : "");
+        } else if (keyname.equalsIgnoreCase(config.gpsaltitude)) {
+            xdata.getinstance().saveSetting(config.Altitude, (ismetricsselected) ? value : "");
+        } else if (keyname.equalsIgnoreCase("gpsaccuracy")) {
+            xdata.getinstance().saveSetting(config.GPSAccuracy, ((ismetricsselected) ? value : "NA"));
+        } else if (keyname.equalsIgnoreCase("address")) {
+            xdata.getinstance().saveSetting(config.Address, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("speed")) {
-            xdata.getinstance().saveSetting(config.Speed,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.Speed, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase(config.acceleration_x)) {
-            xdata.getinstance().saveSetting(config.acceleration_x,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.acceleration_x, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase(config.acceleration_y)) {
-            xdata.getinstance().saveSetting(config.acceleration_y,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.acceleration_y, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase(config.acceleration_z)) {
-            xdata.getinstance().saveSetting(config.acceleration_z,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.acceleration_z, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("connectionspeed")) {
-            xdata.getinstance().saveSetting(config.Connectionspeed,((ismetricsselected)?value:"NA"));
-        }else if (keyname.equalsIgnoreCase(config.connectiondatadelay)) {
-            xdata.getinstance().saveSetting(config.connectiondatadelay,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.Connectionspeed, ((ismetricsselected) ? value : "NA"));
+        } else if (keyname.equalsIgnoreCase(config.connectiondatadelay)) {
+            xdata.getinstance().saveSetting(config.connectiondatadelay, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("distancetravelled")) {
-            xdata.getinstance().saveSetting(config.distancetravelled,((ismetricsselected)?value:"NA"));
-        }else if (keyname.equalsIgnoreCase("attitude")) {
-            xdata.getinstance().saveSetting(config.attitude_data,((ismetricsselected)?value:"NA"));
-        }
-        else if (keyname.equalsIgnoreCase(config.airplanemode)) {
-            xdata.getinstance().saveSetting(config.airplanemode,((ismetricsselected)?value:"NA"));
-        }
-        else if (keyname.equalsIgnoreCase(config.availablewifinetwork)) {
-            xdata.getinstance().saveSetting(config.availablewifinetwork,((ismetricsselected)?value:"NA"));
+            xdata.getinstance().saveSetting(config.distancetravelled, ((ismetricsselected) ? value : "NA"));
+        } else if (keyname.equalsIgnoreCase("attitude")) {
+            xdata.getinstance().saveSetting(config.attitude_data, ((ismetricsselected) ? value : "NA"));
+        } else if (keyname.equalsIgnoreCase(config.airplanemode)) {
+            xdata.getinstance().saveSetting(config.airplanemode, ((ismetricsselected) ? value : "NA"));
+        } else if (keyname.equalsIgnoreCase(config.availablewifinetwork)) {
+            xdata.getinstance().saveSetting(config.availablewifinetwork, ((ismetricsselected) ? value : "NA"));
         }
     }
 
 
-    public static void setgraphicalblockchainvalue(String keyname,String value,boolean ismetricsselected){
+    public static void setgraphicalblockchainvalue(String keyname, String value, boolean ismetricsselected) {
 
-         if (keyname.equalsIgnoreCase(config.blockchainid)) {
-            xdata.getinstance().saveSetting(config.blockchainid,(ismetricsselected)?value:"NA");
-         } else if (keyname.equalsIgnoreCase(config.hashformula)) {
-                 xdata.getinstance().saveSetting(config.hashformula,(ismetricsselected)?value:"NA");
-         } else if (keyname.equalsIgnoreCase(config.datahash)) {
-                     xdata.getinstance().saveSetting(config.datahash,(ismetricsselected)?value:"NA");
-         } else if (keyname.equalsIgnoreCase(config.matrichash)) {
-                         xdata.getinstance().saveSetting(config.matrichash,(ismetricsselected)?value:"NA");
-         }
+        if (keyname.equalsIgnoreCase(config.blockchainid)) {
+            xdata.getinstance().saveSetting(config.blockchainid, (ismetricsselected) ? value : "NA");
+        } else if (keyname.equalsIgnoreCase(config.hashformula)) {
+            xdata.getinstance().saveSetting(config.hashformula, (ismetricsselected) ? value : "NA");
+        } else if (keyname.equalsIgnoreCase(config.datahash)) {
+            xdata.getinstance().saveSetting(config.datahash, (ismetricsselected) ? value : "NA");
+        } else if (keyname.equalsIgnoreCase(config.matrichash)) {
+            xdata.getinstance().saveSetting(config.matrichash, (ismetricsselected) ? value : "NA");
+        }
     }
 
     public static String metric_display(String key) {
@@ -662,7 +656,7 @@ public class common {
             metricItemName = "manufacturer";
         } else if (key.equalsIgnoreCase("model")) {
             metricItemName = "model";
-        }else if (key.equalsIgnoreCase("memoryusage")) {
+        } else if (key.equalsIgnoreCase("memoryusage")) {
             metricItemName = "memoryusage";
         } else if (key.equalsIgnoreCase("phonetype")) {
             metricItemName = "phonetype";
@@ -672,7 +666,7 @@ public class common {
             metricItemName = "osversion";
         } else if (key.equalsIgnoreCase("devicetime")) {
             metricItemName = "devicetime";
-        }else if (key.equalsIgnoreCase("devicedate")) {
+        } else if (key.equalsIgnoreCase("devicedate")) {
             metricItemName = "devicedate";
         } else if (key.equalsIgnoreCase("softwareversion")) {
             metricItemName = "softwareversion";
@@ -696,9 +690,9 @@ public class common {
             metricItemName = "screenheight";
         } else if (key.equalsIgnoreCase("gpslatitude")) {
             metricItemName = "gpslatitude";
-        }else if (key.equalsIgnoreCase(config.gpslatitudedegree)) {
+        } else if (key.equalsIgnoreCase(config.gpslatitudedegree)) {
             metricItemName = config.gpslatitudedegree;
-        }else if (key.equalsIgnoreCase(config.gpslongitudedegree)) {
+        } else if (key.equalsIgnoreCase(config.gpslongitudedegree)) {
             metricItemName = config.gpslongitudedegree;
         } else if (key.equalsIgnoreCase("gpslongitude")) {
             metricItemName = "gpslongitude";
@@ -742,7 +736,7 @@ public class common {
             metricItemName = "headphonesattached";
         } else if (key.equalsIgnoreCase("deviceorientation")) {
             metricItemName = "deviceorientation";
-        }else if (key.equalsIgnoreCase("orientation")) {
+        } else if (key.equalsIgnoreCase("orientation")) {
             metricItemName = "orientation";
         } else if (key.equalsIgnoreCase("wifiname")) {
             metricItemName = "wifiname";
@@ -824,7 +818,7 @@ public class common {
             metricItemName = "currentcalldecibel";
         } else if (key.equalsIgnoreCase("devicetime")) {
             metricItemName = "devicetime";
-        }else if (key.equalsIgnoreCase("devicedate")) {
+        } else if (key.equalsIgnoreCase("devicedate")) {
             metricItemName = "devicedate";
         } else if (key.equalsIgnoreCase("airplanemode")) {
             metricItemName = "airplanemode";
@@ -832,47 +826,42 @@ public class common {
             metricItemName = "gpsonoff";
         } else if (key.equalsIgnoreCase("syncphonetime")) {
             metricItemName = "syncphonetime";
-        } else if(key.equalsIgnoreCase("country")){
-            metricItemName ="country";
-        } else if(key.equalsIgnoreCase("gpsaccuracy")){
-            metricItemName ="gpsaccuracy";
-        } else if(key.equalsIgnoreCase("connectionspeed")){
-            metricItemName ="connectionspeed";
-        } else if(key.equalsIgnoreCase("address")){
-            metricItemName ="address";
-        }else if(key.equalsIgnoreCase("speed")){
-            metricItemName ="speed";
-        }else if(key.equalsIgnoreCase("heading")){
-            metricItemName ="heading";
-        }else if(key.equalsIgnoreCase("celltowersignalstrength")){
-            metricItemName ="celltowersignalstrength";
-        }else if(key.equalsIgnoreCase("celltowerid")){
-            metricItemName ="celltowerid";
-        }else if(key.equalsIgnoreCase("numberoftowers")){
-            metricItemName ="numberoftowers";
-        }else if(key.equalsIgnoreCase("numberofsatellites")){
-            metricItemName ="numberofsatellites";
-        }else if(key.equalsIgnoreCase("satelliteangle")){
-            metricItemName ="satelliteangle";
-        }else if(key.equalsIgnoreCase("satelliteid")){
-            metricItemName ="satelliteid";
-        }else if(key.equalsIgnoreCase("strengthofsatellites")){
-            metricItemName ="strengthofsatellites";
-        }
-        else if(key.equalsIgnoreCase("attitude")){
-            metricItemName =config.phone_attitude;
-        }
-        else if(key.equalsIgnoreCase(config.availablewifinetwork)){
-            metricItemName =config.availablewifinetwork;
-        }
-        else if(key.equalsIgnoreCase(config.worldclocktime)){
-            metricItemName =config.worldclocktime;
-        }
-        else if(key.equalsIgnoreCase(config.phoneclocktime)){
-            metricItemName =config.phoneclocktime;
-        }
-        else if(key.equalsIgnoreCase(config.connectiondatadelay)){
-            metricItemName =config.connectiondatadelay;
+        } else if (key.equalsIgnoreCase("country")) {
+            metricItemName = "country";
+        } else if (key.equalsIgnoreCase("gpsaccuracy")) {
+            metricItemName = "gpsaccuracy";
+        } else if (key.equalsIgnoreCase("connectionspeed")) {
+            metricItemName = "connectionspeed";
+        } else if (key.equalsIgnoreCase("address")) {
+            metricItemName = "address";
+        } else if (key.equalsIgnoreCase("speed")) {
+            metricItemName = "speed";
+        } else if (key.equalsIgnoreCase("heading")) {
+            metricItemName = "heading";
+        } else if (key.equalsIgnoreCase("celltowersignalstrength")) {
+            metricItemName = "celltowersignalstrength";
+        } else if (key.equalsIgnoreCase("celltowerid")) {
+            metricItemName = "celltowerid";
+        } else if (key.equalsIgnoreCase("numberoftowers")) {
+            metricItemName = "numberoftowers";
+        } else if (key.equalsIgnoreCase("numberofsatellites")) {
+            metricItemName = "numberofsatellites";
+        } else if (key.equalsIgnoreCase("satelliteangle")) {
+            metricItemName = "satelliteangle";
+        } else if (key.equalsIgnoreCase("satelliteid")) {
+            metricItemName = "satelliteid";
+        } else if (key.equalsIgnoreCase("strengthofsatellites")) {
+            metricItemName = "strengthofsatellites";
+        } else if (key.equalsIgnoreCase("attitude")) {
+            metricItemName = config.phone_attitude;
+        } else if (key.equalsIgnoreCase(config.availablewifinetwork)) {
+            metricItemName = config.availablewifinetwork;
+        } else if (key.equalsIgnoreCase(config.worldclocktime)) {
+            metricItemName = config.worldclocktime;
+        } else if (key.equalsIgnoreCase(config.phoneclocktime)) {
+            metricItemName = config.phoneclocktime;
+        } else if (key.equalsIgnoreCase(config.connectiondatadelay)) {
+            metricItemName = config.connectiondatadelay;
         }
         return metricItemName;
     }
@@ -898,19 +887,17 @@ public class common {
         return null;
     }
 
-    public static int getdrawerswipearea()
-    {
-        int[] screenWidthHeight=getScreenWidthHeight(applicationviavideocomposer.getactivity());
-        int screenwidth=screenWidthHeight[0];
-        int width=((screenwidth)/2);
+    public static int getdrawerswipearea() {
+        int[] screenWidthHeight = getScreenWidthHeight(applicationviavideocomposer.getactivity());
+        int screenwidth = screenWidthHeight[0];
+        int width = ((screenwidth) / 2);
         return width;
     }
 
-    public static int getcomposerswipearea()
-    {
-        int[] screenWidthHeight=getScreenWidthHeight(applicationviavideocomposer.getactivity());
-        int screenwidth=screenWidthHeight[0];
-        int width=((screenwidth)/5);
+    public static int getcomposerswipearea() {
+        int[] screenWidthHeight = getScreenWidthHeight(applicationviavideocomposer.getactivity());
+        int screenwidth = screenWidthHeight[0];
+        int width = ((screenwidth) / 5);
         return width;
     }
 
@@ -974,7 +961,7 @@ public class common {
     }
 
     public static String anglefromcoordinate(double lat1, double long1, double lat2,
-                                       double long2) {
+                                             double long2) {
 
         double dLon = (long2 - long1);
 
@@ -991,8 +978,7 @@ public class common {
         return String.valueOf(new DecimalFormat("#.#").format(brng));
     }
 
-    public static List<String> getstorageaudiorecorddeniedpermissions()
-    {
+    public static List<String> getstorageaudiorecorddeniedpermissions() {
         String[] neededpermissions = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -1007,8 +993,7 @@ public class common {
         return deniedpermissions;
     }
 
-    public static List<String> getstoragedeniedpermissions()
-    {
+    public static List<String> getstoragedeniedpermissions() {
         String[] neededpermissions = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -1022,8 +1007,7 @@ public class common {
         return deniedpermissions;
     }
 
-    public static List<String> getphonelocationdeniedpermissions()
-    {
+    public static List<String> getphonelocationdeniedpermissions() {
         String[] neededpermissions = {
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.RECORD_AUDIO,
@@ -1040,8 +1024,7 @@ public class common {
         return deniedpermissions;
     }
 
-    public static List<String> getlocationdeniedpermissions()
-    {
+    public static List<String> getlocationdeniedpermissions() {
         String[] neededpermissions = {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -1056,31 +1039,26 @@ public class common {
         return deniedpermissions;
     }
 
-    public static void deletefile(String filename)
-    {
-        File sourcefile=new File(filename);
+    public static void deletefile(String filename) {
+        File sourcefile = new File(filename);
         try {
             File dir = new File(config.dirallmedia);
-            if (dir.isDirectory())
-            {
+            if (dir.isDirectory()) {
                 String[] children = dir.list();
-                for (int i = 0; i < children.length; i++)
-                {
-                    if(children[i].contains(sourcefile.getName()))
+                for (int i = 0; i < children.length; i++) {
+                    if (children[i].contains(sourcefile.getName()))
                         new File(dir, children[i]).delete();
                 }
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static boolean delete(File f) throws IOException {
         if (f.isDirectory()) {
-            int count=f.listFiles().length;
-            if(count > 0)
-            {
+            int count = f.listFiles().length;
+            if (count > 0) {
                 for (File c : f.listFiles()) {
                     delete(c);
                 }
@@ -1089,30 +1067,24 @@ public class common {
         } else {
             if (f.delete()) {
                 return true;
-            }
-            else
-            {
+            } else {
                 new FileNotFoundException("Failed to delete file: " + f);
             }
         }
         return false;
     }
 
-    public static void exportaudio(final File file, boolean savetohome)
-    {
+    public static void exportaudio(final File file, boolean savetohome) {
         String sourcePath = file.getAbsolutePath();
         File sourceFile = new File(sourcePath);
 
-        File destinationDir=null;
+        File destinationDir = null;
 
-        if(savetohome)
-        {
+        if (savetohome) {
             destinationDir = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_MUSIC), BuildConfig.APPLICATION_ID);
-        }
-        else
-        {
-            destinationDir=new File(config.dirallmedia);
+        } else {
+            destinationDir = new File(config.dirallmedia);
         }
 
         if (!destinationDir.exists())
@@ -1120,8 +1092,7 @@ public class common {
 
         final File mediaFile = new File(destinationDir.getPath() + File.separator +
                 sourceFile.getName());
-        try
-        {
+        try {
             if (!mediaFile.getParentFile().exists())
                 mediaFile.getParentFile().mkdirs();
 
@@ -1143,26 +1114,22 @@ public class common {
             in.close();
             out.close();
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            Log.e("Video export ","Error2");
+            Log.e("Video export ", "Error2");
         }
     }
 
-    public static List<folder> getalldirfolders()
-    {
-        List<folder> folderitem=new ArrayList<>();
+    public static List<folder> getalldirfolders() {
+        List<folder> folderitem = new ArrayList<>();
         File rootdir = new File(config.dirmedia);
-        if(! rootdir.exists())
+        if (!rootdir.exists())
             return folderitem;
 
         File[] files = rootdir.listFiles();
-        for (File file : files)
-        {
-            if((! file.getName().equalsIgnoreCase(config.cachefolder)) && (! file.getName().equalsIgnoreCase(config.allmedia)))
-            {
-                folder myfolder=new folder();
+        for (File file : files) {
+            if ((!file.getName().equalsIgnoreCase(config.cachefolder)) && (!file.getName().equalsIgnoreCase(config.allmedia))) {
+                folder myfolder = new folder();
                 myfolder.setFoldername(file.getName());
                 myfolder.setFolderdir(file.getAbsolutePath());
                 folderitem.add(myfolder);
@@ -1171,20 +1138,18 @@ public class common {
         return folderitem;
     }
 
-    public static boolean copyfile(File sourcefile,File destinationfolder)
-    {
+    public static boolean copyfile(File sourcefile, File destinationfolder) {
         String sourcePath = sourcefile.getAbsolutePath();
         File sourceFile = new File(sourcePath);
 
-        File destinationDir=destinationfolder;
+        File destinationDir = destinationfolder;
 
         if (!destinationDir.exists())
             destinationDir.mkdirs();
 
         final File mediaFile = new File(destinationDir.getPath() + File.separator +
                 sourceFile.getName());
-        try
-        {
+        try {
             if (!mediaFile.getParentFile().exists())
                 mediaFile.getParentFile().mkdirs();
 
@@ -1207,23 +1172,20 @@ public class common {
             out.close();
 
             return true;
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public static boolean movemediafile(File sourcemediafile,File destinationfolder)
-    {
+    public static boolean movemediafile(File sourcemediafile, File destinationfolder) {
         File sourcefile = new File(sourcemediafile.getAbsolutePath());
 
         if (!destinationfolder.exists())
             destinationfolder.mkdirs();
 
         final File destinationmediafile = new File(destinationfolder.getPath() + File.separator + sourcefile.getName());
-        try
-        {
+        try {
             if (!destinationmediafile.getParentFile().exists())
                 destinationmediafile.getParentFile().mkdirs();
 
@@ -1245,17 +1207,13 @@ public class common {
             in.close();
             out.close();
 
-            if(delete(sourcefile))
-            {
+            if (delete(sourcefile)) {
                 return true;
-            }
-            else
-            {
-                Log.e("Operation ","File move operation failed! ");
+            } else {
+                Log.e("Operation ", "File move operation failed! ");
                 return false;
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -1432,6 +1390,7 @@ public class common {
         }
         return format;
     }
+
     public static String getfileextension(String path) {
         String format = "";
         if (!path.trim().isEmpty()) {
@@ -1441,9 +1400,9 @@ public class common {
         return format;
     }
 
-    public static String getfilename(String path){
+    public static String getfilename(String path) {
 
-        String filename=path.substring(path.lastIndexOf("/")+1);
+        String filename = path.substring(path.lastIndexOf("/") + 1);
 
         return filename;
     }
@@ -1476,36 +1435,27 @@ public class common {
 
         {
             StringBuilder mformatbuilder = new StringBuilder();
-            final String latitude=xdata.getinstance().getSetting(config.LatitudeDegree);
-            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA")))
-            {
-                mformatbuilder.append(config.Latitude+System.getProperty("line.separator")+ latitude);
-            }
-            else
-            {
-                mformatbuilder.append(System.getProperty("line.separator")+config.Latitude+System.getProperty("line.separator")+"NA");
+            final String latitude = xdata.getinstance().getSetting(config.LatitudeDegree);
+            if (!latitude.isEmpty() && (!latitude.equalsIgnoreCase("NA"))) {
+                mformatbuilder.append(config.Latitude + System.getProperty("line.separator") + latitude);
+            } else {
+                mformatbuilder.append(System.getProperty("line.separator") + config.Latitude + System.getProperty("line.separator") + "NA");
             }
 
-            final String altitude=xdata.getinstance().getSetting(config.Altitude);
-            if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
-            {
-                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Altitude+System.getProperty("line.separator")+
+            final String altitude = xdata.getinstance().getSetting(config.Altitude);
+            if (!altitude.isEmpty() && (!altitude.equalsIgnoreCase("NA"))) {
+                mformatbuilder.append(System.getProperty("line.separator") + System.getProperty("line.separator") + config.Altitude + System.getProperty("line.separator") +
                         common.getxdatavalue(xdata.getinstance().getSetting(config.Altitude)));
+            } else {
+                mformatbuilder.append(System.getProperty("line.separator") + System.getProperty("line.separator") + config.Altitude + System.getProperty("line.separator") + "NA");
             }
-            else
-            {
-                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Altitude+System.getProperty("line.separator")+"NA");
-            }
-            String value=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
-            if((! value.equalsIgnoreCase("NA")) && (! value.equalsIgnoreCase("NA")))
-            {
-                double heading=Double.parseDouble(value);
-                int headingg=(int)heading;
-                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Heading+System.getProperty("line.separator")+headingg);
-            }
-            else
-            {
-                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Heading+System.getProperty("line.separator"));
+            String value = common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
+            if ((!value.equalsIgnoreCase("NA")) && (!value.equalsIgnoreCase("NA"))) {
+                double heading = Double.parseDouble(value);
+                int headingg = (int) heading;
+                mformatbuilder.append(System.getProperty("line.separator") + System.getProperty("line.separator") + config.Heading + System.getProperty("line.separator") + headingg);
+            } else {
+                mformatbuilder.append(System.getProperty("line.separator") + System.getProperty("line.separator") + config.Heading + System.getProperty("line.separator"));
             }
 
             txt_latitude.setText(mformatbuilder.toString());
@@ -1513,20 +1463,17 @@ public class common {
 
         {
             StringBuilder mformatbuilder = new StringBuilder();
-            final String longitude=xdata.getinstance().getSetting(config.LongitudeDegree);
-            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA")))
-            {
-                mformatbuilder.append(config.Longitude+System.getProperty("line.separator")+
+            final String longitude = xdata.getinstance().getSetting(config.LongitudeDegree);
+            if (!longitude.isEmpty() && (!longitude.equalsIgnoreCase("NA"))) {
+                mformatbuilder.append(config.Longitude + System.getProperty("line.separator") +
                         longitude);
-            }
-            else
-            {
-                mformatbuilder.append(System.getProperty("line.separator")+config.Longitude+System.getProperty("line.separator")+"NA");
+            } else {
+                mformatbuilder.append(System.getProperty("line.separator") + config.Longitude + System.getProperty("line.separator") + "NA");
             }
 
-            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Speed+System.getProperty("line.separator")+
+            mformatbuilder.append(System.getProperty("line.separator") + System.getProperty("line.separator") + config.Speed + System.getProperty("line.separator") +
                     common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
-            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Orientation+System.getProperty("line.separator")+
+            mformatbuilder.append(System.getProperty("line.separator") + System.getProperty("line.separator") + config.Orientation + System.getProperty("line.separator") +
                     common.getxdatavalue(xdata.getinstance().getSetting(config.Orientation)));
             txt_longitude.setText(mformatbuilder.toString());
 
@@ -1534,25 +1481,24 @@ public class common {
         }
     }
 
-    public  static String getxdatavalue(String value)
-    {
-        if(value == null || value.equalsIgnoreCase("null") || value.toString().trim().isEmpty())
-            value="NA";
+    public static String getxdatavalue(String value) {
+        if (value == null || value.equalsIgnoreCase("null") || value.toString().trim().isEmpty())
+            value = "NA";
 
         return value;
     }
 
     public static String systemuptime(long uptime) {
 
-        String time="";
-        String wholeUptime="";
+        String time = "";
+        String wholeUptime = "";
 
      /*  long hours=uptime/3600;
        long minutes=((uptime/60)%60);
        long seconds=(uptime%60);*/
 
         int day = (int) (uptime / (24 * 3600));
-       // Log.e("days", String.valueOf(day));
+        // Log.e("days", String.valueOf(day));
 
         uptime = uptime % (24 * 3600);
         int hour = (int) (uptime / 3600);
@@ -1563,20 +1509,20 @@ public class common {
         uptime %= 60;
         int seconds = (int) uptime;
 
-       if(hour<=24){
-            wholeUptime = String.format("%02d:%02d:%02d",hour, minutes,seconds);
+        if (hour <= 24) {
+            wholeUptime = String.format("%02d:%02d:%02d", hour, minutes, seconds);
             time = wholeUptime;
 
-       }else {
-           if(day==1){
-               wholeUptime  = String.format("%d day %02d:%02d:%02d", day,hour,minutes, seconds);
-           }else{
-               wholeUptime = String.format("%d days %02d:%02d:%02d", day,hour,minutes, seconds);
-           }
-           time = wholeUptime;
-        //   Log.e("systemtime", "" + time);
-       }
-      return time;
+        } else {
+            if (day == 1) {
+                wholeUptime = String.format("%d day %02d:%02d:%02d", day, hour, minutes, seconds);
+            } else {
+                wholeUptime = String.format("%d days %02d:%02d:%02d", day, hour, minutes, seconds);
+            }
+            time = wholeUptime;
+            //   Log.e("systemtime", "" + time);
+        }
+        return time;
     }
 
     public static String gettimezoneshortname() {
@@ -1611,8 +1557,7 @@ public class common {
     }
 
 
-
-    public static String convertlongitude(double longitude){
+    public static String convertlongitude(double longitude) {
         StringBuilder builder = new StringBuilder();
 
 
@@ -1632,29 +1577,28 @@ public class common {
         return builder.toString();
     }
 
-    public static String[] getmetricesarray()
-    {
-        String[] items={"battery","phonetype","imeinumber","simserialnumber","version","osversion","softwareversion","model",
-                "manufacturer","brightness","gpslatitude","gpslongitude",config.gpslatitudedegree,config.gpslongitudedegree,config.gpsaltitude,"gpsquality","carrier","screenwidth",
-                "screenheight","systemuptime","multitaskingenabled","proximitysensorenabled","pluggedin","devicedate","devicetime",
-                "deviceregion","devicelanguage","devicecurrency","timezone","headphonesattached","accessoriesattached",
-                "nameattachedaccessories","attachedaccessoriescount","totalspace","usedspace","memoryusage","freespace",
-                "orientation","deviceorientation","rammemory","usedram","freeram","wificonnect","cellnetworkconnect","internalip",
-                "externalip","networktype",config.connectedphonenetworkquality,"gravitysensorenabled","gyroscopesensorenabled",
-                "lightsensorenabled","debuggerattached","deviceid","bluetoothonoff","wifiname",config.wifinetworkavailable,
-                "processorcount","activeprocessorcount",config.cpuusageuser,config.cpuusagesystem,config.cpuusageiow,
-                config.cpuusageirq,config.compass,config.decibel,config.barometer,config.acceleration_x,config.acceleration_y,
-                config.acceleration_z,config.distancetravelled,config.currentcallinprogress,config.currentcalldurationseconds,
-                config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
-                "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","syncphonetime","country",
-                "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers","numberofsatellites",
-                "satelliteangle","satelliteid","strengthofsatellites","attitude",config.availablewifinetwork,"phoneclocktime","worldclocktime",config.connectiondatadelay};
+    public static String[] getmetricesarray() {
+        String[] items = {"battery", "phonetype", "imeinumber", "simserialnumber", "version", "osversion", "softwareversion", "model",
+                "manufacturer", "brightness", "gpslatitude", "gpslongitude", config.gpslatitudedegree, config.gpslongitudedegree, config.gpsaltitude, "gpsquality", "carrier", "screenwidth",
+                "screenheight", "systemuptime", "multitaskingenabled", "proximitysensorenabled", "pluggedin", "devicedate", "devicetime",
+                "deviceregion", "devicelanguage", "devicecurrency", "timezone", "headphonesattached", "accessoriesattached",
+                "nameattachedaccessories", "attachedaccessoriescount", "totalspace", "usedspace", "memoryusage", "freespace",
+                "orientation", "deviceorientation", "rammemory", "usedram", "freeram", "wificonnect", "cellnetworkconnect", "internalip",
+                "externalip", "networktype", config.connectedphonenetworkquality, "gravitysensorenabled", "gyroscopesensorenabled",
+                "lightsensorenabled", "debuggerattached", "deviceid", "bluetoothonoff", "wifiname", config.wifinetworkavailable,
+                "processorcount", "activeprocessorcount", config.cpuusageuser, config.cpuusagesystem, config.cpuusageiow,
+                config.cpuusageirq, config.compass, config.decibel, config.barometer, config.acceleration_x, config.acceleration_y,
+                config.acceleration_z, config.distancetravelled, config.currentcallinprogress, config.currentcalldurationseconds,
+                config.currentcallremotenumber, config.currentcalldecibel, config.airplanemode,
+                "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country",
+                "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid", "numberoftowers", "numberofsatellites",
+                "satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork, "phoneclocktime", "worldclocktime", config.connectiondatadelay};
 
         return items;
     }
     // config.sister_metric,config.json_blob
 
-    public static String getCurrentDate(){
+    public static String getCurrentDate() {
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
 
@@ -1664,40 +1608,31 @@ public class common {
         return formattedDate;
     }
 
-    public static int checkframeduration()
-    {
-        int frameduration=15;
+    public static int checkframeduration() {
+        int frameduration = 15;
 
-        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
-            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+        if (!xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+            frameduration = Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
         return frameduration;
     }
 
-    public static String checkkey()
-    {
-        String key="";
-        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
-                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
-        {
-            key=config.prefs_md5;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
-        {
-            key=config.prefs_md5_salt;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
-        {
-            key=config.prefs_sha;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
-        {
-            key=config.prefs_sha_salt;
+    public static String checkkey() {
+        String key = "";
+        if (xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty()) {
+            key = config.prefs_md5;
+        } else if (xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt)) {
+            key = config.prefs_md5_salt;
+        } else if (xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha)) {
+            key = config.prefs_sha;
+        } else if (xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt)) {
+            key = config.prefs_sha_salt;
         }
         return key;
     }
 
-    public static String[] getcurrentdatewithtimezone(){
+    public static String[] getcurrentdatewithtimezone() {
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"),
                 Locale.getDefault());
@@ -1708,62 +1643,61 @@ public class common {
 
         int convertedVal = Integer.parseInt(localTime);
 
-        if(convertedVal > 0){
-            convertedVal=convertedVal/100;
-            localTime = "+" + ""+convertedVal;
-        }else{
+        if (convertedVal > 0) {
+            convertedVal = convertedVal / 100;
+            localTime = "+" + "" + convertedVal;
+        } else {
 
-            convertedVal=convertedVal/100;
+            convertedVal = convertedVal / 100;
 
-            localTime =  "" + convertedVal;
+            localTime = "" + convertedVal;
         }
 
         DateFormat date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault());
 
-        String currenttime[] = {date1.format(currentLocalTime),localTime };
+        String currenttime[] = {date1.format(currentLocalTime), localTime};
 
 
         return currenttime;
 
     }
 
-    public static String getvideotimefromurl(String url){
+    public static String getvideotimefromurl(String url) {
 
-        String duration="";
+        String duration = "";
         MediaExtractor extractor = new MediaExtractor();
         try {
             //Adjust data source as per the requirement if file, URI, etc.
             extractor.setDataSource(url);
             int numTracks = extractor.getTrackCount();
-            if(numTracks > 0)
-            {
+            if (numTracks > 0) {
                 for (int i = 0; i < numTracks; ++i) {
                     MediaFormat format = extractor.getTrackFormat(i);
                     if (format.containsKey(MediaFormat.KEY_DURATION)) {
                         long seconds = format.getLong(MediaFormat.KEY_DURATION);
-                        seconds=seconds/1000000;
+                        seconds = seconds / 1000000;
                         int day = (int) TimeUnit.SECONDS.toDays(seconds);
-                        long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
-                        long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
-                        long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
-                        long millis = TimeUnit.SECONDS.toMillis(seconds) - (TimeUnit.SECONDS.toSeconds(seconds) *60);
+                        long hours = TimeUnit.SECONDS.toHours(seconds) - (day * 24);
+                        long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds) * 60);
+                        long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) * 60);
+                        long millis = TimeUnit.SECONDS.toMillis(seconds) - (TimeUnit.SECONDS.toSeconds(seconds) * 60);
 
-                        String milliseconds="0";
-                        char[] chararray=String.valueOf(millis).toCharArray();
-                        if(chararray != null && chararray.length > 0)
-                            milliseconds=""+chararray[0];
+                        String milliseconds = "0";
+                        char[] chararray = String.valueOf(millis).toCharArray();
+                        if (chararray != null && chararray.length > 0)
+                            milliseconds = "" + chararray[0];
 
-                        if(second == 0)
-                            second=1;
+                        if (second == 0)
+                            second = 1;
 
-                        duration=(""+hours+":"+common.appendzero(minute)+":"+common.appendzero(second)+"."+milliseconds);
+                        duration = ("" + hours + ":" + common.appendzero(minute) + ":" + common.appendzero(second) + "." + milliseconds);
                         break;
                     }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             //Release stuff
             extractor.release();
         }
@@ -1772,16 +1706,15 @@ public class common {
 
     public static File gettempfileforaudiowave() {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.audiowavesdir, fileName+".png");
+        File file = new File(config.audiowavesdir, fileName + ".png");
 
-        File destinationDir=new File(config.audiowavesdir);
+        File destinationDir = new File(config.audiowavesdir);
         try {
 
             if (!destinationDir.exists())
                 destinationDir.mkdirs();
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return file;
@@ -1789,38 +1722,35 @@ public class common {
 
     public static File gettempfileforhash() {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.hashesdir, fileName+".framemd5");
+        File file = new File(config.hashesdir, fileName + ".framemd5");
 
-        File destinationDir=new File(config.hashesdir);
+        File destinationDir = new File(config.hashesdir);
         try {
 
             if (!destinationDir.exists())
                 destinationDir.mkdirs();
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return file;
     }
 
-    public static boolean ishashfileexist(String filepath)
-    {
-        String filename=common.getfilename(filepath);
-        String[] array=filename.split("\\.");
-        if(array.length > 0) {
+    public static boolean ishashfileexist(String filepath) {
+        String filename = common.getfilename(filepath);
+        String[] array = filename.split("\\.");
+        if (array.length > 0) {
             File file = new File(config.hashesdir, array[0] + ".framemd5");
             if (file.exists())
                 return true;
         }
-            return false;
+        return false;
     }
 
-    public static String getexisthashfilepath(String filepath)
-    {
-        String filename=common.getfilename(filepath);
-        String[] array=filename.split("\\.");
-        if(array.length > 0) {
+    public static String getexisthashfilepath(String filepath) {
+        String filename = common.getfilename(filepath);
+        String[] array = filename.split("\\.");
+        if (array.length > 0) {
             File file = new File(config.hashesdir, array[0] + ".framemd5");
             if (file.exists())
                 return file.getAbsolutePath();
@@ -1828,11 +1758,10 @@ public class common {
         return "";
     }
 
-    public static File createtempfileofmedianameforhash(String filepath)
-    {
-        String filename=common.getfilename(filepath);
-        String[] array=filename.split("\\.");
-        if(array.length > 0) {
+    public static File createtempfileofmedianameforhash(String filepath) {
+        String filename = common.getfilename(filepath);
+        String[] array = filename.split("\\.");
+        if (array.length > 0) {
             File file = new File(config.hashesdir, array[0] + ".framemd5");
             File destinationDir = new File(config.hashesdir);
             try {
@@ -1848,9 +1777,8 @@ public class common {
         return gettempfileforhash();
     }
 
-    public static void showcustompermissiondialog(Context context, final adapteritemclick mitemclick, final String permission)
-    {
-        if(custompermissiondialog != null && custompermissiondialog.isShowing())
+    public static void showcustompermissiondialog(Context context, final adapteritemclick mitemclick, final String permission) {
+        if (custompermissiondialog != null && custompermissiondialog.isShowing())
             custompermissiondialog.dismiss();
 
         custompermissiondialog = new Dialog(context);
@@ -1869,30 +1797,21 @@ public class common {
         ImageView logo_icon = (ImageView) custompermissiondialog.findViewById(R.id.logo_icon);
 
 
-        if(permission.equalsIgnoreCase(Manifest.permission.CAMERA))
-        {
+        if (permission.equalsIgnoreCase(Manifest.permission.CAMERA)) {
             logo_icon.setImageResource(R.drawable.permission_camera);
             txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_camera));
             txt_permission_desc.setText(context.getResources().getString(R.string.camera_take_picture));
-        }
-        else if(permission.equalsIgnoreCase(Manifest.permission.RECORD_AUDIO))
-        {
+        } else if (permission.equalsIgnoreCase(Manifest.permission.RECORD_AUDIO)) {
             txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_current_location));
             txt_permission_desc.setText(context.getResources().getString(R.string.your_current_location));
-        }
-        else if(permission.equalsIgnoreCase(Manifest.permission.READ_EXTERNAL_STORAGE))
-        {
+        } else if (permission.equalsIgnoreCase(Manifest.permission.READ_EXTERNAL_STORAGE)) {
             txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_current_location));
             txt_permission_desc.setText(context.getResources().getString(R.string.your_current_location));
-        }
-        else if(permission.equalsIgnoreCase(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-        {
+        } else if (permission.equalsIgnoreCase(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_current_location));
             txt_permission_desc.setText(context.getResources().getString(R.string.your_current_location));
-        }
-        else if(permission.equalsIgnoreCase(Manifest.permission.ACCESS_COARSE_LOCATION) ||
-                permission.equalsIgnoreCase(Manifest.permission.ACCESS_FINE_LOCATION))
-        {
+        } else if (permission.equalsIgnoreCase(Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                permission.equalsIgnoreCase(Manifest.permission.ACCESS_FINE_LOCATION)) {
             logo_icon.setImageResource(R.drawable.location_icon);
             txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_current_location));
             txt_permission_desc.setText(context.getResources().getString(R.string.your_current_location));
@@ -1904,16 +1823,16 @@ public class common {
         txt_allow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mitemclick != null)
-                    mitemclick.onItemClicked(permission,1);
+                if (mitemclick != null)
+                    mitemclick.onItemClicked(permission, 1);
             }
         });
 
         txt_skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mitemclick != null)
-                    mitemclick.onItemClicked(permission,0);
+                if (mitemclick != null)
+                    mitemclick.onItemClicked(permission, 0);
 
                 dismisscustompermissiondialog();
             }
@@ -1922,59 +1841,56 @@ public class common {
         custompermissiondialog.getWindow().setAttributes(lp);
         custompermissiondialog.show();
     }
-        public static void dismisscustompermissiondialog()
-    {
-        if(custompermissiondialog != null && custompermissiondialog.isShowing())
+
+    public static void dismisscustompermissiondialog() {
+        if (custompermissiondialog != null && custompermissiondialog.isShowing())
             custompermissiondialog.dismiss();
     }
 
-    public static void setspannable(String encryption_key, String encryption_value, TextView txt_encryption){
+    public static void setspannable(String encryption_key, String encryption_value, TextView txt_encryption) {
 
-        String encryptionstr =  encryption_key.concat(encryption_value);
-       // int substring=encryptionblock.lastIndexOf(":");
+        String encryptionstr = encryption_key.concat(encryption_value);
+        // int substring=encryptionblock.lastIndexOf(":");
         Typeface regularfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Regular.ttf");
         Typeface semiboldfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Semibold.ttf");
 
-        SpannableStringBuilder encryptionstring=new SpannableStringBuilder(encryptionstr);
-        encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()),0,encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        encryptionstring.setSpan(new RelativeSizeSpan(1.1f),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        SpannableStringBuilder encryptionstring = new SpannableStringBuilder(encryptionstr);
+        encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()), 0, encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        encryptionstring.setSpan(new RelativeSizeSpan(1.1f), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         txt_encryption.setText(encryptionstring);
     }
 
-    public static void setdrawabledata(String encryption_key, String encryption_value, TextView txt_encryption){
+    public static void setdrawabledata(String encryption_key, String encryption_value, TextView txt_encryption) {
 
-        if(txt_encryption == null)
+        if (txt_encryption == null)
             return;
 
-        if(! encryption_key.trim().isEmpty())
-        {
-            String encryptionstr =  encryption_key.concat(encryption_value);
+        if (!encryption_key.trim().isEmpty()) {
+            String encryptionstr = encryption_key.concat(encryption_value);
             Typeface regularfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Regular.ttf");
             Typeface semiboldfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Semibold.ttf");
-            SpannableStringBuilder encryptionstring=new SpannableStringBuilder(encryptionstr);
-            encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()),0,encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            encryptionstring.setSpan(new RelativeSizeSpan(1.1f),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            SpannableStringBuilder encryptionstring = new SpannableStringBuilder(encryptionstr);
+            encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()), 0, encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            encryptionstring.setSpan(new RelativeSizeSpan(1.1f), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_encryption.setText(encryptionstring);
-        }
-        else
-        {
-            String encryptionstr =  encryption_value;
+        } else {
+            String encryptionstr = encryption_value;
             Typeface semiboldfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Semibold.ttf");
-            SpannableStringBuilder encryptionstring=new SpannableStringBuilder(encryptionstr);
-            encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),0,encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            encryptionstring.setSpan(new RelativeSizeSpan(1.1f),0,encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            SpannableStringBuilder encryptionstring = new SpannableStringBuilder(encryptionstr);
+            encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()), 0, encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            encryptionstring.setSpan(new RelativeSizeSpan(1.1f), 0, encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_encryption.setText(encryptionstring);
         }
 
     }
 
     public static String filesize(String imageurl) {
-        String img_size =null ;
+        String img_size = null;
 
-        File file=new File(imageurl);
-        long photosize= file.length();
+        File file = new File(imageurl);
+        long photosize = file.length();
         int b = (int) photosize;
         int k = (int) photosize / 1024;
         int m = (int) ((photosize / 1024) / 1024);
@@ -1990,9 +1906,9 @@ public class common {
         } else if (m > 1) {
             img_size = m + "Mb";
         } else if (k > 1) {
-            img_size = k +"Kb";
+            img_size = k + "Kb";
         } else {
-            img_size =dec.format(b);
+            img_size = dec.format(b);
         }
         return img_size;
     }
@@ -2014,7 +1930,7 @@ public class common {
         return buf.toString();
     }*/
 
-    public static String getvideotimefromurl(Context context,String url){
+    public static String getvideotimefromurl(Context context, String url) {
 
         MediaPlayer mpl = null;
         mpl = MediaPlayer.create(context, Uri.parse(url));
@@ -2025,52 +1941,52 @@ public class common {
         int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
         //   convent into milisec and then minus from millis
         int milisec = (int) (seconds * 1000);
-        int milisecond = (int) ( millis - milisec );
-        String milliseconds="0";
-        char[] chararray=String.valueOf(milisecond).toCharArray();
-        if(chararray != null && chararray.length > 0)
-            milliseconds=""+chararray[0];
-        int milise= Integer.parseInt(milliseconds=""+chararray[0]);
-        Log.e("milliseconds", ""+milliseconds);
+        int milisecond = (int) (millis - milisec);
+        String milliseconds = "0";
+        char[] chararray = String.valueOf(milisecond).toCharArray();
+        if (chararray != null && chararray.length > 0)
+            milliseconds = "" + chararray[0];
+        int milise = Integer.parseInt(milliseconds = "" + chararray[0]);
+        Log.e("milliseconds", "" + milliseconds);
 
-        String duration=(""+hours+":"+common.appendzero(minutes)+":"+common.appendzero(seconds)+"."+milise);
+        String duration = ("" + hours + ":" + common.appendzero(minutes) + ":" + common.appendzero(seconds) + "." + milise);
         return duration;
 
     }
 
     public static String gettimestring(long millis) {
-        StringBuffer buf = new StringBuffer();        int hours = (int) (millis / (1000 * 60 * 60));
+        StringBuffer buf = new StringBuffer();
+        int hours = (int) (millis / (1000 * 60 * 60));
         int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
         int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
         //   convent into milisec and then minus from millis
         int milisec = (int) (seconds * 1000);
-        int milisecond = (int) ( millis - milisec );
-        String milliseconds="0";
-        char[] chararray=String.valueOf(milisecond).toCharArray();
-        if(chararray != null && chararray.length > 0)
-            milliseconds=""+chararray[0];
-        int milise= Integer.parseInt(milliseconds=""+chararray[0]);
+        int milisecond = (int) (millis - milisec);
+        String milliseconds = "0";
+        char[] chararray = String.valueOf(milisecond).toCharArray();
+        if (chararray != null && chararray.length > 0)
+            milliseconds = "" + chararray[0];
+        int milise = Integer.parseInt(milliseconds = "" + chararray[0]);
 
-        if(hours == 0){
-            buf.append(String.format("%02d",minutes))
+        if (hours == 0) {
+            buf.append(String.format("%02d", minutes))
                     .append(":")
                     .append(String.format("%02d", seconds))
                     .append(".")
                     .append(String.format("%d", milise));
 
-        }else{
+        } else {
             buf.append(String.format("%02d", hours))
-                .append(":")
-                .append(String.format("%02d", minutes))
-                .append(":")
-                .append(String.format("%02d", seconds))
-                .append(".")
-                .append(String.format("%d", milise));
+                    .append(":")
+                    .append(String.format("%02d", minutes))
+                    .append(":")
+                    .append(String.format("%02d", seconds))
+                    .append(".")
+                    .append(String.format("%d", milise));
 
-        }        return buf.toString();
+        }
+        return buf.toString();
     }
-
-
 
 
     public static void slidetoabove(final LinearLayout layout_mediatype) {
@@ -2087,7 +2003,7 @@ public class common {
 
     }
 
-    public static void slidetodown(LinearLayout layout_mediatype){
+    public static void slidetodown(LinearLayout layout_mediatype) {
         layout_mediatype.setAlpha(0.0f);
         // Start the animation
         layout_mediatype.animate()
@@ -2107,7 +2023,7 @@ public class common {
         return true;
     }
 
-    public static String getcompassdirection(int heading){
+    public static String getcompassdirection(int heading) {
 
         String strdirection = "E";
         if (heading > 23 && heading <= 67) {
@@ -2130,24 +2046,22 @@ public class common {
         return strdirection;
     }
 
-    public static String[] gettransparencyvalues()
-    {
-        String[] values={"FF","FC","FA","F7","F5","F2","F0","ED","EB","E8","E6","E3","E0","DE","DB","D9","D6","D4","D1","CF","CC","C9",
-                "C7","C4","C2","BF","BD","BA","B8","B5","B3","B0","AD","AB","A8","A6","A3","A1","9E","9C","99","96","94","91","8F","8C",
-                "8A","87","85","82","80","7D","7A","78","75","73","70","6E","6B","69","66","63","61","5E","5C","59","57","54","52",
-                "4F","4D","4A","47","45","42","40","3D","3B","38","36","33","30","2E","2B","29","26","24","21","1F","1C",
-                "1A","17","14","12","0F","0D","0A","08","05","03","00"};
+    public static String[] gettransparencyvalues() {
+        String[] values = {"FF", "FC", "FA", "F7", "F5", "F2", "F0", "ED", "EB", "E8", "E6", "E3", "E0", "DE", "DB", "D9", "D6", "D4", "D1", "CF", "CC", "C9",
+                "C7", "C4", "C2", "BF", "BD", "BA", "B8", "B5", "B3", "B0", "AD", "AB", "A8", "A6", "A3", "A1", "9E", "9C", "99", "96", "94", "91", "8F", "8C",
+                "8A", "87", "85", "82", "80", "7D", "7A", "78", "75", "73", "70", "6E", "6B", "69", "66", "63", "61", "5E", "5C", "59", "57", "54", "52",
+                "4F", "4D", "4A", "47", "45", "42", "40", "3D", "3B", "38", "36", "33", "30", "2E", "2B", "29", "26", "24", "21", "1F", "1C",
+                "1A", "17", "14", "12", "0F", "0D", "0A", "08", "05", "03", "00"};
         return values;
     }
 
-    public static GradientDrawable getyelloradargradient()
-    {
+    public static GradientDrawable getyelloradargradient() {
         // a hexadecimal color string to an integer value (int color)
-        int[] colors = {Color.parseColor("#00FDD012"),Color.parseColor("#00FDD012"),Color.parseColor("#14FDD012"),
-                Color.parseColor("#4AFDD012"),Color.parseColor("#85FDD012"),Color.parseColor("#C2FDD012"),
+        int[] colors = {Color.parseColor("#00FDD012"), Color.parseColor("#00FDD012"), Color.parseColor("#14FDD012"),
+                Color.parseColor("#4AFDD012"), Color.parseColor("#85FDD012"), Color.parseColor("#C2FDD012"),
                 Color.parseColor("#FFFDD012"),
-                Color.parseColor("#C2FDD012"),Color.parseColor("#85FDD012"),Color.parseColor("#4AFDD012"),
-                Color.parseColor("#14FDD012"),Color.parseColor("#00FDD012"),Color.parseColor("#00FDD012")};
+                Color.parseColor("#C2FDD012"), Color.parseColor("#85FDD012"), Color.parseColor("#4AFDD012"),
+                Color.parseColor("#14FDD012"), Color.parseColor("#00FDD012"), Color.parseColor("#00FDD012")};
 
         //create a new gradient color
         GradientDrawable gd = new GradientDrawable(
@@ -2157,14 +2071,13 @@ public class common {
         return gd;
     }
 
-    public static GradientDrawable getblueradargradient()
-    {
+    public static GradientDrawable getblueradargradient() {
         // a hexadecimal color string to an integer value (int color)
-        int[] colors = {Color.parseColor("#00FDD012"),Color.parseColor("#00FDD012"),Color.parseColor("#14004860"),
-                Color.parseColor("#4A004860"),Color.parseColor("#85004860"),Color.parseColor("#C2004860"),
+        int[] colors = {Color.parseColor("#00FDD012"), Color.parseColor("#00FDD012"), Color.parseColor("#14004860"),
+                Color.parseColor("#4A004860"), Color.parseColor("#85004860"), Color.parseColor("#C2004860"),
                 Color.parseColor("#FF004860"),
-                Color.parseColor("#C2004860"),Color.parseColor("#85004860"),Color.parseColor("#4A004860"),
-                Color.parseColor("#14004860"),Color.parseColor("#00FDD012"),Color.parseColor("#00FDD012")};
+                Color.parseColor("#C2004860"), Color.parseColor("#85004860"), Color.parseColor("#4A004860"),
+                Color.parseColor("#14004860"), Color.parseColor("#00FDD012"), Color.parseColor("#00FDD012")};
 
         //create a new gradient color
         GradientDrawable gd = new GradientDrawable(
@@ -2174,43 +2087,42 @@ public class common {
         return gd;
     }
 
-    public static int getnavigationbarheight(){
+    public static int getnavigationbarheight() {
         Resources resources = applicationviavideocomposer.getactivity().getResources();
-        boolean value  = hasNavBar(resources);
-        if (value){
+        boolean value = hasNavBar(resources);
+        if (value) {
             int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
             return resources.getDimensionPixelSize(resourceId);
-        }else{
+        } else {
             return 0;
         }
     }
 
-    public static boolean hasNavBar (Resources resources)
-    {
+    public static boolean hasNavBar(Resources resources) {
         int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
         return id > 0 && resources.getBoolean(id);
     }
 
-    public static String get24hourformat(){
+    public static String get24hourformat() {
         boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
-        Calendar currenttime ;
+        Calendar currenttime;
         currenttime = Calendar.getInstance();
-        String devicedate ;
-        if(is24HourFormat ==true){
-            SimpleDateFormat devicetimeformat = new SimpleDateFormat("HH:mm:ss aa");
+        String devicedate;
+        if (is24HourFormat == true) {
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("HH:mm");
             devicedate = devicetimeformat.format(currenttime.getTime());
-        }else{
+        } else {
             SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss aa");
             devicedate = devicetimeformat.format(currenttime.getTime());
         }
         return devicedate;
     }
 
-    public static int getmediaorientation(Context context, String mediapath){
+    public static int getmediaorientation(Context context, String mediapath) {
         int rotate = 0;
         try {
             File mediafile = new File(mediapath);
-            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+            Uri uri = FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                     BuildConfig.APPLICATION_ID + ".provider", mediafile);
 
             context.getContentResolver().notifyChange(uri, null);
@@ -2243,18 +2155,12 @@ public class common {
         return rotate;
     }
 
-    public static int sortmediatype(int type)
-    {
-        if(type == 0)
-        {
+    public static int sortmediatype(int type) {
+        if (type == 0) {
             return 2;
-        }
-        else if(type == 1)
-        {
+        } else if (type == 1) {
             return 3;
-        }
-        else if(type == 2)
-        {
+        } else if (type == 2) {
             return 4;
         }
         return 2;
@@ -2263,99 +2169,86 @@ public class common {
     public static double convertmetertofeets(double meter) {
         return meter / 0.305;
     }
+
     public static double convertmpstomph(double mps) {
-        return  mps * 2.236936 ;
+        return mps * 2.236936;
     }
     public static double convertmpstokmph(double mps) {
         return  mps * 3.6 ;
     }
+
     public static double convertmetertomiles(double meters) {
-        return  meters*0.000621371192;
+        return meters * 0.000621371192;
     }
     public static double convertmetertokm(double meters) {
         return  meters/1000;
     }
+
     public static double convertmilestometer(float miles) {
-        return miles*1609.344;
+        return miles * 1609.344;
     }
+
     public static int convertmetertofeet(float meter) {
-        return (int)(meter / 0.3048);
+        return (int) (meter / 0.3048);
     }
-
-
 
 
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.
      *
-     * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
+     * @param dp      A value in dp (density independent pixels) unit. Which we need to convert into pixels
      * @param context Context to get resources and device specific display metrics
      * @return A float value to represent px equivalent to dp depending on device density
      */
-    public static float convertDpToPixel(float dp, Context context){
+    public static float convertDpToPixel(float dp, Context context) {
         return dp * ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
     /**
      * This method converts device specific pixels to density independent pixels.
      *
-     * @param px A value in px (pixels) unit. Which we need to convert into db
+     * @param px      A value in px (pixels) unit. Which we need to convert into db
      * @param context Context to get resources and device specific display metrics
      * @return A float value to represent dp equivalent to px value
      */
-    public static float convertPixelsToDp(float px, Context context){
+    public static float convertPixelsToDp(float px, Context context) {
         return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
 
-
-
-
-    public static boolean isdeviceinportraitmode(Context mContext)
-    {
+    public static boolean isdeviceinportraitmode(Context mContext) {
         Display display = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int rotation = display.getRotation();
-        if(rotation == 0)
+        if (rotation == 0)
             return true;
 
         return false;
     }
 
-    public static String getcolorprogresspercentage(int currentprogress,int totalitem)
-    {
-        double current=currentprogress;
-        double max=totalitem;
+    public static String getcolorprogresspercentage(int currentprogress, int totalitem) {
+        double current = currentprogress;
+        double max = totalitem;
         double progresspercentage = (current * 100) / max;
         //DecimalFormat precision=new DecimalFormat("0.00");
-        String output=""+Math.round(progresspercentage)+"%";
-        if(progresspercentage == 100)
-            output="100%";
+        String output = "" + Math.round(progresspercentage) + "%";
+        if (progresspercentage == 100)
+            output = "100%";
 
         return output;
     }
 
-    public static String getcolorbystring(String colorname)
-    {
-        String color="#FF3B30";
-        if(colorname.equalsIgnoreCase("green"))
-        {
-            color=config.color_code_green;
-        }
-        else if(colorname.equalsIgnoreCase("yellow"))
-        {
-            color=config.color_code_yellow;
-        }
-        else if(colorname.equalsIgnoreCase("red"))
-        {
-            color=config.color_code_red;
-        }
-        else if(colorname.equalsIgnoreCase("gray"))
-        {
-            color=config.color_code_gray;
-        }
-        else if(colorname.equalsIgnoreCase("white"))
-        {
-            color=config.color_code_white;
+    public static String getcolorbystring(String colorname) {
+        String color = "#FF3B30";
+        if (colorname.equalsIgnoreCase("green")) {
+            color = config.color_code_green;
+        } else if (colorname.equalsIgnoreCase("yellow")) {
+            color = config.color_code_yellow;
+        } else if (colorname.equalsIgnoreCase("red")) {
+            color = config.color_code_red;
+        } else if (colorname.equalsIgnoreCase("gray")) {
+            color = config.color_code_gray;
+        } else if (colorname.equalsIgnoreCase("white")) {
+            color = config.color_code_white;
         }
         return color;
     }
@@ -2367,20 +2260,21 @@ public class common {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
         }
     }
+
     public static boolean isvalidusername(String target) {
         if (target == null) {
             return false;
         } else {
-                char[] chars = target.toCharArray();
+            char[] chars = target.toCharArray();
 
-                    if(chars!=null && chars.length >0){
-                      Log.e("arrayvalue",""+chars[0]);
-                      int value = (int) chars[0];
-                        if( (value>='a' && value<='z') || (value>='A' && value<='Z')){
-                        return true;
-                    }
+            if (chars != null && chars.length > 0) {
+                Log.e("arrayvalue", "" + chars[0]);
+                int value = (int) chars[0];
+                if ((value >= 'a' && value <= 'z') || (value >= 'A' && value <= 'Z')) {
+                    return true;
                 }
-                return false;
+            }
+            return false;
         }
     }
 
@@ -2389,22 +2283,23 @@ public class common {
         return android.util.Patterns.PHONE.matcher(number).matches();
     }
 
-    public static boolean checkemailvalidation(Context mcontext,customfontedittext edtusername){
+    public static boolean checkemailvalidation(Context mcontext, customfontedittext edtusername) {
 
         if (edtusername.getText().toString().trim().toString().length() == 0) {
             Toast.makeText(mcontext, "Please enter email!", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (! common.isValidEmail(edtusername.getText().toString().trim())) {
+        if (!common.isValidEmail(edtusername.getText().toString().trim())) {
             Toast.makeText(mcontext, "Please enter valid email!", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
-    };
+    }
 
-    public static String getactionbarcolor()
-    {
-        String colorString="#"+common.gettransparencyvalues()[65]+"004860";
+    ;
+
+    public static String getactionbarcolor() {
+        String colorString = "#" + common.gettransparencyvalues()[65] + "004860";
         return colorString;
     }
 
@@ -2417,7 +2312,7 @@ public class common {
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    public static int getscreenwidthheight(int percentage){
+    public static int getscreenwidthheight(int percentage) {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         applicationviavideocomposer.getactivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -2427,7 +2322,8 @@ public class common {
 
         return percentageheight;
     }
-    public static String getdate(){
+
+    public static String getdate() {
         //Date date = new Date();
         //return DateFormat.getDateInstance().format(date);
         Date date = new Date();
@@ -2435,50 +2331,70 @@ public class common {
         return formatter.format(date);
     }
 
-    public static String parsedateformat(Date date)
-    {
+    public static String parsedateformat(Date date) {
         DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
         return formatter.format(date);
     }
-    public static String parsetimeformat(Date date)
-    {
-        DateFormat timeformat=android.text.format.DateFormat.getTimeFormat(applicationviavideocomposer.getactivity());
-        return timeformat.format(date);
+
+    public static String parsetimeformat(Date date) {
+        boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
+        String devicetime;
+        if (is24HourFormat == true) {
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("HH:mm:ss");
+            devicetime = devicetimeformat.format(date);
+        } else {
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss.SS aa");
+            devicetime = devicetimeformat.format(date);
+        }
+        return devicetime;
     }
 
 
-    public static String gettime(){
-        DateFormat timeformat=android.text.format.DateFormat.getTimeFormat(applicationviavideocomposer.getactivity());
-        Date date=new Date();
-        return timeformat.format(date);
+    public static String gettime() {
+
         /*Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
         SimpleDateFormat formatted = new SimpleDateFormat("hh:mm:ss.SS",Locale.ENGLISH);
         String formattedDate = formatted.format(date);
         return formattedDate;*/
+
+        /*DateFormat timeformat = android.text.format.DateFormat.getTimeFormat(applicationviavideocomposer.getactivity());
+        Date date=new Date();
+        return timeformat.format(date);*/
+
+        boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
+        Calendar currenttime;
+        currenttime = Calendar.getInstance();
+        String devicedate;
+        if (is24HourFormat == true) {
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("HH:mm:ss");
+            devicedate = devicetimeformat.format(currenttime.getTime());
+        } else {
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss.SS aa", Locale.ENGLISH);
+            devicedate = devicetimeformat.format(currenttime.getTime());
+        }
+        return devicedate;
+
     }
 
-    public static String currenttime_analogclock(){
+    public static String currenttime_analogclock() {
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
-        SimpleDateFormat formatted = new SimpleDateFormat("hh:mm:ss",Locale.ENGLISH);
+        SimpleDateFormat formatted = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
         String formattedDate = formatted.format(date);
         return formattedDate;
     }
 
-    public static void setting_check(String key,String defaultvalue)
-    {
-        if(setting_get(key).trim().isEmpty())
-            setting_set(key,defaultvalue);
+    public static void setting_check(String key, String defaultvalue) {
+        if (setting_get(key).trim().isEmpty())
+            setting_set(key, defaultvalue);
     }
 
-    public static void setting_set(String key,String keyvalue)
-    {
-        xdata.getinstance().saveSetting(key,keyvalue);
+    public static void setting_set(String key, String keyvalue) {
+        xdata.getinstance().saveSetting(key, keyvalue);
     }
 
-    public static void sharemessagewithapps(String sharemessage)
-    {
+    public static void sharemessagewithapps(String sharemessage) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, sharemessage);
@@ -2487,63 +2403,62 @@ public class common {
                 applicationviavideocomposer.getactivity().getResources().getText(R.string.send_to)));
     }
 
-    public static String setting_get(String key)
-    {
+    public static String setting_get(String key) {
         return xdata.getinstance().getSetting(key);
     }
 
-    public static String createurl(List<NameValuePair> nameValuePairList,String baseurl){
-      String newcreateurl = "";
-      parameter ="";
+    public static String createurl(List<NameValuePair> nameValuePairList, String baseurl) {
+        String newcreateurl = "";
+        parameter = "";
 
-        for(int i=0;i<nameValuePairList.size();i++){
+        for (int i = 0; i < nameValuePairList.size(); i++) {
             String key = nameValuePairList.get(i).getName();
             String value = nameValuePairList.get(i).getValue();
-            getactiontype(key,value);
-            if(newcreateurl.isEmpty()){
-                newcreateurl = baseurl +"&"+key+"="+value;
-                parameter = key+"="+value;
-            }else{
-                newcreateurl = newcreateurl+"&"+key+"="+value;
-                parameter =parameter+"&"+ key+"="+value;
+            getactiontype(key, value);
+            if (newcreateurl.isEmpty()) {
+                newcreateurl = baseurl + "&" + key + "=" + value;
+                parameter = key + "=" + value;
+            } else {
+                newcreateurl = newcreateurl + "&" + key + "=" + value;
+                parameter = parameter + "&" + key + "=" + value;
             }
         }
-        Log.e("finalurl",newcreateurl);
+        Log.e("finalurl", newcreateurl);
         return newcreateurl;
     }
 
     public static void setxapirequestresponses(String jsonurl, String action, String parameterxapi, List<NameValuePair> nameValuePairList,
-                                               String baseurl, Object object, Date starttime, Date endtime,String sharedprefkey){
-        HashMap<String,String> xapivalue = new HashMap<String,String>();
+                                               String baseurl, Object object, Date starttime, Date endtime, String sharedprefkey) {
+        HashMap<String, String> xapivalue = new HashMap<String, String>();
 
-        if(nameValuePairList==null){
-            xapivalue.put(config.API_STORE_URL,jsonurl);
-            xapivalue.put(config.API_ACTION,action);
-            xapivalue.put(config.API_PARAMETER,parameterxapi);
-        }else{
-            xapivalue.put(config.API_STORE_URL,common.createurl(nameValuePairList,baseurl));
-            xapivalue.put(config.API_ACTION,actiontype);
-            xapivalue.put(config.API_PARAMETER,parameter);
+        if (nameValuePairList == null) {
+            xapivalue.put(config.API_STORE_URL, jsonurl);
+            xapivalue.put(config.API_ACTION, action);
+            xapivalue.put(config.API_PARAMETER, parameterxapi);
+        } else {
+            xapivalue.put(config.API_STORE_URL, common.createurl(nameValuePairList, baseurl));
+            xapivalue.put(config.API_ACTION, actiontype);
+            xapivalue.put(config.API_PARAMETER, parameter);
         }
-        xapivalue.put(config.API_RESULT,object.toString());
-        xapivalue.put(config.API_START_DATE,""+starttime);
-        xapivalue.put(config.API_RESPONCE_DATE,timedifference(starttime,endtime));
+        xapivalue.put(config.API_RESULT, object.toString());
+        xapivalue.put(config.API_START_DATE, "" + starttime);
+        xapivalue.put(config.API_RESPONCE_DATE, timedifference(starttime, endtime));
 
-        timedifference(starttime,endtime);
+        timedifference(starttime, endtime);
 
         Gson gson = new Gson();
         String json = gson.toJson(xapivalue);
 
-        for(int i =0; i < Integer.MAX_VALUE;i++){
-            if(xdata.getinstance().getSetting(sharedprefkey +i).isEmpty()){
-                xdata.getinstance().saveSetting(sharedprefkey +i, json);
+        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            if (xdata.getinstance().getSetting(sharedprefkey + i).isEmpty()) {
+                xdata.getinstance().saveSetting(sharedprefkey + i, json);
                 //xdata.getinstance().saveSettingApiArray("xapi"+""+i, json);
                 break;
             }
         }
     }
 
-    public static String convertdateintostring(Date time){
+    public static String convertdateintostring(Date time) {
 
         String pattern = "HH:mm:ss";
         DateFormat df = new SimpleDateFormat(pattern);
@@ -2553,35 +2468,46 @@ public class common {
         return converttime;
     }
 
-    public static void getactiontype(String key,String value) {
+    public static void getactiontype(String key, String value) {
         if (key.equalsIgnoreCase("action")) {
             actiontype = value;
         }
     }
 
-    public static String timedifference(Date starttime, Date endtime){
+    public static String timedifference(Date starttime, Date endtime) {
 
         long diff = endtime.getTime() - starttime.getTime();
 
         long seconds = diff / 1000;
         long milisecond = diff % 1000;
 
-        return (""+ seconds+"."+""+milisecond);
+        return ("" + seconds + "." + "" + milisecond);
     }
 
-    public static void clearxapidate(xapidetailadapter mControllerAdapter, ArrayList<pair> mItemList,String sharedprefkey){
+    public static void clearxapidate(xapidetailadapter mControllerAdapter, ArrayList<pair> mItemList, String sharedprefkey) {
 
-        for(int i =0; i < Integer.MAX_VALUE;i++){
-            if(!xdata.getinstance().getSetting(sharedprefkey+""+i).isEmpty()){
-                xdata.getinstance().clearsharevalue(sharedprefkey+""+i);
-            }else{
-                if(mControllerAdapter != null && mItemList !=null){
+        for (int i = 0; i < Integer.MAX_VALUE; i++) {
+            if (!xdata.getinstance().getSetting(sharedprefkey + "" + i).isEmpty()) {
+                xdata.getinstance().clearsharevalue(sharedprefkey + "" + i);
+            } else {
+                if (mControllerAdapter != null && mItemList != null) {
                     mItemList.clear();
                     mControllerAdapter.notifyDataSetChanged();
                 }
                 break;
             }
-            }
+        }
+    }
+
+    public static String convertstringintodate(String date) {
+        String dateformat = "";
+        DateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+        Date convertedDate = new Date();
+        try {
+            convertedDate = format.parse(date);
+            dateformat = parsedateformat(convertedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
 
@@ -2695,5 +2621,43 @@ public class common {
     private static boolean useMiles(Locale locale) {
         return locale.equals(Locale.US) || locale.equals(Locale.UK);
     }
+        return dateformat;
+    }
+
+    public static String getFormattedTime(String time) {
+
+        String timeformat = "";
+        DateFormat format = new SimpleDateFormat("hh:mm:ss:SS aa", Locale.ENGLISH);
+        Date convertedDate = new Date();
+        try {
+            convertedDate = format.parse(time);
+            timeformat = parsetimeformat(convertedDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return timeformat;
+    }
 }
+        /*String input = " 05:10:25 PM ";
+        //Format of the date defined in the input String
+        DateFormat df = new SimpleDateFormat(" hh:mm:ss aa");
+        //Desired format: 24 hour format: Change the pattern as per the need
+        DateFormat outputformat = new SimpleDateFormat("HH:mm:ss");
+        Date date = null;
+        String output = null;
+        try {
+            //Converting the input String to Date
+            date = df.parse(input);
+            //Changing the format of date and storing it in String
+            output = outputformat.format(date);
+            //Displaying the date
+            System.out.println("Date->"+output);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return output;
+
+    }*/
+
 

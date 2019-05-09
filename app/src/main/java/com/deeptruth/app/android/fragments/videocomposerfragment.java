@@ -2050,7 +2050,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         try {
             String devicetime = common.get24hourformat();
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS aa");
             String starttime = sdf.format(sequencestarttime.getTime());
             String endtime = sdf.format(sequenceendtime.getTime());
 

@@ -13,6 +13,7 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.arraycontainer;
 import com.deeptruth.app.android.models.graphicalmodel;
 import com.deeptruth.app.android.models.metricmodel;
+import com.deeptruth.app.android.utils.common;
 
 import java.util.ArrayList;
 
@@ -46,13 +47,13 @@ public class encryptiondataadapter extends RecyclerView.Adapter<encryptiondataad
         for(int i=0;i<metalist.size();i++)
         {
             if(metalist.get(i).getMetricTrackKeyName().equalsIgnoreCase("devicedate"))
-                holder.txt_date.setText(metalist.get(i).getMetricTrackValue());
+                holder.txt_date.setText(common.convertstringintodate(metalist.get(i).getMetricTrackValue()));
 
             if(metalist.get(i).getMetricTrackKeyName().equalsIgnoreCase("sequencestarttime"))
-                holder.txt_time.setText(metalist.get(i).getMetricTrackValue());
+                holder.txt_time.setText(common.getFormattedTime(metalist.get(i).getMetricTrackValue()));
 
             if(metalist.get(i).getMetricTrackKeyName().equalsIgnoreCase("sequenceendtime"))
-                holder.txt_time.setText(holder.txt_time.getText()+" - "+metalist.get(i).getMetricTrackValue());
+                holder.txt_time.setText(holder.txt_time.getText()+" - "+common.getFormattedTime(metalist.get(i).getMetricTrackValue()));
         }
     }
 

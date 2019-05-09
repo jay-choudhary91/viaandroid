@@ -1098,7 +1098,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             if(sequenceendtime == null)
                 sequenceendtime = Calendar.getInstance();
 
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS aa");
             String starttime = sdf.format(sequencestarttime.getTime());
             String endtime = sdf.format(sequenceendtime.getTime());
             String devicedate = common.get24hourformat();
