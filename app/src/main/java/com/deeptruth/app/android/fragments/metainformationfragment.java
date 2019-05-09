@@ -230,12 +230,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     LinearLayout layout_videoaudiodata;
     @BindView(R.id.layout_mediametadata)
     LinearLayout layout_mediametadata;
-    @BindView(R.id.vertical_slider_speed)
-    verticalseekbar vertical_slider_speed;
-    @BindView(R.id.vertical_slider_traveled)
-    verticalseekbar vertical_slider_traveled;
-    @BindView(R.id.vertical_slider_altitude)
-    verticalseekbar vertical_slider_altitude;
     @BindView(R.id.txt_timeinformation)
     TextView txt_timeinformation;
     @BindView(R.id.txt_phonetime)
@@ -280,6 +274,18 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     LinearLayout layout_encryptioninfo;
     @BindView(R.id.layoutcompass)
     ImageView layoutcompass;
+    @BindView(R.id.vertical_slider_speed)
+    verticalseekbar vertical_slider_speed;
+    @BindView(R.id.vertical_slider_traveled)
+    verticalseekbar vertical_slider_traveled;
+    @BindView(R.id.vertical_slider_altitude)
+    verticalseekbar vertical_slider_altitude;
+    @BindView(R.id.vertical_slider_gpsaccuracy)
+    verticalseekbar vertical_slider_gpsaccuracy;
+    @BindView(R.id.vertical_slider_connectionspeed)
+    verticalseekbar vertical_slider_connectionspeed;
+    @BindView(R.id.vertical_slider_connectiondatatimedely)
+    verticalseekbar vertical_slider_connectiondatatimedely;
 
 
     GoogleMap mgooglemap;
@@ -330,6 +336,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             vertical_slider_speed.setEnabled(false);
             vertical_slider_altitude.setEnabled(false);
             vertical_slider_traveled.setEnabled(false);
+            vertical_slider_gpsaccuracy.setEnabled(false);
+            vertical_slider_connectionspeed.setEnabled(false);
+            vertical_slider_connectiondatatimedely.setEnabled(false);
             linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
             linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
@@ -381,21 +390,25 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             halfpaichartdate(chart_battery);
 
             setchartdata(linechart_speed,60);
-            setchartdata(linechart_traveled,30);
+            setchartdata(linechart_traveled,100);
             setchartdata(linechart_altitude,2000);
 
-            initlinechart(linechart_connectionspeed);
-            initlinechart(linechart_datatimedelay);
-            initlinechart(linechart_gpsaccuracy);
 
             //visiblity gone of media information
             layout_videoaudiodata.setVisibility(View.GONE);
             layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
 
+            initlinechart(linechart_connectionspeed,25f);
+            initlinechart(linechart_datatimedelay,10f);
+            initlinechart(linechart_gpsaccuracy,100f);
+            vertical_slider_gpsaccuracy.setMax(100);
+            vertical_slider_connectionspeed.setMax(25);
+            vertical_slider_connectiondatatimedely.setMax(10);
+
             vertical_slider_speed.setMax(60);
             vertical_slider_altitude.setMax(2000);
-            vertical_slider_traveled.setMax(30);
+            vertical_slider_traveled.setMax(100);
             vertical_slider_speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -465,10 +478,18 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     arraycontainerformetric = metricmainarraylist.get(currentmediaposition);
 
                     ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
+                    String latitude="",longitude="";
                     for (int j = 0; j < metricItemArraylist.size(); j++)
                     {
-
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.heading))
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude))
+                        {
+                            latitude=metricItemArraylist.get(j).getMetricTrackValue();
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude))
+                        {
+                            longitude=metricItemArraylist.get(j).getMetricTrackValue();
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.heading))
                         {
                             String value=metricItemArraylist.get(j).getMetricTrackValue();
                             if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
@@ -482,11 +503,16 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             {
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"NA", tvheading);
                             }
+
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitudedegree)){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlatitude);
-                        }else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitudedegree)){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlongitude);
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitudedegree))
+                        {
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude)
+                                    ,"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlatitude);
+                        }else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitudedegree))
+                        {
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude)
+                                    ,"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlongitude);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_x)){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.xaxis),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvxaxis);
@@ -505,10 +531,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlanguage);
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("country")){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.country),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvcountry);
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("country")) {
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.country), "\n" + metricItemArraylist.get(j).getMetricTrackValue(), tvcountry);
                         }
-
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("carrier")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.network),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvnetwork);
                         }
@@ -528,26 +553,10 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.timezone),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvtimezone);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.address)){
-                            common.setdrawabledata("","\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvaddress);
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.address),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvaddress);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvwifi);
-                        }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.blockchainid)){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.blockchain_id),
-                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblockchainid);
-                        }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.hashformula)){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.hash_formula),
-                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblockid);
-                        }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.datahash)){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.metadata),
-                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblocknumber);
-                        }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.matrichash)){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.mediahash),
-                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvmetahash);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
                             screenwidth = metricItemArraylist.get(j).getMetricTrackValue();
@@ -555,7 +564,18 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             screenheight = metricItemArraylist.get(j).getMetricTrackValue();
                             common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
                         }
-
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.blockchainid)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.blockchain_id),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblockchainid);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.hashformula)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.hash_formula),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblockid);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.datahash)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.metadata),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvblocknumber);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.matrichash)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.mediahash),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvmetahash);
+                        }
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.Battery))
                         {
                             if(chart_battery!= null)
@@ -590,6 +610,17 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             }
                         }
 
+                        /*if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicedate")){
+                            tvdate.setText(common.convertstringintodate(metricItemArraylist.get(j).getMetricTrackValue()));
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequencestarttime")){
+                            tvtime.setText(common.getFormattedTime(metricItemArraylist.get(j).getMetricTrackValue()));
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequenceendtime"))
+                            tvtime.setText(tvtime.getText()+" - "+common.getFormattedTime(metricItemArraylist.get(j).getMetricTrackValue()));*/
+
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclocktime))
                         {
                             String time=metricItemArraylist.get(j).getMetricTrackValue();
@@ -598,10 +629,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                 if((! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
                                     phone_time_clock.setpostrecorddata(false,time);
 
-                                phone_time_clock.setfromdrawercontroller(false);
+                                phone_time_clock.setfromdrawercontroller(true);
                             }
                         }
-
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.worldclocktime))
                         {
                             String time=metricItemArraylist.get(j).getMetricTrackValue();
@@ -610,20 +640,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                 if(world_time_clock != null && (! time.trim().isEmpty()) && (! time.equalsIgnoreCase("NA")))
                                     world_time_clock.setpostrecorddata(false,time);
 
-                                world_time_clock.setfromdrawercontroller(false);
+                                world_time_clock.setfromdrawercontroller(true);
                             }
-                        }
 
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("connectionspeed"))
-                        {
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),
-                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue() , tvconnection);
-                        }
-
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.connectiondatadelay))
-                        {
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay),
-                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue() ,txt_datatimedelay);
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.availablewifinetwork))
@@ -632,25 +651,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                     metricItemArraylist.get(j).getMetricTrackValue(), txt_availablewifinetwork);
                         }
 
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))
-                        {
-                            String value=metricItemArraylist.get(j).getMetricTrackValue();
-                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
-                                    && (! value.equalsIgnoreCase("null")))
-                            {
-                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                                        "\n"+value+" feet", tvgpsaccuracy);
-                            }
-                            else
-                            {
-                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                                        "\n"+value, tvgpsaccuracy);
-                            }
-                        }
-
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.speed))
                         {
-                            String value = metricItemArraylist.get(j).getMetricTrackValue();
+                            String value = common.speedformatter(metricItemArraylist.get(j).getMetricTrackValue());
                             updateverticalsliderlocationdata(value,vertical_slider_speed);
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed)
                                     ,"\n"+ value, tvspeed);
@@ -665,11 +668,57 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled))
                         {
-                            String value = metricItemArraylist.get(j).getMetricTrackValue();
+                            String value = common.travelleddistanceformatter(metricItemArraylist.get(j).getMetricTrackValue());
                             updateverticalsliderlocationdata(value,vertical_slider_traveled);
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),"\n"+value, tvtraveled);
                         }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("connectionspeed"))
+                        {
+                            String value = metricItemArraylist.get(j).getMetricTrackValue();
+                            updateverticalsliderlocationdata(value,vertical_slider_connectionspeed);
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),
+                                    "\n"+value , tvconnection);
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.connectiondatadelay))
+                        {
+                            String value=metricItemArraylist.get(j).getMetricTrackValue();
+                            updateverticalsliderlocationdata(value,vertical_slider_connectiondatatimedely);
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay),
+                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue() ,txt_datatimedelay);
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))
+                        {
+                            String value=metricItemArraylist.get(j).getMetricTrackValue();
+                            updateverticalsliderlocationdata(value,vertical_slider_gpsaccuracy);
+                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
+                                    && (! value.equalsIgnoreCase("null")))
+                            {
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                                        "\n"+value+" feet", tvgpsaccuracy);
+                            }
+                            else
+                            {
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                                        "\n"+value, tvgpsaccuracy);
+                            }
+                        }
+
                     }
+
+                    if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                            (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                    {
+                        populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                    }
+
+                    tvblockchainid.setText(arraycontainerformetric.getVideostarttransactionid());
+                    tvblockid.setText(arraycontainerformetric.getHashmethod());
+                    tvblocknumber.setText(arraycontainerformetric.getValuehash());
+                    tvmetahash.setText(arraycontainerformetric.getMetahash());
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -1588,7 +1637,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         linechart.setPinchZoom(false);
     }
 
-    public  void initlinechart(LineChart chart)
+    public  void initlinechart(LineChart chart,Float maxrange)
     {
         chart.setNoDataText("");
         // background color
@@ -1600,8 +1649,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         YAxis yAxis;
         yAxis = chart.getAxisLeft();
         chart.getAxisRight().setEnabled(false);
-        //yAxis.setAxisMaximum(20f);
-        //yAxis.setAxisMinimum(0f);
+        yAxis.setAxisMaximum(maxrange);
+        yAxis.setAxisMinimum(0f);
 
         // // Create Limit Lines // //
         LimitLine llXAxis = new LimitLine(9f, "Index 10");

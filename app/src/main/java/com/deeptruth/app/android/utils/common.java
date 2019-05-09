@@ -2509,6 +2509,8 @@ public class common {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        return dateformat;
+    }
 
 
     public static String speedformatter(String value) {
@@ -2620,8 +2622,6 @@ public class common {
 
     private static boolean useMiles(Locale locale) {
         return locale.equals(Locale.US) || locale.equals(Locale.UK);
-    }
-        return dateformat;
     }
 
     public static String getFormattedTime(String time) {
