@@ -1678,15 +1678,16 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
             if(isdatacomposing)
             {
-                mgooglemap.setMyLocationEnabled(true);
+                mgooglemap.setMyLocationEnabled(false);
             }
             else
             {
                 mgooglemap.setMyLocationEnabled(false);
             }
 
-            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
+            mgooglemap.getUiSettings().setZoomControlsEnabled(false);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
+            mgooglemap.getUiSettings().setZoomGesturesEnabled(false);
         }
     }
     public void zoomgooglemap(double latitude,double longitude)

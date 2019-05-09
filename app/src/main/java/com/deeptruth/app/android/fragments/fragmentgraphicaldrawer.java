@@ -1831,6 +1831,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             mgooglemap.getUiSettings().setZoomControlsEnabled(false);
             mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
+            mgooglemap.getUiSettings().setZoomGesturesEnabled(false);
         }
     }
 
