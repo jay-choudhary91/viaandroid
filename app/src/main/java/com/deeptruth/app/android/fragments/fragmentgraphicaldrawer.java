@@ -41,6 +41,7 @@ import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.AnalogClock;
+import com.deeptruth.app.android.utils.AnalogClockBlack;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
@@ -75,7 +76,6 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.warkiz.widget.IndicatorSeekBar;
@@ -232,10 +232,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     RelativeLayout layout_constraint;
     @BindView(R.id.layout_transparency_meter)
     LinearLayout layout_transparency_meter;
-    @BindView(R.id.phone_time_clock)
+
+    @BindView(R.id.phone_time_clock_white)
     AnalogClock phone_time_clock;
-    @BindView(R.id.world_time_clock)
+    @BindView(R.id.phone_time_clock_black)
+    AnalogClockBlack phone_time_clock_black;
+
+    @BindView(R.id.world_time_clock_white)
     AnalogClock world_time_clock;
+    @BindView(R.id.world_time_clock_black)
+    AnalogClockBlack world_time_clock_black;
+
     @BindView(R.id.txt_phone_time)
     TextView txt_phone_time;
     @BindView(R.id.txt_world_time)
@@ -349,7 +356,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
           msensormanager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
           scrollview_meta = (ScrollView) findViewById(R.id.scrollview_meta);
-
+          phone_time_clock_black.setVisibility(View.GONE);
+          world_time_clock_black.setVisibility(View.GONE);
           settextviewcolor();
 
           seekbar_mediavideoaudio.setEnabled(false);

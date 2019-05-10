@@ -28,7 +28,15 @@
             <com.deeptruth.app.android.utils.AnalogClock
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:id="@+id/phone_time_clock"
+                android:id="@+id/phone_time_clock_white"
+                android:layout_marginTop="10dp"
+                android:elevation="10dp"
+                app:showSecondHand="true"/>
+
+            <com.deeptruth.app.android.utils.AnalogClockBlack
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:id="@+id/phone_time_clock_black"
                 android:layout_marginTop="10dp"
                 android:elevation="10dp"
                 app:showSecondHand="true"/>
@@ -63,7 +71,15 @@
             <com.deeptruth.app.android.utils.AnalogClock
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:id="@+id/world_time_clock"
+                android:id="@+id/world_time_clock_white"
+                android:elevation="10dp"
+                android:layout_marginTop="10dp"
+                app:showSecondHand="true"/>
+
+            <com.deeptruth.app.android.utils.AnalogClockBlack
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:id="@+id/world_time_clock_black"
                 android:elevation="10dp"
                 android:layout_marginTop="10dp"
                 app:showSecondHand="true"/>

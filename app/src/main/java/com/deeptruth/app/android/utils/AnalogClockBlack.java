@@ -24,7 +24,7 @@ import java.util.TimeZone;
 
 import static android.text.format.DateUtils.SECOND_IN_MILLIS;
 
-public class AnalogClock extends View {
+public class AnalogClockBlack extends View {
 
     boolean isdatacomposing=true;
     boolean isdrawercontroller=true;
@@ -63,15 +63,15 @@ public class AnalogClock extends View {
     private TimeZone mTimeZone;
     private boolean mEnableSeconds = true;
     private itemupdatelistener itemupdator;
-    public AnalogClock(Context context) {
+    public AnalogClockBlack(Context context) {
         this(context, null);
     }
 
-    public AnalogClock(Context context, AttributeSet attrs) {
+    public AnalogClockBlack(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public AnalogClock(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AnalogClockBlack(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         final Resources r = context.getResources();
@@ -82,9 +82,9 @@ public class AnalogClock extends View {
         mDial = a.getDrawable(R.styleable.AnalogClock_dial);
         if (mDial == null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mDial = context.getDrawable(R.drawable.clock_face);
+                mDial = context.getDrawable(R.drawable.clock_face_black);
             } else {
-                mDial = r.getDrawable(R.drawable.clock_face);
+                mDial = r.getDrawable(R.drawable.clock_face_black);
             }
         }
         mHourHand = a.getDrawable(R.styleable.AnalogClock_hour);
@@ -115,8 +115,8 @@ public class AnalogClock extends View {
         initdrawable(context, mHourHand);
         initdrawable(context, mMinuteHand);
         initdrawable(context, mSecondHand);
-        mMinuteHand.setTint(Color.WHITE);
-        mHourHand.setTint(Color.WHITE);
+        mMinuteHand.setTint(Color.BLACK);
+        mHourHand.setTint(Color.BLACK);
     }
 
     @Override
@@ -165,19 +165,6 @@ public class AnalogClock extends View {
             canvas.scale(scale, scale, 0f, 0f);
         }
         mDial.draw(canvas);
-
-        if(isdrawercontroller)
-        {
-            mDial.setTint(Color.WHITE);
-            mHourHand.setTint(Color.WHITE);
-            mMinuteHand.setTint(Color.WHITE);
-        }
-        else
-        {
-            mDial.setTint(Color.BLACK);
-            mHourHand.setTint(Color.BLACK);
-            mMinuteHand.setTint(Color.BLACK);
-        }
 
         if(isdatacomposing)
         {
@@ -287,20 +274,5 @@ public class AnalogClock extends View {
     public void setfromdrawercontroller(boolean isdrawercontroller)
     {
         this.isdrawercontroller=isdrawercontroller;
-        if(mDial != null && mHourHand != null && mMinuteHand != null)
-        {
-            if(isdrawercontroller)
-            {
-                mDial.setTint(Color.WHITE);
-                mHourHand.setTint(Color.WHITE);
-                mMinuteHand.setTint(Color.WHITE);
-            }
-            else
-            {
-                mDial.setTint(Color.BLACK);
-                mHourHand.setTint(Color.BLACK);
-                mMinuteHand.setTint(Color.BLACK);
-            }
-        }
     }
 }

@@ -40,6 +40,7 @@ import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.AnalogClock;
+import com.deeptruth.app.android.utils.AnalogClockBlack;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.views.customfonttextview;
@@ -172,10 +173,16 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     @BindView(R.id.img_phone_orientation)
     ImageView img_phone_orientation;
 
-    @BindView(R.id.phone_time_clock)
-    AnalogClock phone_time_clock;
-    @BindView(R.id.world_time_clock)
-    AnalogClock world_time_clock;
+    @BindView(R.id.phone_time_clock_white)
+    AnalogClock phone_time_clock_white;
+    @BindView(R.id.phone_time_clock_black)
+    AnalogClockBlack phone_time_clock;
+
+    @BindView(R.id.world_time_clock_white)
+    AnalogClock world_time_clock_white;
+    @BindView(R.id.world_time_clock_black)
+    AnalogClockBlack world_time_clock;
+
     @BindView(R.id.txt_phone_time)
     TextView txt_phone_time;
     @BindView(R.id.txt_world_time)
@@ -328,6 +335,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             {
                 e.printStackTrace();
             }
+
+            phone_time_clock_white.setVisibility(View.GONE);
+            world_time_clock_white.setVisibility(View.GONE);
 
             settextviewcolor();
 
