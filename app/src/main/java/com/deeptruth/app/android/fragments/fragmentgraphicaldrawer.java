@@ -462,24 +462,25 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             halfpaichartdate(chart_cpuusage);
             halfpaichartdate(chart_battery);
 
-            setchartdata(linechart_speed,60);
-            setchartdata(linechart_traveled,100);
+            setchartdata(linechart_speed,80);
             setchartdata(linechart_altitude,2000);
+            setchartdata(linechart_traveled,100);
+            vertical_slider_speed.setMax(80);
+            vertical_slider_altitude.setMax(2000);
+            vertical_slider_traveled.setMax(100);
 
             initlinechart(linechart_connectionspeed,25f);
             initlinechart(linechart_datatimedelay,10f);
             initlinechart(linechart_gpsaccuracy,100f);
-            vertical_slider_gpsaccuracy.setMax(100);
             vertical_slider_connectionspeed.setMax(25);
             vertical_slider_connectiondatatimedely.setMax(10);
+            vertical_slider_gpsaccuracy.setMax(100);
 
             /*linechart_speed.setVisibility(View.GONE);
             linechart_traveled.setVisibility(View.GONE);
             linechart_altitude.setVisibility(View.GONE);*/
 
-            vertical_slider_speed.setMax(60);
-            vertical_slider_altitude.setMax(2000);
-            vertical_slider_traveled.setMax(100);
+
 
         }
         return rootview;
@@ -1322,6 +1323,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                         set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(getActivity(),
                                 R.drawable.blue_black_ball));
+
+
+                       // Log.e("X value ",""+set1.getEntryForIndex(selectedchartposition).getX());
                     }
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override

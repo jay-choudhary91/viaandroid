@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -9,7 +9,7 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:statusBarColor">@color/dark_blue_solid_a</item>
         <item name="android:windowDisablePreview">false</item>
-
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="28">never</item>
     </style>
 
     <style name="textview">
