@@ -471,7 +471,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             initlinechart(linechart_connectionspeed,25f);
             initlinechart(linechart_datatimedelay,10f);
-            initlinechart(linechart_gpsaccuracy,200f);
+            initlinechart(linechart_gpsaccuracy,100f);
             vertical_slider_connectionspeed.setMax(25);
             vertical_slider_connectiondatatimedely.setMax(10);
             vertical_slider_gpsaccuracy.setMax(100);
