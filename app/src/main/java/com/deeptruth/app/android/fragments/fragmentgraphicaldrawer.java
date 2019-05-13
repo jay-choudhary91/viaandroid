@@ -471,7 +471,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             initlinechart(linechart_connectionspeed,25f);
             initlinechart(linechart_datatimedelay,10f);
-            initlinechart(linechart_gpsaccuracy,100f);
+            initlinechart(linechart_gpsaccuracy,200f);
             vertical_slider_connectionspeed.setMax(25);
             vertical_slider_connectiondatatimedely.setMax(10);
             vertical_slider_gpsaccuracy.setMax(100);
@@ -1299,8 +1299,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             setspeedtraveledaltitudechart(linechart_altitude,-1f,altitudegraphitems);
     }
 
-
-    public void updatelinegraphwithposition(final LineChart chart, ArrayList<Entry> valuesarray, final int mediarunningpercentage)
+    public void updatelinegraphwithposition(final LineChart chart, ArrayList<Entry> valuesarray, final int mediarunningpercentage, final verticalseekbar vertical_seekbar)
     {
         if (chart.getData() != null &&  chart.getData().getDataSetCount() > 0)
         {
@@ -1315,22 +1314,33 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 public void run()
                 {
                     int totalsize=set1.getEntryCount();
-                    int selectedchartposition = (mediarunningpercentage * totalsize) / 100;
+                    final int selectedchartposition = (mediarunningpercentage * totalsize) / 100;
+                    int count = 0;
                     if(selectedchartposition < set1.getEntryCount())
                     {
                         for(int i=0;i<set1.getEntryCount();i++)
                             set1.getEntryForIndex(i).setIcon(null);
 
-                        set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(getActivity(),
-                                R.drawable.blue_black_ball));
-
-
+                        count =  set1.getEntryCount();
+                        if (count != 1) {
+                            set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(getActivity(),
+                                    R.drawable.blue_black_ball));
+                        }
                        // Log.e("X value ",""+set1.getEntryForIndex(selectedchartposition).getX());
                     }
+                    final int finalCount = count;
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             chart.invalidate();
+                            if(finalCount != 1){
+                                if(vertical_seekbar.getVisibility() == View.VISIBLE)
+                                       vertical_seekbar.setVisibility(View.GONE);
+                            }else{
+                                vertical_seekbar.setVisibility(View.VISIBLE);
+                                float sizey = set1.getEntryForIndex(selectedchartposition).getY();
+                                updateverticalsliderlocationdata(Float.toString(sizey),vertical_seekbar);
+                            }
                         }
                     });
                 }
@@ -1692,22 +1702,22 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     int mediarunningpercentage = (currentmediaposition * 100) / metricmainarraylist.size();
 
                     if(linechart_connectionspeed != null)
-                        updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage);
+                        updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage,vertical_slider_connectionspeed);
 
                     if(linechart_datatimedelay != null)
-                        updatelinegraphwithposition(linechart_datatimedelay,connectiondatadelayvalues,mediarunningpercentage);
+                        updatelinegraphwithposition(linechart_datatimedelay,connectiondatadelayvalues,mediarunningpercentage,vertical_slider_connectiondatatimedely);
 
                     if(linechart_gpsaccuracy != null)
-                        updatelinegraphwithposition(linechart_gpsaccuracy,gpsaccuracyvalues,mediarunningpercentage);
+                        updatelinegraphwithposition(linechart_gpsaccuracy,gpsaccuracyvalues,mediarunningpercentage,vertical_slider_gpsaccuracy);
 
                     if(linechart_speed != null && speedgraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_speed,speedgraphitems,mediarunningpercentage);
+                        updatelinegraphwithposition(linechart_speed,speedgraphitems,mediarunningpercentage,vertical_slider_speed);
 
                     if(linechart_traveled != null && travelledgraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_traveled,travelledgraphitems,mediarunningpercentage);
+                        updatelinegraphwithposition(linechart_traveled,travelledgraphitems,mediarunningpercentage,vertical_slider_traveled);
 
                     if(linechart_altitude != null && altitudegraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_altitude,altitudegraphitems,mediarunningpercentage);
+                        updatelinegraphwithposition(linechart_altitude,altitudegraphitems,mediarunningpercentage,vertical_slider_altitude);
 
                 }
 
