@@ -3211,53 +3211,53 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         int sectioncount=0;
         String lastcolor="";
         ArrayList<String> colorsectioncount=new ArrayList<>();
-
-        for(int i=0 ; i<metricmainarraylist.size();i++)
-        {
-            String color=metricmainarraylist.get(i).getColor();
-            sectioncount++;
-            if(color.trim().isEmpty())
-                color=config.color_white;
-
-            if(! lastcolor.equalsIgnoreCase(color))
+        if(colorsectioncount !=  null){
+            for(int i=0 ; i<metricmainarraylist.size();i++)
             {
-                sectioncount=0;
+                String color=metricmainarraylist.get(i).getColor();
                 sectioncount++;
-                colorsectioncount.add(color+","+sectioncount);
-            }
-            else
-            {
-                colorsectioncount.set(colorsectioncount.size()-1,color+","+sectioncount);
-            }
-            lastcolor=color;
+                if(color.trim().isEmpty())
+                    color=config.color_white;
 
-            if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
-               if(latency.isEmpty()){
-                   latency = metricmainarraylist.get(i).getLatency();
-               }else{
-                   latency = latency + "," + metricmainarraylist.get(i).getLatency();
-               }
-            }
-        }
-
-        for(int i=0;i<colorsectioncount.size();i++)
-        {
-            String item=colorsectioncount.get(i);
-            if(! item.trim().isEmpty())
-            {
-                String[] itemarray=item.split(",");
-                if(itemarray.length >= 2)
+                if(! lastcolor.equalsIgnoreCase(color))
                 {
-                    String writecolor=itemarray[0];
-                    String weight=itemarray[1];
-                    if(! weight.trim().isEmpty())
+                    sectioncount=0;
+                    sectioncount++;
+                    colorsectioncount.add(color+","+sectioncount);
+                }
+                else
+                {
+                    colorsectioncount.set(colorsectioncount.size()-1,color+","+sectioncount);
+                }
+                lastcolor=color;
+
+                if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
+                    if(latency.isEmpty()){
+                        latency = metricmainarraylist.get(i).getLatency();
+                    }else{
+                        latency = latency + "," + metricmainarraylist.get(i).getLatency();
+                    }
+                }
+            }
+
+            for(int i=0;i<colorsectioncount.size();i++)
+            {
+                String item=colorsectioncount.get(i);
+                if(! item.trim().isEmpty())
+                {
+                    String[] itemarray=item.split(",");
+                    if(itemarray.length >= 2)
                     {
-                        linearseekbarcolorview.addView(getmediaseekbarbackgroundview(weight,writecolor));
+                        String writecolor=itemarray[0];
+                        String weight=itemarray[1];
+                        if(! weight.trim().isEmpty())
+                        {
+                            linearseekbarcolorview.addView(getmediaseekbarbackgroundview(weight,writecolor));
+                        }
                     }
                 }
             }
         }
-
         xdata.getinstance().saveSetting(config.latency,latency);
         gethelper().setdatacomposing(false);
     }

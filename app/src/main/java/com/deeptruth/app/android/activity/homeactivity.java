@@ -708,10 +708,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     public void setdrawerheightonfullscreen(int drawerheight) {
         if(drawerheight!=0){
             navigation_drawer.setPadding(0,0,0,drawerheight);
-            imglefthandle.setPadding(0,0,0,drawerheight);
+            imgrighthandle.setPadding(0,drawerheight,0,0);
         }else{
             navigation_drawer.setPadding(0,0,0,0);
-            imglefthandle.setPadding(0,0,0,0);
+            imgrighthandle.setPadding(0,0,0,0);
         }
         //  graphicaldrawerfragment.setdrawerheight(drawerheight);
     }
