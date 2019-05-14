@@ -3211,31 +3211,34 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         int sectioncount=0;
         String lastcolor="";
         ArrayList<String> colorsectioncount=new ArrayList<>();
-        if(colorsectioncount !=  null){
+        if(metricmainarraylist !=  null){
             for(int i=0 ; i<metricmainarraylist.size();i++)
             {
-                String color=metricmainarraylist.get(i).getColor();
-                sectioncount++;
-                if(color.trim().isEmpty())
-                    color=config.color_white;
-
-                if(! lastcolor.equalsIgnoreCase(color))
+                if(metricmainarraylist.get(i) != null)
                 {
-                    sectioncount=0;
+                    String color=metricmainarraylist.get(i).getColor();
                     sectioncount++;
-                    colorsectioncount.add(color+","+sectioncount);
-                }
-                else
-                {
-                    colorsectioncount.set(colorsectioncount.size()-1,color+","+sectioncount);
-                }
-                lastcolor=color;
+                    if(color.trim().isEmpty())
+                        color=config.color_white;
 
-                if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
-                    if(latency.isEmpty()){
-                        latency = metricmainarraylist.get(i).getLatency();
-                    }else{
-                        latency = latency + "," + metricmainarraylist.get(i).getLatency();
+                    if(! lastcolor.equalsIgnoreCase(color))
+                    {
+                        sectioncount=0;
+                        sectioncount++;
+                        colorsectioncount.add(color+","+sectioncount);
+                    }
+                    else
+                    {
+                        colorsectioncount.set(colorsectioncount.size()-1,color+","+sectioncount);
+                    }
+                    lastcolor=color;
+
+                    if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
+                        if(latency.isEmpty()){
+                            latency = metricmainarraylist.get(i).getLatency();
+                        }else{
+                            latency = latency + "," + metricmainarraylist.get(i).getLatency();
+                        }
                     }
                 }
             }
