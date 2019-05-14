@@ -1464,7 +1464,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             dbstartitemcontainer.clear();
             dbmiddleitemcontainer.clear();
 
-            imgflashon.setVisibility(View.VISIBLE);
+            if(imgflashon != null)
+                imgflashon.setVisibility(View.VISIBLE);
+
             apicurrentduration =0;
             currentframenumber =0;
             mframetorecordcount =0;

@@ -610,6 +610,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(object.has("storageuploadurl"))
                             storageurl=object.getString("storageuploadurl");
 
+                        if(object.has("sharedurl"))
+                            shareurl=object.getString("sharedurl");
+
                         if(object.has("shareurl"))
                             shareurl=object.getString("shareurl");
 

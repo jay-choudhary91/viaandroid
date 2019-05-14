@@ -20,7 +20,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http"
+                <data android:scheme="https"
                     android:host="@string/deep_link_hosturl"
                     android:pathPrefix="/"/>
                 <!-- note that the leading "/" is required for pathPrefix-->

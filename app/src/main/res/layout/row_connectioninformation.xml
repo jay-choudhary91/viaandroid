@@ -50,6 +50,8 @@
             android:id="@+id/linechart_connectionspeed"
             android:layout_width="match_parent"
             android:layout_height="120dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="5dp"/>
 
         <LinearLayout
@@ -128,12 +130,12 @@
 
         </LinearLayout>
 
-
-
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/linechart_datatimedelay"
         android:layout_width="match_parent"
         android:layout_height="120dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"/>
 
         <LinearLayout
