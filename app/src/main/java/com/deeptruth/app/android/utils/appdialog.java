@@ -129,7 +129,6 @@ public class appdialog
                     if(edtInputData1.getText().toString().trim().equalsIgnoreCase("0000"))
                     {
                         xdata.getinstance().saveSetting(xdata.developer_mode,"1");
-                        xdata.getinstance().saveSettingArray(xdata.developer_mode,"1");
 
                         if(developerdialog != null && developerdialog.isShowing())
                             developerdialog.dismiss();

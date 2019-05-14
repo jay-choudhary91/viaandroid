@@ -20,6 +20,8 @@ public class applicationviavideocomposer extends Application {
         Fabric.with(this, new Crashlytics());
         mcontext = this;
         xdata.getinstance().init(this);
+        xdata.getinstance().saveSetting(xdata.developer_mode,"0");
+
         common.setting_check(xdata.xapi_url, "http://console.dev.crypto-servers.com/xapi.php?");
         common.setting_check(xdata.app_paid_level, "0");
         common.setting_check(xdata.developer_mode, "0");// 0 - false, 1 - true
