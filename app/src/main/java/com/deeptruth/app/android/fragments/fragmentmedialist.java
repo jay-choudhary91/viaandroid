@@ -289,8 +289,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             recyclerviewlist.setLayoutManager(layoutManager);
             ((DefaultItemAnimator) recyclerviewlist.getItemAnimator()).setSupportsChangeAnimations(false);
             recyclerviewlist.getItemAnimator().setChangeDuration(0);
-            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
+            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
+            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
             lay_gridstyle.setOnClickListener(this);
             lay_liststyle.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
@@ -314,7 +314,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             try {
                 DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_bg));
+                        , R.color.img_blue_bg));
             }catch (Exception e)
             {
                 e.printStackTrace();
@@ -322,7 +322,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             try {
                 DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_blue_bg));
+                        , R.color.img_bg));
             }catch (Exception e)
             {
                 e.printStackTrace();
@@ -380,7 +380,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             });
 
-            recyclerviewgrid.setVisibility(View.VISIBLE);
+            recyclerviewgrid.setVisibility(View.GONE);
+            recyclerviewlist.setVisibility(View.VISIBLE);
             recyclerviewgrid.setNestedScrollingEnabled(false);
             recyclerviewlist.setNestedScrollingEnabled(false);
             RecyclerView.LayoutManager mLayoutManager=new GridLayoutManager(getActivity(), 2);
@@ -421,7 +422,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             };
             applicationviavideocomposer.getactivity().registerReceiver(medialistitemaddreceiver, intentFilter);
-            selectedstyletype=1;
+            selectedstyletype=2;
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
                 img_uploadmedia.setVisibility(View.VISIBLE);

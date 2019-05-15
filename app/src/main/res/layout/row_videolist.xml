@@ -163,7 +163,6 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:id="@+id/layout_imageshare"
                             android:layout_height="match_parent">
 
                             <ImageView
@@ -211,6 +210,7 @@
                                         android:layout_height="wrap_content"
                                         android:gravity="left"
                                         android:textSize="11sp"
+                                        android:minLines="2"
                                         android:textColor="@color/black"
                                         android:text="xx-xx-xxxx"
                                         />
