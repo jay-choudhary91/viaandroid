@@ -2237,9 +2237,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
+
                 Highlight   high = new Highlight(set1.getEntryForIndex(set1.getEntryCount()-1).getX(), 0, set1.getEntryCount()-1);
                 chart.highlightValue(high, false);
-
 
                 chart.setViewPortOffsets(0,0,100,0);
             }
@@ -2316,10 +2316,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
                                     R.drawable.blue_black_ball));
                            // high.setDataIndex(selectedchartposition);
-                            Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
-                            chart.highlightValue(high, false);
-
-
                         }
                         // Log.e("X value ",""+set1.getEntryForIndex(selectedchartposition).getX());
                     }
@@ -2327,6 +2323,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
+                            chart.highlightValue(high, false);
                             chart.invalidate();
                             if(finalCount != 1){
                                 if(vertical_seekbar.getVisibility() == View.VISIBLE)
