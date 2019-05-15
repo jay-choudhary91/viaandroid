@@ -359,6 +359,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.layoutmetainfo)
     RelativeLayout layoutmetainfo;
 
+
     int footerheight ,bottompadding ,actionbarheight;
     int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0, lastrotatedangle =-1,videorotatedangle=-1;
     boolean flag = true;
@@ -369,7 +370,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     Surface surfacetexture = null;
 
 
-    public boolean ismediaplayer = false,islastdragarrow = false;
+    public boolean ismediaplayer = false,islastdragarrow = false,isvalidatingbarshow = false;
     String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             lastsavedangle="",mediatoken="";
     private float currentDegree = 0f;
@@ -420,6 +421,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     boolean isplaypauswebtnshow = false;
     int layoutpauseheight = 0;
     metainformationfragment fragmentmetainformation;
+
+    boolean isplaying = false;
 
     @Override
     public int getlayoutid() {
@@ -2430,6 +2433,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             isvideocompleted=true;
             controller.setplaypauuse();
             maxincreasevideoduration=videoduration;
+            isplaying = false;
+            layout_validating.setVisibility(View.GONE);
            /* playpausebutton.setImageResource(R.drawable.play_btn);
             playpausebutton.setVisibility(View.VISIBLE);*/
             mediaseekbar.setProgress(player.getCurrentPosition());
@@ -2820,8 +2825,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             if(mediafilepath!=null)
             {
+                isplaying=true;
                 playpausebutton.setImageResource(R.drawable.pausebutton);
                 player.start();
+
+
             }
         }
     }
@@ -2865,11 +2873,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 e.printStackTrace();
                             }
-                            layout_validating.setVisibility(View.VISIBLE);
+                            if(isplaying)
+                                layout_validating.setVisibility(View.VISIBLE);
+
                             //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
                             break;
                         case "white":
-                            layout_validating.setVisibility(View.GONE);
+                                layout_validating.setVisibility(View.GONE);
                             break;
                         case "red":
                             txt_section_validating_secondary.setText(config.invalid);
@@ -2880,7 +2890,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 e.printStackTrace();
                             }
-                            layout_validating.setVisibility(View.VISIBLE);
+                            if(isplaying)
+                                layout_validating.setVisibility(View.VISIBLE);
                             //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
                             break;
                         case "yellow":
@@ -2892,14 +2903,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 e.printStackTrace();
                             }
-                            layout_validating.setVisibility(View.VISIBLE);
+                            if(isplaying)
+                                layout_validating.setVisibility(View.VISIBLE);
                             //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
                             break;
                     }
                 }
                 else
                 {
-                    layout_validating.setVisibility(View.GONE);
+                        layout_validating.setVisibility(View.GONE);
                 }
 
                 hdlr.postDelayed(this, 10);
@@ -3408,7 +3420,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         edittext.setFocusable(false);
         edittext.setFocusableInTouchMode(false);
         layout_halfscrnimg.setVisibility(View.VISIBLE);
-        layout_validating.setVisibility(View.VISIBLE);
+
+        if(isplaying)
+            layout_validating.setVisibility(View.VISIBLE);
+
         removeheadermargin();
     }
 
@@ -3457,7 +3472,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         if(layout_halfscrnimg.getVisibility() == View.GONE){
             hidekeyboard();
             layout_halfscrnimg.setVisibility(View.VISIBLE);
-            layout_validating.setVisibility(View.VISIBLE);
+            if(isplaying)
+                layout_validating.setVisibility(View.VISIBLE);
+
             removeheadermargin();
         }
     }
