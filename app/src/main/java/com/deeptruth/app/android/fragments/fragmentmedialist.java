@@ -418,10 +418,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     requestpermissions();
+                    shouldshowlist(true);
                 }
             };
             applicationviavideocomposer.getactivity().registerReceiver(medialistitemaddreceiver, intentFilter);
-            selectedstyletype=1;
+            shouldshowlist(true);
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
                 img_uploadmedia.setVisibility(View.VISIBLE);
@@ -516,60 +517,71 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         return true;
     }
 
+    public void shouldshowlist(boolean listvisible)
+    {
+        if(listvisible)
+        {
+            selectedstyletype=2;
+            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
+            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+            recyclerviewlist.setVisibility(View.VISIBLE);
+            recyclerviewgrid.setVisibility(View.GONE);
+
+            if(adaptermedialist != null && arraymediaitemlist.size() > 0)
+                adaptermedialist.notifyitems(arraymediaitemlist);
+            try {
+                DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.img_bg));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            try {
+                DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.img_blue_bg));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            selectedstyletype=1;
+            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
+            recyclerviewlist.setVisibility(View.GONE);
+            recyclerviewgrid.setVisibility(View.VISIBLE);
+
+            if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
+                adaptermediagrid.notifyDataSetChanged();
+            try {
+                DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.img_bg));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            try {
+                DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.img_blue_bg));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId())
         {
             case R.id.lay_gridstyle:
-                selectedstyletype=1;
-                lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-                lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
-                recyclerviewlist.setVisibility(View.GONE);
-                recyclerviewgrid.setVisibility(View.VISIBLE);
-
-                if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
-                    adaptermediagrid.notifyDataSetChanged();
-                try {
-                    DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                            , R.color.img_bg));
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-                try {
-                    DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                            , R.color.img_blue_bg));
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
+                shouldshowlist(false);
                 break;
             case R.id.lay_liststyle:
-                selectedstyletype=2;
-                lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
-                lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-                recyclerviewlist.setVisibility(View.VISIBLE);
-                recyclerviewgrid.setVisibility(View.GONE);
-
-                if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                    adaptermedialist.notifyitems(arraymediaitemlist);
-                try {
-                    DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                            , R.color.img_bg));
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-                try {
-                    DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                            , R.color.img_blue_bg));
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                shouldshowlist(true);
                 break;
             case R.id.img_camera:
                 launchbottombarfragment();

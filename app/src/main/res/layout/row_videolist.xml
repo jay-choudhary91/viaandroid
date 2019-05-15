@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
+                android:visibility="visible"
                 android:id="@+id/layout_share_slide"
                 android:background="@drawable/img_swipeshare"
                 android:layout_height="match_parent">
@@ -155,241 +156,245 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="0.65"
                         android:layout_marginLeft="5dp"
                         android:orientation="vertical">
 
-
-                        <EditText
-                            android:id="@+id/edt_videoname"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:textSize="15sp"
-                            android:ems="1"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:ellipsize="end"
-                            android:inputType="none"
-                            android:scrollHorizontally="false"
-                            android:background="@drawable/edittext_shap"
-                            android:textColor="@color/black"
-                            android:visibility="visible"
-                            android:imeOptions="actionDone"
-                            />
+                            android:layout_height="match_parent">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:orientation="horizontal">
-
-                            <com.deeptruth.app.android.views.customfonttextview
-                                app:fontType="OpenSans_Regular"
-                                android:id="@+id/tv_mediadate"
+                            <ImageView
+                                android:id="@+id/img_imageshare"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="left"
-                                android:textSize="11sp"
-                                android:textColor="@color/black"
-                                android:text="xx-xx-xx"
-                                />
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="@dimen/margin_2dp"
+                                android:src="@drawable/ic_blueshareimage"/>
 
-                            <com.deeptruth.app.android.views.customfonttextview
-                                android:id="@+id/txt_pipesign"
-                                app:fontType="OpenSans_Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:textSize="11sp"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"
-                                android:textColor="@color/black"
-                                android:text="|"
-                                />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_toLeftOf="@id/img_imageshare"
+                                android:orientation="vertical">
 
-                            <com.deeptruth.app.android.views.customfonttextview
-                                app:fontType="OpenSans_Regular"
-                                android:id="@+id/tv_mediatime"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="left"
-                                android:textSize="11sp"
-                                android:textColor="@color/black"
-                                android:text="5/31/2018"
-                                />
+                                <EditText
+                                    android:id="@+id/edt_videoname"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left"
+                                    android:textSize="15sp"
+                                    android:ems="1"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
+                                    android:ellipsize="end"
+                                    android:inputType="none"
+                                    android:scrollHorizontally="false"
+                                    android:background="@drawable/edittext_shap"
+                                    android:textColor="@color/black"
+                                    android:visibility="visible"
+                                    android:imeOptions="actionDone"
+                                    />
 
-                        </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:orientation="horizontal">
 
+                                    <com.deeptruth.app.android.views.customfonttextview
+                                        app:fontType="OpenSans_Regular"
+                                        android:id="@+id/tv_mediadate"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:textSize="11sp"
+                                        android:minLines="2"
+                                        android:textColor="@color/black"
+                                        android:text="xx-xx-xxxx"
+                                        />
 
-                        <com.deeptruth.app.android.views.customfonttextview
-                            app:fontType="OpenSans_Regular"
-                            android:id="@+id/tv_localkey"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:visibility="gone"
-                            android:textSize="13sp"
-                            android:layout_marginTop="3dp"
-                            android:layout_below="@+id/tv_videoduration"
-                            android:textColor="@color/black"
-                            android:maxLines="1"
-                            android:text=""
-                            />
-
-
-                        <com.deeptruth.app.android.views.customfonttextview
-                            app:fontType="OpenSans_Regular"
-                            android:id="@+id/tv_medianotes"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:textSize="13sp"
-                            android:layout_marginTop="3dp"
-                            android:textColor="@color/black"
-                            android:maxLines="1"
-                            android:ellipsize="end"
-                            android:text=""
-                            />
-
-                        <com.deeptruth.app.android.views.customfonttextview
-                            app:fontType="OpenSans_Regular"
-                            android:id="@+id/tv_sync_status"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:textSize="13sp"
-                            android:layout_marginTop="3dp"
-                            android:layout_below="@+id/tv_localkey"
-                            android:textColor="@color/black"
-                            android:maxLines="1"
-                            android:visibility="gone"
-                            android:text=""
-                            />
-
-                        <LinearLayout
-                            android:id="@+id/layout_colorbar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginTop="3dp">
+                                </LinearLayout>
 
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
 
-                            <com.deeptruth.app.android.views.customfonttextview
-                                app:fontType="OpenSans_Regular"
-                                android:id="@+id/tv_valid"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:textSize="11sp"
-                                android:textColor="@color/black"
-                                android:background="@drawable/roundshape_validtext"
-                                android:maxLines="1"
-                                android:text="Valid"
-                                android:paddingLeft="3dp"
-                                android:paddingRight="3dp"
-                                />
+                                <com.deeptruth.app.android.views.customfonttextview
+                                    app:fontType="OpenSans_Regular"
+                                    android:id="@+id/tv_medianotes"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left"
+                                    android:textSize="13sp"
+                                    android:layout_marginTop="3dp"
+                                    android:textColor="@color/black"
+                                    android:maxLines="1"
+                                    android:visibility="gone"
+                                    android:ellipsize="end"
+                                    android:text=""
+                                    />
 
-                            <com.deeptruth.app.android.views.customfonttextview
-                                android:id="@+id/txt_pipesign_caution"
-                                app:fontType="OpenSans_Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:textSize="11sp"
-                                android:layout_marginLeft="2dp"
-                                android:layout_marginRight="2dp"
-                                android:textColor="@color/black"
-                                android:text="|"
-                                />
+                                <com.deeptruth.app.android.views.customfonttextview
+                                    app:fontType="OpenSans_Regular"
+                                    android:id="@+id/tv_localkey"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left"
+                                    android:visibility="gone"
+                                    android:textSize="13sp"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_below="@+id/tv_videoduration"
+                                    android:textColor="@color/black"
+                                    android:maxLines="1"
+                                    android:text=""
+                                    />
 
-                            <com.deeptruth.app.android.views.customfonttextview
-                                app:fontType="OpenSans_Regular"
-                                android:id="@+id/tv_caution"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:textSize="11sp"
-                                android:textColor="@color/black"
-                                android:background="@drawable/roundshape_cautiontxt"
-                                android:maxLines="1"
-                                android:paddingLeft="3dp"
-                                android:paddingRight="3dp"
-                                android:text="Caution"
-                                />
+                                <com.deeptruth.app.android.views.customfonttextview
+                                    app:fontType="OpenSans_Regular"
+                                    android:id="@+id/tv_sync_status"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left"
+                                    android:textSize="13sp"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_below="@+id/tv_localkey"
+                                    android:textColor="@color/black"
+                                    android:maxLines="1"
+                                    android:visibility="gone"
+                                    android:text=""
+                                    />
 
-                            <com.deeptruth.app.android.views.customfonttextview
-                                android:id="@+id/txt_pipesign_unsent"
-                                app:fontType="OpenSans_Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:textSize="11sp"
-                                android:layout_marginLeft="2dp"
-                                android:layout_marginRight="2dp"
-                                android:textColor="@color/black"
-                                android:text="|"
-                                />
+                                <LinearLayout
+                                    android:id="@+id/layout_colorbar"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginTop="3dp">
 
-                            <com.deeptruth.app.android.views.customfonttextview
-                                app:fontType="OpenSans_Regular"
-                                android:id="@+id/tv_unsent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:textSize="11sp"
-                                android:textColor="@color/black"
-                                android:background="@drawable/roundshape_unsenttxt"
-                                android:maxLines="1"
-                                android:text="Unsent"
-                                android:paddingLeft="3dp"
-                                android:paddingRight="3dp"
-                                />
 
-                            <com.deeptruth.app.android.views.customfonttextview
-                                android:id="@+id/txt_pipesign_invalid"
-                                app:fontType="OpenSans_Regular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:textSize="11sp"
-                                android:layout_marginLeft="2dp"
-                                android:layout_marginRight="2dp"
-                                android:textColor="@color/black"
-                                android:text="|"
-                                />
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
 
-                            <com.deeptruth.app.android.views.customfonttextview
-                                app:fontType="OpenSans_Regular"
-                                android:id="@+id/tv_invalid"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:textSize="11sp"
-                                android:textColor="@color/black"
-                                android:background="@drawable/roundshape_redtxt"
-                                android:maxLines="1"
-                                android:text="Invalid"
-                                android:paddingLeft="3dp"
-                                android:paddingRight="3dp"
-                                />
+                                        <com.deeptruth.app.android.views.customfonttextview
+                                            app:fontType="OpenSans_Regular"
+                                            android:id="@+id/tv_valid"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:textSize="11sp"
+                                            android:textColor="@color/black"
+                                            android:background="@drawable/roundshape_validtext"
+                                            android:maxLines="1"
+                                            android:text="Valid"
+                                            android:paddingLeft="3dp"
+                                            android:paddingRight="3dp"
+                                            />
 
-                        </LinearLayout>
+                                        <com.deeptruth.app.android.views.customfonttextview
+                                            android:id="@+id/txt_pipesign_caution"
+                                            app:fontType="OpenSans_Regular"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:textSize="11sp"
+                                            android:layout_marginLeft="2dp"
+                                            android:layout_marginRight="2dp"
+                                            android:textColor="@color/black"
+                                            android:text="|"
+                                            />
 
-                        <LinearLayout
-                            android:id="@+id/linear_seekbarcolorview"
-                            android:layout_width="match_parent"
-                            android:layout_height="20dp"
-                            android:layout_marginTop="5dp"
-                            android:orientation="horizontal"/>
+                                        <com.deeptruth.app.android.views.customfonttextview
+                                            app:fontType="OpenSans_Regular"
+                                            android:id="@+id/tv_caution"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:textSize="11sp"
+                                            android:textColor="@color/black"
+                                            android:background="@drawable/roundshape_cautiontxt"
+                                            android:maxLines="1"
+                                            android:paddingLeft="3dp"
+                                            android:paddingRight="3dp"
+                                            android:text="Caution"
+                                            />
 
-                        </LinearLayout>
+                                        <com.deeptruth.app.android.views.customfonttextview
+                                            android:id="@+id/txt_pipesign_unsent"
+                                            app:fontType="OpenSans_Regular"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:textSize="11sp"
+                                            android:layout_marginLeft="2dp"
+                                            android:layout_marginRight="2dp"
+                                            android:textColor="@color/black"
+                                            android:text="|"
+                                            />
+
+                                        <com.deeptruth.app.android.views.customfonttextview
+                                            app:fontType="OpenSans_Regular"
+                                            android:id="@+id/tv_unsent"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:textSize="11sp"
+                                            android:textColor="@color/black"
+                                            android:background="@drawable/roundshape_unsenttxt"
+                                            android:maxLines="1"
+                                            android:text="Unsent"
+                                            android:paddingLeft="3dp"
+                                            android:paddingRight="3dp"
+                                            />
+
+                                        <com.deeptruth.app.android.views.customfonttextview
+                                            android:id="@+id/txt_pipesign_invalid"
+                                            app:fontType="OpenSans_Regular"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:textSize="11sp"
+                                            android:layout_marginLeft="2dp"
+                                            android:layout_marginRight="2dp"
+                                            android:textColor="@color/black"
+                                            android:text="|"
+                                            />
+
+                                        <com.deeptruth.app.android.views.customfonttextview
+                                            app:fontType="OpenSans_Regular"
+                                            android:id="@+id/tv_invalid"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:textSize="11sp"
+                                            android:textColor="@color/black"
+                                            android:background="@drawable/roundshape_redtxt"
+                                            android:maxLines="1"
+                                            android:text="Invalid"
+                                            android:paddingLeft="3dp"
+                                            android:paddingRight="3dp"
+                                            />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/linear_seekbarcolorview"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="20dp"
+                                        android:layout_marginTop="5dp"
+                                        android:orientation="horizontal"/>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+
+                        </RelativeLayout>
+
+
+
                     </LinearLayout>
 
                 </LinearLayout>
