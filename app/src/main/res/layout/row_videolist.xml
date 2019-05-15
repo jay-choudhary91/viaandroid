@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
+                android:visibility="gone"
                 android:id="@+id/layout_share_slide"
                 android:background="@drawable/img_swipeshare"
                 android:layout_height="match_parent">
@@ -162,20 +163,21 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
+                            android:id="@+id/layout_imageshare"
                             android:layout_height="match_parent">
 
                             <ImageView
-                                android:id="@+id/img_image"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
+                                android:id="@+id/img_imageshare"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:background="@color/red"/>
+                                android:src="@drawable/ic_blueshareimage"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_toLeftOf="@id/img_image"
+                                android:layout_toLeftOf="@id/img_imageshare"
                                 android:orientation="vertical">
 
                                 <EditText
@@ -208,38 +210,9 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:gravity="left"
-                                        android:maxLines="1"
-                                        android:singleLine="true"
-                                        android:ellipsize="end"
                                         android:textSize="11sp"
                                         android:textColor="@color/black"
                                         android:text="xx-xx-xxxx"
-                                        />
-
-                                    <com.deeptruth.app.android.views.customfonttextview
-                                        android:id="@+id/txt_pipesign"
-                                        app:fontType="OpenSans_Regular"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="center"
-                                        android:textSize="11sp"
-                                        android:visibility="gone"
-                                        android:layout_marginLeft="5dp"
-                                        android:layout_marginRight="5dp"
-                                        android:textColor="@color/black"
-                                        android:text="|"
-                                        />
-
-                                    <com.deeptruth.app.android.views.customfonttextview
-                                        app:fontType="OpenSans_Regular"
-                                        android:id="@+id/tv_mediatime"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="left"
-                                        android:textSize="11sp"
-                                        android:visibility="gone"
-                                        android:textColor="@color/black"
-                                        android:text="5/31/2018"
                                         />
 
                                 </LinearLayout>
@@ -256,6 +229,7 @@
                                     android:layout_marginTop="3dp"
                                     android:textColor="@color/black"
                                     android:maxLines="1"
+                                    android:visibility="gone"
                                     android:ellipsize="end"
                                     android:text=""
                                     />
