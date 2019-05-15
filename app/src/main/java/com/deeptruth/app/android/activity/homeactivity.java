@@ -35,7 +35,6 @@ import com.deeptruth.app.android.fragments.fetchsettingvaluefragment;
 import com.deeptruth.app.android.fragments.fetchxapivaluefragment;
 import com.deeptruth.app.android.fragments.fragment_xapi_detail;
 import com.deeptruth.app.android.fragments.fragmentgraphicaldrawer;
-import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.fragmentrimvideo;
 import com.deeptruth.app.android.fragments.framemetricssettings;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;

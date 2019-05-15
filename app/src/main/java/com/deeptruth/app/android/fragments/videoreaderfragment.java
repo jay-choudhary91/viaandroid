@@ -1619,6 +1619,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             playpausebutton.setVisibility(View.GONE);
                         }
 
+                        if(!player.isPlaying()){
+                            playpausebutton.setVisibility(View.VISIBLE);
+                        }
+
                         if(islastdragarrow){
                             return;
                         }else{
