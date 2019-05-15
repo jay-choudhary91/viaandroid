@@ -31,6 +31,7 @@ import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
+import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.fragmentrimvideo;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
