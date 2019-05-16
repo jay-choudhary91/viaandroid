@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -24,6 +25,7 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -36,10 +38,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Process;
 import android.os.StatFs;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
@@ -2176,7 +2180,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     public void updateunsyncedcomposeritems() {
         String hashmethod = "", hashvalue = "", mediatitle = "", selectedid = "", header = "", type = "", localkey = "", token = "", mediakey = "",
                 sync = "", sync_date = "", action_type = "", apirequestdevicedate = "", videostartdevicedate = "", devicetimeoffset = "",
-                videocompletedevicedate = "";
+                videocompletedevicedate = "",mediafilepath="";
 
         String synchdefaultversion = "1", synchstatus = config.sync_inprogress, synchcompletedate = "", synchlastsequence = "";
 
@@ -2196,6 +2200,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             videostartdevicedate = unsyncedmediaitems.get(syncupdationcounter).getVideostartdevicedate().toString();
             devicetimeoffset = unsyncedmediaitems.get(syncupdationcounter).getDevicetimeoffset().toString();
             videocompletedevicedate = unsyncedmediaitems.get(syncupdationcounter).getVideocompletedevicedate().toString();
+            mediafilepath = unsyncedmediaitems.get(syncupdationcounter).getMediafilepath().toString();
         }
 
         if (sync.equalsIgnoreCase("0")) {
@@ -2249,6 +2254,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
         if (mediakey.trim().isEmpty()) {
             // api calling for video_start or audio_start
+            final String finalLocalkey = localkey;
+            final String finalMediafilepath = mediafilepath;
             xapipost_sendjson(locationawareactivity.this, action_type, mpairslist, new apiresponselistener() {
                 @Override
                 public void onResponse(taskresult response) {
@@ -2275,7 +2282,16 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             if (object.has("imagestarttransactionid"))
                                 transactionid = object.getString("imagestarttransactionid");
 
-                            updatevideokeytoken(finalselectedid, key, token, transactionid);
+                            if(object.has("imagetoken") && object.has("imagestarttransactionid"))
+                            {
+                                //isdatasyncing=true;
+                                updatevideokeytoken(finalselectedid, key, token, transactionid);
+                                //performsaveimageslice(finalLocalkey, finalMediafilepath);
+                            }
+                            else
+                            {
+                                updatevideokeytoken(finalselectedid, key, token, transactionid);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -2288,6 +2304,99 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 runmediaupdate(header, localkey, mediakey, token, sync, devicetimeoffset, apirequestdevicedate, finalselectedid, videocompletedevicedate, type);
         }
     }
+
+    public void performsaveimageslice(String localkey, final String mediafilepath)
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try
+                {
+                    File file=new File(mediafilepath);
+                    if(file.exists())
+                    {
+                        Uri uri = FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                                BuildConfig.APPLICATION_ID + ".provider", file);
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(locationawareactivity.this.getContentResolver(), uri);
+                        ArrayList<String> splitimagearray=splitimage(bitmap,16);
+
+                        if (mdbhelper == null) {
+                            mdbhelper = new databasemanager(locationawareactivity.this);
+                            mdbhelper.createDatabase();
+                        }
+                        try {
+                            mdbhelper.open();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try
+                        {
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            mdbhelper.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private ArrayList<String> splitimage(Bitmap bitmap, int chunkNumbers) {
+
+        //For the number of rows and columns of the grid to be displayed
+        int rows,cols;
+        //For height and width of the small image chunks
+        int chunkHeight,chunkWidth;
+
+        ArrayList<String> arrayList=new ArrayList<>();
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+        rows = cols = (int) Math.sqrt(chunkNumbers);
+        chunkHeight = bitmap.getHeight() / rows;
+        chunkWidth = bitmap.getWidth() / cols;
+
+        //xCoord and yCoord are the pixel positions of the image chunks
+        int yCoord = 0;
+        for(int x = 0; x < rows; x++) {
+            int xCoord = 0;
+            for(int y = 0; y < cols; y++) {
+                //Log.e("Properties ",""+xCoord+" "+yCoord+" "+chunkWidth+" "+chunkHeight+" "+chunkNumbers);
+                Bitmap createdbitmap=Bitmap.createBitmap(scaledBitmap, xCoord, yCoord, chunkWidth, chunkHeight);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                createdbitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+                String value= md5.calculatebytemd5(byteArray);
+
+                /*final int lnth=createdbitmap.getByteCount();
+                ByteBuffer dst= ByteBuffer.allocate(lnth);
+                createdbitmap.copyPixelsToBuffer( dst);
+                byte[] barray=dst.array();
+                String value= md5.calculatebytemd5(barray);
+                Log.e("MD5 ",""+value);*/
+
+                arrayList.add(value);
+                /*storeImage(createdbitmap);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+                xCoord += chunkWidth;
+            }
+            yCoord += chunkHeight;
+        }
+        return arrayList;
+    }
+
 
     public void triggersyncstatus() {
         syncupdationcounter++;
@@ -2328,8 +2437,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         try {
 
             ArrayList<mediametadatainfo> mediametadatainfosarray = mdbhelper.setmediametadatainfo(finallocalkey);
-
-
             if (mediametadatainfosarray != null && mediametadatainfosarray.size() > 0) {
 
                 selectedid = mediametadatainfosarray.get(0).getId();
@@ -2659,7 +2766,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             e.printStackTrace();
         }
     }
-
 
     public void updatevideoupdateapiresponse(String selectedid, String sequence, String serverdate, String serverdictionaryhash,
                                              String sequenceid, String videoframetransactionid, String color, String latency, String dictionaryhashvalue) {

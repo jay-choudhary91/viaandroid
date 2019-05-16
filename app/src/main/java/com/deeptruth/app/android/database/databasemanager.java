@@ -542,10 +542,11 @@ public class databasemanager {
                     String  videostartdevicedate = ""+ cur.getString(cur.getColumnIndex("videostartdevicedate"));
                     String  devicetimeoffset = ""+ cur.getString(cur.getColumnIndex("devicetimeoffset"));
                     String  videocompletedevicedate = ""+ cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                    String  mediafilepath = ""+ cur.getString(cur.getColumnIndex("mediafilepath"));
 
                     marray.add(new startmediainfo(selectedid, header, type, location,localkey,token, videokey,
                             sync, action_type,sync_date,apirequestdevicedate,videostartdevicedate,
-                            devicetimeoffset,videocompletedevicedate));
+                            devicetimeoffset,videocompletedevicedate,mediafilepath));
                 }while(cur.moveToNext());
             }
         }catch (Exception e)
