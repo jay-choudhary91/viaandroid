@@ -1053,6 +1053,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         playpausebutton.setVisibility(View.GONE);
                     }
 
+                    if(player != null && !player.isPlaying()){
+                        playpausebutton.setVisibility(View.VISIBLE);
+                    }
+
                     audio_downwordarrow.setVisibility(View.VISIBLE);
                     rl_audio_downwordarrow.setVisibility(View.VISIBLE);
                     img_fullscreen.setVisibility(View.VISIBLE);
