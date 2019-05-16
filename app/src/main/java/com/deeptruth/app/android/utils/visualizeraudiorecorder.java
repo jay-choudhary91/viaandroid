@@ -59,7 +59,7 @@ public class visualizeraudiorecorder extends View {
         width = w; // new width of this View
         height = h; // new height of this View
 
-        LINE_SCALE=common.convertDpToPixel(8,context);
+        LINE_SCALE=common.convertDpToPixel(4,context);
         Log.e("LINE_SCALEheight",""+LINE_SCALE);
         amplitudes = new ArrayList<Float>(width / LINE_WIDTH);
     }
@@ -117,7 +117,7 @@ public class visualizeraudiorecorder extends View {
 
             //linePaint.setPathEffect(new DashPathEffect(new float[] {5,5}, 5));
             // draw a line representing this item in the amplitudes ArrayList
-            canvas.drawLine(curX, middle + scaledHeight / 1, curX, middle- scaledHeight / 1, linePaint);
+            canvas.drawLine(curX, middle + scaledHeight / 6, curX, middle- scaledHeight / 6, linePaint);
 
         }
     }

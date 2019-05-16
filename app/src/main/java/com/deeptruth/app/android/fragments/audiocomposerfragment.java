@@ -11,6 +11,7 @@ import android.media.AudioRecord;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -25,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -47,6 +49,7 @@ import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.models.wavevisualizer;
 import com.deeptruth.app.android.services.insertmediadataservice;
+import com.deeptruth.app.android.utils.visualizerview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
@@ -166,6 +169,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     TextView txt_weakgps;
     @BindView(R.id.txt_no_gps_wifi)
     TextView txt_no_gps_wifi;
+    int bufferSize;
+    private List<visualizerview> mVisualizerviews = new ArrayList<>();
+    visualizerview barvisualizer;
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_audiocomposer;
@@ -184,6 +191,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         gethelper().drawerenabledisable(true);
         gethelper().setdatacomposing(true);
         txt_section_validating_secondary.setVisibility(View.INVISIBLE);
+
+        barvisualizer = (visualizerview)findViewById(R.id.barvisualizer);
 
         handle = (ImageView) rootview.findViewById(R.id.handle);
         img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
@@ -207,7 +216,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
 
         try {
-            int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
+             bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
                     RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
         }catch (Exception e)
         {
@@ -290,6 +299,23 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
         };
         validationbaranimation.setAnimationListener(translatelistener);
+
+        link(barvisualizer);
+
+        ViewTreeObserver observer = barvisualizer.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                barvisualizer.setBaseY(barvisualizer.getHeight());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    barvisualizer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    barvisualizer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+            }
+        });
+
+
 
         return rootview;
     }
@@ -691,10 +717,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         while (isaudiorecording) {
             // gets the voice output from microphone to byte format
             audiorecorder.read(sData, 0, bufferelements2rec);
+            runRecording(short2byte(sData));
             System.out.println("Short writing to file" + sData.toString());
             try {
                 // writes the data to file from buffer stores the voice buffer
                 byte data[] = short2byte(sData);
+
                 os.write(data, 0, bufferelements2rec * bytesperelement);
 
                 if(isaudiorecording)
@@ -1610,8 +1638,40 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void setlayoutmargin(int linearheaderheight){
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
-        params.setMargins(0,(linearheaderheight*2),0,layoutmediatypeheight);
+        params.setMargins(0,(linearheaderheight),0,layoutmediatypeheight);
         rlvisulizerview.setLayoutParams(params);
         rlvisulizerview.requestLayout();
     }
+
+    private void runRecording(final byte buf[]) {
+       // final byte buf[] = new byte[bufferSize];
+                // stop recording
+                if (!isaudiorecording) {
+                    return;
+                }
+                //audiorecorder.read(buf, 0, bufferelements2rec);
+
+                int decibel = calculateDecibel(buf);
+
+                int mVisualizerViewssize = mVisualizerviews.size();
+                if (mVisualizerviews != null && !mVisualizerviews.isEmpty()) {
+                    for (int i = 0; i < mVisualizerviews.size(); i++) {
+                        mVisualizerviews.get(i).receive(decibel);
+                    }
+                }
+            }
+
+    private int calculateDecibel(byte[] buf) {
+        int sum = 0;
+        for (int i = 0; i < bufferelements2rec; i++) {
+            sum += Math.abs(buf[i]);
+        }
+        // avg 10-50
+        return sum / bufferelements2rec;
+    }
+
+    public void link(visualizerview visualizerview) {
+        mVisualizerviews.add(visualizerview);
+    }
+
 }
