@@ -679,8 +679,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(object.has("message"))
                             Toast.makeText(baseactivity.this,object.getString("message"),Toast.LENGTH_SHORT).show();
 
+                        String shareurl="";
+                        if(object.has("sharedurl"))
+                            shareurl=object.getString("sharedurl");
+
+                        if(object.has("shareurl"))
+                            shareurl=object.getString("shareurl");
+
                         if (subdialogshare != null && subdialogshare.isShowing())
                             subdialogshare.dismiss();
+
+                        if(! shareurl.trim().isEmpty())
+                            common.sharemessagewithapps(shareurl);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
