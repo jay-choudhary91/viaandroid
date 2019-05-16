@@ -1994,8 +1994,13 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onStop() {
         super.onStop();
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-            applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
+            try{
+                applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
 
         if (mOrientation != null)
             mOrientation.stopListening();

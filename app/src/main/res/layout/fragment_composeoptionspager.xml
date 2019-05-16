@@ -64,7 +64,8 @@
             android:layout_width="wrap_content"
             android:id="@+id/layout_encryption"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginRight="@dimen/margin_10dp"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true">
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -79,8 +80,6 @@
                 android:text="@string/encrypting"/>
 
         </RelativeLayout>
-
-
 
         <ImageView
             android:id="@+id/img_mediathumbnail"

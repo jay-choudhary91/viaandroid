@@ -338,6 +338,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private PolylineOptions mappathoptions;
     private Polyline mappathpolyline;
     private ArrayList<LatLng> mappathcoordinates=new ArrayList<>();
+    Highlight high =null;
 
     @Override
     public int getlayoutid() {
@@ -2230,11 +2231,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
-                chart.setViewPortOffsets(0,10,100,10);
+
+                Highlight   high = new Highlight(set1.getEntryForIndex(set1.getEntryCount()-1).getX(), 0, set1.getEntryCount()-1);
+                chart.highlightValue(high, false);
+
+                chart.setViewPortOffsets(0,0,100,0);
             }
             else
             {
-                chart.setViewPortOffsets(10,10,10,10);
+                chart.setViewPortOffsets(10,0,10,0);
             }
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
@@ -2252,6 +2257,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             set1.setDrawCircleHole(false);
             set1.setValueTextSize(0f);
             set1.setDrawFilled(false);
+            set1.setHighLightColor(Color.WHITE);
+            set1.setHighlightLineWidth(3);
+            set1.setHighlightEnabled(true);
+            set1.setDrawHorizontalHighlightIndicator(false);
             set1.setFillFormatter(new IFillFormatter() {
                 @Override
                 public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
@@ -2266,7 +2275,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             LineData data = new LineData(dataSets);
             // set data
             chart.setData(data);
-            chart.setViewPortOffsets(10,10,10,10);
+            chart.setViewPortOffsets(10,0,10,10);
         }
 
         chart.animateX(0);
@@ -2300,6 +2309,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         if (count != 1) {
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
                                     R.drawable.blue_black_ball));
+                           // high.setDataIndex(selectedchartposition);
                         }
                         // Log.e("X value ",""+set1.getEntryForIndex(selectedchartposition).getX());
                     }
@@ -2307,6 +2317,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
+                            chart.highlightValue(high, false);
                             chart.invalidate();
                             if(finalCount != 1){
                                 if(vertical_seekbar.getVisibility() == View.VISIBLE)

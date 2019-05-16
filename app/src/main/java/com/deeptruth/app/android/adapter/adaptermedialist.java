@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +52,8 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes,tv_mediaduration,
                 tv_valid,tv_caution,tv_unsent,tv_invalid,txt_pipesign_caution,txt_pipesign_unsent,txt_pipesign_invalid;
         EditText edtvideoname;
-        RelativeLayout relative_child;
-        public ImageView img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
+        RelativeLayout relative_child ;
+        public ImageView img_imageshare,img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public SwipeRevealLayout root_view;
         LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide,linearseekbarcolorview,layout_colorbar;
         horizontalindeterminateprogress progress_db_view;
@@ -60,10 +61,9 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         public myViewHolder(View view) {
             super(view);
             tv_medianotes = (TextView) view.findViewById(R.id.tv_medianotes);
-            txt_pipesign = (TextView) view.findViewById(R.id.txt_pipesign);
             edtvideoname = (EditText) view.findViewById(R.id.edt_videoname);
-            tv_mediatime = (TextView) view.findViewById(R.id.tv_mediatime);
             tv_mediadate = (TextView) view.findViewById(R.id.tv_mediadate);
+            img_imageshare = (ImageView) view.findViewById(R.id.img_imageshare);
             tv_localkey = (TextView) view.findViewById(R.id.tv_localkey);
             tv_sync_status = (TextView) view.findViewById(R.id.tv_sync_status);
             img_videothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
@@ -160,6 +160,11 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             holder.tv_unsent.setVisibility(View.VISIBLE);
             holder.tv_invalid.setVisibility(View.VISIBLE);
 
+            holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            holder.tv_invalid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+
             if(validcount == 0)
                 holder.tv_valid.setVisibility(View.GONE);
 
@@ -179,8 +184,12 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             if(validcount > 0 && cautioncount > 0)
                 holder.txt_pipesign_caution.setVisibility(View.VISIBLE);
 
-            if((cautioncount > 0 || validcount > 0) && unsentcount > 0)
+            if((cautioncount > 0 || validcount > 0) && unsentcount > 0){
                 holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
+                holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
+                holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
+                holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
+            }
 
             if(unsentcount > 0)
             {
@@ -246,15 +255,13 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             if(mediaobject.getCreatedate().trim().isEmpty())
             {
-                holder.txt_pipesign.setVisibility(View.GONE);
+
                 holder.tv_mediadate.setText("NA");
-                holder.tv_mediatime.setText(mediaobject.getCreatetime());
+                // holder.tv_mediatime.setText(mediaobject.getCreatetime());
             }
             else
             {
-                holder.txt_pipesign.setVisibility(View.VISIBLE);
-                holder.tv_mediadate.setText(mediaobject.getCreatedate());
-                holder.tv_mediatime.setText(mediaobject.getCreatetime());
+                holder.tv_mediadate.setText(mediaobject.getCreatedate() +" | "  + mediaobject.getCreatetime());
             }
 
             holder.tv_medianotes.setText(mediaobject.getMedianotes());
@@ -302,6 +309,22 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                     Glide.with(context).load(R.drawable.audiothum).apply(requestOptions).thumbnail(0.1f).into(holder.img_videothumbnail);
                 }
             }
+            holder.img_imageshare.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.img_imageshare.setEnabled(false);
+                    new Handler().postDelayed(new Runnable()
+                    {
+                        public void run()
+                        {
+                            holder.img_imageshare.setEnabled(true);
+                        }
+                    }, 1000);
+                    binderHelper.bind(holder.root_view,""+position);
+                    binderHelper.closeLayout(""+position);
+                    adapter.onItemClicked(mediaobject,1);
+                }
+            });
 
             holder.layout_share_slide.setOnClickListener(new View.OnClickListener() {
                 @Override
