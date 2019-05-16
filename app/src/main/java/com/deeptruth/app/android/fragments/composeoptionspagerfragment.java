@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,7 +43,7 @@ import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
-import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
+import com.deeptruth.app.android.enumclasses.cryptomediatypepagerenum;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.common;
@@ -118,6 +119,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private String[] transparentarray=common.gettransparencyvalues();
     GradientDrawable gradientDrawablebutton;
     private volatile boolean iscircle = true;
+    Typeface fontfaceregular, fontfacebold;
+    private String SANS_BOLD_COMFORTAA = "fonts/Comfortaa-Bold.ttf";
+    private String SANS_REGULAR_COMFORTAA = "fonts/Comfortaa-Regular.ttf";
 
     @Override
     public int getlayoutid() {
@@ -144,6 +148,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
             layoutbottom.setOnTouchListener(this);
+
+            fontfaceregular =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), SANS_REGULAR_COMFORTAA);
+            fontfacebold =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), SANS_BOLD_COMFORTAA);
+            gethelper().drawerenabledisable(false);
 
             navigationbarheight =  common.getnavigationbarheight();
             setfooterlayout();
@@ -190,13 +198,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     int currentpagerpos=position;
                     isfragmentload = false;
                     if(currentpagerpos == 0)
-                        currentpagerpos=2;
+                        currentpagerpos=1;
                     else if(currentpagerpos == 1)
-                        currentpagerpos=3;
+                        currentpagerpos=2;
                     else if(currentpagerpos == 2)
-                        currentpagerpos=4;
+                        currentpagerpos=3;
 
-                    for(int i = 0; i<= mediatypepagerenum.values().length; i++)
+                    for(int i = 0; i<= cryptomediatypepagerenum.values().length; i++)
                     {
                         if(pagermediatype != null)
                         {
@@ -208,10 +216,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                                 {
                                     txt_mediatype.setTextColor(applicationviavideocomposer.getactivity().getResources().
                                             getColor(R.color.wave_blue));
+                                    txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
+                                    txt_mediatype.setTextSize(13f);
                                 }
                                 else
                                 {
                                     txt_mediatype.setTextColor(Color.WHITE);
+                                    txt_mediatype.setTypeface(fontfaceregular, Typeface.NORMAL);
+                                    txt_mediatype.setTextSize(12f);
                                 }
                             }
                         }
@@ -250,7 +262,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         @Override
         public Object instantiateItem(ViewGroup collection, final int position) {
-            final mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
+            final cryptomediatypepagerenum enummediatype = cryptomediatypepagerenum.values()[position];
             LayoutInflater inflater = LayoutInflater.from(mContext);
             ViewGroup layout = (ViewGroup) inflater.inflate(enummediatype.getLayoutResId(), collection, false);
             final TextView txt_mediatype=(TextView)layout.findViewById(R.id.txt_mediatype);
@@ -259,15 +271,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 @Override
                 public void onClick(View view) {
                     Log.e("onClick ",""+ enummediatype.getItemposition());
-                    if(enummediatype.getItemposition() == 2)
+                    if(enummediatype.getItemposition() == 1)
                     {
                         pagermediatype.setCurrentItem(0,true);
                     }
-                    else if(enummediatype.getItemposition() == 3)
+                    else if(enummediatype.getItemposition() == 2)
                     {
                         pagermediatype.setCurrentItem(1,true);
                     }
-                    else if(enummediatype.getItemposition() == 4)
+                    else if(enummediatype.getItemposition() == 3)
                     {
                         pagermediatype.setCurrentItem(2,true);
                     }
@@ -284,12 +296,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         @Override
         public float getPageWidth(int position) {
-            return 0.20f;
+            return 0.33f;
         }
 
         @Override
         public int getCount() {
-            return mediatypepagerenum.values().length;
+            return cryptomediatypepagerenum.values().length;
         }
 
         @Override
@@ -299,7 +311,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         @Override
         public CharSequence getPageTitle(int position) {
-            mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
+            cryptomediatypepagerenum enummediatype = cryptomediatypepagerenum.values()[position];
             return enummediatype.getItemname();
         }
 
@@ -425,15 +437,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         int currentpagerpos=currentselectedcomposer;
         if(currentpagerpos == 0)
-            currentpagerpos=2;
+            currentpagerpos=1;
         else if(currentpagerpos == 1)
-            currentpagerpos=3;
+            currentpagerpos=2;
         else if(currentpagerpos == 2)
-            currentpagerpos=4;
+            currentpagerpos=3;
 
-        if(currentpagerpos == 2)
+        if(currentpagerpos == 1)
         {
-            for(int i=0;i<=6;i++)
+            for(int i=0;i<=4;i++)
             {
                 if(pagermediatype != null)
                 {
@@ -445,10 +457,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         {
                             txt_mediatype.setTextColor(applicationviavideocomposer.getactivity().getResources().
                                     getColor(R.color.wave_blue));
+                            txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
+                            txt_mediatype.setTextSize(13f);
                         }
                         else
                         {
                             txt_mediatype.setTextColor(Color.WHITE);
+                            txt_mediatype.setTypeface(fontfaceregular, Typeface.NORMAL);
+                            txt_mediatype.setTextSize(12f);
                         }
                     }
                 }

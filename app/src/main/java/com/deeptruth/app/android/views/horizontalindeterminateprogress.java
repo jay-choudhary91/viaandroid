@@ -40,19 +40,24 @@ public class horizontalindeterminateprogress extends FrameLayout {
     }
 
     private void initAnimation(int tileImageWidth) {
-        LayoutParams layoutParams = (LayoutParams) mProgressImage.getLayoutParams();
-        layoutParams.setMargins(-tileImageWidth, 0, 0, 0);
+        if(mProgressAnimation == null)
+        {
+            LayoutParams layoutParams = (LayoutParams) mProgressImage.getLayoutParams();
+            layoutParams.setMargins(-tileImageWidth, 0, 0, 0);
 
-        // *HACK* tileImageWidth-3 is used because of *lags*(slow pause) in the moment
-        // of animation END-RESTART.
-        mProgressAnimation = new TranslateAnimation(0, tileImageWidth - 3, 0, 0);
-        mProgressAnimation.setInterpolator(new LinearInterpolator());
-        mProgressAnimation.setDuration(1000);
-        mProgressAnimation.setRepeatCount(Animation.INFINITE);
+            // *HACK* tileImageWidth-3 is used because of *lags*(slow pause) in the moment
+            // of animation END-RESTART.
+            mProgressAnimation = new TranslateAnimation(0, tileImageWidth - 3, 0, 0);
+            mProgressAnimation.setInterpolator(new LinearInterpolator());
+            mProgressAnimation.setDuration(1000);
+            mProgressAnimation.setRepeatCount(Animation.INFINITE);
+        }
+
     }
 
     public void startAnimation() {
-        mProgressImage.startAnimation(mProgressAnimation);
+        if(mProgressAnimation != null)
+            mProgressImage.startAnimation(mProgressAnimation);
     }
 
     public void stopAnimation() {

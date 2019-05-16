@@ -52,7 +52,7 @@ import com.deeptruth.app.android.adapter.adaptermediagrid;
 import com.deeptruth.app.android.adapter.adaptermedialist;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
-import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
+import com.deeptruth.app.android.enumclasses.cryptomediatypepagerenum;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
 import com.deeptruth.app.android.models.video;
@@ -157,6 +157,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     long lastTapTimeMs = 0;
     long touchDownMs = 0;
     boolean iskeyboardopen = false;
+    Typeface fontfaceregular, fontfacebold;
+    private String SANS_BOLD_COMFORTAA = "fonts/Comfortaa-Bold.ttf";
+    private String SANS_REGULAR_COMFORTAA = "fonts/Comfortaa-Regular.ttf";
+
+
     // Called just after any media uploaded
     public void registerbroadcastmediauploaded()
     {
@@ -188,7 +193,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         super.initviews(parent, savedInstanceState);
         applicationviavideocomposer.getactivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         ButterKnife.bind(this,parent);
-
     }
 
     @Override
@@ -282,6 +286,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             listlayout=rootview.findViewById(R.id.listlayout);
            // setheadermargin();
 
+            fontfaceregular =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), SANS_REGULAR_COMFORTAA);
+            fontfacebold =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), SANS_BOLD_COMFORTAA);
             gethelper().drawerenabledisable(false);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
@@ -417,12 +423,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             medialistitemaddreceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
+                    //selectedstyletype=2;
                     requestpermissions();
-                    shouldshowlist(true);
                 }
             };
             applicationviavideocomposer.getactivity().registerReceiver(medialistitemaddreceiver, intentFilter);
-            shouldshowlist(true);
+            selectedstyletype=1;
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
                 img_uploadmedia.setVisibility(View.VISIBLE);
@@ -521,55 +527,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     {
         if(listvisible)
         {
-            selectedstyletype=2;
-            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
-            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-            recyclerviewlist.setVisibility(View.VISIBLE);
-            recyclerviewgrid.setVisibility(View.GONE);
 
-            if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                adaptermedialist.notifyitems(arraymediaitemlist);
-            try {
-                DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_bg));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            try {
-                DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_blue_bg));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
         }
         else
         {
-            selectedstyletype=1;
-            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
-            recyclerviewlist.setVisibility(View.GONE);
-            recyclerviewgrid.setVisibility(View.VISIBLE);
 
-            if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
-                adaptermediagrid.notifyDataSetChanged();
-            try {
-                DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_bg));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            try {
-                DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_blue_bg));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -578,10 +540,57 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         switch (view.getId())
         {
             case R.id.lay_gridstyle:
-                shouldshowlist(false);
+                //shouldshowlist(false);
+                selectedstyletype=1;
+                lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+                lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
+                recyclerviewlist.setVisibility(View.GONE);
+                recyclerviewgrid.setVisibility(View.VISIBLE);
+
+                if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
+                    adaptermediagrid.notifyDataSetChanged();
+                try {
+                    DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                            , R.color.img_bg));
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                try {
+                    DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                            , R.color.img_blue_bg));
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.lay_liststyle:
-                shouldshowlist(true);
+               // shouldshowlist(true);
+                selectedstyletype=2;
+                lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
+                lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+                recyclerviewlist.setVisibility(View.VISIBLE);
+                recyclerviewgrid.setVisibility(View.GONE);
+
+                if(adaptermedialist != null && arraymediaitemlist.size() > 0)
+                    adaptermedialist.notifyitems(arraymediaitemlist);
+                try {
+                    DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                            , R.color.img_bg));
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                try {
+                    DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                            , R.color.img_blue_bg));
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
                 break;
             case R.id.img_camera:
                 launchbottombarfragment();
@@ -707,13 +716,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             countaudio=" ("+audiocount+")";
 
         if(mediatype == 0)
-            mediatype=2;
+            mediatype=1;
         else if(mediatype == 1)
-            mediatype=3;
+            mediatype=2;
         else if(mediatype == 2)
-            mediatype=4;
+            mediatype=3;
 
-        for(int i = 0; i<= mediatypepagerenum.values().length; i++)
+        for(int i = 0; i<= cryptomediatypepagerenum.values().length; i++)
         {
             if(pagermediatype != null)
             {
@@ -721,20 +730,22 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 if(view != null)
                 {
                     TextView txt_mediatype=(TextView)view.findViewById(R.id.txt_mediatype);
+                    if(i == 1)
+                        txt_mediatype.setText(config.item_crypto_video+countvideo);
                     if(i == 2)
-                        txt_mediatype.setText(config.item_video+countvideo);
+                        txt_mediatype.setText(config.item_crypto_photo+countimage);
                     if(i == 3)
-                        txt_mediatype.setText(config.item_photo+countimage);
-                    if(i == 4)
-                        txt_mediatype.setText(config.item_audio+countaudio);
+                        txt_mediatype.setText(config.item_crypto_audio+countaudio);
 
                     if(mediatype == i)
                     {
-                        txt_mediatype.setTypeface(txt_mediatype.getTypeface(), Typeface.BOLD);
+                        txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
+                        txt_mediatype.setTextSize(13f);
                     }
                     else
                     {
-                        txt_mediatype.setTypeface(txt_mediatype.getTypeface(), Typeface.NORMAL);
+                        txt_mediatype.setTypeface(fontfaceregular, Typeface.NORMAL);
+                        txt_mediatype.setTextSize(12f);
                     }
                 }
             }
@@ -757,6 +768,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if(scrolllisttotop)
                 recyclerviewgrid.smoothScrollToPosition(0);
         }
+        /*if(selectedstyletype == 1)
+            shouldshowlist(false);
+        else
+            shouldshowlist(true);*/
     }
 
     public void showfolderdialog(final String sourcefilepath)
@@ -1297,7 +1312,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     }
                                     else
                                     {
-                                        view.setBackgroundColor(Color.parseColor(config.color_code_gray));
+                                        view.setBackgroundColor(Color.parseColor(config.color_code_transparent));
                                     }
                                     layout.addView(view);
                                 }while (cursor2.moveToNext());
@@ -2003,7 +2018,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         @Override
         public Object instantiateItem(ViewGroup collection, final int position) {
-            final mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
+            final cryptomediatypepagerenum enummediatype = cryptomediatypepagerenum.values()[position];
             LayoutInflater inflater = LayoutInflater.from(mContext);
             ViewGroup layout = (ViewGroup) inflater.inflate(enummediatype.getLayoutResId(), collection, false);
             final TextView txt_mediatype=(TextView)layout.findViewById(R.id.txt_mediatype);
@@ -2012,7 +2027,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 @Override
                 public void onClick(View view) {
                     Log.e("onClick ",""+ enummediatype.getItemposition());
-                    if(enummediatype.getItemposition() == 2)
+                    /*if(enummediatype.getItemposition() == 2)
                     {
                         pagermediatype.setCurrentItem(0,true);
                     }
@@ -2021,6 +2036,18 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         pagermediatype.setCurrentItem(1,true);
                     }
                     else if(enummediatype.getItemposition() == 4)
+                    {
+                        pagermediatype.setCurrentItem(2,true);
+                    }*/
+                    if(enummediatype.getItemposition() == 1)
+                    {
+                        pagermediatype.setCurrentItem(0,true);
+                    }
+                    else if(enummediatype.getItemposition() == 2)
+                    {
+                        pagermediatype.setCurrentItem(1,true);
+                    }
+                    else if(enummediatype.getItemposition() == 3)
                     {
                         pagermediatype.setCurrentItem(2,true);
                     }
@@ -2037,12 +2064,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         @Override
         public float getPageWidth(int position) {
-            return 0.20f;
+            return 0.33f;
         }
 
         @Override
         public int getCount() {
-            return mediatypepagerenum.values().length;
+            return cryptomediatypepagerenum.values().length;
         }
 
         @Override
@@ -2052,7 +2079,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         @Override
         public CharSequence getPageTitle(int position) {
-            mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
+            cryptomediatypepagerenum enummediatype = cryptomediatypepagerenum.values()[position];
             return enummediatype.getItemname();
         }
 

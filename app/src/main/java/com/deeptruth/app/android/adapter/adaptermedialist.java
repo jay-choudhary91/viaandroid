@@ -193,7 +193,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             if(unsentcount > 0)
             {
-                holder.progress_db_view.stopAnimation();
+                //holder.progress_db_view.stopAnimation();
                 holder.progress_db_view.setBackgroundAsTile(R.drawable.tile_progress_a);
                 holder.progress_db_view.startAnimation();
             }

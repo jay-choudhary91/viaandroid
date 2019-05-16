@@ -181,6 +181,10 @@ public class config {
     public static final String item_audio="AUDIO";
     public static final String item_image="IMAGE";
 
+    public static final String item_crypto_photo="CryptoPHOTO";
+    public static final String item_crypto_video="CryptoVIDEO";
+    public static final String item_crypto_audio="CryptoAUDIO";
+
     public static final String color_red="red";
     public static final String color_gray="gray";
     public static final String color_yellow="yellow";
