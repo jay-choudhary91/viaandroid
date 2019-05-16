@@ -179,14 +179,29 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             holder.txt_pipesign_unsent.setVisibility(View.GONE);
             holder.txt_pipesign_invalid.setVisibility(View.GONE);
 
-            if(validcount > 0 && cautioncount > 0)
+            if(validcount > 0 && cautioncount > 0){
+                holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+                holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
                 holder.txt_pipesign_caution.setVisibility(View.VISIBLE);
+            }
 
-            if((cautioncount > 0 || validcount > 0) && unsentcount > 0){
-                holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
+            if(cautioncount > 0 && unsentcount > 0){
+                holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+                holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            }
+            if(validcount > 0 && unsentcount > 0){
+                holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+                holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            }
+
+            if(validcount >0 && unsentcount > 0 && unsentcount > 0 ){
                 holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
                 holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
                 holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
+            }
+
+            if((cautioncount > 0 || validcount > 0) && unsentcount > 0){
+                holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
             }
 
             if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
