@@ -1004,7 +1004,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                                         sectioncount++;
                                         if(framecolor.trim().isEmpty())
-                                            framecolor=config.color_gray;
+                                            framecolor=config.color_transparent;
 
                                         if(! lastcolor.equalsIgnoreCase(framecolor))
                                         {

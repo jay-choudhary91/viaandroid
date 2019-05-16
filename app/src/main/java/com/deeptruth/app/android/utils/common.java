@@ -2246,7 +2246,9 @@ public class common {
         } else if (colorname.equalsIgnoreCase("red")) {
             color = config.color_code_red;
         } else if (colorname.equalsIgnoreCase("gray")) {
-            color = config.color_code_gray;
+            color = config.color_code_transparent;
+        } else if (colorname.equalsIgnoreCase(config.color_transparent)) {
+            color = config.color_code_transparent;
         } else if (colorname.equalsIgnoreCase("white")) {
             color = config.color_code_white;
         }
