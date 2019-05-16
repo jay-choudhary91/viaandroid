@@ -1890,23 +1890,23 @@ public class common {
         String img_size = null;
 
         File file = new File(imageurl);
-        long photosize = file.length();
-        int b = (int) photosize;
-        int k = (int) photosize / 1024;
-        int m = (int) ((photosize / 1024) / 1024);
-        int g = (int) (((photosize / 1024) / 1024) / 1024);
-        int t = (int) ((((photosize / 1024) / 1024) / 1024) / 1024);
+        float photosize = file.length();
+        float b = photosize;
+        float k = photosize / 1024;
+        float m = ((photosize / 1024) / 1024);
+        float g = (((photosize / 1024) / 1024) / 1024);
+        float t = ((((photosize / 1024) / 1024) / 1024) / 1024);
 
-        DecimalFormat dec = new DecimalFormat("0.00");
+        DecimalFormat dec = new DecimalFormat("0.0");
 
         if (t > 1) {
-            img_size = t + "Tb";
+            img_size = dec.format(t) + "Tb";
         } else if (g > 1) {
-            img_size = g + "Gb";
+            img_size = dec.format(g) + "Gb";
         } else if (m > 1) {
-            img_size = m + "Mb";
+            img_size = dec.format(m) + "Mb";
         } else if (k > 1) {
-            img_size = k + "Kb";
+            img_size = dec.format(k) + "Kb";
         } else {
             img_size = dec.format(b);
         }
@@ -2246,7 +2246,9 @@ public class common {
         } else if (colorname.equalsIgnoreCase("red")) {
             color = config.color_code_red;
         } else if (colorname.equalsIgnoreCase("gray")) {
-            color = config.color_code_gray;
+            color = config.color_code_transparent;
+        } else if (colorname.equalsIgnoreCase(config.color_transparent)) {
+            color = config.color_code_transparent;
         } else if (colorname.equalsIgnoreCase("white")) {
             color = config.color_code_white;
         }
