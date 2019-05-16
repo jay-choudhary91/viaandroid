@@ -12,10 +12,32 @@
             android:layout_height="match_parent"
             android:id="@+id/rl_visulizerview">
 
-            <com.deeptruth.app.android.utils.visualizeraudiorecorder
-                android:id="@+id/myvisualizerview"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.deeptruth.app.android.utils.visualizeraudiorecorder
+                    android:id="@+id/myvisualizerview"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/margin_10dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <com.deeptruth.app.android.utils.visualizerview
+                    android:id="@+id/barvisualizer"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/margin_10dp"
+                    android:background="@android:color/transparent"
+                    android:layout_weight="1"
+                    app:numColumns="30"
+                    app:renderColor="@color/blue_button"
+                    app:renderRange="top"
+                    app:renderType="bar|fade" />
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/layout_drawertouchable"

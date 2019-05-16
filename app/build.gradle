@@ -90,11 +90,14 @@ dependencies {
     implementation 'com.github.GoodieBag:Pinview:v1.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
+
     // Check for v11.4.2 or higher
     implementation 'com.google.firebase:firebase-core:16.0.7'
 
     // Add dependency
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+
+    implementation 'com.tyorikan:voice-recording-visualizer:1.0.3@aar'
 
 }
 apply plugin: 'com.google.gms.google-services'
