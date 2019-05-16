@@ -717,11 +717,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         while (isaudiorecording) {
             // gets the voice output from microphone to byte format
             audiorecorder.read(sData, 0, bufferelements2rec);
-            runRecording(short2byte(sData));
+
             System.out.println("Short writing to file" + sData.toString());
             try {
                 // writes the data to file from buffer stores the voice buffer
                 byte data[] = short2byte(sData);
+                runRecording(data);
 
                 os.write(data, 0, bufferelements2rec * bytesperelement);
 
