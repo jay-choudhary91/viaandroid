@@ -32,10 +32,10 @@
                     android:layout_marginTop="@dimen/margin_10dp"
                     android:background="@android:color/transparent"
                     android:layout_weight="1"
-                    app:numColumns="5"
+                    app:numColumns="30"
                     app:renderColor="@color/blue_button"
                     app:renderRange="top"
-                    app:renderType="bar|pixel" />
+                    app:renderType="bar|fade" />
 
             </LinearLayout>
 
