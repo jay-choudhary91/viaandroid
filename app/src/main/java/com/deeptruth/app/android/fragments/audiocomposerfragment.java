@@ -75,6 +75,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -704,7 +705,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private void writeAudioDataToFile() {
         // Write the output audio in byte
         String filePath = gettempfile().getAbsolutePath();
-        short sData[] = new short[bufferelements2rec];
+        final short sData[] = new short[bufferelements2rec];
+
 
         FileOutputStream os = null;
         try {
@@ -713,48 +715,59 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             e.printStackTrace();
         }
 
-        int framegap=0;
+        final int[] framegap = {0};
         while (isaudiorecording) {
             // gets the voice output from microphone to byte format
             audiorecorder.read(sData, 0, bufferelements2rec);
-
             System.out.println("Short writing to file" + sData.toString());
             try {
-                // writes the data to file from buffer stores the voice buffer
-                byte data[] = short2byte(sData);
-                runRecording(data);
 
-                os.write(data, 0, bufferelements2rec * bytesperelement);
-
-                if(isaudiorecording)
-                {
-                    Log.e("Frame count ",""+mframetorecordcount);
-                    if(framegap == frameduration || (mediakey.trim().isEmpty()))
+                final FileOutputStream finalOs = os;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run()
                     {
-                        if(mediakey.trim().isEmpty())
-                        {
-                            sequencestarttime = Calendar.getInstance();
-                            String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                            mediakey=currenttimestamp;
-                            Log.e("localkey ",mediakey);
-                            String keyvalue= getkeyvalue(data);
-                            savestartmediainfo();
-                        }
-                        else
-                        {
-                            sequenceendtime = Calendar.getInstance();
+                        // writes the data to file from buffer stores the voice buffer
+                        Log.e("ShortBuffer",Arrays.toString(sData));
+                        final byte data[] = short2byte(sData);
+
+                        runRecording(data);
+                        try {
+                            finalOs.write(data, 0, bufferelements2rec * bytesperelement);
+                            if(isaudiorecording)
+                            {
+                                Log.e("Frame count ",""+mframetorecordcount);
+                                if(framegap[0] == frameduration || (mediakey.trim().isEmpty()))
+                                {
+                                    if(mediakey.trim().isEmpty())
+                                    {
+                                        sequencestarttime = Calendar.getInstance();
+                                        String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                                        mediakey=currenttimestamp;
+                                        Log.e("localkey ",mediakey);
+                                        String keyvalue= getkeyvalue(data);
+                                        savestartmediainfo();
+                                    }
+                                    else
+                                    {
+                                        sequenceendtime = Calendar.getInstance();
+                                    }
+
+                                    framegap[0] =0;
+                                    updatelistitemnotify(data,currentframenumber,"Frame");
+                                    currentframenumber = currentframenumber + frameduration;
+                                    sequencestarttime = Calendar.getInstance();
+                                }
+                                framegap[0]++;
+                                mframetorecordcount++;
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
 
-                        framegap=0;
-                        updatelistitemnotify(data,currentframenumber,"Frame");
-                        currentframenumber = currentframenumber + frameduration;
-                        sequencestarttime = Calendar.getInstance();
                     }
-                    framegap++;
-                    mframetorecordcount++;
-                }
-
-            } catch (IOException e) {
+                }).start();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -1283,6 +1296,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         if(mediarecorder != null)
                         {
                             int x = mediarecorder.getMaxAmplitude();
+                           // mVisualizerviews.get(0).receive(x);
                             myvisualizerview.addAmplitude(x); // update the VisualizeView
                             myvisualizerview.invalidate();
                             wavevisualizerslist.add(new wavevisualizer(x,true));
@@ -1645,30 +1659,38 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
     private void runRecording(final byte buf[]) {
-       // final byte buf[] = new byte[bufferSize];
+        //final byte buf[] = new byte[bufferSize];
                 // stop recording
                 if (!isaudiorecording) {
                     return;
                 }
                 //audiorecorder.read(buf, 0, bufferelements2rec);
+                Log.e("dataArray", Arrays.toString(buf));
+                final int decibel = calculateDecibel(buf);
 
-                int decibel = calculateDecibel(buf);
+                Log.e("dataArray", Arrays.toString(buf));
 
                 int mVisualizerViewssize = mVisualizerviews.size();
                 if (mVisualizerviews != null && !mVisualizerviews.isEmpty()) {
                     for (int i = 0; i < mVisualizerviews.size(); i++) {
-                        mVisualizerviews.get(i).receive(decibel);
+                        final int finalI = i;
+                        getActivity().runOnUiThread(new Runnable() {
+                         @Override
+                         public void run() {
+                             mVisualizerviews.get(finalI).receive(decibel);
+                         }
+                     });
                     }
                 }
             }
 
     private int calculateDecibel(byte[] buf) {
         int sum = 0;
-        for (int i = 0; i < bufferelements2rec; i++) {
+        for (int i = 0; i < bufferSize; i++) {
             sum += Math.abs(buf[i]);
         }
         // avg 10-50
-        return sum / bufferelements2rec;
+        return sum / bufferSize;
     }
 
     public void link(visualizerview visualizerview) {
