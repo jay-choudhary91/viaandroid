@@ -563,7 +563,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.timezone),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvtimezone);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.address)){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.address),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvaddress);
+                            common.setdrawabledata("",metricItemArraylist.get(j).getMetricTrackValue(), tvaddress);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvwifi);

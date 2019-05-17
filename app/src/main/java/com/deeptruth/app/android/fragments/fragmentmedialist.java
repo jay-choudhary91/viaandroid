@@ -158,8 +158,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     long touchDownMs = 0;
     boolean iskeyboardopen = false;
     Typeface fontfaceregular, fontfacebold;
-    private String SANS_BOLD_COMFORTAA = "fonts/Comfortaa-Bold.ttf";
-    private String SANS_REGULAR_COMFORTAA = "fonts/Comfortaa-Regular.ttf";
+    private String OPEN_SANS_BOLD = "fonts/OpenSans-Bold.ttf";
+    private String OPEN_SANS_REGULAR = "fonts/OpenSans-Regular.ttf";
 
 
     // Called just after any media uploaded
@@ -286,8 +286,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             listlayout=rootview.findViewById(R.id.listlayout);
            // setheadermargin();
 
-            fontfaceregular =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), SANS_REGULAR_COMFORTAA);
-            fontfacebold =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), SANS_BOLD_COMFORTAA);
+            fontfaceregular =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), OPEN_SANS_REGULAR);
+            fontfacebold =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), OPEN_SANS_BOLD);
             gethelper().drawerenabledisable(false);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
