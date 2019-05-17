@@ -18,10 +18,11 @@
             android:orientation="vertical">
 
             <com.deeptruth.app.android.views.customfonttextview
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 style="@style/txt_normalview"
                 android:textColor="@color/white"
                 android:gravity="center"
+                android:textSize="12sp"
                 android:id="@+id/txt_phonetime"
                 android:text="@string/phone_time"/>
 
@@ -43,7 +44,7 @@
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_phone_time"
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 style="@style/txt_normalview"
                 android:textColor="@color/white"
                 android:gravity="center"
@@ -61,10 +62,11 @@
             android:orientation="vertical">
 
             <com.deeptruth.app.android.views.customfonttextview
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 style="@style/txt_normalview"
                 android:textColor="@color/white"
                 android:gravity="center"
+                android:textSize="12sp"
                 android:id="@+id/txt_worldclocktime"
                 android:text="@string/world_clock_time"/>
 
@@ -86,7 +88,7 @@
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_world_time"
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 style="@style/txt_normalview"
                 android:textColor="@color/white"
                 android:gravity="center"

@@ -33,12 +33,26 @@
             android:visibility="gone"
             />
 
-        <LinearLayout
-            android:id="@+id/linear_seekbarcolorview"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:layout_alignParentBottom="true"
-            android:orientation="horizontal" />
+            android:layout_marginTop="5dp">
+
+            <com.deeptruth.app.android.views.horizontalindeterminateprogress
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/progress_db_view"
+                />
+
+            <LinearLayout
+                android:id="@+id/linear_seekbarcolorview"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:orientation="horizontal"
+                android:background="@color/transparent"/>
+
+        </RelativeLayout>
 
         <com.deeptruth.app.android.views.customfonttextview
             app:fontType="OpenSans_Regular"

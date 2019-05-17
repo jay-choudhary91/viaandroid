@@ -1619,7 +1619,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             playpausebutton.setVisibility(View.GONE);
                         }
 
-                        if(!player.isPlaying()){
+                        if(player != null && !player.isPlaying()){
                             playpausebutton.setVisibility(View.VISIBLE);
                         }
 
@@ -2454,6 +2454,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if(!islastdragarrow){
                     showcontrollers();
                     layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                }
+                if(islastdragarrow == true){
+                    isplaypauswebtnshow = true;
+                    playpausebutton.setImageResource(R.drawable.play_btn);
+                    playpausebutton.setVisibility(View.VISIBLE);
                 }
             }
 

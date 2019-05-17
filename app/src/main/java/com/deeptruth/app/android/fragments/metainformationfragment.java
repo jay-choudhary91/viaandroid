@@ -1373,7 +1373,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         colors.add(Color.parseColor(config.color_code_green));
         colors.add(Color.parseColor(config.color_code_yellow));
         colors.add(Color.parseColor(config.color_code_red));
-        colors.add(Color.parseColor(config.color_code_transparent));
+        colors.add(Color.parseColor(config.color_code_white_transparent));
 
         dataSet.setColors(colors);
         PieData data = new PieData(dataSet);

@@ -225,7 +225,7 @@ public abstract class basefragment extends Fragment {
         }
         else
         {
-            view.setBackgroundColor(Color.parseColor(config.color_code_transparent));
+            view.setBackgroundColor(Color.parseColor(config.color_code_white_transparent));
         }
         return view;
     }
