@@ -148,7 +148,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private RecyclerTouchListener onTouchListener;
     private static final int request_read_external_storage = 1;
     private BroadcastReceiver medialistitemaddreceiver;
-    private BroadcastReceiver broadcastmediauploaded;
     private int REQUESTCODE_PICK=201;
     private FFmpeg ffmpeg;
     int navigationbarheight = 0;
@@ -160,27 +159,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     Typeface fontfaceregular, fontfacebold;
     private String SANS_BOLD_COMFORTAA = "fonts/Comfortaa-Bold.ttf";
     private String SANS_REGULAR_COMFORTAA = "fonts/Comfortaa-Regular.ttf";
-
-
-    // Called just after any media uploaded
-    public void registerbroadcastmediauploaded()
-    {
-        IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
-        broadcastmediauploaded = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                /*getallmedialistfromdb();
-                if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                    adaptermedialist.notifyitems(arraymediaitemlist);
-
-                if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
-                    adaptermediagrid.notifyDataSetChanged();*/
-            }
-        };
-        applicationviavideocomposer.getactivity().registerReceiver(broadcastmediauploaded, intentFilter);
-    }
-
 
 
     @Override
@@ -198,19 +176,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @Override
     public void onStart() {
         super.onStart();
-        registerbroadcastmediauploaded();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         isinbackground=true;
-        try {
-            applicationviavideocomposer.getactivity().unregisterReceiver(broadcastmediauploaded);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     @Override
