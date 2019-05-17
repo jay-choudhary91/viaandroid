@@ -156,7 +156,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     int numberOfTaps = 0, devicewidth = 0;
     long lastTapTimeMs = 0;
     long touchDownMs = 0;
-    boolean iskeyboardopen = false;
+    boolean iskeyboardopen = false,shouldnavigatelist=true;
     Typeface fontfaceregular, fontfacebold;
     private String SANS_BOLD_COMFORTAA = "fonts/Comfortaa-Bold.ttf";
     private String SANS_REGULAR_COMFORTAA = "fonts/Comfortaa-Regular.ttf";
@@ -424,11 +424,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     //selectedstyletype=2;
+                    shouldnavigatelist=true;
                     requestpermissions();
                 }
             };
             applicationviavideocomposer.getactivity().registerReceiver(medialistitemaddreceiver, intentFilter);
-            selectedstyletype=1;
+            showlistitemsvisible(true);
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
                 img_uploadmedia.setVisibility(View.VISIBLE);
@@ -523,15 +524,59 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         return true;
     }
 
-    public void shouldshowlist(boolean listvisible)
+    public void showlistitemsvisible(boolean visiblelist)
     {
-        if(listvisible)
+        if(visiblelist)
         {
+            selectedstyletype=2;
+            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
+            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+            recyclerviewlist.setVisibility(View.VISIBLE);
+            recyclerviewgrid.setVisibility(View.GONE);
 
+            if(adaptermedialist != null && arraymediaitemlist.size() > 0)
+                adaptermedialist.notifyitems(arraymediaitemlist);
+            try {
+                DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.img_bg));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            try {
+                DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.img_blue_bg));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
         else
         {
+            selectedstyletype=1;
+            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
+            recyclerviewlist.setVisibility(View.GONE);
+            recyclerviewgrid.setVisibility(View.VISIBLE);
 
+            if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
+                adaptermediagrid.notifyDataSetChanged();
+            try {
+                DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.img_bg));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            try {
+                DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.img_blue_bg));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -541,56 +586,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             case R.id.lay_gridstyle:
                 //shouldshowlist(false);
-                selectedstyletype=1;
-                lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-                lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
-                recyclerviewlist.setVisibility(View.GONE);
-                recyclerviewgrid.setVisibility(View.VISIBLE);
-
-                if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
-                    adaptermediagrid.notifyDataSetChanged();
-                try {
-                    DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                            , R.color.img_bg));
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-                try {
-                    DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                            , R.color.img_blue_bg));
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                showlistitemsvisible(false);
                 break;
             case R.id.lay_liststyle:
                // shouldshowlist(true);
-                selectedstyletype=2;
-                lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
-                lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-                recyclerviewlist.setVisibility(View.VISIBLE);
-                recyclerviewgrid.setVisibility(View.GONE);
-
-                if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                    adaptermedialist.notifyitems(arraymediaitemlist);
-                try {
-                    DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                            , R.color.img_bg));
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-                try {
-                    DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                            , R.color.img_blue_bg));
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
+                showlistitemsvisible(true);
                 break;
             case R.id.img_camera:
                 launchbottombarfragment();
@@ -1112,6 +1112,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         recyclerviewgrid.post(new Runnable() {
             @Override
             public void run() {
+
                 listviewheight=recyclerviewgrid.getHeight();
                 if(adaptermedialist == null)
                 {
@@ -1149,6 +1150,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     pagermediatype.setCurrentItem(config.selectedmediatype,true);
                 else
                     showselectedmediatypeitems(config.selectedmediatype,true);
+
+                if(shouldnavigatelist)
+                {
+                    shouldnavigatelist=false;
+                    showlistitemsvisible(true);
+                }
+
             }
         });
     }

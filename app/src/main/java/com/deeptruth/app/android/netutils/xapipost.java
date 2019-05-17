@@ -99,43 +99,46 @@ public class xapipost extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String aVoid) {
         super.onPostExecute(aVoid);
-        endtime = Calendar.getInstance().getTime();
+        if(! aVoid.equalsIgnoreCase(taskresult.NO_INTERNET))
+        {
+            endtime = Calendar.getInstance().getTime();
 
-        taskresult result = new taskresult();
-        JSONObject jsonObject = null;
-      //  Log.d("Response>> ", aVoid);
-        try {
-            result.success(false);
-            jsonObject=new JSONObject(aVoid);
-            if (jsonObject != null && jsonObject.has("result"))
-            {
-               JSONObject object = jsonObject.optJSONObject("result");
-               common.setxapirequestresponses("","","",nameValuePairList,useurl,object,
-                       starttime,endtime, config.all_xapi_list);
-                if(object.has("settings_set"))
+            taskresult result = new taskresult();
+            JSONObject jsonObject = null;
+            //  Log.d("Response>> ", aVoid);
+            try {
+                result.success(false);
+                jsonObject=new JSONObject(aVoid);
+                if (jsonObject != null && jsonObject.has("result"))
                 {
-                    JSONObject saveSetting = object.getJSONObject("settings_set");
-                    Iterator<String> myIter = saveSetting.keys();
-                    while (myIter.hasNext()) {
-                        String key = myIter.next();
-                        String value = saveSetting.optString(key);
-                        common.setting_set(key, value);
+                    JSONObject object = jsonObject.optJSONObject("result");
+                    common.setxapirequestresponses("","","",nameValuePairList,useurl,object,
+                            starttime,endtime, config.all_xapi_list);
+                    if(object.has("settings_set"))
+                    {
+                        JSONObject saveSetting = object.getJSONObject("settings_set");
+                        Iterator<String> myIter = saveSetting.keys();
+                        while (myIter.hasNext()) {
+                            String key = myIter.next();
+                            String value = saveSetting.optString(key);
+                            common.setting_set(key, value);
+                        }
                     }
+                    result.success(true);
+                    result.setData(object);
                 }
-                result.success(true);
-                result.setData(object);
-            }
-            else if (jsonObject != null && jsonObject.has("errors"))
-            {
-                result.success(true);
-                result.setData(jsonObject);
-            }
+                else if (jsonObject != null && jsonObject.has("errors"))
+                {
+                    result.success(true);
+                    result.setData(jsonObject);
+                }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (listner != null)
+                listner.onResponse(result);
         }
-        if (listner != null)
-            listner.onResponse(result);
     }
 }
 
