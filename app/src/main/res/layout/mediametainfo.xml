@@ -22,7 +22,7 @@
                 android:id="@+id/txt_locationtracking"
                 style="@style/txt_drawer_graphical_title"
                 android:text="@string/locationinformation"
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 />
 
             <LinearLayout
@@ -44,7 +44,7 @@
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_address"
-                    app:fontType="Comfortaa-Regular"
+                    app:fontType="OpenSans_Regular"
                     style="@style/txt_normalview"
                     android:layout_marginTop="5dp"
                     android:text="X-Axis"/>
@@ -65,7 +65,7 @@
                 android:id="@+id/txt_locationanalytics"
                 style="@style/txt_drawer_graphical_title"
                 android:text="@string/locationanalytics"
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 android:layout_marginTop="10dp"
                 android:visibility="gone"
                 />
@@ -111,7 +111,7 @@
                     </RelativeLayout>
                     <com.deeptruth.app.android.views.customfonttextview
                         android:id="@+id/txt_degree"
-                        app:fontType="Comfortaa-Regular"
+                        app:fontType="OpenSans_Regular"
                         style="@style/txt_degreeview"
                         android:visibility="gone"
                         android:layout_alignParentBottom="true"
@@ -400,15 +400,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="vertical">
-
             <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_gps_accuracy"
+                app:fontType="OpenSans_Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:lines="2"
+                android:text=""/>
+
+            <!--<com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_gps_accuracy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:fontType="OpenSans_Regular"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:text=""/>
+                android:text=""/>-->
 
             <include layout="@layout/row_gpsaccuracy"></include>
 
@@ -426,7 +435,7 @@
                 android:id="@+id/txt_timeinformation"
                 style="@style/txt_drawer_graphical_title"
                 android:text="@string/timeinformation"
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 android:textColor="@color/white"
                 />
 
@@ -448,7 +457,7 @@
                 style="@style/txt_drawer_graphical_title"
                 android:id="@+id/txt_orientation"
                 android:text="@string/phoneinformation"
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 android:layout_marginTop="10dp"
                 />
             <LinearLayout
@@ -539,7 +548,7 @@
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_drawer_graphical_title"
                 android:id="@+id/txt_Phoneanalytics"
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 android:visibility="gone"
                 android:text="@string/Phoneanalytics" />
 
@@ -566,7 +575,7 @@
                             android:id="@+id/txt_Memory"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="14sp"
+                            android:textSize="12sp"
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="@dimen/margin_15dp"
                             android:gravity="center_horizontal"
@@ -605,7 +614,7 @@
                             android:id="@+id/txt_cpuusage"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="14sp"
+                            android:textSize="12sp"
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="@dimen/margin_15dp"
                             android:textColor="@color/white"
@@ -642,7 +651,7 @@
                             android:id="@+id/txtbattery"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="14sp"
+                            android:textSize="12sp"
                             android:layout_alignParentTop="true"
                             android:layout_marginTop="5dp"
                             android:layout_marginBottom="@dimen/margin_15dp"
@@ -868,7 +877,7 @@
                 android:id="@+id/txt_mediainformation"
                 style="@style/txt_drawer_graphical_title"
                 android:text="@string/media_information"
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 android:layout_marginTop="@dimen/margin_10dp"
                 android:textColor="@color/white"
                 />
@@ -886,7 +895,7 @@
                 android:id="@+id/txt_connectioninformation"
                 style="@style/txt_drawer_graphical_title"
                 android:text="@string/connection_information"
-                app:fontType="Comfortaa-Regular"
+                app:fontType="OpenSans_Regular"
                 android:layout_marginTop="@dimen/margin_10dp"
                 android:textColor="@color/white"
                 />
