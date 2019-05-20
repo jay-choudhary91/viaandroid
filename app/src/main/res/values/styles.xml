@@ -273,4 +273,11 @@
         <item name="android:background">@drawable/edittext_shap</item>
         <item name="android:padding">10dp</item>
     </style>
+
+    <style name="CustomProgressBar" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminate">true</item>
+        <item name="android:progressDrawable">@drawable/indeterminate_progress_drawable</item>
+        <item name="android:indeterminateDrawable">@drawable/indeterminate_animation_progress</item>
+    </style>
+
 </resources>
