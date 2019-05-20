@@ -82,9 +82,9 @@ public class AnalogClock extends View {
         mDial = a.getDrawable(R.styleable.AnalogClock_dial);
         if (mDial == null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mDial = context.getDrawable(R.drawable.clock_face);
+                mDial = context.getDrawable(R.drawable.clock_face_white);
             } else {
-                mDial = r.getDrawable(R.drawable.clock_face);
+                mDial = r.getDrawable(R.drawable.clock_face_white);
             }
         }
         mHourHand = a.getDrawable(R.styleable.AnalogClock_hour);
