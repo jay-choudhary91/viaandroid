@@ -34,13 +34,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:visibility="visible"
-        android:padding="@dimen/margin_5dp"
         android:background="@color/translucent_dark_blue_solid"
         >
         <RelativeLayout
             android:id="@+id/layout_mediatype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/margin_2dp"
             android:orientation="horizontal">
 
             <android.support.v4.view.ViewPager
@@ -48,7 +48,7 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_height="50dp"
+                android:layout_height="25dp"
                 />
 
         </RelativeLayout>
@@ -57,6 +57,8 @@
         android:layout_width="match_parent"
         android:layout_below="@+id/layout_mediatype"
         android:clipToPadding="true"
+        android:padding="@dimen/margin_5dp"
+        android:layout_marginBottom="@dimen/margin_10dp"
         android:layout_height="wrap_content"
         >
 
@@ -92,15 +94,15 @@
 
 
         <RelativeLayout
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:id="@+id/layout_recorder"
             android:background="@drawable/shape_recorder_off"
             android:layout_centerInParent="true"
             >
             <ImageView
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:background="@drawable/circle_record_btn_bg"
@@ -110,14 +112,14 @@
                 android:id="@+id/base_view"
                 android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_centerVertical="true"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_centerInParent="true"
                 app:cardElevation="0dp">
 
                 <ImageView
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:id="@+id/img_video_capture"

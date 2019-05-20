@@ -56,6 +56,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.text.Regex;
 
 import static android.widget.RelativeLayout.TRUE;
 
@@ -120,8 +121,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     GradientDrawable gradientDrawablebutton;
     private volatile boolean iscircle = true;
     Typeface fontfaceregular, fontfacebold;
-    private String SANS_BOLD_COMFORTAA = "fonts/Comfortaa-Bold.ttf";
-    private String SANS_REGULAR_COMFORTAA = "fonts/Comfortaa-Regular.ttf";
+    private String OPEN_SANS_BOLD = "fonts/OpenSans-Bold.ttf";
+    private String OPEN_SANS_REGULAR = "fonts/OpenSans-Regular.ttf";
 
     @Override
     public int getlayoutid() {
@@ -149,8 +150,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             img_mediathumbnail.setOnClickListener(this);
             layoutbottom.setOnTouchListener(this);
 
-            fontfaceregular =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), SANS_REGULAR_COMFORTAA);
-            fontfacebold =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), SANS_BOLD_COMFORTAA);
+            fontfaceregular =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), OPEN_SANS_REGULAR);
+            fontfacebold =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), OPEN_SANS_BOLD);
             gethelper().drawerenabledisable(false);
 
             navigationbarheight =  common.getnavigationbarheight();
@@ -1065,7 +1066,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
         shiftAnimation.setTarget(mParent);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(800);
+        animatorSet.setDuration(300);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
         iscircle = !iscircle;
@@ -1077,7 +1078,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_left_up);
         shiftAnimation.setTarget(mParent);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(800);
+        animatorSet.setDuration(300);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
         iscircle = !iscircle;
