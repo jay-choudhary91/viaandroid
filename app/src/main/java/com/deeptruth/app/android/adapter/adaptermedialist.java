@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,7 +32,6 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
-import com.deeptruth.app.android.views.horizontalindeterminateprogress;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         public ImageView img_imageshare,img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public SwipeRevealLayout root_view;
         LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide,linearseekbarcolorview,layout_colorbar;
-        horizontalindeterminateprogress progress_db_view;
+        ProgressBar progressmediasync;
 
         public myViewHolder(View view) {
             super(view);
@@ -87,7 +87,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             txt_pipesign_unsent = (TextView) view.findViewById(R.id.txt_pipesign_unsent);
             txt_pipesign_invalid = (TextView) view.findViewById(R.id.txt_pipesign_invalid);
             layout_colorbar = (LinearLayout) view.findViewById(R.id.layout_colorbar);
-            progress_db_view = (horizontalindeterminateprogress) view.findViewById(R.id.progress_db_view);
+            progressmediasync = (ProgressBar) view.findViewById(R.id.progressmediasync);
         }
     }
 
@@ -204,13 +204,11 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             if(unsentcount > 0)
             {
-                //holder.progress_db_view.stopAnimation();
-                holder.progress_db_view.setBackgroundAsTile(R.drawable.tile_progress_a);
-                holder.progress_db_view.startAnimation();
+                holder.progressmediasync.setVisibility(View.VISIBLE);
             }
             else
             {
-                holder.progress_db_view.stopAnimation();
+                holder.progressmediasync.setVisibility(View.GONE);
             }
 
             if((cautioncount > 0 || validcount > 0) && unsentcount > 0){

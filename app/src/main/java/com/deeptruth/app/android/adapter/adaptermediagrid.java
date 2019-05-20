@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,7 +24,6 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
-import com.deeptruth.app.android.views.horizontalindeterminateprogress;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
         public ImageView img_mediathumbnail,img_loader;
         public RelativeLayout rl_row_media;
         LinearLayout linearseekbarcolorview;
-        horizontalindeterminateprogress progress_db_view;
+        ProgressBar progressmediasync;
 
         public myViewHolder(View view) {
             super(view);
@@ -51,7 +51,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             img_loader = (ImageView) view.findViewById(R.id.img_loader);
             rl_row_media = (RelativeLayout) view.findViewById(R.id.rl_row_media);
             linearseekbarcolorview = (LinearLayout) view.findViewById(R.id.linear_seekbarcolorview);
-            progress_db_view = (horizontalindeterminateprogress) view.findViewById(R.id.progress_db_view);
+            progressmediasync = (ProgressBar) view.findViewById(R.id.progressmediasync);
         }
     }
 
@@ -92,12 +92,11 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 int unsentcount=mediaobject.getUnsentcount();
                 if(unsentcount > 0)
                 {
-                    holder.progress_db_view.setBackgroundAsTile(R.drawable.tile_progress_a);
-                    holder.progress_db_view.startAnimation();
+                    holder.progressmediasync.setVisibility(View.VISIBLE);
                 }
                 else
                 {
-                    holder.progress_db_view.stopAnimation();
+                    holder.progressmediasync.setVisibility(View.GONE);
                 }
 
                 if(arrayList != null && arrayList.size() > 0 && mediaobject.getColorbarview() != null ) {
