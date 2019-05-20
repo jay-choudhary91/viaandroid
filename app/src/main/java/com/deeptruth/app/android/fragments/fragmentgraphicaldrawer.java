@@ -2152,6 +2152,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         linechart.setDragEnabled(false);
         linechart.setScaleEnabled(false);
         linechart.setPinchZoom(false);
+
     }
 
     public  void initlinechart(LineChart chart,Float maxrange)
@@ -2306,6 +2307,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             set1.getEntryForIndex(i).setIcon(null);
 
                         count =  set1.getEntryCount();
+
+                        Log.e("countaltitude=",""+count);
                         if (count != 1) {
 
                             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -2313,6 +2316,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 public void run() {
                                     Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
                                     chart.highlightValue(high, false);
+
+                                    chart.moveViewTo(set1.getEntryForIndex(selectedchartposition).getX(),set1.getEntryForIndex(selectedchartposition).getX(), YAxis.AxisDependency.LEFT);
+                                   /* if(chart.getCenter().x == set1.getEntryForIndex(selectedchartposition).getX()){
+                                        //chart.moveViewToX(set1.getEntryForIndex(selectedchartposition).getX()+5);
+                                    }*/
                                 }
                             });
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
@@ -2367,7 +2375,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
-                linechart.setViewPortOffsets(0,10,40,10);
+                linechart.setViewPortOffsets(0,10,40,0);
             }
             else
             {
@@ -2376,6 +2384,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             LineData data = new LineData(set1);
             linechart.setData(data);
             linechart.notifyDataSetChanged();
+            linechart.invalidate();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(arrayitems, "");
@@ -2409,6 +2418,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             LineData data = new LineData(dataSets);
             // set data
             linechart.setData(data);
+            linechart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
         }
 
         linechart.animateX(0);
