@@ -39,11 +39,12 @@
             android:layout_alignParentBottom="true"
             android:layout_marginTop="5dp">
 
-            <com.deeptruth.app.android.views.horizontalindeterminateprogress
+            <ProgressBar
+                android:id="@+id/progressmediasync"
+                style="@style/CustomProgressBar"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:id="@+id/progress_db_view"
-                />
+                android:visibility="gone"
+                android:layout_height="20dp"/>
 
             <LinearLayout
                 android:id="@+id/linear_seekbarcolorview"

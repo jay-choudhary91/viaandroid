@@ -310,7 +310,7 @@ public class databasemanager {
         try {
             lock.lock();
 
-            String sql = "SELECT * FROM tblmetadata where localkey = '"+finallocalkey+"'   AND rsequenceno = 0 " ;
+            String sql = "SELECT * FROM tblmetadata where localkey = '"+finallocalkey+"'   AND rsequenceno = 0 LIMIT 50" ;
 
             //String sql = "SELECT * FROM tblmetadata";
             if(mDb == null)
@@ -354,15 +354,13 @@ public class databasemanager {
     }*/
 
 
-    public ArrayList<mediametadatainfo> setmediametadatainfo(String finallocalkey) {
-
-
+    public ArrayList<mediametadatainfo> setmediametadatainfo(String finallocalkey)
+    {
         ArrayList<mediametadatainfo> mediametadatainfosarray = new ArrayList<>();
-
         Cursor cur = fetchmetadata(finallocalkey);
-
-        if (cur != null && cur.getCount() > 0) {
-
+        if (cur != null && cur.moveToFirst() && cur.getCount() > 0)
+        {
+            do{
                 String selectedid = "" + cur.getString(cur.getColumnIndex("id"));
                 String blockchain = "" + cur.getString(cur.getColumnIndex("blockchain"));
                 String valuehash = "" + cur.getString(cur.getColumnIndex("valuehash"));
@@ -376,9 +374,9 @@ public class databasemanager {
                 String serverdate = "" + cur.getString(cur.getColumnIndex("serverdate"));
                 String sequencedevicedate = "" + cur.getString(cur.getColumnIndex("sequencedevicedate"));
 
-            mediametadatainfosarray.add(new mediametadatainfo(selectedid,blockchain,valuehash,hashmethod,localkey,
-                    metricdata,recordate,rsequenceno,sequencehash,sequenceno,serverdate,sequencedevicedate));
-
+                mediametadatainfosarray.add(new mediametadatainfo(selectedid,blockchain,valuehash,hashmethod,localkey,
+                        metricdata,recordate,rsequenceno,sequencehash,sequenceno,serverdate,sequencedevicedate));
+            }while(cur.moveToNext());
         }
         return mediametadatainfosarray;
     }
@@ -470,7 +468,8 @@ public class databasemanager {
     }
 
     public Cursor updatevideoupdateapiresponse(String videoid, String sequence, String serverdate, String serverdictionaryhash,
-                                               String sequenceid, String videoframetransactionid,String color,String latency,String dictionaryhashvalue) {
+                                               String sequenceid, String videoframetransactionid,String color,String latency,
+                                               String mediahashvalue) {
         Cursor mCur=null;
         try {
             lock.lock();
@@ -480,9 +479,8 @@ public class databasemanager {
                     "',serverdate ='"+serverdate+
                     "',color ='"+color+
                     "',latency ='"+latency+
-                    "',valuehash ='"+dictionaryhashvalue+
                     "', serverdictionaryhash = '"+serverdictionaryhash+
-                    "', sequenceid = '"+sequenceid+"' , videostarttransactionid = '"+videoframetransactionid+"' where id='"+videoid+"'");
+                    "', sequenceid = '"+sequenceid+"' , videostarttransactionid = '"+videoframetransactionid+"' where sequencehash='"+mediahashvalue+"'");
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {

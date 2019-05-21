@@ -1546,9 +1546,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         if (inclination != lastinclination) {
 
                         }*/
-                        double xAngle = Math.atan(ax / (Math.sqrt(Math.pow(ay, 2) + Math.pow(az, 2))));
-                        double yAngle = Math.atan(ay / (Math.sqrt(Math.pow(ax, 2) + Math.pow(az, 2))));
-                        double zAngle = Math.atan(Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2)) / az);
+                        double xAngle = Math.atan(ax / (Math.round(Math.pow(ay, 2) + Math.pow(az, 2))));
+                        double yAngle = Math.atan(ay / (Math.round(Math.pow(ax, 2) + Math.pow(az, 2))));
+                        double zAngle = Math.atan(Math.round(Math.pow(ax, 2) + Math.pow(ay, 2)) / az);
 
                         xAngle *= 180.00;
                         yAngle *= 180.00;
@@ -2442,137 +2442,160 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         try {
 
             ArrayList<mediametadatainfo> mediametadatainfosarray = mdbhelper.setmediametadatainfo(finallocalkey);
-            if (mediametadatainfosarray != null && mediametadatainfosarray.size() > 0) {
-
-                selectedid = mediametadatainfosarray.get(0).getId();
-                blockchain = mediametadatainfosarray.get(0).getBlockchain();
-                valuehash = mediametadatainfosarray.get(0).getValuehash();
-                hashmethod = mediametadatainfosarray.get(0).getHashmethod();
-                localkey = mediametadatainfosarray.get(0).getLocalkey();
-                metricdata = mediametadatainfosarray.get(0).getMetricdata();
-                recordate = mediametadatainfosarray.get(0).getRecordate();
-                rsequenceno = mediametadatainfosarray.get(0).getRsequenceno();
-                sequencehash = mediametadatainfosarray.get(0).getSequencehash();
-                sequenceno = mediametadatainfosarray.get(0).getSequenceno();
-                serverdate = mediametadatainfosarray.get(0).getServerdate();
-                sequencedevicedate = mediametadatainfosarray.get(0).getSequencedevicedate();
-
-            } else {
-
+            if (mediametadatainfosarray == null || mediametadatainfosarray.size() == 0)
+            {
+                // calling media complete api
                 callvideocompletedapi(startselectedid, finalheader, finallocalkey, finalapirequestdevicedate, finalvideokey,
                         finaldevicetimeoffset, finaltoken, finalvideocompletedevicedate, finalsync, type);
                 return;
-
             }
 
-            final String finalselectedid = selectedid;
-            String dictionaryhashvalue = "";
+            if (mediametadatainfosarray != null && mediametadatainfosarray.size() > 0) {
 
-            try {
+                for(int i=0;i<mediametadatainfosarray.size();i++)
+                {
+                    selectedid = mediametadatainfosarray.get(i).getId();
+                    blockchain = mediametadatainfosarray.get(i).getBlockchain();
+                    valuehash = mediametadatainfosarray.get(i).getValuehash();
+                    hashmethod = mediametadatainfosarray.get(i).getHashmethod();
+                    localkey = mediametadatainfosarray.get(i).getLocalkey();
+                    metricdata = mediametadatainfosarray.get(i).getMetricdata();
+                    recordate = mediametadatainfosarray.get(i).getRecordate();
+                    rsequenceno = mediametadatainfosarray.get(i).getRsequenceno();
+                    sequencehash = mediametadatainfosarray.get(i).getSequencehash();
+                    sequenceno = mediametadatainfosarray.get(i).getSequenceno();
+                    serverdate = mediametadatainfosarray.get(i).getServerdate();
+                    sequencedevicedate = mediametadatainfosarray.get(i).getSequencedevicedate();
 
-                JSONArray jsonArray = new JSONArray(metricdata);
-                org.json.simple.JSONObject obj = new org.json.simple.JSONObject();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    Iterator<String> myIter = jsonArray.getJSONObject(0).keys();
-                    while (myIter.hasNext()) {
-                        String key = myIter.next();
-                        String value = jsonArray.getJSONObject(0).optString(key);
-                        obj.put(key, value);
-                    }
-                }
-                JSONObject mainobject = new JSONObject();
-                StringWriter out = new StringWriter();
-                obj.writeJSONString(out);
+                    try {
 
-                String jsontext = out.toString();
-                dictionaryhashvalue = md5.calculatestringtomd5(jsontext);
+                        JSONArray jsonArray = new JSONArray(metricdata);
+                        JSONObject mainobject = new JSONObject();
 
-                mainobject.put("sequencedevicedate", "" + sequencedevicedate);
-                mainobject.put("sequenceno", sequenceno);
-                mainobject.put("sequencehashmethod", "" + hashmethod);
-                mainobject.put("dictionaryhashmethod", "" + hashmethod);
-                mainobject.put("dictionaryhashvalue", dictionaryhashvalue);
-                mainobject.put("recorddate", "" + recordate);
-                mainobject.put("dictionary", jsontext);
-                mainobject.put("sequencehashvalue", sequencehash);
-                array.put(mainobject);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            mpairslist.put("html", "0");
-            mpairslist.put("key", "" + finalvideokey);
-            mpairslist.put("devicetimeoffset", "" + finaldevicetimeoffset);
-            mpairslist.put("apirequestdevicedate", "" + finalapirequestdevicedate);
-            mpairslist.put("sequencelist", array);
-
-            final String finalSequenceno = sequenceno;
-            String actiontype = "";
-
-            if (type.equalsIgnoreCase("video")) {
-                actiontype = config.type_video_update;
-                mpairslist.put("videotoken", finaltoken);
-                mpairslist.put("videoupdatedevicedate", "" + videoupdatedevicedate);
-            } else if (type.equalsIgnoreCase("audio")) {
-                actiontype = config.type_audio_update;
-                mpairslist.put("audiotoken", finaltoken);
-                mpairslist.put("audioupdatedevicedate", "" + videoupdatedevicedate);
-            } else if (type.equalsIgnoreCase("image")) {
-                actiontype = config.type_image_update;
-                mpairslist.put("imagetoken", finaltoken);
-                mpairslist.put("imageupdatedevicedate", "" + videoupdatedevicedate);
-            }
-
-            // api calling for video_update or audio_update
-            final String finalDictionaryhashvalue = dictionaryhashvalue;
-            xapipost_sendjson(locationawareactivity.this, actiontype, mpairslist, new apiresponselistener() {
-                @Override
-                public void onResponse(taskresult response) {
-                    if (response.isSuccess()) {
-                        try {
-
-                            JSONObject object = (JSONObject) response.getData();
-                            JSONObject jsonObject = object.getJSONObject("sequences");
-                            String sequenceid = "", color = "", latency = "", mediaframetransactionid = "", serverdictionaryhash = "", sequencekey = "";
-
-                            Iterator itr = jsonObject.keys();
-                            while (itr.hasNext()) {
-                                sequencekey = (String) itr.next();
-                                JSONObject jobject = jsonObject.getJSONObject(sequencekey);
-
-                                //  get id from  issue
-                                sequenceid = jobject.getString("sequenceid");
-
-                                if (jobject.has("videoframetransactionid"))
-                                    mediaframetransactionid = jobject.getString("videoframetransactionid");
-
-                                if (jobject.has("audioframetransactionid"))
-                                    mediaframetransactionid = jobject.getString("audioframetransactionid");
-
-                                if (jobject.has("imageframetransactionid"))
-                                    mediaframetransactionid = jobject.getString("imageframetransactionid");
-
-                                if (jobject.has("color"))
-                                    color = jobject.getString("color");
-
-                                if (jobject.has("latency"))
-                                    latency = jobject.getString("latency");
-
-                                serverdictionaryhash = jobject.getString("serverdictionaryhash");
+                        org.json.simple.JSONObject obj = new org.json.simple.JSONObject();
+                        for (int j = 0; j < jsonArray.length(); j++) {
+                            Iterator<String> myIter = jsonArray.getJSONObject(0).keys();
+                            while (myIter.hasNext()) {
+                                String key = myIter.next();
+                                String value = jsonArray.getJSONObject(0).optString(key);
+                                obj.put(key, value);
                             }
-
-                            String serverdate = object.getString("serverdate");
-                            updatevideoupdateapiresponse(finalselectedid, sequencekey, serverdate, serverdictionaryhash,
-                                    sequenceid, mediaframetransactionid, color, latency, finalDictionaryhashvalue);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+
+                        StringWriter out = new StringWriter();
+                        obj.writeJSONString(out);
+
+                        String jsontext = out.toString();
+                        String dictionaryhashvalue = md5.calculatestringtomd5(jsontext);
+
+                        mainobject.put("sequencedevicedate", "" + sequencedevicedate);
+                        mainobject.put("sequenceno", sequenceno);
+                        mainobject.put("sequencehashmethod", "" + hashmethod);
+                        mainobject.put("dictionaryhashmethod", "" + hashmethod);
+                        mainobject.put("dictionaryhashvalue", dictionaryhashvalue);
+                        mainobject.put("recorddate", "" + recordate);
+                        mainobject.put("dictionary", jsontext);
+                        mainobject.put("sequencehashvalue", sequencehash);
+                        array.put(mainobject);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    triggersyncstatus();
                 }
-            });
+
+                // Block for calling media update api
+                final String finalselectedid = selectedid;
+                mpairslist.put("html", "0");
+                mpairslist.put("key", "" + finalvideokey);
+                mpairslist.put("devicetimeoffset", "" + finaldevicetimeoffset);
+                mpairslist.put("apirequestdevicedate", "" + finalapirequestdevicedate);
+                mpairslist.put("sequencelist", array);
+
+                String actiontype = "";
+                if (type.equalsIgnoreCase("video")) {
+                    actiontype = config.type_video_update;
+                    mpairslist.put("videotoken", finaltoken);
+                    mpairslist.put("videoupdatedevicedate", "" + videoupdatedevicedate);
+                } else if (type.equalsIgnoreCase("audio")) {
+                    actiontype = config.type_audio_update;
+                    mpairslist.put("audiotoken", finaltoken);
+                    mpairslist.put("audioupdatedevicedate", "" + videoupdatedevicedate);
+                } else if (type.equalsIgnoreCase("image")) {
+                    actiontype = config.type_image_update;
+                    mpairslist.put("imagetoken", finaltoken);
+                    mpairslist.put("imageupdatedevicedate", "" + videoupdatedevicedate);
+                }
+
+                // api calling for video_update or audio_update
+
+                //**************************************************************************final String finalDictionaryhashvalue = dictionaryhashvalue;
+
+                final String finalDictionaryhashvalue = "";
+                xapipost_sendjson(locationawareactivity.this, actiontype, mpairslist, new apiresponselistener() {
+                    @Override
+                    public void onResponse(taskresult response) {
+                        if (response.isSuccess()) {
+                            try {
+
+                                JSONObject object = (JSONObject) response.getData();
+                                JSONObject jsonObject = object.getJSONObject("sequences");
+                                String sequenceid = "",serverdate="",color = "", latency = "", mediaframetransactionid = "",
+                                        serverdictionaryhash = "", sequencekey = "",mediahashvalue="";
+
+                                Iterator itr = jsonObject.keys();
+                                while (itr.hasNext()) {
+                                    sequencekey = (String) itr.next();
+                                    JSONObject jobject = jsonObject.getJSONObject(sequencekey);
+
+                                    //  get id from  issue
+                                    sequenceid = jobject.getString("sequenceid");
+
+                                    if (jobject.has("videoframetransactionid"))
+                                        mediaframetransactionid = jobject.getString("videoframetransactionid");
+
+                                    if (jobject.has("audioframetransactionid"))
+                                        mediaframetransactionid = jobject.getString("audioframetransactionid");
+
+                                    if (jobject.has("imageframetransactionid"))
+                                        mediaframetransactionid = jobject.getString("imageframetransactionid");
+
+                                    if (jobject.has("color"))
+                                        color = jobject.getString("color");
+
+                                    if (jobject.has("latency"))
+                                        latency = jobject.getString("latency");
+
+                                    if (jobject.has("serverdictionaryhash"))
+                                        serverdictionaryhash = jobject.getString("serverdictionaryhash");
+
+                                    if (jobject.has("serverdate"))
+                                        serverdate = object.getString("serverdate");
+
+                                    if (jobject.has("videoframehashvalue"))
+                                        mediahashvalue = jobject.getString("videoframehashvalue");
+
+                                    if (jobject.has("audioframehashvalue"))
+                                        mediahashvalue = jobject.getString("audioframehashvalue");
+
+                                    if (jobject.has("imageframehashvalue"))
+                                        mediahashvalue = jobject.getString("imageframehashvalue");
+
+                                    updatevideoupdateapiresponse(finalselectedid, sequencekey, serverdate, serverdictionaryhash,
+                                            sequenceid, mediaframetransactionid, color, latency,mediahashvalue);
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        triggersyncstatus();
+                    }
+                });
+            }
+            else
+            {
+                return;
+            }
             mdbhelper.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -2773,7 +2796,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     public void updatevideoupdateapiresponse(String selectedid, String sequence, String serverdate, String serverdictionaryhash,
-                                             String sequenceid, String videoframetransactionid, String color, String latency, String dictionaryhashvalue) {
+                                             String sequenceid, String videoframetransactionid, String color, String latency,
+                                             String mediahashvalue) {
 
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
@@ -2786,7 +2810,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         try {
             mdbhelper.updatevideoupdateapiresponse(selectedid, sequence, serverdate,
-                    serverdictionaryhash, sequenceid, videoframetransactionid, color, latency, dictionaryhashvalue);
+                    serverdictionaryhash, sequenceid, videoframetransactionid, color, latency, mediahashvalue);
             mdbhelper.close();
         } catch (Exception e) {
             e.printStackTrace();
