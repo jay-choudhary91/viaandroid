@@ -204,6 +204,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         layout_drawertouchable.setOnTouchListener(this);
         img_dotmenu.setVisibility(View.VISIBLE);
         myvisualizerview.setVisibility(View.VISIBLE);
+        barvisualizer.setVisibility(View.VISIBLE);
         img_dotmenu.setOnClickListener(this);
         img_gpswifiwarning.setOnClickListener(this);
         img_close.setOnClickListener(this);
@@ -447,7 +448,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             {
                 myvisualizerview.clear();
                 myvisualizerview.setVisibility(View.INVISIBLE);
+
             }
+
+            if(barvisualizer != null)
+                barvisualizer.setVisibility(View.INVISIBLE);
 
             if(validationbaranimation != null)
             {
@@ -472,6 +477,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 myvisualizerview.clear();
                 myvisualizerview.setVisibility(View.INVISIBLE);
             }
+
+            if(barvisualizer != null)
+                barvisualizer.setVisibility(View.INVISIBLE);
+
             stopblinkanimation();
         }
 
@@ -684,6 +693,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             e.printStackTrace();
         }
         myvisualizerview.setVisibility(View.VISIBLE);
+        barvisualizer.setVisibility(View.VISIBLE);
         starttimer();
         isaudiorecording=true;
         gethelper().setrecordingrunning(true);
@@ -890,6 +900,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             myvisualizerview.clear();
             myvisualizerview.setVisibility(View.INVISIBLE);
         }
+
+        if(barvisualizer != null)
+            barvisualizer.setVisibility(View.INVISIBLE);
 
         if(validationbaranimation != null)
         {
@@ -1240,6 +1253,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private void startnoise() {
         myvisualizerview.setVisibility(View.VISIBLE);
+        barvisualizer.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -1295,11 +1309,15 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     {
                         if(mediarecorder != null)
                         {
-                            int x = mediarecorder.getMaxAmplitude();
-                           // mVisualizerviews.get(0).receive(x);
-                            myvisualizerview.addAmplitude(x); // update the VisualizeView
-                            myvisualizerview.invalidate();
-                            wavevisualizerslist.add(new wavevisualizer(x,true));
+                         int x = mediarecorder.getMaxAmplitude();
+                         double ampletude = 20 * Math.log10(x / 32767.0);
+                         Log.e("ampletudevalue",""+Math.abs((int)ampletude));
+                         int deciblevalue = 50 - Math.abs((int)ampletude);
+                         mVisualizerviews.get(0).receive(deciblevalue);
+
+                         myvisualizerview.addAmplitude(x); // update the VisualizeView
+                         myvisualizerview.invalidate();
+                         wavevisualizerslist.add(new wavevisualizer(x,true));
                         }
                     }
 
@@ -1570,6 +1588,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     public void resetaudioreder(){
 
         myvisualizerview.setVisibility(View.VISIBLE);
+        barvisualizer.setVisibility(View.VISIBLE);
 
     }
 
