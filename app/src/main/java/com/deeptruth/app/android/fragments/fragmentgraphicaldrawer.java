@@ -1147,6 +1147,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             {
                                 connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
                             }
+
                         }
                         catch (Exception e)
                         {
@@ -1173,6 +1174,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             {
                                 connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(array[0]), 0));
                             }
+
                         }
                         catch (Exception e)
                         {
@@ -1200,6 +1202,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             {
                                 gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
                             }
+
                         }
                         catch (Exception e)
                         {
@@ -1217,15 +1220,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
+                            float value=1.0f;
+                            if(Float.parseFloat(itemarray[0]) != 0)
+                                value=Float.parseFloat(itemarray[0]);
+
                             if(speedgraphitems.size() > 0)
                             {
-                                if(speedgraphitems.get(speedgraphitems.size()-1).getY() != Float.parseFloat(itemarray[0]))
-                                    speedgraphitems.add(new Entry(speedgraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                                if(speedgraphitems.get(speedgraphitems.size()-1).getY() != value)
+                                    speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
                             }
                             else
                             {
-                                speedgraphitems.add(new Entry(speedgraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
                             }
+
                         }
                         catch (Exception e)
                         {
@@ -1243,15 +1251,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
+                            float value=1.0f;
+                            if(Float.parseFloat(itemarray[0]) != 0)
+                                value=Float.parseFloat(itemarray[0]);
+
                             if(travelledgraphitems.size() > 0)
                             {
-                                if(travelledgraphitems.get(travelledgraphitems.size()-1).getY() != Float.parseFloat(itemarray[0]))
-                                    travelledgraphitems.add(new Entry(travelledgraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                                if(travelledgraphitems.get(travelledgraphitems.size()-1).getY() != value)
+                                    travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
                             }
                             else
                             {
-                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
                             }
+
                         }
                         catch (Exception e)
                         {
@@ -1269,7 +1282,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            altitudegraphitems.add(new Entry(altitudegraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                            float value=1.0f;
+                            if(Float.parseFloat(itemarray[0]) != 0)
+                                value=Float.parseFloat(itemarray[0]);
+
+                            if(altitudegraphitems.size() > 0)
+                            {
+                                if(altitudegraphitems.get(altitudegraphitems.size()-1).getY() != value)
+                                    altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
+                            }
+                            else
+                            {
+                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
+                            }
                         }
                         catch (Exception e)
                         {
@@ -2209,11 +2234,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void setlinechartdata(final LineChart chart, Float value, ArrayList<Entry> valuesarray)
     {
+        chart.setVisibility(View.VISIBLE);
         if(valuesarray.size() > 0)
         {
             if(valuesarray.get(valuesarray.size()-1).getY() == value)
                 return;
         }
+
+        if(value == 0)
+            value=1.0f;
 
         if(value != -1)  // It means chart is preparing on recording time
             valuesarray.add(new Entry(valuesarray.size(), value, 0));
@@ -2275,7 +2304,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             LineData data = new LineData(dataSets);
             // set data
             chart.setData(data);
-            chart.setViewPortOffsets(10,0,10,10);
+            chart.setViewPortOffsets(10,0,10,0);
         }
 
         chart.animateX(0);
@@ -2326,6 +2355,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         @Override
                         public void run() {
 
+                            chart.setViewPortOffsets(0,5,5,0);
                             chart.invalidate();
                             if(finalCount != 1){
                                 if(vertical_seekbar.getVisibility() == View.VISIBLE)
@@ -2345,14 +2375,23 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     private void setspeedtraveledaltitudechart(final LineChart linechart, Float value, ArrayList<Entry> arrayitems) {
 
+        linechart.setVisibility(View.VISIBLE);
         if(arrayitems.size() > 0)
         {
             if(arrayitems.get(arrayitems.size()-1).getY() == value)
                 return;
         }
 
+        if(value == 0)
+            value=1.0f;
+
         if(value != -1)
+        {
+            //if(arrayitems.size() == 0)
+              //  arrayitems.add(new Entry(0, 1, 0));
             arrayitems.add(new Entry(arrayitems.size(), value, 0));
+        }
+
 
         LineDataSet set1;
         if (linechart.getData() != null && linechart.getData().getDataSetCount() > 0 && arrayitems.size() > 0)
@@ -2367,11 +2406,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
-                linechart.setViewPortOffsets(0,10,40,10);
+                linechart.setViewPortOffsets(0,10,40,5);
             }
             else
             {
-                linechart.setViewPortOffsets(10,10,10,10);
+                linechart.setViewPortOffsets(10,10,10,5);
             }
             LineData data = new LineData(set1);
             linechart.setData(data);
@@ -2380,6 +2419,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             // create a dataset and give it a type
             set1 = new LineDataSet(arrayitems, "");
             set1.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+
 
             set1.setDrawIcons(true);
             set1.setColor(Color.WHITE);
