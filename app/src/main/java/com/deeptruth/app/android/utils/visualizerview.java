@@ -139,7 +139,7 @@ public class visualizerview extends FrameLayout {
             float right = (i + 1) * mColumnWidth - mSpace;
 
             RectF rect = createRectF(left, right, height);
-            mPaint.setShader(new LinearGradient(0, 0, 0, height, Color.RED, Color.GREEN, Shader.TileMode.MIRROR));
+            mPaint.setShader(new LinearGradient(0, 0, 0, height, Color.YELLOW, Color.GREEN, Shader.TileMode.MIRROR));
             mCanvas.drawRect(rect, mPaint);
         }
     }

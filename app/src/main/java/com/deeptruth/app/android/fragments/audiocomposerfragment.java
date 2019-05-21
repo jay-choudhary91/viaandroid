@@ -895,6 +895,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         stoptimer();
         resettimer();
         isaudiorecording=false;
+
         if(myvisualizerview != null)
         {
             myvisualizerview.clear();
@@ -1253,7 +1254,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private void startnoise() {
         myvisualizerview.setVisibility(View.VISIBLE);
-        barvisualizer.setVisibility(View.VISIBLE);
+        barvisualizer.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -1588,7 +1589,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     public void resetaudioreder(){
 
         myvisualizerview.setVisibility(View.VISIBLE);
-        barvisualizer.setVisibility(View.VISIBLE);
+        barvisualizer.setVisibility(View.INVISIBLE);
 
     }
 
