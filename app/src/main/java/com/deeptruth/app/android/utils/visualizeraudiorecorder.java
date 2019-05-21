@@ -72,6 +72,10 @@ public class visualizeraudiorecorder extends View {
 
     // add the given amplitude to the amplitudes ArrayList
     public void addAmplitude(float amplitude) {
+
+        if(amplitudes == null)
+            amplitudes = new ArrayList<Float>(width / LINE_WIDTH);
+
         amplitudes.add(amplitude); // add newest to the amplitudes ArrayList
 
         // if the power lines completely fill the VisualizerView

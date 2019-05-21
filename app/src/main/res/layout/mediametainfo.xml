@@ -445,6 +445,25 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/layout_soundiformation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_soundiformation"
+                style="@style/txt_drawer_graphical_title"
+                android:text="@string/sound_information"
+                app:fontType="OpenSans_Regular"
+                android:textColor="@color/white"
+                />
+
+            <include layout="@layout/sound_information"></include>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/layout_orientationanalytics"
@@ -536,7 +555,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/layout_phoneanalytics"

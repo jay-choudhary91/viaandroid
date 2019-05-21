@@ -43,6 +43,8 @@ import com.deeptruth.app.android.utils.AnalogClock;
 import com.deeptruth.app.android.utils.AnalogClockBlack;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.visualizeraudiorecorder;
+import com.deeptruth.app.android.utils.visualizerview;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.deeptruth.app.android.views.customseekbar;
@@ -88,6 +90,7 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -308,6 +311,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     verticalseekbar vertical_slider_connectionspeed;
     @BindView(R.id.vertical_slider_connectiondatatimedely)
     verticalseekbar vertical_slider_connectiondatatimedely;
+    @BindView(R.id.myvisualizerview)
+    visualizeraudiorecorder myvisualizerview;
+    @BindView(R.id.barvisualizer)
+    visualizerview barvisualizerview;
+    @BindView(R.id.layout_soundiformation)
+    LinearLayout layout_soundiformation;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -780,6 +789,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
                 else
                 {
+                    myvisualizerview.clear();
+                    layout_soundiformation.setVisibility(View.GONE);
                     showhideverticalbar(true);
                     updateverticalsliderlocationdata(speed,vertical_slider_speed);
                     updateverticalsliderlocationdata(altitude,vertical_slider_altitude);
@@ -885,6 +896,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
 
         }
+    }
+
+    public void setsoundinformation(int ampletudevalue,int decibelvalue){
+
+        layout_soundiformation.setVisibility(View.VISIBLE);
+
+        if(myvisualizerview != null){
+            myvisualizerview.addAmplitude(ampletudevalue); // update the VisualizeView
+            myvisualizerview.invalidate();
+        }
+
+        if(barvisualizerview!=null)
+            barvisualizerview.receive(decibelvalue);
     }
 
     public void updateverticalsliderlocationdata(String value, verticalseekbar seekbar)
@@ -2177,6 +2201,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         linechart.setDragEnabled(false);
         linechart.setScaleEnabled(false);
         linechart.setPinchZoom(false);
+
     }
 
     public  void initlinechart(LineChart chart,Float maxrange)

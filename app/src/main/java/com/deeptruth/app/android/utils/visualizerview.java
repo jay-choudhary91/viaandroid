@@ -5,12 +5,14 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -45,6 +47,7 @@ public class visualizerview extends FrameLayout {
         super(context, attrs);
         init(context, attrs);
         mPaint.setColor(mRenderColor);
+        //mPaint.setShader(new LinearGradient(0, 0, 0, getHeight(), Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
         mFadePaint.setColor(Color.argb(138, 255, 255, 255));
     }
 
@@ -136,6 +139,7 @@ public class visualizerview extends FrameLayout {
             float right = (i + 1) * mColumnWidth - mSpace;
 
             RectF rect = createRectF(left, right, height);
+            mPaint.setShader(new LinearGradient(0, 0, 0, height, Color.RED, Color.GREEN, Shader.TileMode.MIRROR));
             mCanvas.drawRect(rect, mPaint);
         }
     }

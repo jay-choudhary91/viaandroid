@@ -346,8 +346,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     ArrayList<permissions> permissionslist =new ArrayList<>();
 
     private boolean isdraweropen=false,isgraphicalshown=false;
-    private Handler myhandler;
-    private Runnable myrunnable;
+    private Handler myhandler,mysoundwavehandler;
+    private Runnable myrunnable,mymysoundwaverunnable;
     private boolean issavedtofolder=false,previewupdated=false;;
     JSONArray metadatametricesjson=new JSONArray();
 
@@ -1210,8 +1210,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 // Start recording
                 mediarecorder.start();
                 startvideotimer();
+                setsoundwaveinfo();
                 //fragmentgraphic.setvisualizerwave();
                 wavevisualizerslist.clear();
+
+
                 //startnoise();
             }
 
@@ -1241,6 +1244,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         issavedtofolder=true;
         isvideorecording = false;
         lastrecordedvideo=new File(selectedvideofile);
+
+        if(mysoundwavehandler != null && mymysoundwaverunnable != null)
+            mysoundwavehandler.removeCallbacks(mymysoundwaverunnable);
 
         try {
             previewsession.stopRepeating();
@@ -1675,6 +1681,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         stopblinkanimation();
         if(myhandler != null && myrunnable != null)
             myhandler.removeCallbacks(myrunnable);
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
 
         if(validationbaranimation != null)
         {
@@ -1868,6 +1876,29 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     apicurrentduration=0;
             }
         }).start();
+    }
+
+    public void setsoundwaveinfo(){
+
+        if(mysoundwavehandler != null && mymysoundwaverunnable != null)
+            mysoundwavehandler.removeCallbacks(mymysoundwaverunnable);
+
+        mysoundwavehandler =new Handler();
+        mymysoundwaverunnable = new Runnable() {
+            @Override
+            public void run() {
+                if(mediarecorder != null)
+                {
+                    int ampletudevalue = mediarecorder.getMaxAmplitude();
+                    double ampletude = 20 * Math.log10(ampletudevalue / 32767.0);
+                    int decibelvalue = 50 - Math.abs((int)ampletude);
+
+                    gethelper().setsoundwaveinformation(ampletudevalue,decibelvalue);
+                }
+                mysoundwavehandler.postDelayed(this, 50);
+            }
+        };
+        mysoundwavehandler.post(mymysoundwaverunnable);
     }
 
     public void setmetriceshashesdata()
