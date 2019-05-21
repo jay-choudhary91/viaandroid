@@ -1546,9 +1546,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         if (inclination != lastinclination) {
 
                         }*/
-                        double xAngle = Math.atan(ax / (Math.sqrt(Math.pow(ay, 2) + Math.pow(az, 2))));
-                        double yAngle = Math.atan(ay / (Math.sqrt(Math.pow(ax, 2) + Math.pow(az, 2))));
-                        double zAngle = Math.atan(Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2)) / az);
+                        double xAngle = Math.atan(ax / (Math.round(Math.pow(ay, 2) + Math.pow(az, 2))));
+                        double yAngle = Math.atan(ay / (Math.round(Math.pow(ax, 2) + Math.pow(az, 2))));
+                        double zAngle = Math.atan(Math.round(Math.pow(ax, 2) + Math.pow(ay, 2)) / az);
 
                         xAngle *= 180.00;
                         yAngle *= 180.00;
