@@ -281,6 +281,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if (getcurrentfragment() instanceof composeoptionspagerfragment) {
             if (mfragments.size() == 1) {
                 mfragments.pop();
+                clearfragmentstack();
                 launchmedialistfragment();
             } else {
                 backtolastfragment();

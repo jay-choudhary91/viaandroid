@@ -1233,31 +1233,20 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
 
+                    try {
+                        setimagehash();
+                        medialistitemaddbroadcast();
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(null,4);
 
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                //Do something after 100ms
-                                try {
-                                    setimagehash();
-
-                                    medialistitemaddbroadcast();
-                                    if(madapterclick != null)
-                                        madapterclick.onItemClicked(null,4);
-
-                                    zoomLevel=1.0f;
-                                    if(madapterclick != null)
-                                        madapterclick.onItemClicked(""+zoomLevel+" x",5);
-
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, 100);
+                        zoomLevel=1.0f;
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(""+zoomLevel+" x",5);
 
                         unlockfocus();
-
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     isimagecaptureprocessing=false;
                 }
             };
