@@ -2519,6 +2519,8 @@ public class common {
         if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
         {
             DecimalFormat precision = new DecimalFormat("0.0");
+            String splitvalue[] = value.split("\\s");
+            value = splitvalue[0];
             double speedinmps=Double.parseDouble(value);
             Locale locale = Locale.getDefault();
             if (useMiles(locale)) {
@@ -2535,6 +2537,8 @@ public class common {
         if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
         {
             DecimalFormat precision = new DecimalFormat("0.0");
+            String splitvalue[] = value.split("\\s");
+            value = splitvalue[0];
             double distanceInMeters=common.convertmilestometer(Float.parseFloat(value));
             Locale locale = Locale.getDefault();
             if (useMiles(locale)) {

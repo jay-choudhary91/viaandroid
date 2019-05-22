@@ -318,7 +318,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             finish();
         } else if (getcurrentfragment() instanceof composeoptionspagerfragment) {
             if (mfragments.size() == 1) {
-                mfragments.pop();
+                clearfragmentstack();
                 launchmedialistfragment();
             } else {
                 backtolastfragment();
@@ -342,6 +342,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             onfragmentbackstackchanged();
         }
 
+    }
+
+    public void clearfragmentstack()
+    {
+        FragmentManager fm = getSupportFragmentManager();
+        for (int i = 0; i < fm.getBackStackEntryCount() - getMinNumberOfFragments(); i++) {
+            fm.popBackStack();
+        }
+
+        if (!mfragments.isEmpty()) {
+            mfragments.clear();
+        }
     }
 
     public void clearfragmentbackstack() {

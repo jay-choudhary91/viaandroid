@@ -79,6 +79,7 @@ public class md5
         }
 
     public static String fileToMD5(String filePath) {
+        String md5hash="";
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream(filePath);
@@ -91,9 +92,9 @@ public class md5
                     digest.update(buffer, 0, numRead);
             }
             byte [] md5Bytes = digest.digest();
-            return convertHashToString(md5Bytes);
+            md5hash= convertHashToString(md5Bytes);
         } catch (Exception e) {
-            return null;
+            e.printStackTrace();
         } finally {
             if (inputStream != null) {
                 try {
@@ -101,6 +102,10 @@ public class md5
                 } catch (Exception e) { }
             }
         }
+        if(! md5hash.trim().isEmpty())
+            return md5hash;
+
+        return fileToMD5(filePath);
     }
 
     private static String convertHashToString(byte[] md5Bytes) {

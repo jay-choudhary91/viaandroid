@@ -1312,7 +1312,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         {
                          int x = mediarecorder.getMaxAmplitude();
                          double ampletude = 20 * Math.log10(x / 32767.0);
-                         Log.e("ampletudevalue",""+Math.abs((int)ampletude));
                          int deciblevalue = 50 - Math.abs((int)ampletude);
                          mVisualizerviews.get(0).receive(deciblevalue);
 
