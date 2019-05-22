@@ -13,7 +13,6 @@
         android:layout_height="match_parent"
         android:layout_above="@id/navigation"
         android:orientation="vertical">
-
     </FrameLayout>
 
     <com.deeptruth.app.android.views.customfonttextview
@@ -83,14 +82,7 @@
 
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/img_mediathumbnail"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
-            android:scaleType="centerCrop"
-            android:layout_centerVertical="true"/>
+
 
 
         <RelativeLayout
@@ -157,5 +149,48 @@
         <include layout="@layout/layout_seekbarzoom_level"></include>
 
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="bottom">
+
+            <ImageView
+                android:id="@+id/img_mediathumbnail"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:scaleType="centerCrop"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="15dp"
+                android:layout_marginBottom="@dimen/margin_20dp"
+                android:layout_centerVertical="true"/>
+        </LinearLayout>
+
+
+        <!-- This initially-hidden ImageView will hold the expanded/zoomed version of
+             the images above. Without transformations applied, it takes up the entire
+             screen. To achieve the "zoom" animation, this view's bounds are animated
+             from the bounds of the thumbnail button above, to its final laid-out
+             bounds.
+             -->
+
+        <ImageView
+            android:id="@+id/expanded_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/margin_20dp"
+            android:visibility="invisible" />
+
+
+
+    </FrameLayout>
+
+
 
 </RelativeLayout>
