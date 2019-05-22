@@ -664,16 +664,18 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     {
         try {
             String keyvalue="";
-            for(int i=0;i<5;i++)
+            /*for(int i=0;i<5;i++)
             {
                 keyvalue =  md5.fileToMD5(capturedimagefile.getAbsolutePath());
-                if(keyvalue.trim().length() > 0)
+                if(keyvalue != null &&  keyvalue.trim().length() > 0)
                     break;
-            }
+            }*/
+
+            keyvalue =  md5.fileToMD5(capturedimagefile.getAbsolutePath());
 
             selectedhashes =  keyvalue;
             selectedhashes=keytype+" : "+selectedhashes;
-            Log.e("imagekeyhash = ","" +selectedhashes);
+            Log.e("imagekeyhash = ","Values are: " +selectedhashes);
             hashvalue = selectedhashes;
 
             ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
@@ -1231,20 +1233,31 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
 
-                    try {
-                        setimagehash();
-                        medialistitemaddbroadcast();
-                        if(madapterclick != null)
-                            madapterclick.onItemClicked(null,4);
 
-                        zoomLevel=1.0f;
-                        if(madapterclick != null)
-                            madapterclick.onItemClicked(""+zoomLevel+" x",5);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //Do something after 100ms
+                                try {
+                                    setimagehash();
+
+                                    medialistitemaddbroadcast();
+                                    if(madapterclick != null)
+                                        madapterclick.onItemClicked(null,4);
+
+                                    zoomLevel=1.0f;
+                                    if(madapterclick != null)
+                                        madapterclick.onItemClicked(""+zoomLevel+" x",5);
+
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, 100);
 
                         unlockfocus();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+
                     isimagecaptureprocessing=false;
                 }
             };

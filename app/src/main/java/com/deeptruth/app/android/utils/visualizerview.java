@@ -43,6 +43,12 @@ public class visualizerview extends FrameLayout {
     private float mColumnWidth;
     private float mSpace;
 
+    int[] colors = {
+            Color.YELLOW,
+            Color.RED,
+            Color.GREEN
+    };
+
     public visualizerview(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
@@ -139,7 +145,7 @@ public class visualizerview extends FrameLayout {
             float right = (i + 1) * mColumnWidth - mSpace;
 
             RectF rect = createRectF(left, right, height);
-            mPaint.setShader(new LinearGradient(0, 0, 0, height, Color.YELLOW, Color.GREEN, Shader.TileMode.MIRROR));
+            mPaint.setShader(new LinearGradient(height, 0, 0, 0, colors, null, Shader.TileMode.MIRROR));
             mCanvas.drawRect(rect, mPaint);
         }
     }

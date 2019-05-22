@@ -451,7 +451,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_soundiformation"

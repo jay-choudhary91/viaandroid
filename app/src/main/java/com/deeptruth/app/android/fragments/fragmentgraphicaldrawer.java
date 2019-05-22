@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -482,6 +483,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             vertical_slider_connectionspeed.setMax(25);
             vertical_slider_connectiondatatimedely.setMax(10);
             vertical_slider_gpsaccuracy.setMax(100);
+
+            ViewTreeObserver observer = barvisualizerview.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    barvisualizerview.setBaseY(barvisualizerview.getHeight());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        barvisualizerview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        barvisualizerview.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+                }
+            });
+
 
             /*linechart_speed.setVisibility(View.GONE);
             linechart_traveled.setVisibility(View.GONE);
@@ -1130,6 +1145,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         linechart_speed.clear();
         linechart_traveled.clear();
         linechart_altitude.clear();
+        layout_soundiformation.setVisibility(View.GONE);
 
         mappathoptions = new PolylineOptions().width(7).color(Color.BLUE).geodesic(true);
         for (int i = 0; i < metricmainarraylist.size(); i++)
@@ -1466,6 +1482,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 if (currentmediaposition < metricmainarraylist.size() && metricmainarraylist.size() > 0) {
                     arraycontainerformetric = new arraycontainer();
                     arraycontainerformetric = metricmainarraylist.get(currentmediaposition);
+                    layout_soundiformation.setVisibility(View.GONE);
 
                     ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
                     String latitude="",longitude="";
