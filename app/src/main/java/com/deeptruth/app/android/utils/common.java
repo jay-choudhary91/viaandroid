@@ -2518,6 +2518,10 @@ public class common {
     public static String speedformatter(String value) {
         if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
         {
+            String[] array=value.split(" ");
+            if(array.length >0)
+                value=array[0];
+
             DecimalFormat precision = new DecimalFormat("0.0");
             String splitvalue[] = value.split("\\s");
             value = splitvalue[0];
@@ -2536,6 +2540,10 @@ public class common {
     public static String travelleddistanceformatter(String value) {
         if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
         {
+            String[] array=value.split(" ");
+            if(array.length >0)
+                value=array[0];
+
             DecimalFormat precision = new DecimalFormat("0.0");
             String splitvalue[] = value.split("\\s");
             value = splitvalue[0];
