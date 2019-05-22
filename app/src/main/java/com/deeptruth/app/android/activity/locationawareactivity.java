@@ -652,8 +652,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
             stopLocationUpdates();
         }
-        if (myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
 
     }
 
@@ -2001,6 +1999,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 e.printStackTrace();
             }
         }
+
+        if (myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
 
         if (mOrientation != null)
             mOrientation.stopListening();
