@@ -236,7 +236,7 @@
                             android:id="@+id/linechart_speed"
                             android:layout_width="match_parent"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginBottom="13dp"
+                            android:layout_marginBottom="10dp"
                             android:layout_gravity="center_vertical"
                             android:layout_height="match_parent"/>
 
@@ -305,7 +305,7 @@
                         android:id="@+id/linechart_traveled"
                         android:layout_width="match_parent"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginBottom="13dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_gravity="center_vertical"
                         android:layout_height="match_parent"/>
 
@@ -374,7 +374,7 @@
                             android:layout_width="match_parent"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginBottom="13dp"
+                            android:layout_marginBottom="10dp"
                             android:layout_height="match_parent"/>
 
                         <com.deeptruth.app.android.views.verticalseekbar
