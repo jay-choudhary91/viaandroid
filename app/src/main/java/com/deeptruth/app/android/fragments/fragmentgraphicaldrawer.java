@@ -2384,6 +2384,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 public void run() {
                                     Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
                                     chart.highlightValue(high, false);
+
+                                    chart.moveViewTo(set1.getEntryForIndex(selectedchartposition).getX(),set1.getEntryForIndex(selectedchartposition).getY(), YAxis.AxisDependency.LEFT);
+
+
                                 }
                             });
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
@@ -2418,19 +2422,23 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private void setspeedtraveledaltitudechart(final LineChart linechart, Float value, ArrayList<Entry> arrayitems) {
 
         linechart.setVisibility(View.VISIBLE);
-        if(arrayitems.size() > 0)
+
+        Log.e("speed value",""+value);
+
+       /* if(arrayitems.size() > 0)
         {
             if(arrayitems.get(arrayitems.size()-1).getY() == value)
                 return;
-        }
+        }*/
 
         if(value == 0)
             value=1.0f;
 
         if(value != -1)
         {
-            //if(arrayitems.size() == 0)
-              //  arrayitems.add(new Entry(0, 1, 0));
+           /* if(arrayitems.size() == 0)
+                arrayitems.add(new Entry(0, 1, 0));*/
+
             arrayitems.add(new Entry(arrayitems.size(), value, 0));
         }
 
@@ -2448,6 +2456,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
+
+                linechart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
+
                 linechart.setViewPortOffsets(0,10,40,5);
             }
             else
@@ -2457,6 +2468,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             LineData data = new LineData(set1);
             linechart.setData(data);
             linechart.notifyDataSetChanged();
+            linechart.invalidate();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(arrayitems, "");
@@ -2491,6 +2503,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             LineData data = new LineData(dataSets);
             // set data
             linechart.setData(data);
+            linechart.setScaleMinima(70, 1f);
         }
 
         linechart.animateX(0);

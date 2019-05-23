@@ -681,7 +681,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 Log.e("AudioRecord","AudioRecord init failed");
                 return;
             }
-
             audiorecorder.startRecording();
             recordingthread = new Thread(new Runnable() {
                 public void run() {
@@ -726,22 +725,21 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
 
         final int[] framegap = {0};
-        while (isaudiorecording) {
-            // gets the voice output from microphone to byte format
-            audiorecorder.read(sData, 0, bufferelements2rec);
-            System.out.println("Short writing to file" + sData.toString());
-            try {
+        final FileOutputStream finalOs = os;
+        new Thread(new Runnable() {
+            @Override
+              public void run()
+              {
+               try {
+                        while (isaudiorecording) {
+                            // gets the voice output from microphone to byte format
+                            audiorecorder.read(sData, 0, bufferelements2rec);
+                            System.out.println("Short writing to file" + sData.toString());
 
-                final FileOutputStream finalOs = os;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run()
-                    {
                         // writes the data to file from buffer stores the voice buffer
                         Log.e("ShortBuffer",Arrays.toString(sData));
                         final byte data[] = short2byte(sData);
 
-                        runRecording(data);
                         try {
                             finalOs.write(data, 0, bufferelements2rec * bytesperelement);
                             if(isaudiorecording)
@@ -776,11 +774,13 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         }
 
                     }
-                }).start();
-            } catch (Exception e) {
-                e.printStackTrace();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }
+         }).start();
+
 
         try {
             os.close();
@@ -1313,7 +1313,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                          int x = mediarecorder.getMaxAmplitude();
                          double ampletude = 20 * Math.log10(x / 32767.0);
                          int deciblevalue = 50 - Math.abs((int)ampletude);
-                         mVisualizerviews.get(0).receive(deciblevalue);
+                         barvisualizer.receive(deciblevalue);
 
                          myvisualizerview.addAmplitude(x); // update the VisualizeView
                          myvisualizerview.invalidate();
