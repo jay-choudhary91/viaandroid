@@ -207,8 +207,7 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:paddingBottom="10dp"
+                        android:layout_height="70dp"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -233,25 +232,25 @@
                             android:layout_marginBottom="10dp"
                             android:layout_alignParentBottom="true"></View>
 
-
                         <com.github.mikephil.charting.charts.LineChart
                             android:id="@+id/linechart_speed"
                             android:layout_width="match_parent"
-                            android:layout_gravity="center_vertical"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:layout_height="70dp"/>
+                            android:layout_marginBottom="13dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_height="match_parent"/>
+
 
                         <com.deeptruth.app.android.views.verticalseekbar
                             android:id="@+id/vertical_slider_speed"
                             android:layout_width="20dp"
                             android:layout_height="match_parent"
-                            android:max="100"
                             android:thumb="@drawable/blue_black_ball"
+                            android:max="100"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:progressDrawable="@drawable/verticalseekbarprogress"
-                            android:splitTrack="false"
+                           android:layout_marginBottom="3dp"
                             android:min="0"/>
 
                     </RelativeLayout>
@@ -306,7 +305,7 @@
                         android:id="@+id/linechart_traveled"
                         android:layout_width="match_parent"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginBottom="13dp"
                         android:layout_gravity="center_vertical"
                         android:layout_height="match_parent"/>
 
@@ -319,6 +318,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:progressDrawable="@drawable/verticalseekbarprogress"
+                            android:layout_marginBottom="3dp"
                             android:min="0"/>
 
                     </RelativeLayout>
@@ -374,7 +374,7 @@
                             android:layout_width="match_parent"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginBottom="10dp"
+                            android:layout_marginBottom="13dp"
                             android:layout_height="match_parent"/>
 
                         <com.deeptruth.app.android.views.verticalseekbar
@@ -386,6 +386,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
                             android:progressDrawable="@drawable/verticalseekbarprogress"
+
                             android:min="0"/>
 
                     </RelativeLayout>
