@@ -2306,6 +2306,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
 
+                chart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
+
+
                 chart.setViewPortOffsets(0,0,100,0);
             }
             else
@@ -2315,6 +2318,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
+            chart.invalidate();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(valuesarray, "");
@@ -2344,8 +2348,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             dataSets.add(set1); // add the data sets
             // create a data object with the data sets
             LineData data = new LineData(dataSets);
+
             // set data
             chart.setData(data);
+            if(! isdatacomposing){
+                chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
+            }else{
+                chart.setScaleMinima((float)  90f, 1f);
+            }
+
+
             chart.setViewPortOffsets(10,0,10,0);
         }
 
@@ -2384,9 +2396,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 public void run() {
                                     Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
                                     chart.highlightValue(high, false);
-
-                                    chart.moveViewTo(set1.getEntryForIndex(selectedchartposition).getX(),set1.getEntryForIndex(selectedchartposition).getY(), YAxis.AxisDependency.LEFT);
-
+                                        chart.moveViewTo(set1.getEntryForIndex(selectedchartposition).getX(),set1.getEntryForIndex(selectedchartposition).getY(), YAxis.AxisDependency.LEFT);
                                 }
                             });
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
@@ -2424,11 +2434,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         Log.e("speed value",""+value);
 
-       /* if(arrayitems.size() > 0)
+        if(arrayitems.size() > 0)
         {
             if(arrayitems.get(arrayitems.size()-1).getY() == value)
                 return;
-        }*/
+        }
 
         if(value == 0)
             value=1.0f;
@@ -2502,7 +2512,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             LineData data = new LineData(dataSets);
             // set data
             linechart.setData(data);
-            linechart.setScaleMinima(70, 1f);
+
+            if(! isdatacomposing){
+                linechart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
+            }else{
+
+                linechart.setScaleMinima(90f, 1f);
+            }
         }
 
         linechart.animateX(0);

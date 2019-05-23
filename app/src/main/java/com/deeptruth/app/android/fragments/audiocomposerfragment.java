@@ -725,17 +725,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
 
         final int[] framegap = {0};
-        final FileOutputStream finalOs = os;
-        new Thread(new Runnable() {
-            @Override
-              public void run()
-              {
-               try {
-                        while (isaudiorecording) {
-                            // gets the voice output from microphone to byte format
-                            audiorecorder.read(sData, 0, bufferelements2rec);
-                            System.out.println("Short writing to file" + sData.toString());
+        while (isaudiorecording) {
+            // gets the voice output from microphone to byte format
+            audiorecorder.read(sData, 0, bufferelements2rec);
+            System.out.println("Short writing to file" + sData.toString());
+            try {
 
+                final FileOutputStream finalOs = os;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
                         // writes the data to file from buffer stores the voice buffer
                         Log.e("ShortBuffer",Arrays.toString(sData));
                         final byte data[] = short2byte(sData);
@@ -772,15 +772,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                     }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                }).start();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-         }).start();
-
+        }
 
         try {
             os.close();
