@@ -711,7 +711,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     if(mediatype == i)
                     {
                         txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
-                        txt_mediatype.setTextSize(13f);
+                        txt_mediatype.setTextSize(12f);
                     }
                     else
                     {
