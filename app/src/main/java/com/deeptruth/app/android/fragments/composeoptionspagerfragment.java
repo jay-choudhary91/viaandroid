@@ -1199,7 +1199,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 setonmediathumbnail(expandedImageView,startBounds,startScaleFinal,thumbView,uri);
                 expandedImageView.setVisibility(View.VISIBLE);
             }
-        },700);
+        },1000);
 
 
     }
@@ -1231,7 +1231,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
                         .transition(GenericTransitionOptions.with(R.anim.fadein)).
                         into(thumbView);
-                expandedImageView.setVisibility(View.GONE);
+
+                Animation out = AnimationUtils.loadAnimation(getActivity(),R.anim.fadeoutanimation);
+                expandedImageView.startAnimation(out);
+                expandedImageView.setVisibility(View.INVISIBLE);
                 currentAnimator = null;
             }
 
@@ -1241,8 +1244,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
                         .transition(GenericTransitionOptions.with(R.anim.fadein)).
                         into(thumbView);
-                expandedImageView.setVisibility(View.GONE);
-                currentAnimator = null;
+
+                Animation out = AnimationUtils.loadAnimation(getActivity(),R.anim.fadeoutanimation);
+                expandedImageView.startAnimation(out);
+                expandedImageView.setVisibility(View.INVISIBLE);
             }
         });
         set.start();
