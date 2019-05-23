@@ -2387,7 +2387,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                                     chart.moveViewTo(set1.getEntryForIndex(selectedchartposition).getX(),set1.getEntryForIndex(selectedchartposition).getY(), YAxis.AxisDependency.LEFT);
 
-
                                 }
                             });
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
