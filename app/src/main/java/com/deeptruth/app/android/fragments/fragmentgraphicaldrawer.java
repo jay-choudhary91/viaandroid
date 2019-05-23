@@ -2351,7 +2351,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             // set data
             chart.setData(data);
-            if(! isdatacomposing){
+            if(value == -1){
                 chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
             }else{
                 chart.setScaleMinima((float)  90f, 1f);
@@ -2513,11 +2513,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             // set data
             linechart.setData(data);
 
-            if(! isdatacomposing){
+            if(value == -1){
                 linechart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
             }else{
-
-                linechart.setScaleMinima(90f, 1f);
+                linechart.setScaleMinima(70f, 1f);
             }
         }
 
