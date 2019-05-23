@@ -930,7 +930,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 into(img_mediathumbnail);
         }else{
             zoomImageFromThumb(img_mediathumbnail,uri);
-            shortAnimationDuration = 400;
+            shortAnimationDuration = 10; //zoomed up ....animation speed
         }
     }
 
@@ -1199,7 +1199,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 setonmediathumbnail(expandedImageView,startBounds,startScaleFinal,thumbView,uri);
                 expandedImageView.setVisibility(View.VISIBLE);
             }
-        },500);
+        },700);
 
 
     }
@@ -1208,7 +1208,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if (currentAnimator != null) {
             currentAnimator.cancel();
         }
-
         // Animate the four positioning/sizing properties in parallel,
         // back to their original values.\
         AnimatorSet set = new AnimatorSet();
@@ -1223,12 +1222,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 .with(ObjectAnimator
                         .ofFloat(expandedImageView,
                                 View.SCALE_Y, startScaleFinal));
-        set.setDuration(600);
+        set.setDuration(400);//600 zoomed down to left corner ..animation speed
         set.setInterpolator(new DecelerateInterpolator());
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                thumbView.setAlpha(1f);
+               thumbView.setAlpha(1f);
                 Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
                         .transition(GenericTransitionOptions.with(R.anim.fadein)).
                         into(thumbView);
