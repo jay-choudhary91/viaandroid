@@ -255,12 +255,12 @@
     <string name="enter_complete_url">Enter Complete URL</string>
 
 
-    <string name="config_action">Config : </string>
-    <string name="parameter">Parameter : </string>
-    <string name="result">Result : </string>
-    <string name="elapsed">Elapsed Time : </string>
-    <string name="request_time">Request Time : </string>
-    <string name="xapi_complete">Complete : </string>
-    <string name="xapi_completeness">Completeness : </string>
+    <string name="config_action">Config :</string>
+    <string name="parameter">Parameter :</string>
+    <string name="result">Result :</string>
+    <string name="elapsed">Elapsed Time :</string>
+    <string name="request_time">Request Time :</string>
+    <string name="xapi_complete">Complete :</string>
+    <string name="xapi_completeness">Completeness :</string>
 
 </resources>
