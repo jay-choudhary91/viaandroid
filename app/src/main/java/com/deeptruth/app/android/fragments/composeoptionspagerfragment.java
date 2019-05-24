@@ -471,10 +471,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         {
                             txt_mediatype.setTextColor(applicationviavideocomposer.getactivity().getResources().
                                     getColor(R.color.wave_blue));
+                            txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
+                            txt_mediatype.setTextSize(13f);
+
                         }
                         else
                         {
                             txt_mediatype.setTextColor(Color.WHITE);
+                            txt_mediatype.setTypeface(fontfaceregular, Typeface.NORMAL);
+                            txt_mediatype.setTextSize(12f);
+
                         }
                     }
                 }
