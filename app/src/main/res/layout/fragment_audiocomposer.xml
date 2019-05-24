@@ -10,17 +10,18 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/linear_header"
             android:id="@+id/rl_visulizerview">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_20dp"
                 android:orientation="vertical">
 
                 <com.deeptruth.app.android.utils.visualizeraudiorecorder
                     android:id="@+id/myvisualizerview"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="@dimen/margin_10dp"
                     android:layout_height="0dp"
                     android:layout_weight="1"/>
 
