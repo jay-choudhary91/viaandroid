@@ -711,11 +711,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                     if(mediatype == i)
                     {
-                        txt_mediatype.setTypeface(txt_mediatype.getTypeface(), Typeface.BOLD);
+                        txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
+                        txt_mediatype.setTextSize(12f);
                     }
                     else
                     {
-                        txt_mediatype.setTypeface(txt_mediatype.getTypeface(), Typeface.NORMAL);
+                        txt_mediatype.setTypeface(fontfaceregular, Typeface.NORMAL);
+                        txt_mediatype.setTextSize(12f);
                     }
                 }
             }

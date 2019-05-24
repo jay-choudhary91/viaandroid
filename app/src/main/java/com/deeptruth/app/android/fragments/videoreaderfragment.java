@@ -713,15 +713,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         });
 
-        layout_mediatype.post(new Runnable() {
-            @Override
-            public void run() {
-                headerheight = layout_mediatype.getHeight();
-                headerwidth = layout_mediatype.getWidth();
-                bottompadding = layout_videodetails.getPaddingBottom();
-            }
-        });
-
         layoutbackgroundcontroller.post(new Runnable() {
             @Override
             public void run() {
@@ -3444,7 +3435,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layout_videodetails.requestLayout();
     }
     public void setheadermargin(){
-        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,detailviewheight+headerheight);
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,(detailviewheight-navigationbarheight)+headerheight);
         params.setMargins(0,headerheight,0,0);
         layout_videodetails.setPadding(0,0,0,0);
         layout_videodetails.setLayoutParams(params);
@@ -3467,7 +3458,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layout_validating.setVisibility(View.GONE);
 
         setheadermargin();
-       // gethelper().setwindowfitxy(false);
         edittext.setClickable(true);
         edittext.setEnabled(true);
         edittext.setFocusable(true);

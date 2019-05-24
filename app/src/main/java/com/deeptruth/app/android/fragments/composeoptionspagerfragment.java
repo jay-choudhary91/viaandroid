@@ -96,6 +96,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_zoomlevel;
     @BindView(R.id.viewpager)
     ViewPager pagermediatype;
+    @BindView(R.id.expanded_image)
+    ImageView expandedImageView;
 
     @BindView(R.id.layout_encryption)
     RelativeLayout layout_encryption;
@@ -205,12 +207,18 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     currentselectedcomposer=position;
                     int currentpagerpos=position;
                     isfragmentload = false;
-                    if(currentpagerpos == 0)
+                    if(currentpagerpos == 0){
+                        expandedImageView.setBackgroundColor(0);
                         currentpagerpos=2;
-                    else if(currentpagerpos == 1)
+                    }
+                    else if(currentpagerpos == 1){
+                        expandedImageView.setBackgroundColor(0);
                         currentpagerpos=3;
-                    else if(currentpagerpos == 2)
+                    }
+                    else if(currentpagerpos == 2){
                         currentpagerpos=4;
+                        expandedImageView.setBackgroundColor(getResources().getColor(R.color.dark_blue_solid_a));
+                    }
 
                     for(int i = 0; i<= mediatypepagerenum.values().length; i++)
                     {
@@ -224,10 +232,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                                 {
                                     txt_mediatype.setTextColor(applicationviavideocomposer.getactivity().getResources().
                                             getColor(R.color.wave_blue));
+                                    txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
+                                    txt_mediatype.setTextSize(13f);
                                 }
                                 else
                                 {
                                     txt_mediatype.setTextColor(Color.WHITE);
+                                    txt_mediatype.setTypeface(fontfaceregular, Typeface.NORMAL);
+                                    txt_mediatype.setTextSize(12f);
                                 }
                             }
                         }
@@ -1094,7 +1106,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
 
         // Load the high-resolution "zoomed-in" image.
-        final ImageView expandedImageView = (ImageView) findViewById(R.id.expanded_image);
         Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
                .transition(GenericTransitionOptions.with(R.anim.fadein)).
                 into(expandedImageView);
