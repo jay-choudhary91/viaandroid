@@ -53,6 +53,7 @@ import com.deeptruth.app.android.adapter.adaptermedialist;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.enumclasses.cryptomediatypepagerenum;
+import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
 import com.deeptruth.app.android.models.video;
@@ -687,13 +688,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             countaudio=" ("+audiocount+")";
 
         if(mediatype == 0)
-            mediatype=1;
-        else if(mediatype == 1)
             mediatype=2;
-        else if(mediatype == 2)
+        else if(mediatype == 1)
             mediatype=3;
+        else if(mediatype == 2)
+            mediatype=4;
 
-        for(int i = 0; i<= cryptomediatypepagerenum.values().length; i++)
+        for(int i = 0; i<= mediatypepagerenum.values().length; i++)
         {
             if(pagermediatype != null)
             {
@@ -701,22 +702,20 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 if(view != null)
                 {
                     TextView txt_mediatype=(TextView)view.findViewById(R.id.txt_mediatype);
-                    if(i == 1)
-                        txt_mediatype.setText(config.item_crypto_video+countvideo);
                     if(i == 2)
-                        txt_mediatype.setText(config.item_crypto_photo+countimage);
+                        txt_mediatype.setText(config.item_video+countvideo);
                     if(i == 3)
-                        txt_mediatype.setText(config.item_crypto_audio+countaudio);
+                        txt_mediatype.setText(config.item_photo+countimage);
+                    if(i == 4)
+                        txt_mediatype.setText(config.item_audio+countaudio);
 
                     if(mediatype == i)
                     {
-                        txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
-                        txt_mediatype.setTextSize(12f);
+                        txt_mediatype.setTypeface(txt_mediatype.getTypeface(), Typeface.BOLD);
                     }
                     else
                     {
-                        txt_mediatype.setTypeface(fontfaceregular, Typeface.NORMAL);
-                        txt_mediatype.setTextSize(12f);
+                        txt_mediatype.setTypeface(txt_mediatype.getTypeface(), Typeface.NORMAL);
                     }
                 }
             }
@@ -1997,7 +1996,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         @Override
         public Object instantiateItem(ViewGroup collection, final int position) {
-            final cryptomediatypepagerenum enummediatype = cryptomediatypepagerenum.values()[position];
+            final mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
             LayoutInflater inflater = LayoutInflater.from(mContext);
             ViewGroup layout = (ViewGroup) inflater.inflate(enummediatype.getLayoutResId(), collection, false);
             final TextView txt_mediatype=(TextView)layout.findViewById(R.id.txt_mediatype);
@@ -2006,7 +2005,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 @Override
                 public void onClick(View view) {
                     Log.e("onClick ",""+ enummediatype.getItemposition());
-                    /*if(enummediatype.getItemposition() == 2)
+                    if(enummediatype.getItemposition() == 2)
                     {
                         pagermediatype.setCurrentItem(0,true);
                     }
@@ -2015,18 +2014,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         pagermediatype.setCurrentItem(1,true);
                     }
                     else if(enummediatype.getItemposition() == 4)
-                    {
-                        pagermediatype.setCurrentItem(2,true);
-                    }*/
-                    if(enummediatype.getItemposition() == 1)
-                    {
-                        pagermediatype.setCurrentItem(0,true);
-                    }
-                    else if(enummediatype.getItemposition() == 2)
-                    {
-                        pagermediatype.setCurrentItem(1,true);
-                    }
-                    else if(enummediatype.getItemposition() == 3)
                     {
                         pagermediatype.setCurrentItem(2,true);
                     }
@@ -2043,12 +2030,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         @Override
         public float getPageWidth(int position) {
-            return 0.33f;
+            return 0.20f;
         }
 
         @Override
         public int getCount() {
-            return cryptomediatypepagerenum.values().length;
+            return mediatypepagerenum.values().length;
         }
 
         @Override
@@ -2058,10 +2045,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         @Override
         public CharSequence getPageTitle(int position) {
-            cryptomediatypepagerenum enummediatype = cryptomediatypepagerenum.values()[position];
+            mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
             return enummediatype.getItemname();
         }
 
     }
-
 }
