@@ -55,6 +55,7 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
     private xapidetailadapter mControllerAdapter;
     int navigationbarheight = 0;
     public String sharedprefkey="";
+    boolean shouldshowallapidata =true;
 
     @Override
     public int getlayoutid() {
@@ -105,10 +106,12 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
             pair pairdata = (pair) object;
 
             String key = pairdata.KeyName;
+            String completevalue = pairdata.completevalue;
+            String completelessvalue = pairdata.completelessvalue;
             HashMap<String,String> xapidatamap = pairdata.getKeyvaluemap();
 
             fragment_xapi_detail xapi_detail=new fragment_xapi_detail();
-            xapi_detail.setdata(key,xapidatamap);
+            xapi_detail.setdata(key,xapidatamap,completevalue,completelessvalue);
             gethelper().addFragment(xapi_detail,false,true);
         }
 
@@ -149,6 +152,7 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
 
     public void setdata(boolean shouldshowallapidata)
     {
+        this.shouldshowallapidata = shouldshowallapidata;
         sharedprefkey=config.all_xapi_list;
         if(! shouldshowallapidata)
             sharedprefkey=config.sidecar_xapi_actions;

@@ -329,6 +329,58 @@ public class databasemanager {
         return  mCur;
     }
 
+    public Cursor fetchmetauncompletedata() {
+
+        Cursor mCur=null;
+        try {
+            lock.lock();
+
+            String sql = "SELECT * FROM tblmetadata where rsequenceno = 0" ;
+
+            //String sql = "SELECT * FROM tblmetadata";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur != null) {
+                mCur.moveToNext();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+
+        return  mCur;
+    }
+
+    public Cursor fetchmetacompletedata(int value) {
+
+        Cursor mCur=null;
+        String sql="";
+        try {
+            lock.lock();
+            if(value==1){
+                 sql = "SELECT * FROM tblmetadata where rsequenceno != 0" ;
+            }else{
+                 sql = "SELECT * FROM tblmetadata where rsequenceno = 0" ;
+            }
+            //String sql = "SELECT * FROM tblmetadata";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur != null) {
+                mCur.moveToNext();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
     /*public ArrayList<metadatahash> getlocalkeyfrommedia(String frame) {
         ArrayList<metadatahash> mitemlist=new ArrayList<>();
         Cursor cur=null;
