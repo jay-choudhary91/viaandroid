@@ -15,6 +15,9 @@ public class pair {
     public String KeyValue="";
     public String KeyAction="";
     public String ImageIcon = "";
+    public String completevalue = "";
+    public String completelessvalue = "";
+
     public HashMap<String,String> keyvaluemap;
 
     public HashMap<String, String> getKeyvaluemap() {
@@ -55,5 +58,21 @@ public class pair {
 
     public void setKeyValue(String keyValue) {
         KeyValue = keyValue;
+    }
+
+    public String getCompletevalue() {
+        return completevalue;
+    }
+
+    public void setCompletevalue(String completevalue) {
+        this.completevalue = completevalue;
+    }
+
+    public String getCompletelessvalue() {
+        return completelessvalue;
+    }
+
+    public void setCompletelessvalue(String completelessvalue) {
+        this.completelessvalue = completelessvalue;
     }
 }

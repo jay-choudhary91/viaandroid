@@ -2583,7 +2583,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                                     updatevideoupdateapiresponse(finalselectedid, sequencekey, serverdate, serverdictionaryhash,
                                             sequenceid, mediaframetransactionid, color, latency,mediahashvalue);
+
                                 }
+
+                                updatevideoupdateapiresponse();
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -2812,6 +2815,52 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         try {
             mdbhelper.updatevideoupdateapiresponse(selectedid, sequence, serverdate,
                     serverdictionaryhash, sequenceid, videoframetransactionid, color, latency, mediahashvalue);
+            mdbhelper.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //**
+    public void updatevideoupdateapiresponse() {
+
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(locationawareactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+
+            Cursor cursorcomplete = mdbhelper.fetchmetacompletedata(1);
+            if(cursorcomplete !=null ){
+                int count = cursorcomplete.getCount();
+                /*for (int i = 0; i < Integer.MAX_VALUE; i++) {
+                    if (xdata.getinstance().getSetting(config.sidecar_xapi_complete + i).isEmpty()) {
+                        xdata.getinstance().saveSetting(config.sidecar_xapi_complete + i, ""+count);
+                        break;
+                    }
+                }*/
+                xdata.getinstance().saveSetting(config.frame_complete,""+count);
+                Log.e("countcomplete",""+count);
+            }
+
+            Cursor cursor = mdbhelper.fetchmetacompletedata(0);
+            if(cursor!=null ){
+                int count = cursor.getCount();
+                xdata.getinstance().saveSetting(config.frame_completeness,""+count);
+                /*for (int i = 0; i < Integer.MAX_VALUE; i++) {
+                    if (xdata.getinstance().getSetting(config.sidecar_xapi_completeless + i).isEmpty()) {
+                        xdata.getinstance().saveSetting(config.sidecar_xapi_completeless + i, ""+ count);
+                        break;
+                    }
+                }*/
+                Log.e("countuncomplete",""+count);
+            }
+
             mdbhelper.close();
         } catch (Exception e) {
             e.printStackTrace();

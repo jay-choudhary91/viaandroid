@@ -1,12 +1,16 @@
 package com.deeptruth.app.android.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.utils.common;
@@ -42,6 +46,14 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
     ImageView img_arrow_back;
     @BindView(R.id.tv_delete)
     customfonttextview tv_delete;
+    @BindView(R.id.txt_complete)
+    customfonttextview tv_complete;
+    @BindView(R.id.txt_completeless)
+    customfonttextview tv_completeless;
+    @BindView(R.id.view_complet)
+    View view_complet;
+    @BindView(R.id.view_completless)
+    View view_completless;
 
     String key = "";
     HashMap<String,String> xapidatamap;
@@ -71,12 +83,26 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
             String result = xapidatamap.get(config.API_RESULT);
             String parameter = xapidatamap.get(config.API_PARAMETER);
 
+            String completed_frames = xapidatamap.get(config.completed_frames);
+            String incompleted_frames = xapidatamap.get(config.incompleted_frames);
+
+
+
+            if(!completed_frames.isEmpty() && !incompleted_frames.isEmpty()){
+                tv_complete.setVisibility(View.VISIBLE);
+                tv_completeless.setVisibility(View.VISIBLE);
+                view_complet.setVisibility(View.VISIBLE);
+                view_completless.setVisibility(View.VISIBLE);
+
+                setvalue( tv_complete,getActivity().getResources().getString(R.string.xapi_complete),completed_frames);
+                setvalue( tv_completeless,getActivity().getResources().getString(R.string.xapi_completeness),incompleted_frames);
+            }
             try {
                 JSONObject obj = new JSONObject(result);
-                txtstarttime.setText(startdate);
-                txtendtime.setText(enddate);
-                txtconfigaction.setText(configaction);
-                txtparameter.setText(parameter);
+                setvalue( txtstarttime,getActivity().getResources().getString(R.string.start_time),startdate);
+                setvalue( txtendtime,getActivity().getResources().getString(R.string.elapsed),enddate);
+                setvalue( txtconfigaction,getActivity().getResources().getString(R.string.config_action),configaction);
+                setvalue( txtparameter,getActivity().getResources().getString(R.string.parameter),parameter);
                 txtresult.setText(obj.toString());
 
             } catch (JSONException e) {
@@ -94,7 +120,7 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
     }
 
 
-    public void setdata(String key, HashMap<String,String> xapidatamap){
+    public void setdata(String key, HashMap<String,String> xapidatamap, String completevalue,String completelessvalue){
         this.key=key;
         this.xapidatamap = xapidatamap;
     }
@@ -106,5 +132,12 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
                 gethelper().onBack();
                 break;
         }
+    }
+
+    public void setvalue(TextView textView,String title,String data){
+        SpannableString ss1=  new SpannableString(title);
+        ss1.setSpan(new StyleSpan(Typeface.BOLD), 0, ss1.length(), 0);
+        textView.append(ss1);
+        textView.append(data);
     }
 }

@@ -2277,11 +2277,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void setlinechartdata(final LineChart chart, Float value, ArrayList<Entry> valuesarray)
     {
         chart.setVisibility(View.VISIBLE);
-        if(valuesarray.size() > 0)
+       /* if(valuesarray.size() > 0)
         {
             if(valuesarray.get(valuesarray.size()-1).getY() == value)
                 return;
-        }
+        }*/
 
         if(value == 0)
             value=1.0f;
@@ -2307,7 +2307,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         R.drawable.blue_black_ball));
 
                 chart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
-
 
                 chart.setViewPortOffsets(0,0,100,0);
             }
@@ -2353,10 +2352,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             chart.setData(data);
             if(value == -1){
                 chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
-            }else{
-                chart.setScaleMinima((float)  90f, 1f);
-            }
-
+            }/*else{
+                chart.setScaleMinima(70f, 1f);
+            }*/
 
             chart.setViewPortOffsets(10,0,10,0);
         }
@@ -2396,7 +2394,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 public void run() {
                                     Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
                                     chart.highlightValue(high, false);
-                                        chart.moveViewTo(set1.getEntryForIndex(selectedchartposition).getX(),set1.getEntryForIndex(selectedchartposition).getY(), YAxis.AxisDependency.LEFT);
+                                            chart.moveViewTo(set1.getEntryForIndex(selectedchartposition).getX(),set1.getEntryForIndex(selectedchartposition).getY(), YAxis.AxisDependency.LEFT);
                                 }
                             });
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
