@@ -293,6 +293,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     verticalseekbar vertical_slider_connectionspeed;
     @BindView(R.id.vertical_slider_connectiondatatimedely)
     verticalseekbar vertical_slider_connectiondatatimedely;
+    @BindView(R.id.layout_soundiformation)
+    LinearLayout layout_soundiformation;
 
 
     GoogleMap mgooglemap;
@@ -340,6 +342,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             world_time_clock_white.setVisibility(View.GONE);
 
             settextviewcolor();
+            layout_soundiformation.setVisibility(View.GONE);
 
             seekbar_mediavideoaudio.setEnabled(false);
             seekbar_mediametadata.setEnabled(false);
