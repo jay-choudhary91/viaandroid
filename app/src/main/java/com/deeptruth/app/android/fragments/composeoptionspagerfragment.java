@@ -733,7 +733,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
 
-                fragaudiocomposer.setData(mitemclick,layoutbottom,layoutbottomheight);
+                fragaudiocomposer.setData(mitemclick,layoutbottom,(layoutbottomheight-layoutmediatypeheight));
                 gethelper().replacetabfragment(fragaudiocomposer,false,true);
                 isfragmentload = true;
             break;

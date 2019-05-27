@@ -34,6 +34,7 @@
                     android:background="@android:color/transparent"
                     android:layout_weight="1"
                     app:numColumns="30"
+                    android:layout_marginBottom="-0dp"
                     app:renderColor="@color/blue_button"
                     app:renderRange="top"
                     app:renderType="bar|fade" />
