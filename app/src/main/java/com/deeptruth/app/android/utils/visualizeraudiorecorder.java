@@ -27,7 +27,7 @@ import java.util.List;
 
 public class visualizeraudiorecorder extends View {
 
-    private static final int LINE_WIDTH = 10; // width of visualizer lines
+    private static final int LINE_WIDTH = 5; // width of visualizer lines
     private float LINE_SCALE = 8; // scales visualizer lines
     private List<Float> amplitudes; // amplitudes for line lengths
     private int width; // width of this View
@@ -46,7 +46,7 @@ public class visualizeraudiorecorder extends View {
         linePaint.setAlpha(255);
         linePaint.setStrokeWidth(LINE_WIDTH); // set stroke width
         //linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        linePaint.setPathEffect(new DashPathEffect(new float[]{LINE_WIDTH,5},5));
+        linePaint.setPathEffect(new DashPathEffect(new float[]{LINE_WIDTH,2},2));
         // If we don't render in software mode, the dotted line becomes a solid line.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
