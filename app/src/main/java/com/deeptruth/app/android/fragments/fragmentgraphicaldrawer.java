@@ -2223,6 +2223,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public  void initlinechart(LineChart chart,Float maxrange)
     {
+
         chart.setNoDataText("");
         // background color
         chart.setBackgroundColor(Color.TRANSPARENT);
@@ -2237,11 +2238,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         yAxis.setAxisMinimum(0f);
 
         // // Create Limit Lines // //
-        LimitLine llXAxis = new LimitLine(9f, "");
+        LimitLine llXAxis = new LimitLine(10f, "");
         llXAxis.setLineWidth(0f);
         llXAxis.enableDashedLine(10f, 10f, 0f);
         llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
         llXAxis.setTextSize(0f);
+
         LimitLine ll1 = new LimitLine(150f, "");
         ll1.setLineWidth(0f);
         ll1.enableDashedLine(10f, 10f, 0f);
@@ -2269,7 +2271,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.setPinchZoom(false);
 
         //MarkerView
-        /*IMarker marker = new chartcustommarkerview(applicationviavideocomposer.getactivity(),
+      /*  IMarker marker = new chartcustommarkerview(applicationviavideocomposer.getactivity(),
                 R.layout.row_chartcustommarkerview);
         chart.setMarker(marker);*/
     }
@@ -2306,7 +2308,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
 
-                chart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
+               // chart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
+
 
                 chart.setViewPortOffsets(0,0,100,0);
             }
@@ -2314,14 +2317,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             {
                 chart.setViewPortOffsets(10,0,10,0);
             }
+
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
-            chart.invalidate();
+            chart.refreshDrawableState();
+            chart.setVisibleXRangeMaximum(80);
+            chart.moveViewToX(set1.getEntryCount());
+            //chart.invalidate();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(valuesarray, "");
-
+            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
             set1.setDrawIcons(true);
             set1.setColor(Color.WHITE);
             set1.setCircleColor(Color.GREEN);
@@ -2342,6 +2349,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
             });
 
+
             set1.setFillColor(Color.TRANSPARENT);
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1); // add the data sets
@@ -2350,13 +2358,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             // set data
             chart.setData(data);
-            if(value == -1){
+           // chart.setVisibleXRangeMaximum(80);
+            //chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
+            if(value == -1)
                 chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
-            }/*else{
-                chart.setScaleMinima(70f, 1f);
-            }*/
 
-            chart.setViewPortOffsets(10,0,10,0);
+            chart.setViewPortOffsets(10,0,10,10);
         }
 
         chart.animateX(0);
@@ -2408,7 +2415,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         @Override
                         public void run() {
 
-                            chart.setViewPortOffsets(0,5,5,0);
+                            chart.setViewPortOffsets(3,5,8,3);
                             chart.invalidate();
                             if(finalCount != 1){
                                 if(vertical_seekbar.getVisibility() == View.VISIBLE)
@@ -2432,11 +2439,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         Log.e("speed value",""+value);
 
-        if(arrayitems.size() > 0)
+        /*if(arrayitems.size() > 0)
         {
             if(arrayitems.get(arrayitems.size()-1).getY() == value)
                 return;
-        }
+        }*/
 
         if(value == 0)
             value=1.0f;
@@ -2474,14 +2481,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
             LineData data = new LineData(set1);
             linechart.setData(data);
+            linechart.setVisibleXRangeMaximum(80);
+            linechart.getData().notifyDataChanged();
             linechart.notifyDataSetChanged();
-            linechart.invalidate();
+            linechart.refreshDrawableState();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(arrayitems, "");
             set1.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-
-
             set1.setDrawIcons(true);
             set1.setColor(Color.WHITE);
             set1.setCircleColor(Color.GREEN);
@@ -2510,12 +2517,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             LineData data = new LineData(dataSets);
             // set data
             linechart.setData(data);
-
-            if(value == -1){
+            if(value == -1)
                 linechart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
-            }else{
-                linechart.setScaleMinima(70f, 1f);
-            }
+
+            linechart.setViewPortOffsets(10,10,10,10);
         }
 
         linechart.animateX(0);
