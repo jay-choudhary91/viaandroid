@@ -2415,7 +2415,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         @Override
                         public void run() {
 
-                            chart.setViewPortOffsets(3,5,8,3);
+                            chart.setViewPortOffsets(3,5,5,6);
                             chart.invalidate();
                             if(finalCount != 1){
                                 if(vertical_seekbar.getVisibility() == View.VISIBLE)
