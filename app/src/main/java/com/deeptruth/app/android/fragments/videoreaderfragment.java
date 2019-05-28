@@ -364,8 +364,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0, lastrotatedangle =-1,videorotatedangle=-1;
     boolean flag = true;
     boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
-
-
+    int scrubberviewpercentage = 10, actionbarpercentage = 8,controllerheightpercentage = 23,pauselayoutpercentage = 7;
+    int navigationbarpercentage = 6;
     GoogleMap mgooglemap;
     Surface surfacetexture = null;
 
@@ -439,6 +439,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             txt_section_validating_secondary.setVisibility(View.INVISIBLE);
             //setheadermargin();
             navigationbarheight =  common.getnavigationbarheight();
+            Log.e("navigationbarheight",""+navigationbarheight + "navigationbarheight" +common.getpercentage(navigationbarheight));
+
             setfooterlayout();
             gethelper().setdatacomposing(false);
 
@@ -537,9 +539,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             float videotextureviewheight = videotextureview.getHeight() + e2.getY();
                             int finalvideotextureviewheight = (int)videotextureviewheight;
 
-                            int scrubberheightgesture =  scrubberheight -50;
+                            int scrubberheightgesture =  common.getviewheight(scrubberviewpercentage) -50;
 
-                            setheadermargin(headerheight,scrubberheightgesture,finalvideotextureviewheight,true);
+                            setheadermargin(common.getviewheight(actionbarpercentage),scrubberheightgesture,finalvideotextureviewheight,true);
 
                             Log.e("down bottom layout=",""+layout_videodetails.getLayoutParams().height);
 
@@ -575,9 +577,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                             float videotextureviewheight = videotextureview.getHeight() + e2.getY();
                             int finalvideotextureviewheight = (int)videotextureviewheight;
-                            int scrubberheightgesture =  scrubberheight -50;
+                            int scrubberheightgesture =  common.getviewheight(scrubberviewpercentage) -50;
 
-                            setheadermargin(headerheight,scrubberheightgesture,finalvideotextureviewheight,true);
+                            setheadermargin(common.getviewheight(actionbarpercentage),scrubberheightgesture,finalvideotextureviewheight,true);
 
                             Log.e("increseheight botmlyut=",""+layout_videodetails.getLayoutParams().height);
 
@@ -609,7 +611,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         layout_halfscrnimg.getLayoutParams().height = rootviewheight;
 
                         RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(targetwidth,rootviewheight+navigationbarheight);
-                        paramsvideotextureview.setMargins(0,headerheight-20,0,scrubberheight-50);
+                        paramsvideotextureview.setMargins(0,common.getviewheight(actionbarpercentage)-20,0,common.getviewheight(scrubberviewpercentage)-50);
                         videotextureview.setLayoutParams(paramsvideotextureview);
 
                         videotextureview.post(new Runnable() {
@@ -630,7 +632,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         layout_halfscrnimg.getLayoutParams().height = videoviewheight;
                         layout_videodetails.getLayoutParams().height = detailviewheight;
                         RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(targetwidth,videoviewheight);
-                        paramsvideotextureview.setMargins(0,headerheight-1,0,scrubberheight-50);
+                        paramsvideotextureview.setMargins(0,common.getviewheight(actionbarpercentage)-1,0,common.getviewheight(scrubberviewpercentage)-50);
                         videotextureview.setLayoutParams(paramsvideotextureview);
 
                         videotextureview.post(new Runnable() {
@@ -704,7 +706,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         encryptionadapter = new encryptiondataadapter(encryptionarraylist, applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
 
-        layout_mediatype.post(new Runnable() {
+        /*layout_mediatype.post(new Runnable() {
             @Override
             public void run() {
                 headerheight = layout_mediatype.getHeight();
@@ -719,7 +721,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 scrubberheight = layoutbackgroundcontroller.getHeight();
                 scrubberwidth = layoutbackgroundcontroller.getWidth();
             }
-        });
+        });*/
 
     //   viewheight = Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
 
@@ -1186,7 +1188,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         videowidth = width;
         videoheight = height;
          if(flag){
-             setheadermargin(headerheight,scrubberheight,0,false);
+             setheadermargin(common.getviewheight(actionbarpercentage),common.getviewheight(scrubberviewpercentage),0,false);
              flag = false;
          }
 
@@ -1456,12 +1458,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     imn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                     break;
                 case R.id.img_share_media:
-                    /*if(! gethelper().isuserlogin())
-                    {
-                        gethelper().redirecttologin();
-                        return;
-                    }*/
-
                     img_share_media.setEnabled(false);
                     new Handler().postDelayed(new Runnable()
                     {
@@ -1515,18 +1511,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     {
                         if(layout_mediatype.getVisibility()==View.GONE)  // Action bar is hidden
                         {
-                            //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
-                            /*setbottomimgview();
-                            gethelper().updateactionbar(1);
-                            //recenterplaypause();
-                            gethelper().drawerenabledisable(true);
-
-                            img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                            layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                            layout_mediatype.setVisibility(View.VISIBLE);
-
-                            playpausebutton.setVisibility(View.VISIBLE);*/
-
                             if(player != null && (! player.isPlaying()))  // Player is pause
                             {
                                 gethelper().updateactionbar(1);
@@ -1546,7 +1530,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             }
                             else   // Player is playing
                             {
-
                                 gethelper().updateactionbar(0);
                                 gethelper().drawerenabledisable(true);
                                 img_fullscreen.setVisibility(View.GONE);
@@ -1566,11 +1549,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                     gethelper().drawerenabledisable(true);
                                     getcontrollerheight();
                                 }
-
-                              /*  layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                                layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                                layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));*/
-
                             }
                         }
                         else  // Action bar is showing
@@ -1586,20 +1564,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 gethelper().drawerenabledisable(false);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
                                 layoutpause.setVisibility(View.VISIBLE);
-                            }
-                            else
-                            {
-                                //layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
-
-                               /* gethelper().updateactionbar(0);
-                                gethelper().drawerenabledisable(false);
-                                layoutpause.setVisibility(View.VISIBLE);
-                                layout_mediatype.setVisibility(View.GONE);
-                               // common.slidetoabove(layout_mediatype);
-                                layoutbackgroundcontroller.setVisibility(View.GONE);
-                                layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                                layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                                layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));*/
                             }
                         }
                     } else {
@@ -1688,31 +1652,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             getcontrollerheight();
                         }
                     }
-                        /*if(layout_videodetails.getVisibility()==View.GONE){
-                            if(player.isPlaying() && gethelper().isdraweropened()){
-                                pause();
-                                imgpause.setImageResource(R.drawable.ic_play);
-                            }else if(player.isPlaying() && !gethelper().isdraweropened()){
-                                pause();
-                                imgpause.setImageResource(R.drawable.ic_pause);
-                                playpausebutton.setImageResource(R.drawable.play_btn);
-                                playpausebutton.setVisibility(View.VISIBLE);
-                                img_fullscreen.setVisibility(View.VISIBLE);
-                                img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                                layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-                                totalduration.setVisibility(View.VISIBLE);
-                                time_current.setVisibility(View.VISIBLE);
-                                gethelper().updateactionbar(1);
-                                imgpause.setVisibility(View.GONE);
-                                setbottomimgview();
-                                layout_mediatype.setVisibility(View.VISIBLE);
-                                gethelper().setdrawerheightonfullscreen(0);
-                            }else if(!player.isPlaying() && gethelper().isdraweropened()){
-                                start();
-                                imgpause.setImageResource(R.drawable.ic_pause);
-                            }
-                        }*/
-
                     break;
 
                 case R.id.layout_dtls:
@@ -1788,7 +1727,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         time_current.setVisibility(View.VISIBLE);
         layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
         //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
-        setheadermargin(headerheight,scrubberheight,0,false);
+        setheadermargin(common.getviewheight(actionbarpercentage),common.getviewheight(scrubberviewpercentage),0,false);
         layoutbackgroundcontroller.setVisibility(View.VISIBLE);
         layout_seekbartiming.getResources().getColor(R.color.white);
         dividerline.setVisibility(View.GONE);
@@ -2462,10 +2401,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         controller.setProgress(0,true);
                         playpausebutton.setImageResource(R.drawable.play_btn);
                         recyview_frames.scrollToPosition(0);
-
-                       /* RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        relativeParams.setMargins(0, 0,0, 0);
-                        recyview_frames.setLayoutParams(relativeParams);*/
                     }
                 }
             },200);
@@ -2699,25 +2634,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     private void setMap(GoogleMap googleMap) {
         this.mgooglemap = googleMap;
         this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-
-        /*points.add(new LatLng(26.235896,74.24235896));
-        points.add(new LatLng(26.34235896,74.24235896));
-        points.add(new LatLng(26.232435896,74.424235896));
-        points.add(new LatLng(26.22235896,74.2325896));
-        points.add(new LatLng(26.454235896,74.24235896));
-        points.add(new LatLng(26.534235896,74.24235896));
-        points.add(new LatLng(26.5565235896,74.42235896));
-        points.add(new LatLng(26.67235896,74.23235896));
-        points.add(new LatLng(26.878235896,74.22135896));
-        points.add(new LatLng(26.45235896,74.23335896));
-        points.add(new LatLng(26.33235896,74.22335896));
-        polylineOptions.addAll(points);
-        polylineOptions.color(Color.BLUE);
-        polylineOptions.width(20);
-        Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-        //polyline.setEndCap(new RoundCap());
-        //polyline.setJointType(JointType.ROUND);
-         polyline.setPattern(PATTERN_POLYLINE_DOTTED);*/
 
     }
 
@@ -2979,14 +2895,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
          int buttonheight = playpausebutton.getHeight();
          int layoutvideotextureviewheight = rl_videotextureview.getHeight();
 
-         int centerheightoflayout = layoutvideotextureviewheight - (headerheight + scrubberheight);
+         int centerheightoflayout = layoutvideotextureviewheight - (common.getviewheight(actionbarpercentage) + common.getviewheight(scrubberviewpercentage));
 
          int halfcenterheightoflayout = (centerheightoflayout/2);
 
          //int percentageheight = (buttonheight / 100) * 75;
          double res = (buttonheight / 100.0f) * 70;
 
-         int lastvalue = (halfcenterheightoflayout+headerheight) - (int)res;
+         int lastvalue = (halfcenterheightoflayout+common.getviewheight(actionbarpercentage)) - (int)res;
 
          recenterplaypause(lastvalue ,0);
      }
@@ -3019,14 +2935,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         int buttonheight = playpausebutton.getHeight();
         int layoutvideotextureviewheight = rl_videotextureview.getHeight();
 
-        int centerheightoflayout = layoutvideotextureviewheight - (headerheight + scrubberheight);
+        int centerheightoflayout = layoutvideotextureviewheight - (common.getviewheight(actionbarpercentage) + common.getviewheight(scrubberviewpercentage));
 
         int halfcenterheightoflayout = (centerheightoflayout/2);
 
         //int percentageheight = (buttonheight / 100) * 75;
         double res = (buttonheight / 100.0f) * 70;
 
-        int lastvalue = (halfcenterheightoflayout+headerheight) - (int)res;
+        int lastvalue = (halfcenterheightoflayout+common.getviewheight(actionbarpercentage)) - (int)res;
 
         recenterplaypause(lastvalue ,0);
     }
@@ -3396,18 +3312,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     }
 
-    public void disabletouchedevents()
-    {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                islisttouched = false;
-                islistdragging = false;
-            }
-        },500);
-    }
-
-
     public void setfooterlayout(){
 
             CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.MATCH_PARENT);
@@ -3435,8 +3339,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layout_videodetails.requestLayout();
     }
     public void setheadermargin(){
-        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,(detailviewheight-navigationbarheight)+headerheight);
-        params.setMargins(0,headerheight,0,0);
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,(detailviewheight-navigationbarheight)+common.getviewheight(actionbarpercentage));
+        params.setMargins(0,common.getviewheight(actionbarpercentage),0,0);
         layout_videodetails.setPadding(0,0,0,0);
         layout_videodetails.setLayoutParams(params);
         layout_videodetails.requestLayout();
@@ -3446,7 +3350,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.BELOW,R.id.layout_halfscrnimg);
         params.setMargins(0,0,0,0);
-        Log.e("bottompadding",""+bottompadding);
+        Log.e("footerheight",""+footerheight);
 
         layout_videodetails.setPadding(0,0,0,(footerheight));
         layout_videodetails.setLayoutParams(params);
@@ -3497,13 +3401,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void getcontrollerheight(){
-        layoutbackgroundcontroller.post(new Runnable() {
+       /* layoutbackgroundcontroller.post(new Runnable() {
             @Override
             public void run() {
                 int controllerheight = layoutbackgroundcontroller.getHeight();
-                gethelper().setdrawerheightonfullscreen(controllerheight);
+                Log.e("controllerheight",""+controllerheight + "controllerheight" +common.getpercentage(controllerheight));
+
+
             }
-        });
+        });*/
+        gethelper().setdrawerheightonfullscreen(common.getviewheight(controllerheightpercentage));
     }
 
     public void backgroundcolor(){
@@ -3513,12 +3420,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void getpausebtnheight(){
-        layoutpause.post(new Runnable() {
+       /* layoutpause.post(new Runnable() {
             @Override
             public void run() {
                 layoutpauseheight= layoutpause.getHeight();
+                Log.e("pauseheight",""+layoutpauseheight + "percentageheight" +common.getpercentage(layoutpauseheight));
                 setbottomimgview();
             }
-        });
+        });*/
+        layoutpauseheight = common.getviewheight(pauselayoutpercentage);
+        setbottomimgview();
     }
 }

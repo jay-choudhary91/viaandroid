@@ -2293,6 +2293,38 @@ public class common {
         return percentageheight;
     }
 
+    public static  int getviewheight(double percentage){
+        percentage = (percentage) * (common.getscreenheight())/100;
+        return (int) percentage;
+    }
+    public static double getpercentage(int height){
+        Log.e("percentage" , ""+height );
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        applicationviavideocomposer.getactivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenheight = displayMetrics.heightPixels;
+
+        height = ( height *100 )/screenheight;
+        Log.e("percentageheight" , ""+height );
+        return height;
+    }
+    public static int getscreenheight() {
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        applicationviavideocomposer.getactivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+
+        return height;
+    }
+
+    public static int getscreenwidth() {
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        applicationviavideocomposer.getactivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        return width;
+    }
+
+
     public static String getdate() {
         //Date date = new Date();
         //return DateFormat.getDateInstance().format(date);
