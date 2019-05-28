@@ -2488,7 +2488,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 linechart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
 
-                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_2dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_6dp));
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_2dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_7dp));
             }
             else
             {
