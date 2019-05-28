@@ -38,14 +38,6 @@
 
 
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/linechart_gpsaccuracy"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_below="@id/txt_datatimedelay"/>
-
         <LinearLayout
             android:layout_width="20dp"
             android:gravity="center"
@@ -67,6 +59,24 @@
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
             android:layout_alignParentBottom="true"></View>
+
+        <View
+            android:id="@+id/view_gpsaccuracy"
+            android:layout_width="2dp"
+            android:layout_height="120dp"
+            android:background="@color/white"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"></View>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/linechart_gpsaccuracy"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/txt_datatimedelay"/>
 
         <com.deeptruth.app.android.views.verticalseekbar
             android:id="@+id/vertical_slider_gpsaccuracy"
