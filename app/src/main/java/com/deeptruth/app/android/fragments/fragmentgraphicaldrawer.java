@@ -318,6 +318,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     visualizerview barvisualizerview;
     @BindView(R.id.layout_soundiformation)
     LinearLayout layout_soundiformation;
+    @BindView(R.id.view_connectionspeed)
+    View view_connectionspeed;
+    @BindView(R.id.view_datatimedelay)
+    View view_datatimedelay;
+    @BindView(R.id.view_gpsaccuracy)
+    View view_gpsaccuracy;
+
+
 
     View rootview;
     GoogleMap mgooglemap;
@@ -465,6 +473,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
 
             loadmap();
+            setchartmargin(linechart_altitude);
+            setchartmargin(linechart_speed);
+            setchartmargin(linechart_traveled);
 
             halfpaichartdate(chart_memoeyusage);
             halfpaichartdate(chart_cpuusage);
@@ -723,6 +734,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 if(isrecodrunning)
                 {
+                    setvisibility(false);
                     showhideverticalbar(false);
                     {
                         Float connectionspeed=0.0f;
@@ -805,6 +817,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 else
                 {
                     myvisualizerview.clear();
+                    setvisibility(true);
                     layout_soundiformation.setVisibility(View.GONE);
                     showhideverticalbar(true);
                     updateverticalsliderlocationdata(speed,vertical_slider_speed);
@@ -846,6 +859,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(! isdatacomposing)
             {
+                setvisibility(true);
                 if(xdata.getinstance().getSetting(config.Heading).toString().trim().length() > 0)
                 {
                     String strdegree=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
@@ -2302,16 +2316,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 for(int i=0;i<set1.getEntryCount();i++)
                     set1.getEntryForIndex(i).setIcon(null);
 
-                Highlight   high = new Highlight(set1.getEntryForIndex(set1.getEntryCount()-1).getX(), 0, set1.getEntryCount()-1);
-                chart.highlightValue(high, false);
+                /*Highlight   high = new Highlight(set1.getEntryForIndex(set1.getEntryCount()-1).getX(), 0, set1.getEntryCount()-1);
+                chart.highlightValue(high, false);*/
 
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
 
                // chart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
 
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_2dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_6dp));
 
-                chart.setViewPortOffsets(0,0,100,0);
+                chart.setViewPortOffsets(0,0,getActivity().getResources().getDimension(R.dimen.margin_50dp),0);
             }
             else
             {
@@ -2473,11 +2488,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 linechart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
 
-                linechart.setViewPortOffsets(0,10,40,5);
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_2dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_6dp));
             }
             else
             {
-                linechart.setViewPortOffsets(10,10,10,5);
+                linechart.setViewPortOffsets(10,10,10,0);
             }
             LineData data = new LineData(set1);
             linechart.setData(data);
@@ -2520,7 +2535,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             if(value == -1)
                 linechart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
 
-            linechart.setViewPortOffsets(10,10,10,10);
+            linechart.setViewPortOffsets(10,10,10,0);
         }
 
         linechart.animateX(0);
@@ -2533,6 +2548,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         params.setMargins(0,0,0,navigationbarheight);
         layout_constraint.setLayoutParams(params);
         layout_constraint.requestLayout();
+    }
+
+
+    public void setchartmargin(LineChart chart){
+        Log.e("leftbottommargin=","left ="+(int)getActivity().getResources().getDimension(R.dimen.margin_10dp)+"-"+"bottom"+(int)getActivity().getResources().getDimension(R.dimen.margin_10dp));
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+        params.setMargins((int)getActivity().getResources().getDimension(R.dimen.margin_10dp),0,0,(int)getActivity().getResources().getDimension(R.dimen.margin_10dp));
+        chart.setLayoutParams(params);
+        chart.requestLayout();
     }
 
     public void halfpaichartdate(PieChart chart){
@@ -2709,6 +2734,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     }
 
+    public void setvisibility(boolean isvisible){
+        if(!isvisible){
+            view_connectionspeed.setVisibility(View.VISIBLE);
+            view_datatimedelay.setVisibility(View.VISIBLE);
+            view_gpsaccuracy.setVisibility(View.VISIBLE);
+        }else{
+            view_connectionspeed.setVisibility(View.GONE);
+            view_datatimedelay.setVisibility(View.GONE);
+            view_gpsaccuracy.setVisibility(View.GONE);
+        }
+    }
 
     /*public void movedotbytime(final LineDataSet scoreDataSet, final LineChart chart){
         Timer timer = new Timer();
