@@ -41,6 +41,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -126,6 +127,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     protected float zoomLevel = 1f;
     protected float maximumzoomlevel;
     protected Rect rectzoom;
+    FrameLayout framecontainer;
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private int REQUEST_CAMERA_PERMISSION = 1,rotationangle=0;
@@ -1729,10 +1731,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public void setData(adapteritemclick madapterclick, RelativeLayout layoutbottom,RelativeLayout layout_seekbarzoom) {
+    public void setData(adapteritemclick madapterclick, RelativeLayout layoutbottom, RelativeLayout layout_seekbarzoom, FrameLayout framecontainer) {
         this.madapterclick = madapterclick;
         this.layoutbottom = layoutbottom;
         this.layout_seekbarzoom = layout_seekbarzoom;
+        this.framecontainer = framecontainer;
     }
 
     @Override
@@ -1743,10 +1746,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             layoutbottom.setVisibility(View.GONE);
             linearheader.setVisibility(View.GONE);
             layout_seekbarzoom.setVisibility(View.GONE);
+            framecontainer.setVisibility(View.GONE);
         }else{
             layoutbottom.setVisibility(View.VISIBLE);
             linearheader.setVisibility(View.VISIBLE);
             layout_seekbarzoom.setVisibility(View.VISIBLE);
+            framecontainer.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -30,6 +30,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -173,6 +174,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     int bufferSize;
     private List<visualizerview> mVisualizerviews = new ArrayList<>();
     visualizerview barvisualizer;
+    FrameLayout framecontainer;
 
     @Override
     public int getlayoutid() {
@@ -1566,10 +1568,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
 
-    public void setData(adapteritemclick madapterclick,RelativeLayout layoutbottom, int layoutbottomheight) {
+    public void setData(adapteritemclick madapterclick,RelativeLayout layoutbottom, int layoutbottomheight ,FrameLayout framecontainer) {
         this.madapterclick = madapterclick;
         this.layoutbottom = layoutbottom;
         this.layoutmediatypeheight = layoutbottomheight;
+        this.framecontainer = framecontainer;
     }
 
     @Override
@@ -1600,9 +1603,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         if(isshow){
             layoutbottom.setVisibility(View.GONE);
             linearheader.setVisibility(View.GONE);
+            framecontainer.setVisibility(View.GONE);
         }else{
             layoutbottom.setVisibility(View.VISIBLE);
             linearheader.setVisibility(View.VISIBLE);
+            framecontainer.setVisibility(View.VISIBLE);
         }
     }
 

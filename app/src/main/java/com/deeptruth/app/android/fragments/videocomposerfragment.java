@@ -52,6 +52,7 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -335,6 +336,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
     RelativeLayout layout_bottom,layout_seekbarzoom;
+    FrameLayout framecontainer;
     File lastrecordedvideo=null;
     String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "";
     //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
@@ -1491,11 +1493,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom,RelativeLayout layout_seekbarzoom) {
+    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom, RelativeLayout layout_seekbarzoom, FrameLayout framecontainer) {
         this.autostartvideo = autostartvideo;
         this.madapterclick = madapterclick;
         this.layout_bottom = layout_bottom;
         this.layout_seekbarzoom = layout_seekbarzoom;
+        this.framecontainer = framecontainer;
     }
 
     public static Fragment newInstance()
@@ -2320,10 +2323,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             layout_bottom.setVisibility(View.GONE);
             headercontainer.setVisibility(View.GONE);
             layout_seekbarzoom.setVisibility(View.GONE);
+            framecontainer.setVisibility(View.GONE);
         }else{
             layout_bottom.setVisibility(View.VISIBLE);
             headercontainer.setVisibility(View.VISIBLE);
             layout_seekbarzoom.setVisibility(View.VISIBLE);
+            framecontainer.setVisibility(View.VISIBLE);
         }
     }
 

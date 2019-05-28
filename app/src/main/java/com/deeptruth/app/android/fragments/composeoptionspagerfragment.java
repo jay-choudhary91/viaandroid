@@ -98,6 +98,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ViewPager pagermediatype;
     @BindView(R.id.expanded_image)
     ImageView expandedImageView;
+    @BindView(R.id.container)
+    FrameLayout framecontainer;
 
     @BindView(R.id.layout_encryption)
     RelativeLayout layout_encryption;
@@ -709,7 +711,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
 
-                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_seekbarzoom);
+                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_seekbarzoom,framecontainer);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
                 isfragmentload = true;
             break;
@@ -721,7 +723,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
 
-                fragimgcapture.setData(mitemclick,layoutbottom,layout_seekbarzoom);
+                fragimgcapture.setData(mitemclick,layoutbottom,layout_seekbarzoom,framecontainer);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
                 isfragmentload = true;
             break;
@@ -733,7 +735,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
 
-                fragaudiocomposer.setData(mitemclick,layoutbottom,(layoutbottomheight-layoutmediatypeheight));
+                fragaudiocomposer.setData(mitemclick,layoutbottom,(layoutbottomheight-layoutmediatypeheight),framecontainer);
                 gethelper().replacetabfragment(fragaudiocomposer,false,true);
                 isfragmentload = true;
             break;
