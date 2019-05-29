@@ -599,6 +599,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             String latitudedegree  = xdata.getinstance().getSetting(config.Latitude);
             String longitudedegree = xdata.getinstance().getSetting(config.Longitude);
 
+
             if(isdatacomposing)
             {
 
@@ -2324,13 +2325,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                // chart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
 
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_2dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_6dp));
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,getActivity().getResources().getDimension(R.dimen.margin_50dp),getActivity().getResources().getDimension(R.dimen.margin_6dp));
 
-                chart.setViewPortOffsets(0,0,getActivity().getResources().getDimension(R.dimen.margin_50dp),0);
+                //chart.setViewPortOffsets(0,0,getActivity().getResources().getDimension(R.dimen.margin_50dp),0);
             }
             else
             {
-                chart.setViewPortOffsets(10,0,10,0);
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,10,0);
             }
 
             set1.notifyDataSetChanged();
@@ -2378,7 +2379,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             if(value == -1)
                 chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
 
-            chart.setViewPortOffsets(10,0,10,10);
+            chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,10,10);
         }
 
         chart.animateX(0);
@@ -2421,16 +2422,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             });
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
                                     R.drawable.blue_black_ball));
-                           // high.setDataIndex(selectedchartposition);
                         }
-                        // Log.e("X value ",""+set1.getEntryForIndex(selectedchartposition).getX());
                     }
                     final int finalCount = count;
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
 
-                            chart.setViewPortOffsets(3,5,5,6);
+                            //chart.setViewPortOffsets(3,5,5,6);
                             chart.invalidate();
                             if(finalCount != 1){
                                 if(vertical_seekbar.getVisibility() == View.VISIBLE)
@@ -2488,11 +2487,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 linechart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
 
-                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_2dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_7dp));
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_7dp));
             }
             else
             {
-                linechart.setViewPortOffsets(10,10,10,0);
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_6dp),10,10,getActivity().getResources().getDimension(R.dimen.margin_7dp));
             }
             LineData data = new LineData(set1);
             linechart.setData(data);
@@ -2532,10 +2531,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             LineData data = new LineData(dataSets);
             // set data
             linechart.setData(data);
-            if(value == -1)
-                linechart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
+            /*if(value == -1)
+                linechart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);*/
 
-            linechart.setViewPortOffsets(10,10,10,0);
+            linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,10,getActivity().getResources().getDimension(R.dimen.margin_7dp));
         }
 
         linechart.animateX(0);

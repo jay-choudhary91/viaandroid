@@ -26,7 +26,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
@@ -46,28 +46,26 @@
 
         </LinearLayout>
 
-
-
-
         <LinearLayout
             android:layout_width="20dp"
             android:gravity="center"
+            android:visibility="visible"
             android:layout_height="wrap_content">
 
             <View
                 android:layout_width="4dp"
-                android:layout_height="120dp"
+                android:layout_height="match_parent"
                 android:background="@color/white"
-                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginBottom="8dp"
                 android:layout_alignParentBottom="true"></View>
-
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:background="@color/white"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginBottom="10dp"
             android:layout_alignParentBottom="true"></View>
 
@@ -95,6 +93,7 @@
             android:layout_height="match_parent"
             android:thumb="@drawable/blue_black_ball"
             android:max="100"
+            android:layout_marginLeft="@dimen/margin_7dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:progressDrawable="@drawable/verticalseekbarprogress"
@@ -124,7 +123,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
@@ -147,22 +146,23 @@
         <LinearLayout
             android:layout_width="20dp"
             android:gravity="center"
+            android:visibility="visible"
             android:layout_height="wrap_content">
 
             <View
                 android:layout_width="4dp"
-                android:layout_height="120dp"
+                android:layout_height="match_parent"
                 android:background="@color/white"
-                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginBottom="8dp"
                 android:layout_alignParentBottom="true"></View>
-
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
             android:background="@color/white"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginBottom="10dp"
             android:layout_alignParentBottom="true"></View>
 
@@ -191,6 +191,7 @@
             android:layout_height="match_parent"
             android:thumb="@drawable/blue_black_ball"
             android:max="100"
+            android:layout_marginLeft="@dimen/margin_7dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:progressDrawable="@drawable/verticalseekbarprogress"
