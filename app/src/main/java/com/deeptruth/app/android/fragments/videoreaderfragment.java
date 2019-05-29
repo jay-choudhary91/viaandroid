@@ -2817,7 +2817,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 e.printStackTrace();
                             }
                             layout_validating.setVisibility(View.VISIBLE);
-                            
+
                             break;
                     }
                 }
