@@ -27,7 +27,7 @@ import java.util.List;
 
 public class visualizeraudiorecorder extends View {
 
-    private static final int LINE_WIDTH = 10; // width of visualizer lines
+    private static final int LINE_WIDTH = 8; // width of visualizer lines
     private float LINE_SCALE = 8; // scales visualizer lines
     private List<Float> amplitudes; // amplitudes for line lengths
     private int width; // width of this View
@@ -62,6 +62,10 @@ public class visualizeraudiorecorder extends View {
         LINE_SCALE=common.convertDpToPixel(4,context);
         Log.e("LINE_SCALEheight",""+LINE_SCALE);
         amplitudes = new ArrayList<Float>(width / LINE_WIDTH);
+
+        Log.e("Amplitudevalue=",""+(width / LINE_WIDTH));
+        Log.e("Amplitudevalue=",""+width);
+
     }
 
     // clear all amplitudes to prepare for a new visualization
@@ -79,7 +83,7 @@ public class visualizeraudiorecorder extends View {
         amplitudes.add(amplitude); // add newest to the amplitudes ArrayList
 
         // if the power lines completely fill the VisualizerView
-        if (amplitudes.size() * LINE_WIDTH >= width) {
+        if (amplitudes.size() * 10 >= width) {
             amplitudes.remove(0); // remove oldest power value
         }
     }
