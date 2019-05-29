@@ -2233,7 +2233,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void setbottomimgview(){
         RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,0,0,8);
+        params.setMargins(0,0,0,38);
         params.addRule(RelativeLayout.ABOVE,R.id.layout_scrubberview);
       //  params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);

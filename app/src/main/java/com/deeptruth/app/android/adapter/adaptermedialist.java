@@ -218,11 +218,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
                 holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
 
-            /*holder.tv_valid.setText(config.item_valid);
-            holder.tv_caution.setText(config.item_caution);
-            holder.tv_unsent.setText(config.item_unsent);
-            holder.tv_invalid.setText(config.item_invalid);*/
-
             if(arrayList != null && arrayList.size() > 0 && mediaobject.getColorbarview() != null )
             {
                 holder.layout_colorbar.setVisibility(View.VISIBLE);

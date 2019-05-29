@@ -59,11 +59,11 @@
                     android:background="@color/black"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/margin_5dp"
+                    android:layout_marginTop="@dimen/margin_7dp"
                     >
 
                     <ImageView
-                        android:layout_width="60dp"
+                        android:layout_width="50dp"
                         android:layout_height="13dp"
                         android:padding="5dp"
                         android:layout_centerHorizontal="true"
@@ -164,7 +164,7 @@
                 android:layout_above="@+id/layout_scrubberview"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/ic_full_screen_mode"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="14dp"
                 android:padding="10dp"
                 />
 

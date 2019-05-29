@@ -74,13 +74,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/margin_18dp"
                         android:background="@color/black"
-                        android:layout_marginTop="@dimen/margin_10dp"
+                        android:layout_marginTop="@dimen/margin_7dp"
                         >
 
                         <ImageView
-                            android:layout_width="60dp"
+                            android:layout_width="50dp"
                             android:layout_height="@dimen/margin_18dp"
-                            android:padding="2dp"
+                            android:padding="5dp"
                             android:layout_centerHorizontal="true"
                             android:id="@+id/video_downwordarrow"
                             android:src="@drawable/horizontal_line_img"/>
