@@ -2331,7 +2331,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
             else
             {
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,10,0);
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),0);
             }
 
             set1.notifyDataSetChanged();
@@ -2379,7 +2379,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             if(value == -1)
                 chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
 
-            chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,10,10);
+            chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),10);
         }
 
         chart.animateX(0);
@@ -2491,7 +2491,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
             else
             {
-                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_6dp),10,10,getActivity().getResources().getDimension(R.dimen.margin_7dp));
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_6dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
             }
             LineData data = new LineData(set1);
             linechart.setData(data);
@@ -2512,6 +2512,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             set1.setDrawCircleHole(false);
             set1.setValueTextSize(0f);
             set1.setDrawFilled(true);
+            set1.setHighlightEnabled(false);
+            set1.setDrawHorizontalHighlightIndicator(false);
+            set1.setDrawVerticalHighlightIndicator(false);
             set1.setFillFormatter(new IFillFormatter() {
                 @Override
                 public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
@@ -2534,7 +2537,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             /*if(value == -1)
                 linechart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);*/
 
-            linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,10,getActivity().getResources().getDimension(R.dimen.margin_7dp));
+            linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
         }
 
         linechart.animateX(0);
