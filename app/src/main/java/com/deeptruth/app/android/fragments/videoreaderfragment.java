@@ -2773,7 +2773,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if (time_current != null)
                     time_current.setText(common.gettimestring(videostarttime));
 
-                if(arraycontainerformetric != null && layout_halfscrnimg.getVisibility() == View.VISIBLE && (!gethelper().isdraweropened()))
+                if(arraycontainerformetric != null && layout_halfscrnimg.getVisibility() == View.VISIBLE && (!gethelper().isdraweropened()) && (player.isPlaying()))
                 {
                     String color = "white";
                     if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
@@ -2789,8 +2789,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 e.printStackTrace();
                             }
-                            if(isplaying)
-                                layout_validating.setVisibility(View.VISIBLE);
+                            layout_validating.setVisibility(View.VISIBLE);
+
 
                             //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
                             break;
@@ -2806,8 +2806,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 e.printStackTrace();
                             }
-                            if(isplaying)
-                                layout_validating.setVisibility(View.VISIBLE);
+                            layout_validating.setVisibility(View.VISIBLE);
                             //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
                             break;
                         case "yellow":
@@ -2819,8 +2818,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 e.printStackTrace();
                             }
-                            if(isplaying)
-                                layout_validating.setVisibility(View.VISIBLE);
+                            layout_validating.setVisibility(View.VISIBLE);
                             //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
                             break;
                     }
