@@ -2791,8 +2791,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             }
                             layout_validating.setVisibility(View.VISIBLE);
 
-
-                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
                             break;
                         case "white":
                                 layout_validating.setVisibility(View.GONE);
@@ -2807,7 +2805,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 e.printStackTrace();
                             }
                             layout_validating.setVisibility(View.VISIBLE);
-                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
+
                             break;
                         case "yellow":
                             txt_section_validating_secondary.setText(config.caution);
@@ -2819,7 +2817,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 e.printStackTrace();
                             }
                             layout_validating.setVisibility(View.VISIBLE);
-                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
+                            
                             break;
                     }
                 }
