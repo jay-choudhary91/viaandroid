@@ -2418,11 +2418,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 {
                     int totalsize=set1.getEntryCount();
                     final int selectedchartposition = (mediarunningpercentage * totalsize) / 100;
-                     final boolean isselectedvalue = false;
-
-
-                    Log.e("mediarunningpercentage",""+mediarunningpercentage);
-                    Log.e("selectedchartposition",""+selectedchartposition);
 
                     int count = 0;
                     if(selectedchartposition < set1.getEntryCount())
@@ -2431,13 +2426,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             set1.getEntryForIndex(i).setIcon(null);
 
                         count =  set1.getEntryCount();
-
-                        final int midvalue = Math.round ((40 / count) * 100);;
-
-                        Log.e("midvalue",""+midvalue);
-
-                        Log.e("count",""+count);
-
                         if (count != 1) {
 
                             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -2450,7 +2438,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                           chart.moveViewToX(set1.getEntryForIndex(selectedchartposition-39).getX());
 
 
-                                      //chart.moveViewToX(set1.getEntryForIndex(selectedchartposition).getX());
+                                      chart.moveViewToX(set1.getEntryForIndex(selectedchartposition).getX());
 
                                       //chart.moveViewTo(set1.getEntryForIndex(selectedchartposition).getX(),set1.getEntryForIndex(selectedchartposition).getY(), YAxis.AxisDependency.LEFT);
                                 }
