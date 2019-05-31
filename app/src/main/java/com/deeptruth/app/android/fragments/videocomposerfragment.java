@@ -1890,15 +1890,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mymysoundwaverunnable = new Runnable() {
             @Override
             public void run() {
-                if(mediarecorder != null)
-                {
-                    int ampletudevalue = mediarecorder.getMaxAmplitude();
-                    double ampletude = 20 * Math.log10(ampletudevalue / 32767.0);
-                    int decibelvalue = 50 - Math.abs((int)ampletude);
 
-                    gethelper().setsoundwaveinformation(ampletudevalue,decibelvalue);
+                if (isvideorecording) {
+                    if (mediarecorder != null) {
+                        int ampletudevalue = mediarecorder.getMaxAmplitude();
+                        double ampletude = 20 * Math.log10(ampletudevalue / 32767.0);
+                        int decibelvalue = 50 - Math.abs((int) ampletude);
+
+                        gethelper().setsoundwaveinformation(ampletudevalue, decibelvalue);
+                    }
+                    mysoundwavehandler.postDelayed(this, 50);
                 }
-                mysoundwavehandler.postDelayed(this, 50);
             }
         };
         mysoundwavehandler.post(mymysoundwaverunnable);

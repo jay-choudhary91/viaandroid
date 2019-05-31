@@ -2336,11 +2336,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
 
-               // chart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
-
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,getActivity().getResources().getDimension(R.dimen.margin_50dp),getActivity().getResources().getDimension(R.dimen.margin_6dp));
-
-                //chart.setViewPortOffsets(0,0,getActivity().getResources().getDimension(R.dimen.margin_50dp),0);
             }
             else
             {
@@ -2387,12 +2383,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             // set data
             chart.setData(data);
-           // chart.setVisibleXRangeMaximum(80);
-            //chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
             if(value == -1)
                 chart.setVisibleXRangeMaximum(80);
 
-                chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
+            chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
 
             chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
         }
@@ -2431,7 +2425,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                   /* Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
+                                    /*Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
                                     chart.highlightValue(high, false);*/
 
                                     if(selectedchartposition<=39){
@@ -2451,7 +2445,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         @Override
                         public void run() {
 
-                            chart.invalidate();
+                            //chart.invalidate();
                             if(finalCount != 1){
                                 if(vertical_seekbar.getVisibility() == View.VISIBLE)
                                     vertical_seekbar.setVisibility(View.GONE);
@@ -2556,8 +2550,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(value == -1)
                 linechart.setVisibleXRangeMaximum(80);
-            /*if(value == -1)
-                linechart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);*/
 
             linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
         }
