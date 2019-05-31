@@ -2437,9 +2437,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                       if(selectedchartposition>=40)
                                           chart.moveViewToX(set1.getEntryForIndex(selectedchartposition-39).getX());
 
-
-                                      chart.moveViewToX(set1.getEntryForIndex(selectedchartposition).getX());
-
                                       //chart.moveViewTo(set1.getEntryForIndex(selectedchartposition).getX(),set1.getEntryForIndex(selectedchartposition).getY(), YAxis.AxisDependency.LEFT);
                                 }
                             });
