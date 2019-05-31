@@ -2632,7 +2632,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         colors.add(getResources().getColor(R.color.drawer_seekbar_max));
         dataSet.setColors(colors);
 
-        
+
         PieData data = new PieData(dataSet);
         data.setDrawValues(false);
         chart.setData(data);
