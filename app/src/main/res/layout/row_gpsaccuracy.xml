@@ -17,6 +17,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/txt_datatimedelay"
             android:layout_marginLeft="15dp"
+            android:layout_marginRight="@dimen/margin_7dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
@@ -58,6 +59,7 @@
             android:layout_height="3dp"
             android:background="@color/white"
             android:layout_marginLeft="15dp"
+            android:layout_marginRight="@dimen/margin_7dp"
             android:layout_marginBottom="10dp"
             android:layout_alignParentBottom="true"></View>
 

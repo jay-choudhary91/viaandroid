@@ -32,7 +32,7 @@
                 android:layout_marginTop="10dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 >
 
                 <FrameLayout
@@ -230,6 +230,7 @@
                             android:layout_height="3dp"
                             android:background="@color/white"
                             android:layout_marginLeft="14dp"
+                            android:layout_marginRight="@dimen/margin_8dp"
                             android:layout_marginBottom="14dp"
                             android:layout_alignParentBottom="true"></View>
 
@@ -299,6 +300,7 @@
                             android:layout_height="3dp"
                             android:background="@color/white"
                             android:layout_marginLeft="14dp"
+                            android:layout_marginRight="@dimen/margin_8dp"
                             android:layout_marginBottom="14dp"
                             android:layout_alignParentBottom="true"></View>
 
@@ -367,6 +369,7 @@
                             android:layout_height="3dp"
                             android:background="@color/white"
                             android:layout_marginLeft="14dp"
+                            android:layout_marginRight="@dimen/margin_8dp"
                             android:layout_marginBottom="14dp"
                             android:layout_alignParentBottom="true"></View>
 
