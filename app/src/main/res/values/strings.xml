@@ -141,6 +141,7 @@
     <string name="locationtracking">locationtracking</string>
     <string name="orientation">orientation</string>
 
+    <string name="towerinformation">TOWER INFORMATION</string>
     <string name="locationinformation">LOCATION INFORMATION</string>
     <string name="timeinformation">TIME INFORMATION</string>
     <string name="locationanalytics">Location Analytics</string>

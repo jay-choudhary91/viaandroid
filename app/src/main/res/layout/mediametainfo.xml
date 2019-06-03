@@ -47,7 +47,7 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_normalview"
                     android:layout_marginTop="5dp"
-                    android:text="X-Axis"/>
+                    android:text=""/>
 
             </LinearLayout>
 
@@ -424,6 +424,32 @@
             <include layout="@layout/row_gpsaccuracy"></include>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_towerinfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:orientation="vertical">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_towerinfo"
+                style="@style/txt_drawer_graphical_title"
+                android:text="@string/towerinformation"
+                app:fontType="OpenSans_Regular"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_towerlist"
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/layout_timeinformation"

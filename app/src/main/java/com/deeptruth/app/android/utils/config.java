@@ -227,6 +227,7 @@ public class config {
     public static final String satellitesdata="satellites";
     public static final String sister_metric="sister metric";
     public static final String json_blob="json blob";
+    public static final String json_towerlist="json_towerlist";
 
     public static final String selected_folder="selected_folder";
     public static final String selectedphotourl="selectedphotourl";

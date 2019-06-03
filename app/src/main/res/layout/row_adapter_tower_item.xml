@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_view"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layout_header"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Semibold"
+            android:text="CellID"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Semibold"
+            android:text="MCC"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Semibold"
+            android:text="MNC"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Semibold"
+            android:text="ISO"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Semibold"
+            android:text="Country"
+            android:visibility="gone"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Semibold"
+            android:text="C_Code"
+            android:visibility="gone"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Semibold"
+            android:text="Network"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_container"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_cellid"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_mcc"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_mnc"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_iso"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_country"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"
+            android:visibility="gone"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_countrycode"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:fontType="OpenSans_Regular"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:gravity="center"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_network"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/textsize12sp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

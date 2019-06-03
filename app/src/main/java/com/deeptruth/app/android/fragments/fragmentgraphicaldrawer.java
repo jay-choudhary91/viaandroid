@@ -16,6 +16,9 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,12 +34,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.toweritemadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.itemupdatelistener;
 import com.deeptruth.app.android.models.arraycontainer;
+import com.deeptruth.app.android.models.celltowermodel;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
@@ -173,6 +179,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     customfonttextview tvlocationanalytics;
     @BindView(R.id.txt_locationtracking)
     customfonttextview tvlocationtracking;
+    @BindView(R.id.txt_towerinfo)
+    customfonttextview txt_towerinfo;
     @BindView(R.id.txt_orientation)
     customfonttextview tvorientation;
     @BindView(R.id.txt_Phoneanalytics)
@@ -325,8 +333,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     View view_datatimedelay;
     @BindView(R.id.view_gpsaccuracy)
     View view_gpsaccuracy;
-
-
+    @BindView(R.id.recycler_towerlist)
+    RecyclerView recycler_towerlist;
+    @BindView(R.id.layout_towerinfo)
+    LinearLayout layout_towerinfo;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -358,6 +368,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private Polyline mappathpolyline;
     private ArrayList<LatLng> mappathcoordinates=new ArrayList<>();
     Highlight high =null;
+    toweritemadapter toweradapter;
+    ArrayList<celltowermodel> celltowers = new ArrayList<>();
 
     @Override
     public int getlayoutid() {
@@ -394,6 +406,29 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             layout_videoaudiodata.setVisibility(View.GONE);
             layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
+
+          toweradapter =new toweritemadapter(applicationviavideocomposer.getactivity(),celltowers) ;
+          LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+          layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+          recycler_towerlist.setLayoutManager(layoutManager);
+          ((DefaultItemAnimator) recycler_towerlist.getItemAnimator()).setSupportsChangeAnimations(false);
+          recycler_towerlist.getItemAnimator().setChangeDuration(0);
+          recycler_towerlist.setAdapter(toweradapter);
+
+            /*{
+                celltowermodel model=new celltowermodel();
+                    model.setMnc(404);
+                    model.setMcc(59);
+                    model.setNetwork("BSNL");
+                    model.setCountry("India");
+                    model.setIso("IN");
+                    model.setDbm(Integer.parseInt("-55"));
+                    model.setCountrycode("91");
+                    model.setCid(Integer.parseInt("595959"));
+                celltowers.add(model);
+                toweradapter.notifyDataSetChanged();
+            }*/
+
 
           TimeZone timezone = TimeZone.getDefault();
           String timezoneid=timezone.getID();
@@ -603,6 +638,50 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(isdatacomposing)
             {
+                String towerinfo = xdata.getinstance().getSetting(config.json_towerlist);
+                if(towerinfo.trim().length() > 0)
+                {
+                        try
+                        {
+                            JSONArray jsonArray=new JSONArray(towerinfo);
+                            if(jsonArray.length() > 0 && (celltowers.size() != jsonArray.length()))
+                            {
+                                celltowers.clear();
+                                toweradapter.notifyDataSetChanged();
+
+                                for(int i=0;i<jsonArray.length();i++)
+                                {
+                                    celltowermodel model=new celltowermodel();
+                                    JSONObject object=jsonArray.getJSONObject(i);
+                                    if(object.has("mnc"))
+                                        model.setMnc(Integer.parseInt(object.getString("mnc")));
+                                    if(object.has("mcc"))
+                                        model.setMcc(Integer.parseInt(object.getString("mcc")));
+                                    if(object.has("network"))
+                                        model.setNetwork(object.getString("network"));
+                                    if(object.has("country"))
+                                        model.setCountry(object.getString("country"));
+                                    if(object.has("iso"))
+                                        model.setIso(object.getString("iso"));
+                                    if(object.has("dbm"))
+                                        model.setDbm(Integer.parseInt(object.getString("dbm")));
+                                    if(object.has("country_code"))
+                                        model.setCountrycode(object.getString("country_code"));
+                                    if(object.has("cid"))
+                                        model.setCid(Integer.parseInt(object.getString("cid")));
+                                    celltowers.add(model);
+                                }
+                            }
+                            toweradapter.notifyDataSetChanged();
+                            if(celltowers.size() > 0)
+                                layout_towerinfo.setVisibility(View.VISIBLE);
+                            else
+                                layout_towerinfo.setVisibility(View.GONE);
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                }
 
                 if(! latitudedegree.isEmpty() && (! latitudedegree.equalsIgnoreCase("NA")))
                 {
@@ -2748,6 +2827,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         settextviewcolor(txt_datatimedelay, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_world_time, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_phone_time, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(txt_towerinfo, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
 
     }
 

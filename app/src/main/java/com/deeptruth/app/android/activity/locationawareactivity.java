@@ -45,13 +45,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
+import android.telephony.CellIdentityWcdma;
 import android.telephony.CellInfo;
+import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellSignalStrengthCdma;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
+import android.telephony.CellSignalStrengthWcdma;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -68,9 +74,11 @@ import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.models.celltowermodel;
 import com.deeptruth.app.android.models.mediametadatainfo;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.startmediainfo;
+import com.deeptruth.app.android.models.towerinfo;
 import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.services.locationservice;
@@ -172,6 +180,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private boolean isservicebound = false;
     private databasemanager mdbhelper;
     boolean updatesync = true;
+    ArrayList<towerinfo> cellinfofromassets = new ArrayList<>();
+    ArrayList<celltowermodel> celltowers = new ArrayList<>();
     ArrayList<startmediainfo> unsyncedmediaitems = new ArrayList<>();
     int syncupdationcounter = 0;
     boolean isdatasyncing = false;
@@ -315,6 +325,74 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else {
             startmetrices();
         }
+    }
+
+    public void loadtowerinfofromassets() {
+        if(cellinfofromassets.size() > 0)
+            return;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try
+                {
+                    // source link -> https://github.com/musalbas/mcc-mnc-table
+                   // InputStream is = applicationviavideocomposer.getactivity().getAssets().open("mcc-mnc-table.json");
+                    InputStream is = applicationviavideocomposer.getactivity().getAssets().open("mcc-mnc-list.json");
+                    int size = is.available();
+                    byte[] buffer = new byte[size];
+                    is.read(buffer);
+                    is.close();
+                    String json = new String(buffer, "UTF-8");
+                    JSONArray array=new JSONArray(json);
+                    for(int i=0;i<array.length();i++)
+                    {
+                        towerinfo info=new towerinfo();
+                        JSONObject object=array.getJSONObject(i);
+                        /*if(object.has("network"))
+                            info.setNetwork(object.getString("network"));
+                        if(object.has("country"))
+                            info.setCountry(object.getString("country"));
+                        if(object.has("mcc"))
+                            info.setMcc(object.getString("mcc"));
+                        if(object.has("iso"))
+                            info.setIso(object.getString("iso"));
+                        if(object.has("country_code"))
+                            info.setCountrycode(object.getString("country_code"));
+                        if(object.has("mnc"))
+                            info.setMnc(object.getString("mnc"));*/
+                        if(object.has("brand"))
+                        {
+                            String operatorname="";
+                            if(! object.getString("brand").equalsIgnoreCase("null"))
+                                operatorname=object.getString("brand");
+                            if(! object.getString("operator").equalsIgnoreCase("null"))
+                                operatorname=operatorname+" "+object.getString("operator");
+
+                            info.setNetwork(operatorname);
+                        }
+
+                        if(object.has("countryName"))
+                            info.setCountry(object.getString("countryName"));
+                        if(object.has("mcc"))
+                            info.setMcc(object.getString("mcc"));
+                        if(object.has("countryCode"))
+                            info.setIso(object.getString("countryCode"));
+                        if(object.has("country_code"))
+                            info.setCountrycode(object.getString("country_code"));
+                        if(object.has("mnc"))
+                            info.setMnc(object.getString("mnc"));
+
+                        cellinfofromassets.add(info);
+                    }
+
+                    loadcellinfo();
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -584,6 +662,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             return;
         }
 
+        loadtowerinfofromassets();
         getLastLocation();
         startLocationUpdates();
         enableGPS(locationawareactivity.this);
@@ -592,6 +671,144 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         if (mOrientation != null)
             mOrientation.startListening(this);
     }
+
+    public void loadcellinfo() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try
+                {
+                    celltowers.clear();
+                    TelephonyManager tm =
+                            (TelephonyManager) getSystemService(
+                                    Context.TELEPHONY_SERVICE);
+
+                    int lCurrentApiVersion = Build.VERSION.SDK_INT;
+                    try {
+
+                        if (ActivityCompat.checkSelfPermission(locationawareactivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+
+                        List<CellInfo> cellInfoList = tm.getAllCellInfo();
+                        if (cellInfoList != null && cellInfoList.size() > 0) {
+                            for (final CellInfo info : cellInfoList)
+                            {
+                                celltowermodel celltower=new celltowermodel();
+                                //Network Type
+                                if (info instanceof CellInfoGsm) {
+                                    final CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
+                                    final CellIdentityGsm identityGsm = ((CellInfoGsm) info).getCellIdentity();
+                                    // Signal Strength
+                                    celltower.setType("GSM ");
+                                    celltower.setDbm(gsm.getDbm()); // [dBm]
+                                    // Cell Identity
+                                    celltower.setCid(identityGsm.getCid());
+                                    celltower.setMcc(identityGsm.getMcc());
+                                    celltower.setMnc(identityGsm.getMnc());
+                                    celltower.setLac(identityGsm.getLac());
+                                    if(celltower.getCid() != 2147483647)
+                                        celltowers.add(celltower);
+
+                                    //txt_item.append("\nbsic " + identityGsm.getBsic());
+                                    //txt_item.append("\narfcn " + identityGsm.getArfcn());
+                                }else if (info instanceof CellInfoLte) {
+                                    final CellSignalStrengthLte lte = ((CellInfoLte) info).getCellSignalStrength();
+                                    final CellIdentityLte identityLte = ((CellInfoLte) info).getCellIdentity();
+                                    // Signal Strength
+                                    celltower.setType("LTE ");
+                                    celltower.setDbm(lte.getDbm()); // [dBm]
+                                    // Cell Identity
+                                    celltower.setMcc(identityLte.getMcc());
+                                    celltower.setMnc(identityLte.getMnc());
+                                    celltower.setCi(identityLte.getCi());
+                                    celltower.setCid(identityLte.getCi());
+                                    //celltower.setTac(identityLte.getTac());
+                                    celltower.setLac(identityLte.getTac());
+                                    if(celltower.getCid() != 2147483647)
+                                        celltowers.add(celltower);
+                                    // txt_item.append("\ntiming advance " + ((""+lte.getTimingAdvance()).equals("2147483647")?"-":""+lte.getTimingAdvance()));
+
+                                } else if (lCurrentApiVersion >= Build.VERSION_CODES.JELLY_BEAN_MR2 && info instanceof CellInfoWcdma) {
+                                    final CellSignalStrengthWcdma wcdma = ((CellInfoWcdma) info).getCellSignalStrength();
+                                    final CellIdentityWcdma identityWcdma = ((CellInfoWcdma) info).getCellIdentity();
+                                    // Signal Strength
+                                    celltower.setType("WCDMA ");
+                                    celltower.setDbm(wcdma.getDbm()); // [dBm]
+                                    // Cell Identity
+                                    celltower.setLac(identityWcdma.getLac());
+                                    celltower.setMcc(identityWcdma.getMcc());
+                                    celltower.setMnc(identityWcdma.getMnc());
+                                    celltower.setCid(identityWcdma.getCid());
+                                    celltower.setPsc(identityWcdma.getPsc());
+
+                                    if(celltower.getCid() != 2147483647)
+                                        celltowers.add(celltower);
+                                }
+                                /*else if (info instanceof CellInfoCdma) {
+                                    final CellSignalStrengthCdma cdma = ((CellInfoCdma) info).getCellSignalStrength();
+                                    final CellIdentityCdma identityCdma = ((CellInfoCdma) info).getCellIdentity();
+                                    // Signal Strength
+                                    celltower.setType("CDMA ");
+                                    celltower.setDbm(cdma.getDbm()); // [dBm]
+                                    // Cell Identity
+                                    celltower.setBasestationid(identityCdma.getBasestationId());
+                                    celltower.setSystemid(identityCdma.getSystemId());
+                                    celltower.setNetworkid(identityCdma.getNetworkId());
+                                    celltowers.add(celltower);
+                                }*/
+                            }
+                        }
+
+                        JSONArray jsonArray=new JSONArray();
+                        if(cellinfofromassets.size() > 0 && celltowers.size() > 0)
+                        {
+                            for(int i=0;i<cellinfofromassets.size();i++)
+                            {
+                                for(int j=0;j<celltowers.size();j++)
+                                {
+                                    if(cellinfofromassets.get(i).getMnc().equals(""+celltowers.get(j).getMnc()) &&
+                                            cellinfofromassets.get(i).getMcc().equals(""+celltowers.get(j).getMcc()))
+                                    {
+                                        JSONObject object=new JSONObject();
+                                        celltowers.get(j).setCountry(cellinfofromassets.get(i).getCountry());
+                                        celltowers.get(j).setCountrycode(cellinfofromassets.get(i).getCountrycode());
+                                        celltowers.get(j).setNetwork(cellinfofromassets.get(i).getNetwork());
+                                        celltowers.get(j).setIso(cellinfofromassets.get(i).getIso());
+
+                                        object.put("mcc",celltowers.get(j).getMcc());
+                                        object.put("mnc",celltowers.get(j).getMnc());
+                                        object.put("network",celltowers.get(j).getNetwork());
+                                        object.put("country",celltowers.get(j).getCountry());
+                                        object.put("iso",celltowers.get(j).getIso());
+                                        object.put("dbm",celltowers.get(j).getDbm());
+                                        object.put("country_code",celltowers.get(j).getCountrycode());
+                                        object.put("cid",celltowers.get(j).getCid());
+                                        jsonArray.put(object);
+                                    }
+                                }
+                            }
+                        }
+                        if(jsonArray.length() > 0)
+                            xdata.getinstance().saveSetting(config.json_towerlist,jsonArray.toString());
+                        else
+                            xdata.getinstance().saveSetting(config.json_towerlist,"");
+
+                    } catch (NullPointerException npe) {
+                        //Log.e("loadCellInfo: Unable : ", npe);
+                    }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }).start();
+
+
+    }
+
 
     @Override
     public void showPermissionDialog() {
@@ -835,6 +1052,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 servermetricsgetupdatecounter = 0;
                                 currentsatellitecounter++;
                                 getsistermetric();
+                            }
+                            if(servermetricsgetupdatecounter == 20)
+                            {
+                                loadcellinfo();
                             }
 
                             if ((currentsatellitecounter == -1 || (common.isnetworkconnected(locationawareactivity.this) &&
