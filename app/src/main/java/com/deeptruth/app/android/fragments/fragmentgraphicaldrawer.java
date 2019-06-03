@@ -1581,10 +1581,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         {
             if(! isdatacomposing)
             {
-                if (currentmediaposition < metricmainarraylist.size() && metricmainarraylist.size() > 0) {
+                if (currentmediaposition <= metricmainarraylist.size() && metricmainarraylist.size() > 0) {
                     arraycontainerformetric = new arraycontainer();
-                    arraycontainerformetric = metricmainarraylist.get(currentmediaposition);
-                    layout_soundiformation.setVisibility(View.GONE);
+
+                    if(currentmediaposition == metricmainarraylist.size()){
+                        arraycontainerformetric = metricmainarraylist.get(currentmediaposition-1);
+                    }else{
+                        arraycontainerformetric = metricmainarraylist.get(currentmediaposition);
+                    }
 
                     ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
                     String latitude="",longitude="";
@@ -1848,7 +1852,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                     if(linechart_altitude != null && altitudegraphitems.size() > 0)
                         updatelinegraphwithposition(linechart_altitude,altitudegraphitems,mediarunningpercentage,vertical_slider_altitude);
-
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -2490,36 +2493,45 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 public void run()
                 {
                     int totalsize=set1.getEntryCount();
-                    final int selectedchartposition = (mediarunningpercentage * totalsize) / 100;
+                    int selectedchartposition = (mediarunningpercentage * totalsize) / 100;
+                    Log.e("selectedchartposition",""+selectedchartposition);
 
                     int count = 0;
-                    if(selectedchartposition < set1.getEntryCount())
+
+                    if(selectedchartposition <= set1.getEntryCount())
                     {
                         for(int i=0;i<set1.getEntryCount();i++)
                             set1.getEntryForIndex(i).setIcon(null);
 
                         count =  set1.getEntryCount();
+                        Log.e("count",""+count);
                         if (count != 1) {
+                            if(selectedchartposition ==set1.getEntryCount())
+                                selectedchartposition = selectedchartposition-1;
 
+                            final int finalSelectedchartposition = selectedchartposition;
                             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     /*Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
                                     chart.highlightValue(high, false);*/
 
-                                    if(selectedchartposition<=39){
+                                    if(finalSelectedchartposition <=39){
                                         chart.moveViewToX(set1.getEntryForIndex(0).getX());
                                     }else{
-                                        chart.moveViewToX(set1.getEntryForIndex(selectedchartposition-39).getX());
+                                        chart.moveViewToX(set1.getEntryForIndex(finalSelectedchartposition -39).getX());
                                     }
                                 }
                             });
+
+
 
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
                                     R.drawable.blue_black_ball));
                         }
                     }
                     final int finalCount = count;
+                    final int finalSelectedchartposition1 = selectedchartposition;
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -2530,7 +2542,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                     vertical_seekbar.setVisibility(View.GONE);
                             }else{
                                 vertical_seekbar.setVisibility(View.VISIBLE);
-                                float sizey = set1.getEntryForIndex(selectedchartposition).getY();
+                                float sizey = set1.getEntryForIndex(finalSelectedchartposition1).getY();
                                 updateverticalsliderlocationdata(Float.toString(sizey),vertical_seekbar);
                             }
 

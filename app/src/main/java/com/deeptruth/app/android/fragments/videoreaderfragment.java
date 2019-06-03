@@ -22,6 +22,7 @@ import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -407,6 +408,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     int viewheight = 0;
     int navigationbarheight = 0;
     GestureDetector detector;
+    Visualizer visualizer;
 
     private float videoheight, videowidth;
 
@@ -767,6 +769,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    if (progresspercentage > 0)
                        processframe = (int) (metricmainarraylist.size() * progresspercentage) / 100;
 
+                   Log.e("metricmainarraylist",""+metricmainarraylist.size());
+                   Log.e("progresspercentage",""+progresspercentage);
+
                    if (progresspercentage > 0)
                        scrubberprogress = (int) (mbitmaplist.size() * progresspercentage) / 100;
 
@@ -799,9 +804,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                recyview_frames.smoothScrollToPosition(scrubberprogress);
                    }
 
+                   if(isvideocompleted)
+                       currentprocessframe = metricmainarraylist.size();
+
                    gethelper().setcurrentmediaposition(currentprocessframe);
                    if(fragmentmetainformation != null)
-                       fragmentmetainformation.setcurrentmediaposition(currentprocessframe);
+                        fragmentmetainformation.setcurrentmediaposition(currentprocessframe);
 
                    layout_progressline.setVisibility(View.VISIBLE);
                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
@@ -1837,6 +1845,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void onPause() {
         super.onPause();
         pause();
+        //visualizer.release();
         progressdialog.dismisswaitdialog();
         if(validationbaranimation != null)
         {
@@ -2364,11 +2373,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
+            gethelper().setcurrentmediaposition((int) (metricmainarraylist.size() * 100) / 100);
+            Log.e("oncompletet",""+(int) ((metricmainarraylist.size() * 100) / 100));
             isvideocompleted=true;
             controller.setplaypauuse();
             maxincreasevideoduration=videoduration;
             isplaying = false;
             layout_validating.setVisibility(View.GONE);
+            //visualizer.setEnabled(false);
            /* playpausebutton.setImageResource(R.drawable.play_btn);
             playpausebutton.setVisibility(View.VISIBLE);*/
             mediaseekbar.setProgress(player.getCurrentPosition());
@@ -2741,16 +2753,18 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             if(mediafilepath!=null)
             {
+                //setupVisualizerFxAndUI();
+                //visualizer.setEnabled(true);
                 isplaying=true;
                 playpausebutton.setImageResource(R.drawable.pausebutton);
                 player.start();
-
 
             }
         }
     }
     public void pause() {
         if(player != null && player.isPlaying()){
+            //visualizer.setEnabled(false);
             playpausebutton.setImageResource(R.drawable.play_btn);
             player.pause();
         }
@@ -3426,5 +3440,37 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         });*/
         layoutpauseheight = common.getviewheight(pauselayoutpercentage);
         setbottomimgview();
+    }
+
+    public void setupVisualizerFxAndUI() {
+
+        visualizer = new Visualizer(player.getAudioSessionId());
+        visualizer.setScalingMode(Visualizer.SCALING_MODE_NORMALIZED);
+        visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+        visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+            @Override
+            public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
+                int decibelvalue = Math.abs((int) getsounddecibal(waveform));
+                Log.e("decibelvalue=",""+decibelvalue);
+                gethelper().setsoundwaveinformation(0, decibelvalue);
+            }
+
+            @Override
+            public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
+            }
+        } ,Visualizer.getMaxCaptureRate() / 2, true, false);
+    }
+
+    public double getsounddecibal(byte[] audioData){
+
+        double amplitude = 0;
+        for (int i = 0; i < audioData.length/2; i++) {
+            double y = (audioData[i*2] | audioData[i*2+1] << 8) / 32768.0;
+            // depending on your endianness:
+            // double y = (audioData[i*2]<<8 | audioData[i*2+1]) / 32768.0
+            amplitude += Math.abs(y);
+        }
+        amplitude = amplitude / audioData.length / 2;
+        return amplitude;
     }
 }
