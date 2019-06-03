@@ -3448,7 +3448,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         visualizer.setScalingMode(Visualizer.SCALING_MODE_NORMALIZED);
         visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
         visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
-
             @Override
             public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
                 int decibelvalue = Math.abs((int) getsounddecibal(waveform));
@@ -3461,16 +3460,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         } ,Visualizer.getMaxCaptureRate() / 2, true, false);
     }
-
-    private int calculateDecibel(byte[] buf) {
-        int sum = 0;
-        for (int i = 0; i < buf.length/2; i++) {
-            sum += Math.abs(buf[i]);
-        }
-        // avg 10-50
-        return sum / buf.length/2;
-    }
-
 
     public double getsounddecibal(byte[] audioData){
 
