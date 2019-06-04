@@ -1845,7 +1845,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void onPause() {
         super.onPause();
         pause();
-        //visualizer.release();
+        visualizer.release();
         progressdialog.dismisswaitdialog();
         if(validationbaranimation != null)
         {
@@ -2380,7 +2380,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             maxincreasevideoduration=videoduration;
             isplaying = false;
             layout_validating.setVisibility(View.GONE);
-            //visualizer.setEnabled(false);
+            visualizer.setEnabled(false);
            /* playpausebutton.setImageResource(R.drawable.play_btn);
             playpausebutton.setVisibility(View.VISIBLE);*/
             mediaseekbar.setProgress(player.getCurrentPosition());
@@ -2753,8 +2753,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             if(mediafilepath!=null)
             {
-                //setupVisualizerFxAndUI();
-                //visualizer.setEnabled(true);
+                setupVisualizerFxAndUI();
+                visualizer.setEnabled(true);
                 isplaying=true;
                 playpausebutton.setImageResource(R.drawable.pausebutton);
                 player.start();
@@ -2764,7 +2764,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
     public void pause() {
         if(player != null && player.isPlaying()){
-            //visualizer.setEnabled(false);
+            visualizer.setEnabled(false);
             playpausebutton.setImageResource(R.drawable.play_btn);
             player.pause();
         }
@@ -3450,7 +3450,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
             @Override
             public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
-                int decibelvalue = Math.abs((int) getsounddecibal(waveform));
+                int decibelvalue =127- Math.abs((int) calculateRMSLevel(waveform));
+
+
+                if(decibelvalue==127){
+                    decibelvalue=0;
+                }else{
+                    decibelvalue = decibelvalue+5;
+                }
+
                 Log.e("decibelvalue=",""+decibelvalue);
                 gethelper().setsoundwaveinformation(0, decibelvalue);
             }
@@ -3460,6 +3468,47 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         } ,Visualizer.getMaxCaptureRate() / 2, true, false);
     }
+
+    public double calculatedecibel(byte[] audioData){
+        double sum=0;
+        for (int i = 0; i < audioData.length/2; i++) {
+            double y = ((short)audioData[i*2] | (short) audioData[i*2+1] <<16)/ 32768.0 ;
+            sum += Math.abs(y);
+        }
+        double rms = Math.sqrt(sum /audioData.length/2);
+
+        Log.e("rms=",""+rms);
+
+        double dbAmp = 20.0*Math.log10(rms);
+        return dbAmp;
+    }
+
+    /*public int calculateRMSLevel(byte[] audioData) {
+        //System.out.println("::::: audioData :::::"+audioData);
+        double amplitude = 0;
+        for (int i = 0; i < audioData.length/2; i++) {
+            double y = (audioData[i*2] | audioData[i*2+1] << 8) / 32768.0;
+            // depending on your endianness:
+            // double y = (audioData[i*2]<<8 | audioData[i*2+1]) / 32768.0
+            amplitude += Math.abs(y);
+        }
+        amplitude = amplitude / audioData.length / 2;
+
+        //Add this data to buffer for display
+       *//* if (counterPlayer < 100) {
+            drawingBufferForPlayer[counterPlayer++] = amplitude;
+        } else {
+            for (int k = 0; k < 99; k++) {
+                drawingBufferForPlayer[k] = drawingBufferForPlayer[k + 1];
+            }
+            drawingBufferForPlayer[99] = amplitude;
+        }
+
+        updateBufferDataPlayer(drawingBufferForPlayer);
+        setDataForPlayer(100,100);*//*
+
+        return (int)amplitude;
+    }*/
 
     public double getsounddecibal(byte[] audioData){
 
@@ -3472,5 +3521,27 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
         amplitude = amplitude / audioData.length / 2;
         return amplitude;
+    }
+
+    protected int calculateRMSLevel(byte[] audioData)
+    { // audioData might be buffered data read from a data line
+        long lSum = 0;
+
+        for(int i=0; i<audioData.length; i++)
+
+            lSum = lSum + audioData[i];
+
+        double dAvg = lSum / audioData.length;
+
+        double sumMeanSquare = 0d;
+
+        for(int j=0; j<audioData.length; j++)
+
+            sumMeanSquare = sumMeanSquare + Math.pow(audioData[j] - dAvg, 2d);
+
+        double averageMeanSquare = sumMeanSquare / audioData.length;
+
+        return (int)(Math.pow(averageMeanSquare,0.5d) + 0.2);
+
     }
 }

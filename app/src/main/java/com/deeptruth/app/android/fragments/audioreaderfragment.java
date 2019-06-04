@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -277,6 +278,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     GestureDetector detector;
     public boolean islastdragarrow = false,isplaypauswebtnshow = false;
     metainformationfragment fragmentmetainformation;
+    Visualizer visualizer;
 
     public audioreaderfragment() {
     }
@@ -1289,6 +1291,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onPause() {
         super.onPause();
+        visualizer.release();
         pause();
         progressdialog.dismisswaitdialog();
     }
@@ -1409,6 +1412,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             if(audiourl!=null)
             {
                 playpausebutton.setImageResource(R.drawable.pausebutton);
+                setupVisualizerFxAndUI();
+                visualizer.setEnabled(true);
                 player.start();
                 player.setOnCompletionListener(this);
             }
@@ -1419,6 +1424,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void pause() {
         if(player != null && player.isPlaying()){
                 player.pause();
+                visualizer.setEnabled(false);
                 playpausebutton.setImageResource(R.drawable.play_btn);
         }
     }
@@ -1553,6 +1559,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         ismediacompleted =true;
         isplaypauswebtnshow =false;
         maxincreasevideoduration= audioduration;
+        visualizer.setEnabled(false);
 
         if(layout_audiodetails.getVisibility() == View.GONE){
            // rlcontrollerview.getLayoutParams().height = rootviewheight ;
@@ -2456,5 +2463,55 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 gethelper().setdrawerheightonfullscreen(controllerheight);
             }
         });
+    }
+
+    public void setupVisualizerFxAndUI() {
+
+        visualizer = new Visualizer(player.getAudioSessionId());
+        visualizer.setScalingMode(Visualizer.SCALING_MODE_NORMALIZED);
+        visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+        visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+            @Override
+            public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
+                int decibelvalue =127- Math.abs((int) calculateRMSLevel(waveform));
+
+
+                if(decibelvalue==127){
+                    decibelvalue=0;
+                }else{
+                    decibelvalue = decibelvalue+5;
+                }
+
+                Log.e("decibelvalue=",""+decibelvalue);
+                gethelper().setsoundwaveinformation(0, decibelvalue);
+            }
+
+            @Override
+            public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
+            }
+        } ,Visualizer.getMaxCaptureRate() / 2, true, false);
+    }
+
+
+    protected int calculateRMSLevel(byte[] audioData)
+    { // audioData might be buffered data read from a data line
+        long lSum = 0;
+
+        for(int i=0; i<audioData.length; i++)
+
+            lSum = lSum + audioData[i];
+
+        double dAvg = lSum / audioData.length;
+
+        double sumMeanSquare = 0d;
+
+        for(int j=0; j<audioData.length; j++)
+
+            sumMeanSquare = sumMeanSquare + Math.pow(audioData[j] - dAvg, 2d);
+
+        double averageMeanSquare = sumMeanSquare / audioData.length;
+
+        return (int)(Math.pow(averageMeanSquare,0.5d) + 0.2);
+
     }
 }
