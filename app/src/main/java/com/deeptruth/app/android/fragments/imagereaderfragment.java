@@ -760,6 +760,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 if(layout_halfscrn.getVisibility() == View.GONE){
                     removeheadermargin();
                     layout_halfscrn.setVisibility(View.VISIBLE);
+                    layout_validating.setVisibility(View.VISIBLE);
                     v.clearFocus();
                     InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     immm.hideSoftInputFromWindow(v.getWindowToken(), 0);
