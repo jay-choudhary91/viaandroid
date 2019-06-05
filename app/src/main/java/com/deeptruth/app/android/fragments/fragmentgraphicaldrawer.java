@@ -639,7 +639,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             if(isdatacomposing)
             {
                 String towerinfo = xdata.getinstance().getSetting(config.json_towerlist);
-                if(towerinfo.trim().length() > 0)
+                if(towerinfo.trim().length() == 0)
+                {
+                    celltowers.clear();
+                    if(toweradapter != null)
+                        toweradapter.notifyDataSetChanged();
+                    if(layout_towerinfo != null)
+                        layout_towerinfo.setVisibility(View.GONE);
+                }
+                else if(towerinfo.trim().length() > 0)
                 {
                         try
                         {

@@ -1047,16 +1047,17 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             }
 
                             servermetricsgetupdatecounter++;
+
+                            if(servermetricsgetupdatecounter%20 == 0)
+                                loadcellinfo();
+
                             if ((servermetricsgetupdatecounter >= 60 && common.isnetworkconnected(locationawareactivity.this)) ||
                                     (xdata.getinstance().getSetting(config.satellitedate).trim().isEmpty())) {
                                 servermetricsgetupdatecounter = 0;
                                 currentsatellitecounter++;
                                 getsistermetric();
                             }
-                            if(servermetricsgetupdatecounter == 20)
-                            {
-                                loadcellinfo();
-                            }
+
 
                             if ((currentsatellitecounter == -1 || (common.isnetworkconnected(locationawareactivity.this) &&
                                     currentsatellitecounter == 5)))
@@ -1617,6 +1618,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             if (Settings.Global.getInt(locationawareactivity.this.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) == 0) {
                 metricItemValue = "OFF";
             }
+            if(metricItemValue.equalsIgnoreCase("ON"))
+                xdata.getinstance().saveSetting(config.json_towerlist,"");
+
         } else if (key.equalsIgnoreCase(config.availablewifinetwork)) {
             getwifinetworks();
            //  metricItemValue = availablewifinetwork;
