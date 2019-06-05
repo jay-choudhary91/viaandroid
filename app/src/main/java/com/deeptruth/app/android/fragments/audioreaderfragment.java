@@ -1424,7 +1424,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void pause() {
         if(player != null && player.isPlaying()){
                 player.pause();
-                visualizer.setEnabled(false);
+                if(visualizer != null)
+                     visualizer.setEnabled(false);
+
                 playpausebutton.setImageResource(R.drawable.play_btn);
         }
     }

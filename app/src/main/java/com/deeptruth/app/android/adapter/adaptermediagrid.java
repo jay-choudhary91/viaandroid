@@ -171,7 +171,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             }
             else
             {
-                holder.img_mediathumbnail.setBackgroundColor(context.getResources().getColor(R.color.dark_blue_solid_a));
+                holder.img_mediathumbnail.setBackgroundColor(context.getResources().getColor(R.color.black));
                 if(! mediaobject.getThumbnailpath().trim().isEmpty())
                 {
                     if(new File(mediaobject.getThumbnailpath()).exists())

@@ -303,6 +303,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             }
             else
             {
+                holder.img_videothumbnail.setBackgroundColor(context.getResources().getColor(R.color.black));
                 if(! mediaobject.getThumbnailpath().trim().isEmpty())
                 {
                     if(new File(mediaobject.getThumbnailpath()).exists())

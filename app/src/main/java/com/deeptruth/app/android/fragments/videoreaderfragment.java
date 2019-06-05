@@ -1845,7 +1845,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void onPause() {
         super.onPause();
         pause();
-        visualizer.release();
+        if(visualizer != null)
+            visualizer.release();
+
         progressdialog.dismisswaitdialog();
         if(validationbaranimation != null)
         {
