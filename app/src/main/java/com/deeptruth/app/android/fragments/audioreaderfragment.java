@@ -1291,7 +1291,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onPause() {
         super.onPause();
-        visualizer.release();
+      //  visualizer.release();
         pause();
         progressdialog.dismisswaitdialog();
     }
@@ -1412,8 +1412,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             if(audiourl!=null)
             {
                 playpausebutton.setImageResource(R.drawable.pausebutton);
-                setupVisualizerFxAndUI();
-                visualizer.setEnabled(true);
+                /*setupVisualizerFxAndUI();
+                visualizer.setEnabled(true);*/
                 player.start();
                 player.setOnCompletionListener(this);
             }
@@ -1424,8 +1424,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void pause() {
         if(player != null && player.isPlaying()){
                 player.pause();
-                if(visualizer != null)
-                     visualizer.setEnabled(false);
+               /* if(visualizer != null)
+                     visualizer.setEnabled(false);*/
 
                 playpausebutton.setImageResource(R.drawable.play_btn);
         }
@@ -1491,7 +1491,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if(player!=null){
                     changeactionbarcolor();
-                    wavevisualizerslist.clear();
+                    // wavevisualizerslist.clear();
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -1561,11 +1561,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         ismediacompleted =true;
         isplaypauswebtnshow =false;
         maxincreasevideoduration= audioduration;
-        visualizer.setEnabled(false);
+      //  visualizer.setEnabled(false);
 
         if(layout_audiodetails.getVisibility() == View.GONE){
            // rlcontrollerview.getLayoutParams().height = rootviewheight ;
-            wavevisualizerslist.clear();
+          //  wavevisualizerslist.clear();
             playpausebutton.setVisibility(View.VISIBLE);
             layout_scrubberview.setVisibility(View.VISIBLE);
             linearseekbarcolorview.setVisibility(View.VISIBLE);
@@ -1583,7 +1583,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         }else{
             player.seekTo(0);
-            wavevisualizerslist.clear();
+        //    wavevisualizerslist.clear();
             playpausebutton.setVisibility(View.VISIBLE);
             playpausebutton.setImageResource(R.drawable.play_btn);
         }
@@ -1594,7 +1594,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(player != null )
                 {
                     player.seekTo(0);
-                    wavevisualizerslist.clear();
+                  //  wavevisualizerslist.clear();
                     playpausebutton.setVisibility(View.VISIBLE);
                     playpausebutton.setImageResource(R.drawable.play_btn);
 
