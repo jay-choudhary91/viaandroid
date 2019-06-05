@@ -156,7 +156,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", connectionspeed = "",
             connectiondatadelay = "",availablewifinetwork="";
     MyPhoneStateListener mPhoneStatelistener;
-    int mSignalStrength = 0, dbtoxapiupdatecounter = 0, servermetricsgetupdatecounter = 0,currentsatellitecounter=-1;
+    int mSignalStrength = 0, dbtoxapiupdatecounter = 0, servermetricsgetupdatecounter = 0,currenttowercounter=0,currentsatellitecounter=-1;
     noise mNoise;
     private static final int PERMISSION_RECORD_AUDIO = 92;
     public static final int my_permission_read_phone_state = 90;
@@ -1048,9 +1048,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                             servermetricsgetupdatecounter++;
 
-                            if(servermetricsgetupdatecounter%20 == 0)
-                                loadcellinfo();
-
                             if ((servermetricsgetupdatecounter >= 60 && common.isnetworkconnected(locationawareactivity.this)) ||
                                     (xdata.getinstance().getSetting(config.satellitedate).trim().isEmpty())) {
                                 servermetricsgetupdatecounter = 0;
@@ -1058,9 +1055,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 getsistermetric();
                             }
 
+                            currenttowercounter++;
+                            if(currenttowercounter >= 10)
+                            {
+                                currenttowercounter=0;
+                                loadcellinfo();
+                            }
 
                             if ((currentsatellitecounter == -1 || (common.isnetworkconnected(locationawareactivity.this) &&
-                                    currentsatellitecounter == 5)))
+                                    currentsatellitecounter >= 5)))
                             {
                                 currentsatellitecounter = 0;
                                 getcurrentsatellitesget();
@@ -1625,7 +1628,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             getwifinetworks();
            //  metricItemValue = availablewifinetwork;
              metricItemValue = xdata.getinstance().getSetting(config.availablewifis);
-
         }
         /*else if (key.equalsIgnoreCase(config.sister_metric)) {
             metricItemValue=xdata.getinstance().getSetting(config.sister_metric);
