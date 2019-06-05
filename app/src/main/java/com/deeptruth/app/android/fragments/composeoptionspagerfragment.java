@@ -501,7 +501,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         switch (view.getId())
         {
             case R.id.txt_zoomlevel:
-                if(currentselectedcomposer == 0 && fragvideocomposer != null)
+                if(currentselectedcomposer == 1 && fragvideocomposer != null)
                     fragvideocomposer.adjustzoom();
                 else if(currentselectedcomposer == 1  && fragimgcapture != null)
                     fragimgcapture.adjustzoom();
@@ -516,7 +516,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     }
                 }, 1000);
 
-                if(currentselectedcomposer == 0 || currentselectedcomposer == 2)
+                if(currentselectedcomposer == 1 || currentselectedcomposer == 2)
                 {
                     if (iscircle) {
                         makesquare();
@@ -527,11 +527,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }
 
                 if(currentselectedcomposer == 0)
-                {
-                    if(fragvideocomposer != null  && isfragmentload)
-                        fragvideocomposer.startstopvideo();
-                }
-                else if(currentselectedcomposer == 1)
                 {
                     if(fragimgcapture != null  && isfragmentload)
                     {
@@ -570,6 +565,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                                 fragimgcapture.takePicture();
                         }
                     }
+                }else if(currentselectedcomposer == 1)
+                {
+                    if(fragvideocomposer != null  && isfragmentload)
+                        fragvideocomposer.startstopvideo();
                 }
                 else if(currentselectedcomposer == 2)
                 {
@@ -708,23 +707,24 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 imgrotatecamera.setVisibility(View.VISIBLE);
                 layout_seekbarzoom.setVisibility(View.VISIBLE);
                 showhideactionbottombaricon(1);
-                if(fragvideocomposer == null)
-                    fragvideocomposer=new videocomposerfragment();
+                if(fragimgcapture == null)
+                    fragimgcapture=new imagecomposerfragment();
 
-                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_seekbarzoom,framecontainer);
-                gethelper().replacetabfragment(fragvideocomposer,false,true);
+                fragimgcapture.setData(mitemclick,layoutbottom,layout_seekbarzoom,framecontainer);
+                gethelper().replacetabfragment(fragimgcapture,false,true);
                 isfragmentload = true;
+
             break;
 
             case 1:
                 imgrotatecamera.setVisibility(View.VISIBLE);
                 layout_seekbarzoom.setVisibility(View.VISIBLE);
                 showhideactionbottombaricon(1);
-                if(fragimgcapture == null)
-                    fragimgcapture=new imagecomposerfragment();
+                if(fragvideocomposer == null)
+                    fragvideocomposer=new videocomposerfragment();
 
-                fragimgcapture.setData(mitemclick,layoutbottom,layout_seekbarzoom,framecontainer);
-                gethelper().replacetabfragment(fragimgcapture,false,true);
+                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_seekbarzoom,framecontainer);
+                gethelper().replacetabfragment(fragvideocomposer,false,true);
                 isfragmentload = true;
             break;
 
@@ -761,7 +761,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(type == startrecorder) // for video record start,audio record start and image capture button click
         {
             gethelper().setisrecordrunning(true);
-            if(currentselectedcomposer == 0)
+            if(currentselectedcomposer == 1)
             {
                 showhideactionbottombaricon(0);
             }
@@ -775,7 +775,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         else if(type == stoprecorder) // for video record stop,audio record stop and image captured button click
         {
             gethelper().setisrecordrunning(false);
-            if(currentselectedcomposer == 0)
+            if(currentselectedcomposer == 1)
             {
                 showhideactionbottombaricon(1);
             }
@@ -897,9 +897,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         if(currentselectedcomposer == 0)
         {
-            if(videoarraylist.size() > 0)
+            if(imagearraylist.size() > 0)
             {
-               setthumbnailimage(videoarraylist.get(0),zoominoutimage);
+                setthumbnailimage(imagearraylist.get(0),zoominoutimage);
             }
             else
             {
@@ -908,9 +908,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(currentselectedcomposer == 1)
         {
-            if(imagearraylist.size() > 0)
+
+            if(videoarraylist.size() > 0)
             {
-                setthumbnailimage(imagearraylist.get(0),zoominoutimage);
+                setthumbnailimage(videoarraylist.get(0),zoominoutimage);
             }
             else
             {
@@ -1007,7 +1008,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             if(txt_encrypting != null)
             {
-                if( fragvideocomposer != null && (! fragvideocomposer.isvideorecording) && currentselectedcomposer == 0){
+                if( fragvideocomposer != null && (! fragvideocomposer.isvideorecording) && currentselectedcomposer == 1){
                     layout_encryption.setRotation(rotateangle);
                     layout_seekbarzoom.setRotation(rotateangle);
                 }
@@ -1049,7 +1050,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             case  R.id.layout_bottom:
                 try
                 {
-                    if(currentselectedcomposer == 0 && (fragvideocomposer != null && (fragvideocomposer.isvideorecording)))
+                    if(currentselectedcomposer == 1 && (fragvideocomposer != null && (fragvideocomposer.isvideorecording)))
                     {
                         return true;
                     }
@@ -1057,7 +1058,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     {
                         return true;
                     }
-                    if (motionEvent.getPointerCount() == 1)
+                    if (motionEvent.getPointerCount() == 0)
                         mitemclick.onItemClicked(motionEvent,fragmentswipe);
 
                 } catch (Exception e) {

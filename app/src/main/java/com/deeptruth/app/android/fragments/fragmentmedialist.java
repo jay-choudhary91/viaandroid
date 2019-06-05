@@ -641,13 +641,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         String checkitem="";
         if(selectedmediatype == 0)
         {
-            checkitem="video";
+            checkitem="image";
             layout_sectionsearch.setVisibility(View.GONE);
             setsearchbar();
         }
         else if(selectedmediatype == 1)
         {
-            checkitem="image";
+            checkitem="video";
             layout_sectionsearch.setVisibility(View.GONE);
             setsearchbar();
         }
@@ -661,13 +661,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         for(int i = 0; i< arraymediaitemlist.size(); i++)
         {
             arraymediaitemlist.get(i).setDoenable(false);
-            if(arraymediaitemlist.get(i).getmimetype().startsWith("video"))
-            {
-                videocount++;
-            }
-            else if(arraymediaitemlist.get(i).getmimetype().startsWith("image"))
+            if(arraymediaitemlist.get(i).getmimetype().startsWith("image"))
             {
                 imagecount++;
+            }
+            else if(arraymediaitemlist.get(i).getmimetype().startsWith("video"))
+            {
+                videocount++;
             }
             else if(arraymediaitemlist.get(i).getmimetype().startsWith("audio"))
             {
@@ -703,9 +703,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 {
                     TextView txt_mediatype=(TextView)view.findViewById(R.id.txt_mediatype);
                     if(i == 2)
-                        txt_mediatype.setText(config.item_video+countvideo);
-                    if(i == 3)
                         txt_mediatype.setText(config.item_photo+countimage);
+                    if(i == 3)
+                         txt_mediatype.setText(config.item_video+countvideo);
                     if(i == 4)
                         txt_mediatype.setText(config.item_audio+countaudio);
 
@@ -1694,11 +1694,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
         {
             if(selectedmediatype == 0){
-                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-                type="video/*";
-            }else if(selectedmediatype == 1){
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 type="image/*";
+            }else if(selectedmediatype == 1){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                type="video/*";
             }else if(selectedmediatype == 2){
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
                 type="audio/*";
@@ -1707,11 +1707,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         else
         {
             if(selectedmediatype == 0){
-                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
-                type="video/*";
-            }else if(selectedmediatype == 1){
                 intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                 type="image/*";
+            }else if(selectedmediatype == 1){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+                type="video/*";
             }else if(selectedmediatype == 2){
                 intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
                 type="audio/*";

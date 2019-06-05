@@ -99,7 +99,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
         ButterKnife.bind(this);
         applicationviavideocomposer.setActivity(homeactivity.this);
-        config.selectedmediatype=0;
+        config.selectedmediatype=1;
         xdata.getinstance().saveSetting(config.selected_folder,config.dirallmedia);
 
         // Code for deeplink
