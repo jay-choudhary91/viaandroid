@@ -10,8 +10,8 @@ public enum mediatypepagerenum
 {
     Item1("", R.layout.row_composemediatype,0),
     Item2("", R.layout.row_composemediatype,1),
-    Item3("VIDEO", R.layout.row_composemediatype,2),
-    Item4("PHOTO", R.layout.row_composemediatype,3),
+    Item3("PHOTO", R.layout.row_composemediatype,2),
+    Item4("VIDEO", R.layout.row_composemediatype,3),
     Item5("AUDIO", R.layout.row_composemediatype,4),
     Item6("", R.layout.row_composemediatype,5),
     Item7("", R.layout.row_composemediatype,6);

@@ -242,7 +242,8 @@ public class config {
     public static final long transition_fragment_millis_700 = 700;
     public static final long transition_fragment_millis_300 = 300;
 
-    public static int selectedmediatype=0;   // video,photo,camera
+    public static int selectedmediatype=1;   // video,photo,camera
+    //public static int selectedtypemedia=1;   // video,photo,camera
     // An Enum class
     public enum permissions
     {
