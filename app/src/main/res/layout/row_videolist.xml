@@ -12,7 +12,7 @@
     <FrameLayout
         android:id="@+id/delete_layout"
         android:layout_width="wrap_content"
-        android:layout_height="120dp">
+        android:layout_height="@dimen/listviewheight">
 
         <LinearLayout
             android:id="@+id/bottom_wraper"
@@ -96,7 +96,7 @@
                 android:layout_width="match_parent"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:padding="5dp"
-                android:layout_height="120dp">
+                android:layout_height="@dimen/listviewheight">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -106,7 +106,7 @@
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_height="110dp"
+                        android:layout_height="@dimen/viewheight"
                         android:layout_weight="0.35"
                         android:layout_gravity="center_vertical">
 
@@ -191,8 +191,8 @@
                                     android:singleLine="true"
                                     android:ellipsize="end"
                                     android:inputType="none"
-                                    android:scrollHorizontally="false"
                                     android:background="@drawable/edittext_shap"
+                                    android:scrollHorizontally="false"
                                     android:textColor="@color/black"
                                     android:visibility="visible"
                                     android:imeOptions="actionDone"
@@ -210,8 +210,9 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:gravity="left"
-                                        android:textSize="11sp"
+                                        android:textSize="12sp"
                                         android:minLines="2"
+                                        android:maxLines="2"
                                         android:textColor="@color/black"
                                         android:text="xx-xx-xxxx"
                                         />
@@ -268,8 +269,9 @@
                                 <LinearLayout
                                     android:id="@+id/layout_colorbar"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:orientation="vertical"
+                                    android:gravity="bottom"
                                     android:layout_marginTop="3dp">
 
 
@@ -381,20 +383,23 @@
 
                                     <RelativeLayout
                                         android:layout_width="match_parent"
-                                        android:layout_height="20dp"
-                                        android:layout_marginTop="5dp">
+                                        android:layout_gravity="bottom"
+                                        android:gravity="bottom"
+                                        android:layout_marginBottom="@dimen/margin_5dp"
+                                        android:layout_height="@dimen/animationbarheight"
+                                        android:layout_marginTop="3dp">
 
                                         <ProgressBar
                                             android:id="@+id/progressmediasync"
                                             style="@style/CustomProgressBar"
                                             android:layout_width="match_parent"
                                             android:visibility="gone"
-                                            android:layout_height="20dp"/>
+                                            android:layout_height="@dimen/animationbarheight"/>
 
                                         <LinearLayout
                                             android:id="@+id/linear_seekbarcolorview"
                                             android:layout_width="match_parent"
-                                            android:layout_height="20dp"
+                                            android:layout_height="@dimen/animationbarheight"
                                             android:orientation="horizontal"
                                             android:background="@color/transparent"/>
 
