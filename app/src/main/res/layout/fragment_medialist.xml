@@ -36,22 +36,6 @@
         android:layout_below="@id/layout_mediatype"
         android:orientation="horizontal">
 
-        <RelativeLayout
-            android:id="@+id/lay_gridstyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="3dp"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/btn_gridlist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_grid_view" />
-
-        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/lay_liststyle"
@@ -70,6 +54,25 @@
                 android:src="@drawable/ic_list_view" />
 
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lay_gridstyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="3dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/btn_gridlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_grid_view" />
+
+        </RelativeLayout>
+
+
 
     </LinearLayout>
 

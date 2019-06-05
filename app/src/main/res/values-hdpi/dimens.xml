@@ -35,6 +35,10 @@
     <dimen name="textsize10sp">10sp</dimen>
     <dimen name="textsize11sp">11sp</dimen>
     <dimen name="textsize12sp">12sp</dimen>
+    <dimen name="viewheight">110dp</dimen>
+    <dimen name="listviewheight">120dp</dimen>
+    <dimen name="animationbarheight">20dp</dimen>
+
 
     <dimen name="header_text_size_18">18sp</dimen>
     <dimen name="bottom_nav_title_txt_size_14">14dp</dimen>
