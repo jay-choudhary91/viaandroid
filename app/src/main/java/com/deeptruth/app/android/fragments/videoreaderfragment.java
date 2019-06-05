@@ -564,6 +564,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 layout_videodetails.getLayoutParams().height = layout_videodetails.getHeight();
                                 layout_videodetails.requestLayout();
                             }
+
                         }
                     }
                     else
