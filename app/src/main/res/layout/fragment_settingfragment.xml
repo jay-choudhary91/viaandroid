@@ -27,7 +27,7 @@
 
         <RelativeLayout
             android:id="@+id/ll_toggle"
-            android:layout_below="@+id/layout_mediatype"
+            android:layout_below="@+id/layout_apptitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp">
@@ -56,10 +56,70 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/layout_toggle"
+            android:layout_below="@+id/ll_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/production_and_dev"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:textSize="15sp"
+                app:fontType="Comfortaa-Regular"
+                />
+
+            <com.akash.RevealSwitch
+                android:id="@+id/production_dev_toogle"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                app:setEnabledTrackColor="@color/dark_blue_solid_a"
+                app:setDisabledTrackColor="@color/grey_x"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_below="@+id/layout_mediatype"
+            android:gravity="center"
+            android:id="@+id/layout_apptitle"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/apptitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:text=""
+                android:layout_centerVertical="true"
+                app:fontType="Comfortaa-Regular"/>
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/trademark"
+                android:id="@+id/img_trademark"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/apptitle"
+                android:layout_alignParentTop="true"/>
+
+        </RelativeLayout>
+
         <WebView
             android:layout_width="match_parent"
             android:id="@+id/setting_webview"
-            android:layout_below="@+id/ll_toggle"
+            android:layout_below="@+id/layout_toggle"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true">
 

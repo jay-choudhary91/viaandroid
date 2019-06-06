@@ -51,6 +51,8 @@
     <string name="metrichash">Meta Hash:</string>
     <string name="deeptruth">deeptruth</string>
     <string name="proof_of_the_truth">Proof of the Truth</string>
+    <string name="appversion">Version:</string>
+
 
     <string name="record_now">RECORD NOW</string>
     <string name="save">Save</string>
@@ -138,6 +140,7 @@
     <string name="item_hashes">hashes</string>
     <string name="item_graphical">graphical</string>
     <string name="introscreen">Intro Screen</string>
+    <string name="production_and_dev">production and dev</string>
     <string name="locationtracking">locationtracking</string>
     <string name="orientation">orientation</string>
 

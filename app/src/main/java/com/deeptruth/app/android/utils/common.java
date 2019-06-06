@@ -14,6 +14,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -2651,26 +2653,29 @@ public class common {
         }
         return timeformat;
     }
-}
-        /*String input = " 05:10:25 PM ";
-        //Format of the date defined in the input String
-        DateFormat df = new SimpleDateFormat(" hh:mm:ss aa");
-        //Desired format: 24 hour format: Change the pattern as per the need
-        DateFormat outputformat = new SimpleDateFormat("HH:mm:ss");
-        Date date = null;
-        String output = null;
-        try {
-            //Converting the input String to Date
-            date = df.parse(input);
-            //Changing the format of date and storing it in String
-            output = outputformat.format(date);
-            //Displaying the date
-            System.out.println("Date->"+output);
 
-        } catch (ParseException e) {
+    public static String getapplicationversion(Context context){
+        String version = "";
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+             version = pInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return output;
+        return version;
+    }
 
-    }*/
+    public static String getapplicationname(Context context) {
+        final PackageManager pm = context.getApplicationContext().getPackageManager();
+        ApplicationInfo ai;
+        try {
+            ai = pm.getApplicationInfo( context.getPackageName(), 0);
+        } catch (final PackageManager.NameNotFoundException e) {
+            ai = null;
+        }
+        final String applicationName = (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
+
+        return applicationName;
+    }
+}
 

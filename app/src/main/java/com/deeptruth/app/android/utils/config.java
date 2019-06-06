@@ -218,6 +218,7 @@ public class config {
     public static final String no_title="No Title";
     public static final String istravelleddistanceneeded="istravelleddistanceneeded";
     public static final String enableintroscreen="enableintroscreen";
+    public static final String enableproductionanddev="enableproductionanddev";
     public static final String authtoken="authtoken";
     public static final String usernameemailaddress="usernameemailaddress";
     public static final String reset_authtoken="reset_authtoken";
@@ -260,7 +261,7 @@ public class config {
 
     public static final String PREFS_NAME = "main_prefs";
     public static final String LIST_XAPI = "Xapi";
-    public static final String LIST_SYNC_LOG = "Sync Log";
+    public static final String LIST_SYNC_LOG = "XAPI Log";
     public static final String LIST_In_APP_PURCHASE = "In App purchase";
     public static final String LIST_IMAGES = "images";
     public static final String LIST_CONFIGACTION = "configaction";
