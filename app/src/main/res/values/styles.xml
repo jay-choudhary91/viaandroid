@@ -147,6 +147,14 @@
     </style>
 
 
+    <style name="txt_check_gps_wifi">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
     <style name="btn_share_screen">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
