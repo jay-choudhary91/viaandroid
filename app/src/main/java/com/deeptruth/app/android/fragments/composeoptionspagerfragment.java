@@ -773,13 +773,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         @Override
         public void onItemClicked(Object object, int type) {
 
-            if(type==7){
-                visibleconnection();
-            }else if(type == 8){
-                setactionbarbackgroundcolor();
-            }else{
                 composecallback(object,type);
-            }
         }
     };
 
@@ -835,6 +829,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         else if(type == adjustzoom)
         {
             txt_zoomlevel.setText(object.toString());
+        }else if(type==7){
+            setactionbarbackgroundcolor();
+            visibleconnection();
         }
     }
 
