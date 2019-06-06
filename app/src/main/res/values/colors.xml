@@ -31,6 +31,7 @@
     <color name="whitetransparent">#A6ffffff</color>
     <color name="blacktransparent">#A6000000</color>
     <color name="bluetransparent">#A60a4c60</color>
+    <color name="yellowtransparent">#A6BBC643</color>
     <color name="transparent">#00000000</color>
     <color name="selectedimagehash">#005A78</color>
     <color name="videolist_background">#297BB5</color>

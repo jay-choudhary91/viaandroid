@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:paddingTop="@dimen/margin_50dp"
+            android:orientation="horizontal"
+            android:id="@+id/layout_wifi_gps"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_5dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_weight="1">
+                    <ImageView
+                        android:id="@+id/img_gps"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/warning_icon"/>
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        app:fontType="OpenSans_Semibold"
+                        android:id="@+id/txt_section_gps"
+                        style="@style/txt_check_gps_wifi"
+                        android:gravity="center_vertical"
+                        android:text="GPS:"
+                        android:layout_marginLeft="@dimen/margin_5dp"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="10dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_5dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
+
+                    <ImageView
+                        android:id="@+id/img_data"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/rightcheck" />
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        app:fontType="OpenSans_Semibold"
+                        android:id="@+id/txt_section_data"
+                        android:layout_toRightOf="@+id/img_data"
+                        style="@style/txt_check_gps_wifi"
+                        android:gravity="center_vertical"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="10dp"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:padding="@dimen/margin_5dp"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
+
+                    <ImageView
+                        android:id="@+id/img_network"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/rightcheck"/>
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        app:fontType="OpenSans_Semibold"
+                        android:id="@+id/txt_section_network"
+                        style="@style/txt_check_gps_wifi"
+                        android:gravity="center_vertical"
+                        android:layout_toRightOf="@+id/img_network"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="10dp"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+</LinearLayout>
