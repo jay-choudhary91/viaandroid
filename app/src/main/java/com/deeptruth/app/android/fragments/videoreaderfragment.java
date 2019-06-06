@@ -1640,7 +1640,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         if(player != null && player.isPlaying()){
                             pause();
                             imgpause.setImageResource(R.drawable.ic_play);
-                            playpausebutton.setImageResource(R.drawable.play_btn);
+                         /*   playpausebutton.setImageResource(R.drawable.play_btn);*/
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.VISIBLE);
                             img_colapseicon.setVisibility(View.GONE);
@@ -1656,7 +1656,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }else{
                             start();
                             imgpause.setImageResource(R.drawable.ic_pause);
-                            playpausebutton.setImageResource(R.drawable.play_btn);
+                           /* playpausebutton.setImageResource(R.drawable.play_btn);*/
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
                             img_colapseicon.setVisibility(View.VISIBLE);

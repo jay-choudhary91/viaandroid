@@ -124,11 +124,11 @@ public class settingfragment extends basefragment implements View.OnClickListene
             });
 
           img_arrow_back.setOnClickListener(this);
-          webview.getSettings().setJavaScriptEnabled(true);
+          /*webview.getSettings().setJavaScriptEnabled(true);
           webview.getSettings().setSupportZoom(true);       //Zoom Control on web (You don't need this
           webview.getSettings().setBuiltInZoomControls(true); //Enable Multitouch if supported by ROM
           webview.loadUrl(config.settingpageurl);
-          webview.setWebViewClient(new mywebview());
+          webview.setWebViewClient(new mywebview());*/
         }
         return rootview;
     }
