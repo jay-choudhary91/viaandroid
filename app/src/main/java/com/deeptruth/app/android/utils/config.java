@@ -278,8 +278,8 @@ public class config {
     public static final String API_ACTION = "api_action";
     public static final String API_PARAMETER= "api_parameter";
 
-    public static final String TEXT_GPS= "GPS:";
-    public static final String TEXT_DATA= "DATA:";
-    public static final String TEXT_NATWORK= "NATWORK:";
+    public static final String TEXT_GPS= "GPS: ";
+    public static final String TEXT_DATA= "Data: ";
+    public static final String TEXT_NETWORK = "Network: ";
 
 }

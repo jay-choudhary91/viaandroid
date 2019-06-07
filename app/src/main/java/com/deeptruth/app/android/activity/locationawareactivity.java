@@ -198,7 +198,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private long workT, totalT, workAMT, totalprocess, totalBefore, work, workBefore, workAM, workAMBefore;
     String[] processsysteminfo;
     BroadcastReceiver wifiReceiver;
-
+    Intent locationService;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -575,9 +575,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 } else {
                     Log.e("Running ", "No");
 
-                    final Intent locationService = new Intent(applicationviavideocomposer.getactivity(), locationservice.class);
+                    locationService = new Intent(applicationviavideocomposer.getactivity(), locationservice.class);
                     applicationviavideocomposer.getactivity().startService(locationService);
                     isservicebound = applicationviavideocomposer.getactivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
+
                 }
             } else {
                 String[] array = new String[common.getphonelocationdeniedpermissions().size()];
@@ -864,6 +865,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 }
 
             } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try
+            {
+                if(locationService != null)
+                    stopService(locationService);
+            }catch (Exception e)
+            {
                 e.printStackTrace();
             }
 
