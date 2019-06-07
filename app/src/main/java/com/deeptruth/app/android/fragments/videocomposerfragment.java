@@ -10,13 +10,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
-import android.graphics.drawable.GradientDrawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -370,8 +368,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     TextView txt_media_medium;
     @BindView(R.id.txt_media_high)
     TextView txt_media_high;
-    /*@BindView(R.id.layout_no_gps_wifi)
-    RotateLayout layout_no_gps_wifi;*/
 
     @BindView(R.id.img_warning)
     ImageView img_warning;
@@ -389,13 +385,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     TextView txt_section_data;
     @BindView(R.id.txt_section_network)
     TextView txt_section_network;
-    /*  @BindView(R.id.layout_no_gps_wifi)
-      RotateLayout layout_no_gps_wifi;*/
     @BindView(R.id.layout_wifi_gps_data)
     LinearLayout layout_wifi_gps_data;
-
-
-    RotateLayout layout_no_gps_wifi;
 
     Animation blinkanimation;
     List<String> qualityitemslist=new ArrayList<>();
@@ -636,7 +627,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         rotationangle=(int)rotateangle;
 
-            if(headercontainer !=null && layout_no_gps_wifi != null ){
+            if(headercontainer !=null){
                 if(rotateangle == 180)
                     rotateangle=0;
 
@@ -644,17 +635,22 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     if(!isvideorecording)
                     {
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT);
+
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
                         //lp.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
-                        setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,0,0,0,null,headercontainer,null,90);
+                        setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,
+                                0,0,0,null,headercontainer,null,90);
 
-                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT);
+
                         layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, TRUE);
                         //layoutparams.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
-                        setdynamiclayout(layoutparams,null,0,0,0,bottomlayoutheight,0,0,0,0,null,null,layout_no_gps_wifi,90);
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT);
 
-                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                         lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                         lpexpandable.setMargins(0, 0, 0,  0);
                         expandable_layout.setLayoutParams(lpexpandable);
@@ -664,8 +660,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         img_dotmenu.setVisibility(View.GONE);
                         setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);*/
 
-                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
+                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),
+                                (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
 
                     }
                     gethelper().hidedrawerbutton(true);  // hidden
@@ -675,17 +674,20 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     if(!isvideorecording)
                     {
 
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT);
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
                         //lp.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
-                        setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,0,0,0,null,headercontainer,null,270);
+                        setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,
+                                0,0,0,null,headercontainer,null,270);
 
-                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT);
                         layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
                         //layoutparams.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
-                        setdynamiclayout(layoutparams,null,0,0,0,bottomlayoutheight,0,0,0,0,null,null,layout_no_gps_wifi,270);
 
-                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT);
                         lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                         lpexpandable.setMargins(0, 0, 0,  0);
                         expandable_layout.setLayoutParams(lpexpandable);
@@ -696,8 +698,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         img_dotmenu.setVisibility(View.GONE);
                         setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);*/
 
-                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
+                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),
+                                (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
 
                         // set validating text to right padding
 
@@ -717,27 +721,35 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     if(!isvideorecording)
                     {
 
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
                         setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,(int)rotateangle);
 
-                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
                         layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP, TRUE);
-                        setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,(int)rotateangle);
 
-                        RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         img_dotmenu.setVisibility(View.VISIBLE);
-                        setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);
+                        setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,
+                                (int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),
+                                (int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);
 
-                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT);
                         lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                         lpexpandable.setMargins(20, 0, 0,  0);
                         expandable_layout.setLayoutParams(lpexpandable);
 
 
-                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
+                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),
+                                (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,
+                                0,0,0,imgflashon,null,null,0);
                     }
 
                     if(headercontainer.getAngle() == 90)
@@ -1381,7 +1393,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
 
             case R.id.txt_media_quality:
-                expendcollpaseview();
+                //expendcollpaseview();
                 break;
 
             case R.id.img_dotmenu:
@@ -1920,7 +1932,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(!isvideorecording){
                   //  layout_no_gps_wifi.setVisibility(View.VISIBLE);
                     layout_wifi_gps_data.setVisibility(View.VISIBLE);
-                    actionbar.setBackgroundColor(getResources().getColor(R.color.yellowtransparent));
+                    actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
                     visibleconnection();
                     setactionbarbackgroundcolor();
@@ -1943,7 +1955,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 try {
                     if(gethelper().isdraweropened())
                     {
-                        layout_no_gps_wifi.setVisibility(View.GONE);
                         myhandler.postDelayed(this, 1000);
                         return;
                     }
@@ -1963,40 +1974,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         };
         myhandler.post(myrunnable);
     }
-
-    public void visiblewarningcontrollers(){
-        if(isvideorecording)
-        {
-            if(layout_no_gps_wifi != null)
-                layout_no_gps_wifi.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            layout_no_gps_wifi.setVisibility(View.GONE);
-        }
-    }
-
-    public void hidewarningsection()
-    {
-        if(layout_no_gps_wifi != null)
-            layout_no_gps_wifi.setVisibility(View.GONE);
-    }
-
-    public void validatingcontrollers(){
-
-        if(isvideorecording)
-        {
-            hidewarningsection();
-            layout_no_gps_wifi.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            hidewarningsection();
-            layout_no_gps_wifi.setVisibility(View.GONE);
-        }
-
-    }
-
 
     @Override
     public void onDestroy() {
@@ -2311,20 +2288,20 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null")
                         || xdata.getinstance().getSetting(config.airplanemode).equals("ON"))
                 {
-                    txt_section_network.setText(config.TEXT_NATWORK+""+getResources().getString(R.string.no_network));
-                    img_network.setBackground(getActivity().getResources().getDrawable(R.drawable.rightcheck));
+                    txt_section_network.setText(config.TEXT_NETWORK +""+getResources().getString(R.string.no_network));
+                    img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
 
                 }
             }else {
-                txt_section_network.setText(config.TEXT_NATWORK + "" + common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
-                img_network.setBackground(getActivity().getResources().getDrawable(R.drawable.rightcheck));
+                txt_section_network.setText(config.TEXT_NETWORK + "" + common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
+                img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
             }
 
 
             if(xdata.getinstance().getSetting(config.Connectionspeed)!=null && !xdata.getinstance().getSetting(config.Connectionspeed).isEmpty()){
                 if(xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA")){
                     txt_section_data.setText(config.TEXT_DATA+""+xdata.getinstance().getSetting(config.Connectionspeed));
-                    img_data.setBackground(getActivity().getResources().getDrawable(R.drawable.rightcheck));
+                    img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
                 }else {
 
                     String[] arrayitem=xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
@@ -2332,20 +2309,22 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         double connectionvalue = Double.valueOf(arrayitem[0]);
                         if(connectionvalue!=0.0){
                             txt_section_data.setText(config.TEXT_DATA+""+connectionvalue+"Mb/s");
-                            img_data.setBackground(getActivity().getResources().getDrawable(R.drawable.rightcheck));
+                            img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
 
                         }else{
                             txt_section_data.setText(config.TEXT_DATA+""+connectionvalue+"Mb/s");
-                            img_data.setBackground(getActivity().getResources().getDrawable(R.drawable.rightcheck));
+                            img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
                         }
                     }
                 }
             }
 
-            if(xdata.getinstance().getSetting(config.GPSAccuracy)!= null && (! xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty())) {
-                if(xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA")){
+            if(xdata.getinstance().getSetting(config.GPSAccuracy)!= null && (! xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty()))
+            {
+                if(xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA"))
+                {
                     txt_section_gps.setText(config.TEXT_GPS+""+xdata.getinstance().getSetting(config.GPSAccuracy));
-                    img_gps.setBackground(getActivity().getResources().getDrawable(R.drawable.warning_icon));
+                    img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.warning_icon));
                 }else{
                     String[] arrayitem=xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
                     if(arrayitem.length > 0)
@@ -2353,14 +2332,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         double gpsvalue = Double.valueOf(arrayitem[0]);
                         if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")){
                             // txt_weakgps.setVisibility(View.GONE);
+                            txt_section_gps.setText(config.TEXT_GPS+" 0ft");
+                            img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.warning_icon));
                         }else{
                             if ((gpsvalue <= 50 && gpsvalue != 0)) {
                                 txt_section_gps.setText(config.TEXT_GPS+""+gpsvalue+"ft");
-                                img_gps.setBackground(getActivity().getResources().getDrawable(R.drawable.rightcheck));
+                                img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
 
                             } else {
                                 txt_section_gps.setText(config.TEXT_GPS+""+gpsvalue+"ft");
-                                img_gps.setBackground(getActivity().getResources().getDrawable(R.drawable.warning_icon));
+                                img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.warning_icon));
                             }
                         }
                     }
@@ -2371,33 +2352,48 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void setactionbarbackgroundcolor() {
 
-        if (!isvideorecording) {
+        if (!isvideorecording)
+        {
+            String gpsenabled=xdata.getinstance().getSetting("gpsenabled");
+            String CellProvider=xdata.getinstance().getSetting(config.CellProvider);
+            String Connectionspeed=xdata.getinstance().getSetting(config.Connectionspeed);
+            String GPSAccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
+
             if (!common.isnetworkconnected(getActivity()) ||
                     xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0") ||
                     xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA") ||
                     xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA") ||
                     xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA")) {
 
-                if (layout_wifi_gps_data != null)
-                    layout_wifi_gps_data.setBackgroundColor(getResources().getColor(R.color.yellowtransparent));
+             //   if (layout_wifi_gps_data != null)
+                 //   layout_wifi_gps_data.setBackgroundColor(getResources().getColor(R.color.yellowtransparent));
 
             } else {
                 String[] arrayitemgps = xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
-                double gpsvalue = Double.valueOf(arrayitemgps[0]);
-                String[] arrayitemconnection = xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
-                double connectionvalue = Double.valueOf(arrayitemconnection[0]);
+                if(arrayitemgps.length > 0)
+                {
+                    double gpsvalue=0,connectionvalue=0;
+                    if(! arrayitemgps[0].trim().isEmpty())
+                        gpsvalue = Double.valueOf(arrayitemgps[0]);
 
-                if (gpsvalue > 50 || connectionvalue == 0.0) {
+                    String[] arrayitemconnection = xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
+                    if(arrayitemconnection.length > 0)
+                    {
+                        if(! arrayitemconnection[0].trim().isEmpty())
+                            connectionvalue = Double.valueOf(arrayitemconnection[0]);
+                    }
 
-                    if (layout_wifi_gps_data != null)
-                        layout_wifi_gps_data.setBackgroundColor(getResources().getColor(R.color.yellowtransparent));
-
-                } else {
-
-                    if (layout_wifi_gps_data != null)
-                        layout_wifi_gps_data.setBackgroundColor(getResources().getColor(R.color.bluetransparent));
+                    /*if (gpsvalue > 50 || connectionvalue == 0.0)
+                    {
+                        if (layout_wifi_gps_data != null)
+                            layout_wifi_gps_data.setBackgroundColor(getResources().getColor(R.color.yellowtransparent));
+                    } else {
+                        if (layout_wifi_gps_data != null)
+                            layout_wifi_gps_data.setBackgroundColor(getResources().getColor(R.color.yellowtransparent));
+                    }*/
 
                 }
+
             }
         }
     }
