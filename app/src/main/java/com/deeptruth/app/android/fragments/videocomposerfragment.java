@@ -1948,7 +1948,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         return;
                     }
 
-                    visiblewarningcontrollers();
+                //    visiblewarningcontrollers();
 
                     if(madapterclick != null){
                         madapterclick.onItemClicked(null,7);
