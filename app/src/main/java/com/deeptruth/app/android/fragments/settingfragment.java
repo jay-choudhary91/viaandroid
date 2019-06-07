@@ -1,15 +1,9 @@
 package com.deeptruth.app.android.fragments;
 
 
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.akash.RevealSwitch;
 import com.akash.revealswitch.OnToggleListener;
@@ -29,6 +22,7 @@ import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.xdata;
+import com.suke.widget.SwitchButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,9 +40,11 @@ public class settingfragment extends basefragment implements View.OnClickListene
     @BindView(R.id.setting_webview)
     WebView webview;
     @BindView(R.id.togglebutton)
-    RevealSwitch togglebutton;
-    @BindView(R.id.production_dev_toogle)
-    RevealSwitch production_dev_toogle;
+    com.suke.widget.SwitchButton togglebutton;
+    @BindView(R.id.production_toogle)
+    com.suke.widget.SwitchButton production_toogle;
+    @BindView(R.id.dev_toogle)
+    com.suke.widget.SwitchButton dev_toogle;
     @BindView(R.id.ll_rootlayout)
     LinearLayout llrootlayout;
     int navigationbarheight = 0;
@@ -60,6 +56,8 @@ public class settingfragment extends basefragment implements View.OnClickListene
     TextView  txt_privacy;
     @BindView(R.id.txt_upgrade)
     TextView txt_upgrade;
+
+    boolean toogleonoff = false;
 
     public settingfragment() {
         // Required empty public constructor
@@ -81,45 +79,81 @@ public class settingfragment extends basefragment implements View.OnClickListene
             title.setText(common.getapplicationname(getActivity()) + "\n" +getResources().getString(R.string.appversion) +common.getapplicationversion(getActivity()));
 
             if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes")){
-                togglebutton.setEnable(true);
+                togglebutton.setChecked(true);
                 togglebutton.setVisibility(View.VISIBLE);
 
             }else{
-                togglebutton.setEnable(false);
+                togglebutton.setChecked(false);
                 togglebutton.setVisibility(View.VISIBLE);
             }
 
           navigationbarheight =  common.getnavigationbarheight();
           setlayoutmargin();
 
-            if(xdata.getinstance().getSetting(config.enableproductionanddev).isEmpty() || xdata.getinstance().getSetting(config.enableproductionanddev).equalsIgnoreCase("yes")){
-                production_dev_toogle.setEnable(true);
-                production_dev_toogle.setVisibility(View.VISIBLE);
+
+            if(xdata.getinstance().getSetting(config.enableproduction).isEmpty() || xdata.getinstance().getSetting(config.enableproduction).equalsIgnoreCase("yes")){
+                production_toogle.setChecked(true);
+                production_toogle.setVisibility(View.VISIBLE);
+                dev_toogle.setChecked(false);
+                dev_toogle.setVisibility(View.VISIBLE);
 
             }else{
-                production_dev_toogle.setEnable(false);
-                production_dev_toogle.setVisibility(View.VISIBLE);
+                production_toogle.setChecked(false);
+                production_toogle.setVisibility(View.VISIBLE);
+                dev_toogle.setChecked(true);
+                dev_toogle.setVisibility(View.VISIBLE);
+            }
+            if(xdata.getinstance().getSetting(config.enableproduction).isEmpty() || xdata.getinstance().getSetting(config.enableproduction).equalsIgnoreCase("yes")){
+                dev_toogle.setChecked(true);
+                dev_toogle.setVisibility(View.VISIBLE);
+                production_toogle.setChecked(false);
+                production_toogle.setVisibility(View.VISIBLE);
+
+            }else{
+                dev_toogle.setChecked(false);
+                dev_toogle.setVisibility(View.VISIBLE);
+                production_toogle.setChecked(true);
+                production_toogle.setVisibility(View.VISIBLE);
             }
 
-            togglebutton.setToggleListener(new OnToggleListener() {
+            togglebutton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
                 @Override
-                public void onToggle(boolean isChecked) {
+                public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                     if(isChecked){
                         xdata.getinstance().saveSetting(config.enableintroscreen,"yes");
                     }else{
                         xdata.getinstance().saveSetting(config.enableintroscreen,"no");
                     }
-                 }
+                }
             });
 
-            production_dev_toogle.setToggleListener(new OnToggleListener() {
+            production_toogle.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
                 @Override
-                public void onToggle(boolean isChecked) {
+                public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                     if(isChecked){
-                        xdata.getinstance().saveSetting(config.enableproductionanddev,"yes");
+                        xdata.getinstance().saveSetting(config.enableproduction,"yes");
+                        xdata.getinstance().saveSetting(config.enabledev,"no");
+                        toogleonoff = true;
                     }else{
-                        xdata.getinstance().saveSetting(config.enableproductionanddev,"no");
+                        xdata.getinstance().saveSetting(config.enableproduction,"no");
+                        xdata.getinstance().saveSetting(config.enabledev,"yes");
+                        toogleonoff = false;
                     }
+                    dev_toogle.setChecked(!isChecked);
+                }
+            });
+
+            dev_toogle.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                    if(isChecked){
+                        xdata.getinstance().saveSetting(config.enableproduction,"no");
+                        xdata.getinstance().saveSetting(config.enabledev,"yes");
+                    }else{
+                        xdata.getinstance().saveSetting(config.enableproduction,"yes");
+                        xdata.getinstance().saveSetting(config.enabledev,"no");
+                    }
+                    production_toogle.setChecked(!isChecked);
                 }
             });
 

@@ -218,7 +218,8 @@ public class config {
     public static final String no_title="No Title";
     public static final String istravelleddistanceneeded="istravelleddistanceneeded";
     public static final String enableintroscreen="enableintroscreen";
-    public static final String enableproductionanddev="enableproductionanddev";
+    public static final String enableproduction="enableproduction";
+    public static final String enabledev="enabledev";
     public static final String authtoken="authtoken";
     public static final String usernameemailaddress="usernameemailaddress";
     public static final String reset_authtoken="reset_authtoken";

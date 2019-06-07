@@ -56,6 +56,29 @@
 
                 <include layout="@layout/action_bar_composer"></include>
 
+
+        </com.github.rongi.rotate_layout.layout.RotateLayout>
+
+        <com.github.rongi.rotate_layout.layout.RotateLayout
+            android:id="@+id/layout_no_gps_wifi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:layout_below="@+id/header_container"
+            app:angle="0">
+
+            <LinearLayout
+                android:id="@+id/layout_wifi_gps_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:visibility="visible"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_check_gps_wifi"></include>
+            </LinearLayout>
+
         </com.github.rongi.rotate_layout.layout.RotateLayout>
 
         <RelativeLayout
