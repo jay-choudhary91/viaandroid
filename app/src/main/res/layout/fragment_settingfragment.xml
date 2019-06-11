@@ -215,7 +215,7 @@
                     android:layout_alignRight="@+id/apptitle"
                     android:layout_alignTop="@+id/apptitle"
                     android:layout_alignParentTop="true"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="1dp"
                     android:gravity="center"
                     android:textColor="@color/wave_color"
                     android:text="TM"

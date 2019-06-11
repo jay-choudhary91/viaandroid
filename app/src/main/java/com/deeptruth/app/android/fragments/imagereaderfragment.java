@@ -194,10 +194,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     LinearLayout layout_item_encryption;
     @BindView(R.id.recycler_encryption)
     RecyclerView recycler_encryption;
-    @BindView(R.id.layout_googlemap)
-    LinearLayout layout_googlemap;
-    @BindView(R.id.googlemap)
-    FrameLayout googlemap;
     @BindView(R.id.attitude_indicator)
     AttitudeIndicator attitudeindicator;
     @BindView(R.id.tab_photoreader)
@@ -594,12 +590,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 break;
             case R.id.img_share_media:
-               /* if(! gethelper().isuserlogin())
-                {
-                    gethelper().redirecttologin();
-                    return;
-                }*/
-
                 img_share_media.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                 {
@@ -686,12 +676,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         img_fullscreen.setVisibility(View.VISIBLE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         layout_mediatype.setVisibility(View.VISIBLE);
-                      //  common.slidetodown(layout_mediatype);
                         gethelper().drawerenabledisable(true);
                     } else {
                         gethelper().updateactionbar(0);
-                        //layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
-                   //     common.slidetoabove(layout_mediatype);
                         gethelper().drawerenabledisable(false);
                         layout_mediatype.setVisibility(View.GONE);
                         img_fullscreen.setVisibility(View.GONE);
@@ -723,28 +710,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }
 
     }
-
-    public void showalertdialog(String message){
-        new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
-                .setTitle("Alert!!")
-                .setMessage(message)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(mcontrollernavigator != null)
-                            mcontrollernavigator.onItemClicked(imageurl,2);
-
-                        gethelper().onBack();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-    }
-
     public void launchbottombarfragment()
     {
         composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
