@@ -196,6 +196,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
             case R.id.txt_logout:
                 xdata.getinstance().saveSetting(config.authtoken,"");
                 txt_username.setText("");
+                txt_logout.setText("");
                 break;
         }
     }
