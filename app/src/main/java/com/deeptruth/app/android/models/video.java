@@ -40,6 +40,7 @@ public class video
     public int unsentcount = 0;
     public int unsentunreceived = 0;
     public ArrayList<String> mediabarcolor=new ArrayList<>();
+    public ArrayList<String> colorsectionsarray=new ArrayList<>();
     public View colorbarview=null;
 
 
@@ -289,6 +290,14 @@ public class video
 
     public void setMediabarcolor(ArrayList<String> mediabarcolor) {
         this.mediabarcolor = mediabarcolor;
+    }
+
+    public ArrayList<String> getColorsectionsarray() {
+        return colorsectionsarray;
+    }
+
+    public void setColorsectionsarray(ArrayList<String> colorsectionsarray) {
+        this.colorsectionsarray = colorsectionsarray;
     }
 
     public String getVideotoken() {

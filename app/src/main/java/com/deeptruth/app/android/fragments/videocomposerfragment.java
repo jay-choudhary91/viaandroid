@@ -79,8 +79,10 @@ import com.deeptruth.app.android.utils.xdata;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.gson.Gson;
 
+
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -330,8 +332,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
-    RelativeLayout layout_bottom,layout_seekbarzoom;
-    int bottomlayoutheight = 0;
+    RelativeLayout layout_bottom,layout_seekbarzoom,layout_mediatype;
+    int bottomlayoutheight = 0,layoutmediatypeheight = 0;
     FrameLayout framecontainer;
     File lastrecordedvideo=null;
     String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "";
@@ -387,6 +389,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     TextView txt_section_network;
     @BindView(R.id.layout_wifi_gps_data)
     LinearLayout layout_wifi_gps_data;
+    @BindView(R.id.ll_actionbarcomposer)
+    LinearLayout ll_actionbarcomposer;
 
     Animation blinkanimation;
     List<String> qualityitemslist=new ArrayList<>();
@@ -452,10 +456,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             keytype=config.prefs_sha_salt;
         }
 
-        layout_bottom.post(new Runnable() {
+        layout_mediatype.post(new Runnable() {
             @Override
             public void run() {
                 bottomlayoutheight=layout_bottom.getHeight();
+                layout_mediatype.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        layoutmediatypeheight = layout_mediatype.getHeight();
+                    }
+                });
             }
         });
 
@@ -486,39 +496,34 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(state == 0)
                 {
                     expandable_layout.setVisibility(View.GONE);
-                    actionbarcomposer.setVisibility(View.VISIBLE);
+                    ll_actionbarcomposer.setVisibility(View.VISIBLE);
                 }
-                else if(state == 3)
-                {
+                else if(state == 3) {
 
-                    if(rotationangle == -90){
-
-                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        lpexpandable.setMargins(0, 0, 0,  0);
-                        expandable_layout.setLayoutParams(lpexpandable);
-
-                    }else if(rotationangle == 90){
-
-                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        lpexpandable.setMargins(0, 0, 0,  0);
-                        expandable_layout.setLayoutParams(lpexpandable);
-
-                    }else{
+                    if (rotationangle == -90) {
 
                         RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        lpexpandable.setMargins(20, 0, 0,  0);
+                        lpexpandable.setMargins(0, 0, 0, 0);
+                        expandable_layout.setLayoutParams(lpexpandable);
+
+                    } else if (rotationangle == 90) {
+
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        lpexpandable.setMargins(0, 0, 0, 0);
+                        expandable_layout.setLayoutParams(lpexpandable);
+
+                    } else {
+
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        lpexpandable.setMargins(20, 0, 0, 0);
                         expandable_layout.setLayoutParams(lpexpandable);
                     }
 
-                    txt_media_low.setVisibility(View.VISIBLE);
-                    txt_media_medium.setVisibility(View.VISIBLE);
-                    txt_media_high.setVisibility(View.VISIBLE);
                 }
-
-                Log.d("ExpandableLayout", "State: " + state);
+                    Log.d("ExpandableLayout", "State: " + state);
             }
         });
 
@@ -639,26 +644,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 RelativeLayout.LayoutParams.MATCH_PARENT);
 
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        //lp.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
                         setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,
                                 0,0,0,null,headercontainer,null,90);
-
-                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                                RelativeLayout.LayoutParams.MATCH_PARENT);
-
-                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, TRUE);
-                        //layoutparams.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
-                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                RelativeLayout.LayoutParams.MATCH_PARENT);
-
-                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        lpexpandable.setMargins(0, 0, 0,  0);
-                        expandable_layout.setLayoutParams(lpexpandable);
-
-                        /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        img_dotmenu.setVisibility(View.GONE);
-                        setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);*/
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -666,14 +653,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),
                                 (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
 
+                    }else{
+                        setbottommargin(headercontainer);
                     }
+
                     gethelper().hidedrawerbutton(true);  // hidden
                 }
                 else if(rotateangle == 90)
                 {
                     if(!isvideorecording)
                     {
-
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.MATCH_PARENT);
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
@@ -681,30 +670,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,
                                 0,0,0,null,headercontainer,null,270);
 
-                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                                RelativeLayout.LayoutParams.MATCH_PARENT);
-                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
-                        //layoutparams.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
-
-                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                RelativeLayout.LayoutParams.MATCH_PARENT);
-                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        lpexpandable.setMargins(0, 0, 0,  0);
-                        expandable_layout.setLayoutParams(lpexpandable);
-
-
-                        /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        img_dotmenu.setVisibility(View.GONE);
-                        setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);*/
-
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),
                                 (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
 
-                        // set validating text to right padding
-
+                    }else{
+                        setbottommargin(headercontainer);
                     }
 
                     if(headercontainer.getAngle() == 90)
@@ -734,15 +706,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         img_dotmenu.setVisibility(View.VISIBLE);
+
                         setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,
                                 (int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),
                                 (int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);
 
-                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                RelativeLayout.LayoutParams.MATCH_PARENT);
+                       /* RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                         lpexpandable.setMargins(20, 0, 0,  0);
-                        expandable_layout.setLayoutParams(lpexpandable);
+                        expandable_layout.setLayoutParams(lpexpandable);*/
 
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -751,7 +724,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,
                                 0,0,0,imgflashon,null,null,0);
                     }
-
                     if(headercontainer.getAngle() == 90)
                     {
                         gethelper().hidedrawerbutton(true);  // hidden
@@ -1209,8 +1181,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(! previewupdated)
                 return;
 
-           /* if(expandable_layout != null && expandable_layout.isExpanded())
-                expendcollpaseview();*/
+            if(expandable_layout != null && expandable_layout.isExpanded())
+                expendcollpaseview();
 
             metadatametricesjson=new JSONArray();
             mediakey ="";
@@ -1393,7 +1365,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
 
             case R.id.txt_media_quality:
-                //expendcollpaseview();
+                expendcollpaseview();
                 break;
 
             case R.id.img_dotmenu:
@@ -1412,7 +1384,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             expandable_layout.setDuration(100);
             expandable_layout.collapse();
             expandable_layout.setVisibility(View.GONE);
-            actionbarcomposer.setVisibility(View.VISIBLE);
+            ll_actionbarcomposer.setVisibility(View.VISIBLE);
         }
         else
         {
@@ -1420,7 +1392,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             expandable_layout.setDuration(100);
             expandable_layout.expand();
             expandable_layout.setVisibility(View.VISIBLE);
-            actionbarcomposer.setVisibility(View.GONE);
+            ll_actionbarcomposer.setVisibility(View.GONE);
         }
     }
 
@@ -1487,12 +1459,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom, RelativeLayout layout_seekbarzoom, FrameLayout framecontainer) {
+    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom,RelativeLayout layout_mediatype, RelativeLayout layout_seekbarzoom, FrameLayout framecontainer) {
         this.autostartvideo = autostartvideo;
         this.madapterclick = madapterclick;
         this.layout_bottom = layout_bottom;
         this.layout_seekbarzoom = layout_seekbarzoom;
         this.framecontainer = framecontainer;
+        this.layout_mediatype = layout_mediatype;
 
     }
 
@@ -1930,7 +1903,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
 
                 if(!isvideorecording){
-                  //  layout_no_gps_wifi.setVisibility(View.VISIBLE);
+                    //layout_no_gps_wifi.setVisibility(View.VISIBLE);
                     layout_wifi_gps_data.setVisibility(View.VISIBLE);
                     actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
@@ -1938,7 +1911,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     setactionbarbackgroundcolor();
                 }else{
                     actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
-                //    layout_no_gps_wifi.setVisibility(View.GONE);
+                    //layout_no_gps_wifi.setVisibility(View.GONE);
                     layout_wifi_gps_data.setVisibility(View.GONE);
                 }
 
@@ -2281,27 +2254,30 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         if(!isvideorecording) {
             String value = "";
-            if(! common.isnetworkconnected(getActivity()))
+            if(common.isnetworkconnected(getActivity()))
             {
                 if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
-                        || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA")
+                        || xdata.getinstance().getSetting(config.CellProvider).trim().equalsIgnoreCase("NA")
                         || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null")
                         || xdata.getinstance().getSetting(config.airplanemode).equals("ON"))
                 {
+
+                    Log.e("nonetwork","nonetwork");
                     txt_section_network.setText(config.TEXT_NETWORK +""+getResources().getString(R.string.no_network));
+                    img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
+
+                }else {
+                    Log.e("connectednetwork",common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
+                    txt_section_network.setText(config.TEXT_NETWORK + "" + common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
                     img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
-
                 }
-            }else {
-                txt_section_network.setText(config.TEXT_NETWORK + "" + common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
-                img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
             }
-
 
             if(xdata.getinstance().getSetting(config.Connectionspeed)!=null && !xdata.getinstance().getSetting(config.Connectionspeed).isEmpty()){
                 if(xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA")){
+                    Log.e("Naconcection","Naconcection");
                     txt_section_data.setText(config.TEXT_DATA+""+xdata.getinstance().getSetting(config.Connectionspeed));
-                    img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
+                    img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
                 }else {
 
                     String[] arrayitem=xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
@@ -2313,7 +2289,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         }else{
                             txt_section_data.setText(config.TEXT_DATA+""+connectionvalue+"Mb/s");
-                            img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
+                            img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
                         }
                     }
                 }
@@ -2395,6 +2371,27 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
 
             }
+        }
+    }
+
+    public void setbottommargin(RotateLayout headercontainer){
+
+        if(headercontainer.getAngle()==0){
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT);
+            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+            setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,headercontainer.getAngle());
+        }else{
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+
+            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+
+            if(headercontainer.getAngle()==90)
+                lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+
+            setdynamiclayout(lp,null,0,0,0,bottomlayoutheight-layoutmediatypeheight,0,
+                    0,0,0,null,headercontainer,null,headercontainer.getAngle());
         }
     }
 }

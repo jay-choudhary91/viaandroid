@@ -1007,7 +1007,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     }while (cursor2.moveToNext());
                                 }
 
-                                for(int i=0;i<colorsectioncount.size();i++)
+                                /*for(int i=0;i<colorsectioncount.size();i++)
                                 {
                                     String item=colorsectioncount.get(i);
                                     if(! item.trim().isEmpty())
@@ -1023,8 +1023,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                             }
                                         }
                                     }
-                                }
-                                videoobject.setColorbarview(layout);
+                                }*/
+                                videoobject.setColorsectionsarray(colorsectioncount);
+                                //videoobject.setColorbarview(layout);
                                 videoobject.setMediabarcolor(arrayList);
                                 videoobject.setValidcount(validcount);
                                 videoobject.setCautioncount(cautioncount);
@@ -1245,36 +1246,51 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             e.printStackTrace();
                         }
 
+                        int sectioncount=0,validcount=0,cautioncount=0,invalidcount=0,unsentcount=0;
+                        String lastcolor="";
+                        ArrayList<String> colorsectioncount=new ArrayList<>();
+                        ArrayList<String> arrayList=new ArrayList<>();
                         Cursor cursor2 = mdbhelper.getmediacolor(localkey);
-                        if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
-                        {
-                            LayoutInflater inflater = LayoutInflater.from(getActivity());
-                            View viewparent = inflater.inflate(R.layout.row_mediacolor, null, false);
-                            LinearLayout layout=(LinearLayout)viewparent.findViewById(R.id.linear_seekbarcolorview);
-                            ArrayList<String> arrayList=new ArrayList<>();
-                            int validcount=0,cautioncount=0,unsentcount=0,invalidcount=0;
+                        if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst()) {
 
-                            do{
-                                String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
+                            do {
+                                String framecolor = cursor2.getString(cursor2.getColumnIndex("color"));
                                 arrayList.add(framecolor);
-                                if(framecolor.equalsIgnoreCase(config.color_green))
+                                if (framecolor.equalsIgnoreCase(config.color_green))
                                     validcount++;
 
-                                if(framecolor.equalsIgnoreCase(config.color_yellow))
+                                if (framecolor.equalsIgnoreCase(config.color_yellow))
                                     cautioncount++;
 
-                                if(framecolor.equalsIgnoreCase(config.color_red))
+                                if (framecolor.equalsIgnoreCase(config.color_red))
                                     invalidcount++;
 
-                                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                                {
-                                    if(framecolor.trim().isEmpty())
+                                if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
+                                    if (framecolor.trim().isEmpty())
                                         unsentcount++;
                                 }
 
-                            }while (cursor2.moveToNext());
+                                sectioncount++;
+                                if (framecolor.trim().isEmpty())
+                                    framecolor = config.color_transparent;
+
+                                if (!lastcolor.equalsIgnoreCase(framecolor)) {
+                                    sectioncount = 0;
+                                    sectioncount++;
+                                    colorsectioncount.add(framecolor + "," + sectioncount);
+                                } else {
+                                    colorsectioncount.set(colorsectioncount.size() - 1, framecolor + "," + sectioncount);
+                                }
+                                lastcolor = framecolor;
+
+                            } while (cursor2.moveToNext());
 
                             if(validcount != arraymediaitemlist.get(i).getValidcount() || cautioncount != arraymediaitemlist.get(i).getCautioncount()
+                                    || unsentcount != arraymediaitemlist.get(i).getUnsentcount()) {
+                                isneedtonotify = true;
+                            }
+
+                            /*if(validcount != arraymediaitemlist.get(i).getValidcount() || cautioncount != arraymediaitemlist.get(i).getCautioncount()
                                     || unsentcount != arraymediaitemlist.get(i).getUnsentcount())
                             {
                                 isneedtonotify=true;
@@ -1297,7 +1313,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     layout.addView(view);
                                 }while (cursor2.moveToNext());
                                 arraymediaitemlist.get(i).setColorbarview(layout);
-                            }
+                            }*/
+                            arraymediaitemlist.get(i).setColorsectionsarray(colorsectioncount);
                             arraymediaitemlist.get(i).setMediabarcolor(arrayList);
                             arraymediaitemlist.get(i).setValidcount(validcount);
                             arraymediaitemlist.get(i).setCautioncount(cautioncount);

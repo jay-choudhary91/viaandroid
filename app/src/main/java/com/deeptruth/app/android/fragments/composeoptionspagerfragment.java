@@ -384,7 +384,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                             }
                             else if(type == 1)
                             {
-                                ActivityCompat.requestPermissions(getActivity(), finalArray, request_permissions);
+                                ActivityCompat.requestPermissions(applicationviavideocomposer.getactivity(), finalArray, request_permissions);
                             }
                         }
                     },array[0]);
@@ -416,7 +416,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 doafterallpermissionsgranted = new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(applicationviavideocomposer.getactivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
                         //gethelper().onBack();
                     }
                 };
@@ -562,7 +562,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                             });
                             animation.start();
 
-                            view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.image_click));
+                            view.startAnimation(AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.image_click));
 
                             if(fragimgcapture != null && (! fragimgcapture.isimagecaptureprocessing))
                                 fragimgcapture.takePicture();
@@ -726,7 +726,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
 
-                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_seekbarzoom,framecontainer);
+                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_mediatype,layout_seekbarzoom,framecontainer);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
                 isfragmentload = true;
             break;
@@ -1041,7 +1041,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(fragvideocomposer != null)
                 fragvideocomposer.changeiconsorientation(rotateangle);
             if(rotateangle == 90 || rotateangle == -90){
-                txt_encrypting.setTextSize(8);
+                txt_encrypting.setTextSize(10);
             }else{
                 txt_encrypting.setTextSize(10);
             }
@@ -1093,7 +1093,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private void makecircle()
     {
         ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius", 30.0f, 200.0f);
-        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
+        Animator shiftAnimation = AnimatorInflater.loadAnimator(applicationviavideocomposer.getactivity(), R.animator.slide_right_down);
         shiftAnimation.setTarget(mParent);
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(300);
@@ -1105,7 +1105,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private void makesquare()
     {
         ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius",100f,10.0f);
-        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_left_up);
+        Animator shiftAnimation = AnimatorInflater.loadAnimator(applicationviavideocomposer.getactivity(), R.animator.slide_left_up);
         shiftAnimation.setTarget(mParent);
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(300);
@@ -1250,7 +1250,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         .transition(GenericTransitionOptions.with(R.anim.fadein)).
                         into(thumbView);
 
-                Animation out = AnimationUtils.loadAnimation(getActivity(),R.anim.fadeoutanimation);
+                Animation out = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(),R.anim.fadeoutanimation);
                 expandedImageView.startAnimation(out);
                 expandedImageView.setVisibility(View.INVISIBLE);
                 currentAnimator = null;
@@ -1263,7 +1263,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         .transition(GenericTransitionOptions.with(R.anim.fadein)).
                         into(thumbView);
 
-                Animation out = AnimationUtils.loadAnimation(getActivity(),R.anim.fadeoutanimation);
+                Animation out = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(),R.anim.fadeoutanimation);
                 expandedImageView.startAnimation(out);
                 expandedImageView.setVisibility(View.INVISIBLE);
             }
