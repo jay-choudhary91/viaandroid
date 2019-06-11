@@ -193,7 +193,9 @@
             android:layout_below="@+id/layout_logout"
             android:id="@+id/layout_apptitle"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp">
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/apptitle"
@@ -205,7 +207,7 @@
                 android:paddingRight="@dimen/margin_5dp"
                 android:text=""
                 android:textColor="@color/grey_xxx"
-                app:fontType="OpenSans_Regular"/>
+                app:fontType="Comfortaa-Regular"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_trademark"
@@ -233,7 +235,7 @@
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 android:layout_weight="3"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginLeft="@dimen/margin_left"
                 android:layout_marginRight="@dimen/margin_right"
                 android:layout_marginBottom="@dimen/bottom_margin"
