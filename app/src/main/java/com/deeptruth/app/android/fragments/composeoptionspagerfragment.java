@@ -726,7 +726,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
 
-                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_seekbarzoom,framecontainer);
+                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_mediatype,layout_seekbarzoom,framecontainer);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
                 isfragmentload = true;
             break;
@@ -1250,7 +1250,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         .transition(GenericTransitionOptions.with(R.anim.fadein)).
                         into(thumbView);
 
-                Animation out = AnimationUtils.loadAnimation(getActivity(),R.anim.fadeoutanimation);
+                Animation out = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(),R.anim.fadeoutanimation);
                 expandedImageView.startAnimation(out);
                 expandedImageView.setVisibility(View.INVISIBLE);
                 currentAnimator = null;

@@ -21,7 +21,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="left|center_vertical"
+            android:gravity="center|center_vertical"
             android:orientation="horizontal">
 
             <ImageView
@@ -46,7 +46,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="left|center_vertical"
+            android:gravity="center|center_vertical"
             android:orientation="horizontal">
 
             <ImageView
@@ -71,7 +71,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="left|center_vertical"
+            android:gravity="center|center_vertical"
             android:layout_toRightOf="@id/layout_connection"
             android:layout_gravity="center">
 
