@@ -6,5 +6,6 @@
 
     <include layout="@layout/mediametainfo" />
 
-    <include layout="@layout/mediadrawerencryptioninfo" />
+    <include layout="@layout/mediadrawerencryptioninfo"
+        android:visibility="gone"/>
 </RelativeLayout>

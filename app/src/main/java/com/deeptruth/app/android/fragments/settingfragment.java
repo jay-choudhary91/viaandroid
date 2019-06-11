@@ -56,6 +56,10 @@ public class settingfragment extends basefragment implements View.OnClickListene
     TextView  txt_privacy;
     @BindView(R.id.txt_upgrade)
     TextView txt_upgrade;
+    @BindView(R.id.txt_logout)
+    TextView txt_logout;
+    @BindView(R.id.txt_username)
+    TextView txt_username;
 
     boolean toogleonoff = false;
 
@@ -74,6 +78,14 @@ public class settingfragment extends basefragment implements View.OnClickListene
             txt_upgrade.setText(getResources().getString(R.string.upgrade));
             txt_privacy.setText(getResources().getString(R.string.privacy));
             txt_help.setText(getResources().getString(R.string.faq));
+            txt_logout.setText(getResources().getString(R.string.logout));
+
+            if(gethelper().isuserlogin()){
+                if(!xdata.getinstance().getSetting(config.clientemail).isEmpty())
+                 txt_username.setText(xdata.getinstance().getSetting(config.clientemail));
+            }else{
+                txt_username.setText("");
+            }
 
 
             title.setText(common.getapplicationname(getActivity()) + "\n" +getResources().getString(R.string.appversion) +common.getapplicationversion(getActivity()));

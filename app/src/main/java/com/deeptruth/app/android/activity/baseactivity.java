@@ -549,11 +549,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             txt_share_btn4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*if(!isuserlogin())
-                    {
-                        callloginscreen();
-                        return;
-                    }*/
 
                     if (subdialogshare != null && subdialogshare.isShowing())
                         subdialogshare.dismiss();

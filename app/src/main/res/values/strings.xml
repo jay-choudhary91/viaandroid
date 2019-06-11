@@ -51,7 +51,7 @@
     <string name="metrichash">Meta Hash:</string>
     <string name="deeptruth">deeptruth</string>
     <string name="proof_of_the_truth">Proof of the Truth</string>
-    <string name="appversion">Version:</string>
+    <string name="appversion">Version: </string>
 
 
     <string name="record_now">RECORD NOW</string>
@@ -180,6 +180,7 @@
     <string name="upgrade">Upgrade</string>
     <string name="privacy">Privacy</string>
     <string name="faq">FAQ/Help</string>
+    <string name="logout">Logout</string>
     <string name="deeptruth_small">deeptruth</string>
     <string name="mymedia">MyMedia</string>
     <string name="my_settings">Settings</string>

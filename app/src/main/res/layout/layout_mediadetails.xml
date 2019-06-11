@@ -508,11 +508,8 @@
         android:layout_below="@+id/tab_layout"
         android:scrollbars="none"
         android:nestedScrollingEnabled="true"
-        android:visibility="gone"
-        >
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:visibility="gone">
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:id="@+id/metainfocontainer"
@@ -520,10 +517,6 @@
                 android:layout_height="match_parent">
 
             </FrameLayout>
-            <include layout="@layout/layout_metainfo"
-                android:visibility="gone"/>
-        </RelativeLayout>
-
     </ScrollView>
 
 

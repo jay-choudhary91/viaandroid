@@ -175,6 +175,9 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
                                 if(object.has(config.authtoken))
                                     xdata.getinstance().saveSetting(config.authtoken,object.getString(config.authtoken));
 
+                                if(object.has(config.clientemail))
+                                    xdata.getinstance().saveSetting(config.clientemail,object.getString(config.clientemail));
+
                                 login();
                             }
                             else

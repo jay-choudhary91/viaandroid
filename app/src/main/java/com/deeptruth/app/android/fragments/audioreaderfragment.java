@@ -68,7 +68,6 @@ import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.wavevisualizer;
-import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
@@ -191,12 +190,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.layout_photoreader)
     RelativeLayout layout_photoreader;
 
-    @BindView(R.id.layout_googlemap)
-    LinearLayout layout_googlemap;
-    @BindView(R.id.googlemap)
-    FrameLayout googlemap;
-    @BindView(R.id.img_niddle)
-    ImageView img_niddle;
     @BindView(R.id.img_audiowave)
     ImageView img_audiowave;
     @BindView(R.id.img_verified)
@@ -205,9 +198,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     RelativeLayout audiorootview;
     @BindView(R.id.layout_dtls)
     LinearLayout layout_dtls;
-    GoogleMap mgooglemap;
-    @BindView(R.id.attitude_indicator)
-    AttitudeIndicator attitudeindicator;
     @BindView(R.id.audio_downwordarrow)
     ImageView audio_downwordarrow;
     @BindView(R.id.rl_audio_downwordarrow)
@@ -224,10 +214,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     LinearLayout layout_item_encryption;
     @BindView(R.id.recycler_encryption)
     RecyclerView recycler_encryption;
-    @BindView(R.id.layoutcompass)
-    ImageView layoutcompass;
-    @BindView(R.id.layoutmetainfo)
-    RelativeLayout layoutmetainfo;
     @BindView(R.id.metainfocontainer)
     FrameLayout metainfocontainer;
 
@@ -272,8 +258,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     int rootviewheight , audioviewheight,audiodetailviewheight ,mediatypeheight ,bottompadding;
     int footerheight;
     encryptiondataadapter encryptionadapter;
-    @BindView(R.id.img_phone_orientation)
-    ImageView img_phone_orientation;
     int navigationbarheight = 0;
     GestureDetector detector;
     public boolean islastdragarrow = false,isplaypauswebtnshow = false;
@@ -431,7 +415,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         layout_item_encryption.setVisibility(View.GONE);
         metainfocontainer.setVisibility(VISIBLE);
-        layoutmetainfo.setVisibility(View.GONE);
         recycler_encryption.setVisibility(View.VISIBLE);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
@@ -504,22 +487,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             img_camera.setVisibility(View.VISIBLE);
         }
 
-        try {
-            img_phone_orientation.setImageResource(R.drawable.img_phoneorientation);
-            /*DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                    , R.color.uvv_gray));*/
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        try {
-            DrawableCompat.setTint(layoutcompass.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                    , R.color.uvv_gray));
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
         mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             private int mProgressAtStartTracking=0;
             private final int SENSITIVITY=0;
@@ -558,7 +525,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
 
                     gethelper().setcurrentmediaposition(currentprocessframe);
-                    if(fragmentmetainformation != null)
+                     if(fragmentmetainformation != null)
                         fragmentmetainformation.setcurrentmediaposition(currentprocessframe);
                 }
             }
@@ -635,8 +602,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             }
         });
-
-      //  edt_medianotes.setEnabled(false);
         edt_medianotes.setClickable(false);
         edt_medianotes.setFocusable(false);
         edt_medianotes.setFocusableInTouchMode(false);
@@ -673,8 +638,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString());
 
                     editabletext();
-                    //   edt_medianame.setKeyListener(null);
-                    //   }
                 }
             }
         });
@@ -715,7 +678,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         txtslotmedia.setOnClickListener(this);
         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
 
-        loadmap();
         setmetriceshashesdata();
     }
 
@@ -784,12 +746,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 break;
             case R.id.img_share_media:
-                /*if(! gethelper().isuserlogin())
-                {
-                    gethelper().redirecttologin();
-                    return;
-                }*/
-
                 img_share_media.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                 {
@@ -923,27 +879,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                     }
                 }
-
-                    /*if(layout_audiodetails.getVisibility()==View.GONE){
-                        if(player.isPlaying() && gethelper().isdraweropened()){
-                            pause();
-                            img_pause.setImageResource(R.drawable.ic_play);
-                        }else if(player.isPlaying() && !gethelper().isdraweropened()){
-                            pause();
-                            playpausebutton.setImageResource(R.drawable.play_btn);
-                            playpausebutton.setVisibility(View.VISIBLE);
-                            img_fullscreen.setVisibility(View.VISIBLE);
-                            gethelper().updateactionbar(1);
-                            layout_scrubberview.setVisibility(View.GONE);
-                            img_pause.setVisibility(View.GONE);
-                            img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                            gethelper().setdrawerheightonfullscreen(0);
-                        }else if(!player.isPlaying() && gethelper().isdraweropened()){
-                            start();
-                            img_pause.setImageResource(R.drawable.ic_pause);
-                        }
-                    }*/
-
                 break;
             case R.id.audio_downwordarrow:
 
@@ -2018,86 +1953,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-    private void loadmap() {
-        SupportMapFragment mapFragment = new SupportMapFragment();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.googlemap, mapFragment).commit();
-
-        if (mgooglemap == null) {
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap googleMap) {
-                    setMap(googleMap);
-                }
-            });
-        } else {
-            setMap(mgooglemap);
-        }
-    }
-
-    private void setMap(GoogleMap googleMap) {
-        this.mgooglemap = googleMap;
-        this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-    }
-
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
-
-   /* private void populateUserCurrentLocation(final LatLng location) {
-        // DeviceUser user = DeviceUserManager.getInstance().getUser();
-        if (mgooglemap == null)
-            return;
-
-        googlemap.setVisibility(View.VISIBLE);
-
-        mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
-        if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-        } else
-        {
-            mgooglemap.setMyLocationEnabled(false);
-            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
-            ismapzoomed=true;
-        }
-    }*/
-
-
-    public void drawmappoints(LatLng latlng)
-    {
-        if(mgooglemap != null)
-        {
-            try {
-                mgooglemap.addMarker(new MarkerOptions()
-                        .position(latlng)
-                        .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),R.drawable.rounded_gps_dot)));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-    public void rotatecompass(int degree)
-    {
-        RotateAnimation ra = new RotateAnimation(
-                currentDegree,
-                -degree,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f);
-
-        // how long the animation will take place
-        ra.setDuration(210);
-        ra.setFillAfter(true);
-        img_niddle.startAnimation(ra);
-        currentDegree = -degree;
-    }
 
     public void updatemediainfo(String transactionid,String medianame,String medianotes)
     {
@@ -2200,8 +2056,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         xdata.getinstance().saveSetting(config.latency,latency);
         gethelper().setdatacomposing(false);
-        if(fragmentmetainformation != null)
-            fragmentmetainformation.setdatacomposing(false);
     }
 
     public void recenterplaypause()

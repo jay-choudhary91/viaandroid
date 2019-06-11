@@ -218,12 +218,10 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
                 holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
 
-            if(arrayList != null && arrayList.size() > 0 && mediaobject.getColorbarview() != null )
+            if(arrayList != null && arrayList.size() > 0)
             {
                 holder.layout_colorbar.setVisibility(View.VISIBLE);
                 try {
-                    if(mediaobject.getColorbarview().getParent() != null)
-                        ((ViewGroup)mediaobject.getColorbarview().getParent()).removeView(mediaobject.getColorbarview());
 
                     holder.linearseekbarcolorview.removeAllViews();
                 }catch (Exception e)
@@ -231,7 +229,25 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                     e.printStackTrace();
                 }
                 holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
-                holder.linearseekbarcolorview.addView(mediaobject.getColorbarview());
+                if(mediaobject.getColorsectionsarray() != null && mediaobject.getColorsectionsarray().size() > 0)
+                {
+                    for(int i=0;i<mediaobject.getColorsectionsarray().size();i++)
+                    {
+                        String item=mediaobject.getColorsectionsarray().get(i);
+                        if(! item.trim().isEmpty())
+                        {
+                            String[] itemarray=item.split(",");
+                            if(itemarray.length >= 2)
+                            {
+                                String writecolor=itemarray[0];
+                                String weight=itemarray[1];
+                                if(! weight.trim().isEmpty())
+                                    holder.linearseekbarcolorview.addView(getmediaseekbarbackgroundview(weight,writecolor));
+                            }
+                        }
+                    }
+                }
+
                 holder.linearseekbarcolorview.invalidate();
                 holder.linearseekbarcolorview.requestLayout();
 
@@ -419,6 +435,23 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             binderHelper.bind(holder.root_view,""+position);
         }*/
 
+    }
+
+    public View getmediaseekbarbackgroundview(String weight,String color)
+    {
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,Float.parseFloat(weight));
+        View view = new View(applicationviavideocomposer.getactivity());
+        view.setLayoutParams(param);
+        if((! color.isEmpty()))
+        {
+            view.setBackgroundColor(Color.parseColor(common.getcolorbystring(color)));
+        }
+        else
+        {
+            view.setBackgroundColor(Color.parseColor(config.color_code_white_transparent));
+        }
+        return view;
     }
 
     public void notifyitems(ArrayList<video> arrayvideolist)
