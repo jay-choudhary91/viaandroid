@@ -99,18 +99,33 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                     holder.progressmediasync.setVisibility(View.GONE);
                 }
 
-                if(arrayList != null && arrayList.size() > 0 && mediaobject.getColorbarview() != null ) {
+                if(arrayList != null && arrayList.size() > 0) {
                     holder.linearseekbarcolorview.setVisibility(View.VISIBLE);
                     holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
                     try {
-                        if (mediaobject.getColorbarview().getParent() != null)
-                            ((ViewGroup) mediaobject.getColorbarview().getParent()).removeView(mediaobject.getColorbarview());
 
                         holder.linearseekbarcolorview.removeAllViews();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    holder.linearseekbarcolorview.addView(mediaobject.getColorbarview());
+                    if(mediaobject.getColorsectionsarray() != null && mediaobject.getColorsectionsarray().size() > 0)
+                    {
+                        for(int i=0;i<mediaobject.getColorsectionsarray().size();i++)
+                        {
+                            String item=mediaobject.getColorsectionsarray().get(i);
+                            if(! item.trim().isEmpty())
+                            {
+                                String[] itemarray=item.split(",");
+                                if(itemarray.length >= 2)
+                                {
+                                    String writecolor=itemarray[0];
+                                    String weight=itemarray[1];
+                                    if(! weight.trim().isEmpty())
+                                        holder.linearseekbarcolorview.addView(getmediaseekbarbackgroundview(weight,writecolor));
+                                }
+                            }
+                        }
+                    }
                     holder.linearseekbarcolorview.invalidate();
                     holder.linearseekbarcolorview.requestLayout();
                 }
@@ -118,27 +133,6 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 {
                     holder.linearseekbarcolorview.setVisibility(View.INVISIBLE);
                 }
-            }
-
-
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-            {
-
-                /*ArrayList<String> arrayList = mediaobject.getMediabarcolor();
-                if(arrayList != null && arrayList.size() > 0 )
-                {
-                    holder.linearseekbarcolorview.setVisibility(View.VISIBLE);
-                    setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
-                }
-                else
-                {
-                    holder.linearseekbarcolorview.setVisibility(View.INVISIBLE);
-                }*/
-            }
-            else
-            {
-               // holder.linearseekbarcolorview.setVisibility(View.GONE);
-               // holder.tv_mediaduration.setPadding(0,0,20,5);
             }
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
@@ -205,6 +199,23 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             holder.rl_row_media.setVisibility(View.GONE);
             holder.img_mediathumbnail.getLayoutParams().height = 0;
         }
+    }
+
+    public View getmediaseekbarbackgroundview(String weight,String color)
+    {
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,Float.parseFloat(weight));
+        View view = new View(applicationviavideocomposer.getactivity());
+        view.setLayoutParams(param);
+        if((! color.isEmpty()))
+        {
+            view.setBackgroundColor(Color.parseColor(common.getcolorbystring(color)));
+        }
+        else
+        {
+            view.setBackgroundColor(Color.parseColor(config.color_code_white_transparent));
+        }
+        return view;
     }
 
     public void notifyitems(ArrayList<video> arrayvideolist)
