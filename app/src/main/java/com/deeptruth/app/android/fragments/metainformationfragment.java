@@ -23,6 +23,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -509,6 +511,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                     && (! value.equalsIgnoreCase("null")))
                             {
                                 int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
+                                rotatecompass(degree);
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),
                                         "\n"+metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), tvheading);
                             }
@@ -1862,5 +1865,21 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         text_encryption.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         text_encryption.setVisibility(View.GONE);
         layout_encryptioninfo.setVisibility(View.GONE);
+    }
+
+    public void rotatecompass(int degree)
+    {
+        RotateAnimation ra = new RotateAnimation(
+                currentDegree,
+                -degree,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        // how long the animation will take place
+        ra.setDuration(210);
+        ra.setFillAfter(true);
+        img_niddle.startAnimation(ra);
+        currentDegree = -degree;
     }
 }

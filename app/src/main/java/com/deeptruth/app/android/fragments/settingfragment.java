@@ -78,11 +78,13 @@ public class settingfragment extends basefragment implements View.OnClickListene
             txt_upgrade.setText(getResources().getString(R.string.upgrade));
             txt_privacy.setText(getResources().getString(R.string.privacy));
             txt_help.setText(getResources().getString(R.string.faq));
-            txt_logout.setText(getResources().getString(R.string.logout));
+            txt_logout.setOnClickListener(this);
 
             if(gethelper().isuserlogin()){
                 if(!xdata.getinstance().getSetting(config.clientemail).isEmpty())
-                 txt_username.setText(xdata.getinstance().getSetting(config.clientemail));
+                    txt_logout.setText(getResources().getString(R.string.logout));
+                    txt_logout.setVisibility(View.VISIBLE);
+                    txt_username.setText(xdata.getinstance().getSetting(config.clientemail));
             }else{
                 txt_username.setText("");
             }
@@ -190,6 +192,11 @@ public class settingfragment extends basefragment implements View.OnClickListene
           case R.id.img_arrow_back:
             gethelper().onBack();
             break;
+
+            case R.id.txt_logout:
+                xdata.getinstance().saveSetting(config.authtoken,"");
+                txt_username.setText("");
+                break;
         }
     }
 
