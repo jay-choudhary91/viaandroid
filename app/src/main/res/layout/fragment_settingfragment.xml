@@ -165,7 +165,32 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_below="@+id/layout_mediatype"
-            android:gravity="center"
+            android:id="@+id/layout_logout"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content">
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_createaccount"
+                android:text=""
+                android:textColor="@color/dark_blue_solid_a"
+                app:fontType="Comfortaa-Regular"
+                android:id="@+id/txt_username"
+                android:layout_alignParentLeft="true"
+                />
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_createaccount"
+                android:text=""
+                android:textColor="@color/dark_blue_solid_a"
+                app:fontType="Comfortaa-Regular"
+                android:id="@+id/txt_logout"
+                android:layout_alignParentRight="true"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_below="@+id/layout_logout"
             android:id="@+id/layout_apptitle"
             android:layout_height="wrap_content"
             android:layout_margin="10dp">
@@ -174,33 +199,28 @@
                 android:id="@+id/apptitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="left"
+                android:layout_centerInParent="true"
                 android:textSize="15sp"
+                android:paddingRight="@dimen/margin_5dp"
                 android:text=""
                 android:textColor="@color/grey_xxx"
-                android:layout_centerVertical="true"
-                app:fontType="Comfortaa-Regular"/>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_toRightOf="@+id/apptitle"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="1dp"
-                android:layout_height="wrap_content">
+                app:fontType="OpenSans_Regular"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_trademark"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
-                    android:gravity="center"
                     android:textSize="3sp"
+                    android:layout_alignRight="@+id/apptitle"
+                    android:layout_alignTop="@+id/apptitle"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
                     android:textColor="@color/wave_color"
                     android:text="TM"
-                    android:layout_centerInParent="true"
                     android:background="@drawable/circle_trademark_background"
-                    android:layout_centerVertical="true"
                     app:fontType="Comfortaa-Regular"/>
-            </RelativeLayout>
 
         </RelativeLayout>
 

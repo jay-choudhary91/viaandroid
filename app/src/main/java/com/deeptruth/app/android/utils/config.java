@@ -221,6 +221,7 @@ public class config {
     public static final String enableproduction="enableproduction";
     public static final String enabledev="enabledev";
     public static final String authtoken="authtoken";
+    public static final String clientemail="clientemail";
     public static final String usernameemailaddress="usernameemailaddress";
     public static final String reset_authtoken="reset_authtoken";
     public static final String clientid="clientid";

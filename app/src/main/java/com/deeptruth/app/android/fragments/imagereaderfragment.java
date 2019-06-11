@@ -188,8 +188,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     TextView txt_section_validating_secondary;
     @BindView(R.id.img_scanover)
     ImageView img_scanover;
-    @BindView(R.id.img_phone_orientation)
-    ImageView img_phone_orientation;
     @BindView(R.id.layoutcompass)
     ImageView layoutcompass;
     @BindView(R.id.layout_item_encryption)
@@ -214,10 +212,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private int flingactionmindstvac,footerheight,navigationbarheight = 0,targetheight=0,previousheight=0,bottompadding,
             rootviewheight, devidedheight,actionbarheight;
-    private GoogleMap mgooglemap;
-    private customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
-            tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
-            tvmemoryusage,tvbluetooth,tvlocaltime,tvstoragefree,tvlanguage,tvuptime,tvbattery,tvdegree;
     private String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",
             screenheight = "",screenwidth = "",lastsavedangle="",mediatoken="";
     private float currentDegree = 0f;
@@ -369,15 +363,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
 
         tab_photoreader.setOnClickListener(this);
-
-        try {
-            img_phone_orientation.setImageResource(R.drawable.img_phoneorientation);
-            /*DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                    , R.color.uvv_gray));*/
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
         try {
             DrawableCompat.setTint(layoutcompass.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
                     , R.color.uvv_gray));
@@ -418,40 +403,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 Log.e("previousheight",""+previousheight);
             }
         });
-
-        tvaddress=rootview.findViewById(R.id.txt_address);
-        tvdegree=rootview.findViewById(R.id.txt_degree);
-        tvlatitude=rootview.findViewById(R.id.txt_latitude);
-        tvlongitude=rootview.findViewById(R.id.txt_longitude);
-        tvaltitude=rootview.findViewById(R.id.txt_altitude);
-        tvspeed=rootview.findViewById(R.id.txt_speed);
-        tvheading=rootview.findViewById(R.id.txt_heading);
-        tvtraveled=rootview.findViewById(R.id.txt_traveled);
-        tvxaxis=rootview.findViewById(R.id.txt_xaxis);
-        tvyaxis=rootview.findViewById(R.id.txt_yaxis);
-        tvzaxis=rootview.findViewById(R.id.txt_zaxis);
-        tvphone=rootview.findViewById(R.id.txt_phone);
-        tvnetwork=rootview.findViewById(R.id.txt_network);
-        tvconnection=rootview.findViewById(R.id.txt_connection);
-        tvversion=rootview.findViewById(R.id.txt_version);
-        tvwifi=rootview.findViewById(R.id.txt_wifi);
-        tvgpsaccuracy=rootview.findViewById(R.id.txt_gps_accuracy);
-        tvscreen=rootview.findViewById(R.id.txt_screen);
-        tvcountry=rootview.findViewById(R.id.txt_country);
-        tvcpuusage=rootview.findViewById(R.id.txt_cpu_usage);
-        tvbrightness=rootview.findViewById(R.id.txt_brightness);
-        tvtimezone=rootview.findViewById(R.id.txt_timezone);
-        tvmemoryusage=rootview.findViewById(R.id.txt_memoryusage);
-        tvbluetooth=rootview.findViewById(R.id.txt_bluetooth);
-        tvlocaltime=rootview.findViewById(R.id.txt_localtime);
-        tvstoragefree=rootview.findViewById(R.id.txt_storagefree);
-        tvlanguage=rootview.findViewById(R.id.txt_language);
-        tvuptime=rootview.findViewById(R.id.txt_uptime);
-        tvbattery=rootview.findViewById(R.id.txt_battery);
-        layout_googlemap= rootview.findViewById(R.id.layout_googlemap);
-        googlemap= rootview.findViewById(R.id.googlemap);
-        img_niddle= rootview.findViewById(R.id.img_niddle);
-
 
         String blockchainid = " ";
         String blockid = " ";
@@ -569,7 +520,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         });
 
         fetchmetadatafromdb();
-        loadmap();
         gethelper().setcurrentmediaposition(0);
     }
 
@@ -1051,25 +1001,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                         common.setspannable(getResources().getString(R.string.mediahash), " " + metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
                                         common.setspannable(getResources().getString(R.string.metrichash), " " + metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
-                                        for (int j = 0; j < metricItemArraylist.size(); j++) {
-                                            selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
-                                                    metricItemArraylist.get(j).getMetricTrackValue();
-
-                                            common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                                    metricItemArraylist.get(j).getMetricTrackValue(), true);
-
-                                            setmetadatavalue(metricItemArraylist.get(j));
-
-                                        }
-
-                                        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                                                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                                        {
-                                            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                                            drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                                        }
-
-
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -1272,216 +1203,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         valueAnimator.setInterpolator(new DecelerateInterpolator());
         valueAnimator.setDuration(duration);
         valueAnimator.start();
-    }
-
-
-    public void setmetadatavalue(metricmodel metricItemArraylist){
-
-        if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
-            latitude = metricItemArraylist.getMetricTrackValue();
-            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA"))){
-                common.setspannable(getResources().getString(R.string.latitude),"\n"+common.convertlatitude(Double.parseDouble(latitude)), tvlatitude);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
-            longitude = metricItemArraylist.getMetricTrackValue();
-            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA"))){
-                common.setspannable(getResources().getString(R.string.longitude),"\n"+common.convertlongitude(Double.parseDouble(longitude)), tvlongitude);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)){
-            common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
-            common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
-            if((! metricItemArraylist.getMetricTrackValue().trim().isEmpty()) && (! metricItemArraylist.getMetricTrackValue().
-                    equalsIgnoreCase("NA")))
-            {
-                common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
-                common.setdrawabledata(getResources().getString(R.string.heading),"\n"+ (metricItemArraylist.getMetricTrackValue()+"°"), tvheading);
-            }else{
-                common.setdrawabledata("","NA" , tvdegree);
-                common.setspannable(getResources().getString(R.string.heading),"\n"+"NA", tvheading);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.distancetravelled))){
-            common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.address))){
-            common.setspannable("",metricItemArraylist.getMetricTrackValue(), tvaddress);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_x)){
-            common.setspannable(getResources().getString(R.string.xaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvxaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_y)){
-            common.setspannable(getResources().getString(R.string.yaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvyaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_z)){
-            common.setspannable(getResources().getString(R.string.zaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvzaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("phonetype")){
-            common.setspannable(getResources().getString(R.string.phone),"\n"+metricItemArraylist.getMetricTrackValue(), tvphone);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("carrier")){
-            common.setspannable(getResources().getString(R.string.network),"\n"+metricItemArraylist.getMetricTrackValue(), tvnetwork);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed")){
-            common.setspannable(getResources().getString(R.string.connection),"\n"+metricItemArraylist.getMetricTrackValue(), tvconnection);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("osversion")){
-            common.setspannable(getResources().getString(R.string.version),"\n"+metricItemArraylist.getMetricTrackValue(), tvversion);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
-            common.setspannable(getResources().getString(R.string.wifi),"\n"+metricItemArraylist.getMetricTrackValue(), tvwifi);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
-            if(!metricItemArraylist.getMetricTrackValue().equals("NA")){
-                DecimalFormat precision=new DecimalFormat("0.0");
-                double gpsaccuracy = Double.parseDouble(metricItemArraylist.getMetricTrackValue());
-                common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+precision.format(gpsaccuracy) + " feet", tvgpsaccuracy);
-            }else{
-                common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+metricItemArraylist.getMetricTrackValue(), tvgpsaccuracy);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
-            screenwidth = metricItemArraylist.getMetricTrackValue();
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenheight")){
-            screenheight = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("country")){
-            common.setspannable(getResources().getString(R.string.country),"\n"+metricItemArraylist.getMetricTrackValue(), tvcountry);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("cpuusagesystem")){
-            common.setspannable(getResources().getString(R.string.cpuusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvcpuusage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("brightness")){
-            common.setspannable(getResources().getString(R.string.brightness),"\n"+metricItemArraylist.getMetricTrackValue(), tvbrightness);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("timezone")){
-            common.setspannable(getResources().getString(R.string.timezone),"\n"+metricItemArraylist.getMetricTrackValue(), tvtimezone);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("memoryusage")){
-            common.setspannable(getResources().getString(R.string.memoryusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvmemoryusage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("bluetoothonoff")){
-            common.setspannable(getResources().getString(R.string.bluetooth),"\n"+metricItemArraylist.getMetricTrackValue(), tvbluetooth);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicetime")){
-            common.setspannable(getResources().getString(R.string.localtime),"\n"+metricItemArraylist.getMetricTrackValue(), tvlocaltime);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("freespace")){
-            common.setspannable(getResources().getString(R.string.storagefree),"\n"+metricItemArraylist.getMetricTrackValue(), tvstoragefree);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")){
-            common.setspannable(getResources().getString(R.string.language),"\n"+metricItemArraylist.getMetricTrackValue(), tvlanguage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("systemuptime")){
-            common.setspannable(getResources().getString(R.string.uptime),"\n"+metricItemArraylist.getMetricTrackValue(), tvuptime);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("battery")){
-            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("deviceorientation")){
-
-            String strdegree=xdata.getinstance().getSetting(config.orientation);
-            if(! strdegree.equals(lastsavedangle))
-            {
-                if(strdegree.equalsIgnoreCase("NA"))
-                    strdegree="0.0";
-
-                int degree = Math.abs((int)Double.parseDouble(strdegree));
-                rotatecompass(degree);
-            }
-            lastsavedangle=strdegree;
-        }
-        else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("attitude"))
-        {
-            if(! metricItemArraylist.getMetricTrackValue().trim().isEmpty())
-            {
-                try {
-                    float[] adjustedRotationMatrix = new float[9];
-                    String attitude = metricItemArraylist.getMetricTrackValue().toString();
-                    String[] attitudearray = attitude.split(",");
-                    for(int i = 0 ;i< attitudearray.length;i++){
-                        //float val = (float) (Math.random() * 20) + 3;
-                        adjustedRotationMatrix[i]=Float.parseFloat(attitudearray[i]);
-                    }
-                    // Transform rotation matrix into azimuth/pitch/roll
-                    float[] orientation = new float[3];
-                    SensorManager.getOrientation(adjustedRotationMatrix, orientation);
-
-                    float pitch = orientation[1] * -57;
-                    float roll = orientation[2] * -57;
-                    if(img_phone_orientation != null)
-                        img_phone_orientation.setRotation(roll);
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-    }
-
-    private void loadmap() {
-        SupportMapFragment mapFragment = new SupportMapFragment();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.googlemap, mapFragment).commit();
-
-        if (mgooglemap == null) {
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap googleMap) {
-                    setMap(googleMap);
-                }
-            });
-        } else {
-            setMap(mgooglemap);
-        }
-    }
-
-    private void setMap(GoogleMap googleMap) {
-        this.mgooglemap = googleMap;
-        this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        selectedmetrices = selectedmetrices + "\n";
-
-        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-        {
-            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-            drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-        }
-    }
-
-    //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
-
-    private void populateUserCurrentLocation(final LatLng location) {
-        // DeviceUser user = DeviceUserManager.getInstance().getUser();
-        if (mgooglemap == null)
-            return;
-
-        googlemap.setVisibility(View.VISIBLE);
-        mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
-        if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-        } else {
-            mgooglemap.setMyLocationEnabled(false);
-            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
-        }
-    }
-
-
-    public void drawmappoints(LatLng latlng)
-    {
-        if(mgooglemap != null)
-        {
-            try {
-                mgooglemap.addMarker(new MarkerOptions()
-                        .position(latlng)
-                        .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),R.drawable.rounded_gps_dot)));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-    public void rotatecompass(int degree)
-    {
-        RotateAnimation ra = new RotateAnimation(
-                currentDegree,
-                -degree,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f);
-
-        // how long the animation will take place
-        ra.setDuration(210);
-        ra.setFillAfter(true);
-        img_niddle.startAnimation(ra);
-        currentDegree = -degree;
     }
 
     public void updatemediainfo(String transactionid,String medianame,String medianotes)
