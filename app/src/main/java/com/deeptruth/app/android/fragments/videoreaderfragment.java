@@ -87,7 +87,6 @@ import com.deeptruth.app.android.models.frame;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.videomodel;
-import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.ScrubberLinearLayoutManagerWithSmoothScroller;
@@ -241,64 +240,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.rl_videotextureview)
     RelativeLayout rl_videotextureview;
 
-    @BindView(R.id.txt_address)
-    customfonttextview tvaddress;
-    @BindView(R.id.txt_degree)
-    customfonttextview tvdegree;
-    @BindView(R.id.txt_latitude)
-    customfonttextview tvlatitude;
-    @BindView(R.id.txt_longitude)
-    customfonttextview tvlongitude;
-    @BindView(R.id.txt_altitude)
-    customfonttextview tvaltitude;
-    @BindView(R.id.txt_speed)
-    customfonttextview tvspeed;
-    @BindView(R.id.txt_heading)
-    customfonttextview tvheading;
-    @BindView(R.id.txt_traveled)
-    customfonttextview tvtraveled;
-    @BindView(R.id.txt_xaxis)
-    customfonttextview tvxaxis;
-    @BindView(R.id.txt_yaxis)
-    customfonttextview tvyaxis;
-    @BindView(R.id.txt_zaxis)
-    customfonttextview tvzaxis;
-    @BindView(R.id.txt_phone)
-    customfonttextview tvphone;
-    @BindView(R.id.txt_network)
-    customfonttextview tvnetwork;
-    @BindView(R.id.txt_connection)
-    customfonttextview tvconnection;
-    @BindView(R.id.txt_version)
-    customfonttextview tvversion;
-    @BindView(R.id.txt_wifi)
-    customfonttextview tvwifi;
-    @BindView(R.id.txt_gps_accuracy)
-    customfonttextview tvgpsaccuracy;
-    @BindView(R.id.txt_screen)
-    customfonttextview tvscreen;
-    @BindView(R.id.txt_country)
-    customfonttextview tvcountry;
-    @BindView(R.id.txt_cpu_usage)
-    customfonttextview tvcpuusage;
-    @BindView(R.id.txt_brightness)
-    customfonttextview tvbrightness;
-    @BindView(R.id.txt_timezone)
-    customfonttextview tvtimezone;
-    @BindView(R.id.txt_memoryusage)
-    customfonttextview tvmemoryusage;
-    @BindView(R.id.txt_bluetooth)
-    customfonttextview tvbluetooth;
-    @BindView(R.id.txt_localtime)
-    customfonttextview tvlocaltime;
-    @BindView(R.id.txt_storagefree)
-    customfonttextview tvstoragefree;
-    @BindView(R.id.txt_language)
-    customfonttextview tvlanguage;
-    @BindView(R.id.txt_uptime)
-    customfonttextview tvuptime;
-    @BindView(R.id.txt_battery)
-    customfonttextview tvbattery;
     @BindView(R.id.btn_playpause)
     circularImageview playpausebutton;
     @BindView(R.id.txt_title_actionbarcomposer)
@@ -308,12 +249,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.layout_progressline)
     RelativeLayout layout_progressline;
 
-    @BindView(R.id.layout_googlemap)
-    LinearLayout layout_googlemap;
-    @BindView(R.id.googlemap)
-    FrameLayout googlemap;
-    @BindView(R.id.img_niddle)
-    ImageView img_niddle;
     @BindView(R.id.img_pause)
     ImageView imgpause;
     @BindView(R.id.scrub_layout)
@@ -337,10 +272,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     RelativeLayout layoutpause;
     @BindView(R.id.img_scanover)
     ImageView img_scanover;
-    @BindView(R.id.attitude_indicator)
-    AttitudeIndicator attitudeindicator;
-    @BindView(R.id.img_phone_orientation)
-    ImageView img_phone_orientation;
     @BindView(R.id.videotextureview)
     TextureView videotextureview;
     @BindView(R.id.video_container)
@@ -348,8 +279,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.scrubberverticalbar)
     RelativeLayout scurraberverticalbar;
     boolean istrue = false ;
-    @BindView(R.id.layoutcompass)
-    ImageView layoutcompass;
     @BindView(R.id.video_downwordarrow)
     ImageView videodownwordarrow;
     @BindView(R.id.img_colapseicon)
@@ -359,9 +288,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     RelativeLayout rl_video_downwordarrow;
     @BindView(R.id.metainfocontainer)
     FrameLayout metainfocontainer;
-    @BindView(R.id.layoutmetainfo)
-    RelativeLayout layoutmetainfo;
-
 
     int footerheight ,bottompadding ,actionbarheight;
     int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0, lastrotatedangle =-1,videorotatedangle=-1;
@@ -464,7 +390,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     loadviewdata();
                     // mOrientation = new Orientation(applicationviavideocomposer.getactivity());
                     gethelper().setwindowfitxy(true);
-                    loadmap();
 
                     img_fullscreen.getPaddingBottom();
                     RelativeLayout.LayoutParams imageview  = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -473,7 +398,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             });
 
             metainfocontainer.setVisibility(View.VISIBLE);
-            layoutmetainfo.setVisibility(View.GONE);
 
             recyview_frames.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -599,7 +523,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }else{
                             islastdragarrow =false;
                             //videodownwordarrow.setImageResource(R.drawable.handle_down_arrow);
-
                         }
                     }
                     return false;
@@ -705,30 +628,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
-        //recyview_frames.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
-        //recyview_frames.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
-
         encryptionadapter = new encryptiondataadapter(encryptionarraylist, applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
 
-        /*layout_mediatype.post(new Runnable() {
-            @Override
-            public void run() {
-                headerheight = layout_mediatype.getHeight();
-                headerwidth = layout_mediatype.getWidth();
-                bottompadding = layout_videodetails.getPaddingBottom();
-            }
-        });
-
-        layoutbackgroundcontroller.post(new Runnable() {
-            @Override
-            public void run() {
-                scrubberheight = layoutbackgroundcontroller.getHeight();
-                scrubberwidth = layoutbackgroundcontroller.getWidth();
-            }
-        });*/
-
-    //   viewheight = Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
 
         mediaseekbar.setPadding(0,0,0,0);
 
@@ -838,24 +740,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 maxincreasevideoduration=player.getCurrentPosition();
             }
         });
-
-        try {
-            img_phone_orientation.setImageResource(R.drawable.img_phoneorientation);
-            /*DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                    , R.color.uvv_gray));*/
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        try {
-            DrawableCompat.setTint(layoutcompass.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                    , R.color.uvv_gray));
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
 
         recyview_frames.post(new Runnable() {
             @Override
@@ -1203,9 +1087,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
              setheadermargin(common.getviewheight(actionbarpercentage),common.getviewheight(scrubberviewpercentage),0,false);
              flag = false;
          }
-
-
-        //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
     }
 
     public void recenterplaypause(final int topheight, final int visibility)
@@ -1332,57 +1213,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         changedevicemode(devicemodelandscaperight);
                     }
                 }
-
-                /*if(lastrotatedangle == 90 && common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
-                {
-                    if(common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
-                        common.changedevicemode(3);
-                }*/
-
-                /*if(lastrotatedangle == -90 && common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
-                {
-                    if(common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
-                        common.changedevicemode(false);
-                }
-                else if(lastrotatedangle == 0 && (! common.isdeviceinportraitmode(applicationviavideocomposer.getactivity())))
-                {
-                    if(! common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
-                        common.changedevicemode(true);
-                }
-                else if(lastrotatedangle == 90 && common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
-                {
-                    if(common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
-                        common.changedevicemode(false);
-                }*/
-
-                /*int w = common.getScreenWidth(applicationviavideocomposer.getactivity());
-                int h = common.getScreenHeight(applicationviavideocomposer.getactivity());
-
-                if(lastrotatedangle == 0)
-                {
-                    h = common.getScreenWidth(applicationviavideocomposer.getactivity());
-                    w = common.getScreenHeight(applicationviavideocomposer.getactivity());
-                }
-
-                rl_videotextureview.setRotation(lastrotatedangle);
-                rl_videotextureview.setTranslationX((w - h) / 2);
-                rl_videotextureview.setTranslationY((h - w) / 2);
-
-                ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) rl_videotextureview.getLayoutParams();
-                lp.height = w;
-                lp.width = h;
-                rl_videotextureview.requestLayout();
-
-                RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(h,w);
-                videotextureview.setLayoutParams(paramsvideotextureview);
-
-                videotextureview.post(new Runnable() {
-                    @Override
-                    public void run() {
-
-
-                    }
-                });*/
             }
         }
     }
@@ -1405,12 +1235,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
         }
-        /*videotextureview.post(new Runnable() {
-            @Override
-            public void run() {
-                setplaypuasebtnondrag(videotextureview.getHeight());
-            }
-        });*/
     }
 
     public class setonClick implements View.OnClickListener
@@ -1763,27 +1587,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         rl_video_downwordarrow.setVisibility(View.VISIBLE);
     }
 
-    public void showalertdialog(String message){
-        new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
-            .setTitle("Alert!!")
-            .setMessage(message)
-            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if(mcontrollernavigator != null)
-                        mcontrollernavigator.onItemClicked(mediafilepath,2);
-
-                    gethelper().onBack();
-                }
-            })
-            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).show();
-    }
-
     public void launchbottombarfragment()
     {
         composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
@@ -1952,12 +1755,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                                         DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
                                         String localTime = datee.format(enddate);
-                                        Log.e("localtime",localTime);
 
-                                    /* String startformatteddate=formatted.format(startdate);
-                                        String endformatteddate=formatted.format(enddate);
-                                        final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
-                                        final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);*/
                                         txt_starttime.setText(common.parsedateformat(startdate) + " "+ common.parsetimeformat(startdate) +" " +  localTime);
                                         txt_duration.setText(mediaduration);
                                         txt_endtime.setText(common.parsedateformat(enddate) + " "+ common.parsetimeformat(enddate) +" " +  localTime);
@@ -2333,32 +2131,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                       ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
 
-                      for (int j = 0; j < metricItemArraylist.size(); j++)
-                      {
-                          common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                  metricItemArraylist.get(j).getMetricTrackValue(), true);
-
-                          if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
-                              latitude = metricItemArraylist.get(j).getMetricTrackValue();
-                          }else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
-                              longitude = metricItemArraylist.get(j).getMetricTrackValue();
-                          }
-
-                          if (scrollview_meta.getVisibility() == View.VISIBLE)
-                              setmetadatavalue(metricItemArraylist.get(j));
-                      }
-
-                      if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                              (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                          drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-
-                      if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                              (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                      {
-                          if(! ismapzoomed)
-                              populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-
-                      }
                   }
                 if(currentprocessframe > 0 && metricmainarraylist.size() > 0 && currentprocessframe < metricmainarraylist.size())
                 {
@@ -2479,251 +2251,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             position = 0;
         }
     }
-
-    public void expand(final View v, int targetHeight) {
-
-        int prevHeight  = v.getHeight();
-
-        v.setVisibility(View.VISIBLE);
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(prevHeight, targetHeight);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                v.getLayoutParams().height = (int) animation.getAnimatedValue();
-                v.requestLayout();
-            }
-        });
-        valueAnimator.setInterpolator(new DecelerateInterpolator());
-        valueAnimator.setDuration(100);
-        valueAnimator.start();
-    }
-
-    public void collapse(final View v, int targetHeight) {
-
-        int prevHeight  = v.getHeight();
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(prevHeight, targetHeight);
-        valueAnimator.setInterpolator(new DecelerateInterpolator());
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                v.getLayoutParams().height = (int) animation.getAnimatedValue();
-                v.requestLayout();
-            }
-        });
-        valueAnimator.setInterpolator(new DecelerateInterpolator());
-        valueAnimator.setDuration(100);
-        valueAnimator.start();
-    }
-
-    public void setmetadatavalue(metricmodel metricItemArraylist){
-
-        if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
-            latitude = metricItemArraylist.getMetricTrackValue();
-            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA"))){
-                common.setspannable(getResources().getString(R.string.latitude),"\n"+common.convertlatitude(Double.parseDouble(latitude)), tvlatitude);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
-            longitude = metricItemArraylist.getMetricTrackValue();
-            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA"))){
-                common.setspannable(getResources().getString(R.string.longitude),"\n"+common.convertlongitude(Double.parseDouble(longitude)), tvlongitude);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)){
-            common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
-            common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
-            if((! metricItemArraylist.getMetricTrackValue().trim().isEmpty()) && (! metricItemArraylist.getMetricTrackValue().
-                    equalsIgnoreCase("NA")))
-            {
-                common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
-                common.setdrawabledata(getResources().getString(R.string.heading),"\n"+ (metricItemArraylist.getMetricTrackValue()+"°"), tvheading);
-            }else{
-                common.setdrawabledata("","NA" , tvdegree);
-                common.setspannable(getResources().getString(R.string.heading),"\n"+"NA", tvheading);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.distancetravelled))){
-            common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.address))){
-            common.setspannable("",metricItemArraylist.getMetricTrackValue(), tvaddress);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_x)){
-            common.setspannable(getResources().getString(R.string.xaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvxaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_y)){
-            common.setspannable(getResources().getString(R.string.yaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvyaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_z)){
-            common.setspannable(getResources().getString(R.string.zaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvzaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("phonetype")){
-            common.setspannable(getResources().getString(R.string.phone),"\n"+metricItemArraylist.getMetricTrackValue(), tvphone);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("carrier")){
-            common.setspannable(getResources().getString(R.string.network),"\n"+metricItemArraylist.getMetricTrackValue(), tvnetwork);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed")){
-            common.setspannable(getResources().getString(R.string.connection),"\n"+metricItemArraylist.getMetricTrackValue(), tvconnection);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("osversion")){
-            common.setspannable(getResources().getString(R.string.version),"\n"+metricItemArraylist.getMetricTrackValue(), tvversion);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
-            common.setspannable(getResources().getString(R.string.wifi),"\n"+metricItemArraylist.getMetricTrackValue(), tvwifi);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
-            if(!metricItemArraylist.getMetricTrackValue().equals("NA")){
-                DecimalFormat precision=new DecimalFormat("0.0");
-                double gpsaccuracy = Double.parseDouble(metricItemArraylist.getMetricTrackValue());
-                common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+precision.format(gpsaccuracy) + " feet", tvgpsaccuracy);
-            }else{
-                common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+metricItemArraylist.getMetricTrackValue(), tvgpsaccuracy);
-            }
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
-            screenwidth = metricItemArraylist.getMetricTrackValue();
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenheight")){
-            screenheight = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("country")){
-            common.setspannable(getResources().getString(R.string.country),"\n"+metricItemArraylist.getMetricTrackValue(), tvcountry);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("cpuusagesystem")){
-            common.setspannable(getResources().getString(R.string.cpuusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvcpuusage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("brightness")){
-            common.setspannable(getResources().getString(R.string.brightness),"\n"+metricItemArraylist.getMetricTrackValue(), tvbrightness);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("timezone")){
-            common.setspannable(getResources().getString(R.string.timezone),"\n"+metricItemArraylist.getMetricTrackValue(), tvtimezone);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("memoryusage")){
-            common.setspannable(getResources().getString(R.string.memoryusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvmemoryusage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("bluetoothonoff")){
-            common.setspannable(getResources().getString(R.string.bluetooth),"\n"+metricItemArraylist.getMetricTrackValue(), tvbluetooth);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicetime")){
-            common.setspannable(getResources().getString(R.string.localtime),"\n"+metricItemArraylist.getMetricTrackValue(), tvlocaltime);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("freespace")){
-            common.setspannable(getResources().getString(R.string.storagefree),"\n"+metricItemArraylist.getMetricTrackValue(), tvstoragefree);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")){
-            common.setspannable(getResources().getString(R.string.language),"\n"+metricItemArraylist.getMetricTrackValue(), tvlanguage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("systemuptime")){
-            common.setspannable(getResources().getString(R.string.uptime),"\n"+metricItemArraylist.getMetricTrackValue(), tvuptime);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("battery")){
-            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("deviceorientation")){
-
-            String strdegree=xdata.getinstance().getSetting(config.orientation);
-            if(! strdegree.equals(lastsavedangle))
-            {
-                if(strdegree.equalsIgnoreCase("NA"))
-                    strdegree="0.0";
-
-                int degree = Math.abs((int)Double.parseDouble(strdegree));
-                rotatecompass(degree);
-            }
-            lastsavedangle=strdegree;
-        }
-        else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("attitude"))
-        {
-            if(! metricItemArraylist.getMetricTrackValue().trim().isEmpty())
-            {
-                try {
-                    float[] adjustedRotationMatrix = new float[9];
-                    String attitude = metricItemArraylist.getMetricTrackValue().toString();
-                    Log.e("attitude ",attitude);
-                    if((! attitude.trim().isEmpty()) && (! attitude.equalsIgnoreCase("NA"))
-                            && (! attitude.equalsIgnoreCase("null")))
-                    {
-                        String[] attitudearray = attitude.split(",");
-                        for(int i = 0 ;i< attitudearray.length;i++){
-                            //float val = (float) (Math.random() * 20) + 3;
-                            adjustedRotationMatrix[i]=Float.parseFloat(attitudearray[i]);
-                        }
-                        // Transform rotation matrix into azimuth/pitch/roll
-                        float[] orientation = new float[3];
-                        SensorManager.getOrientation(adjustedRotationMatrix, orientation);
-
-                        float pitch = orientation[1] * -57;
-                        float roll = orientation[2] * -57;
-                        if(img_phone_orientation != null)
-                            img_phone_orientation.setRotation(roll);
-                    }
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-    }
-
-    private void loadmap() {
-        SupportMapFragment mapFragment = new SupportMapFragment();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.googlemap, mapFragment).commit();
-
-        if (mgooglemap == null) {
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap googleMap) {
-                    setMap(googleMap);
-                }
-            });
-        } else {
-            setMap(mgooglemap);
-        }
-    }
-
-    private void setMap(GoogleMap googleMap) {
-        this.mgooglemap = googleMap;
-        this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-
-    }
-
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
-
-    private void populateUserCurrentLocation(final LatLng location) {
-        // DeviceUser user = DeviceUserManager.getInstance().getUser();
-
-        if (mgooglemap == null)
-            return;
-
-        googlemap.setVisibility(View.VISIBLE);
-
-        mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
-        if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-        } else {
-            mgooglemap.setMyLocationEnabled(false);
-            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
-            ismapzoomed=true;
-        }
-    }
-
-
-    public void drawmappoints(LatLng latlng)
-    {
-        if(mgooglemap != null)
-        {
-            try {
-                mgooglemap.addMarker(new MarkerOptions()
-                        .position(latlng)
-                        .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),R.drawable.rounded_gps_dot)));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-    public void rotatecompass(int degree)
-    {
-        RotateAnimation ra = new RotateAnimation(
-                currentDegree,
-                -degree,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f);
-
-        // how long the animation will take place
-        ra.setDuration(210);
-        ra.setFillAfter(true);
-        img_niddle.startAnimation(ra);
-        currentDegree = -degree;
-    }
 
     public void updatemediainfo(String transactionid,String medianame,String medianotes)
     {
@@ -3433,15 +2961,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void getcontrollerheight(){
-       /* layoutbackgroundcontroller.post(new Runnable() {
-            @Override
-            public void run() {
-                int controllerheight = layoutbackgroundcontroller.getHeight();
-                Log.e("controllerheight",""+controllerheight + "controllerheight" +common.getpercentage(controllerheight));
-
-
-            }
-        });*/
         gethelper().setdrawerheightonfullscreen(common.getviewheight(controllerheightpercentage));
     }
 
@@ -3452,14 +2971,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void getpausebtnheight(){
-       /* layoutpause.post(new Runnable() {
-            @Override
-            public void run() {
-                layoutpauseheight= layoutpause.getHeight();
-                Log.e("pauseheight",""+layoutpauseheight + "percentageheight" +common.getpercentage(layoutpauseheight));
-                setbottomimgview();
-            }
-        });*/
         layoutpauseheight = common.getviewheight(pauselayoutpercentage);
         setbottomimgview();
     }

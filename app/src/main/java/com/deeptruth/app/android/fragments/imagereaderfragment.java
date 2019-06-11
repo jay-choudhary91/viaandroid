@@ -188,20 +188,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     TextView txt_section_validating_secondary;
     @BindView(R.id.img_scanover)
     ImageView img_scanover;
-    @BindView(R.id.layoutcompass)
-    ImageView layoutcompass;
     @BindView(R.id.layout_item_encryption)
     LinearLayout layout_item_encryption;
     @BindView(R.id.recycler_encryption)
     RecyclerView recycler_encryption;
-    @BindView(R.id.attitude_indicator)
-    AttitudeIndicator attitudeindicator;
     @BindView(R.id.tab_photoreader)
     ImageView tab_photoreader;
     @BindView(R.id.metainfocontainer)
     FrameLayout metainfocontainer;
-    @BindView(R.id.layoutmetainfo)
-    RelativeLayout layoutmetainfo;
     metainformationfragment fragmentmetainformation;
 
     private String imageurl = null,selectedmetrices = "";
@@ -211,7 +205,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",
             screenheight = "",screenwidth = "",lastsavedangle="",mediatoken="";
     private float currentDegree = 0f;
-    private ImageView img_niddle;
     private adapteritemclick mcontrollernavigator;
     private BroadcastReceiver getmetadatabroadcastreceiver;
     private TranslateAnimation validationbaranimation;
@@ -330,7 +323,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 setupimagedata();
                 metainfocontainer.setVisibility(View.VISIBLE);
-                layoutmetainfo.setVisibility(View.GONE);
             }
         });
         gethelper().drawerenabledisable(false);
@@ -359,14 +351,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
 
         tab_photoreader.setOnClickListener(this);
-        try {
-            DrawableCompat.setTint(layoutcompass.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                    , R.color.uvv_gray));
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
 
         //tabs_detail
         txtslotmedia.setText(getResources().getString(R.string.photo));
