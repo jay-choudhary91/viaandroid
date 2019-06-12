@@ -1,28 +1,21 @@
 package com.deeptruth.app.android.fragments;
 
-import android.Manifest;
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
-import android.hardware.SensorManager;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,7 +27,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,7 +34,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -56,8 +47,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -98,15 +87,8 @@ import com.deeptruth.app.android.utils.simpledivideritemdecoration;
 import com.deeptruth.app.android.utils.videocontrollerview;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.videotrimmer.utils.backgroundexecutor;
-import com.deeptruth.app.android.views.customfonttextview;
 import com.deeptruth.app.android.views.customseekbar;
 import com.github.mikephil.charting.utils.Utils;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -116,7 +98,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -289,21 +270,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.metainfocontainer)
     FrameLayout metainfocontainer;
 
-    int footerheight ,bottompadding ,actionbarheight;
-    int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0, lastrotatedangle =-1,videorotatedangle=-1;
+    int footerheight=0;
+    int lastrotatedangle =-1,videorotatedangle=-1;
     boolean flag = true;
-    boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
     int scrubberviewpercentage = 10, actionbarpercentage = 8,controllerheightpercentage = 23,pauselayoutpercentage = 7;
-    int navigationbarpercentage = 6;
-    GoogleMap mgooglemap;
     Surface surfacetexture = null;
 
 
-    public boolean ismediaplayer = false,islastdragarrow = false,isvalidatingbarshow = false;
-    String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            lastsavedangle="",mediatoken="";
-    private float currentDegree = 0f;
-    private BroadcastReceiver getmetadatabroadcastreceiver;
+    public boolean islastdragarrow = false;
+    String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",mediatoken="",sync_date="";
     int targetheight=0,previousheight=0,targetwidth=0,previouswidth=0, previouswidthpercentage=0,scrubberviewwidth=0;
     private Handler hdlr = new Handler();
     StringBuilder mFormatBuilder;
@@ -321,25 +296,18 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     private ArrayList<videomodel> mvideoframes =new ArrayList<>();
     private ArrayList<videomodel> mallframes =new ArrayList<>();
     private ArrayList<frame> mbitmaplist =new ArrayList<>();
-    private ArrayList<videomodel> mhashesitems =new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private ArrayList<arraycontainer> encryptionarraylist = new ArrayList<>();
     boolean runmethod = false;
-    public boolean isvideocompleted=false,ismapzoomed=false,isfragmentstopped=false;
+    public boolean isvideocompleted=false,isfragmentstopped=false;
     public int flingactionmindstvac;
     private long currentmediaduration =0;
     private int videostarttime =0, endtime =0;
-    private int position=0,devicemodeportrait=0,devicemodereverseportrait=2,devicemodelandscapeleft=1,
+    private int devicemodeportrait=0,devicemodereverseportrait=2,devicemodelandscapeleft=1,
             devicemodelandscaperight=3;
-    String latency = "";
-    int mheightview = 0;
-    int viewheight = 0;
+    int mheightview = 0,updatemetaattempt=0;
     int navigationbarheight = 0;
     GestureDetector detector;
-    Visualizer visualizer;
-
-    private float videoheight, videowidth;
-
     arraycontainer arraycontainerformetric =null;
     adapteritemclick mcontrollernavigator;
     int currentprocessframe=0;
@@ -351,7 +319,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     boolean isplaypauswebtnshow = false;
     int layoutpauseheight = 0;
     metainformationfragment fragmentmetainformation;
-
+    folderdirectoryspinneradapter folderspinneradapter;
     boolean isplaying = false;
 
     @Override
@@ -369,7 +337,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             txt_section_validating_secondary.setVisibility(View.INVISIBLE);
             //setheadermargin();
             navigationbarheight =  common.getnavigationbarheight();
-            Log.e("navigationbarheight",""+navigationbarheight + "navigationbarheight" +common.getpercentage(navigationbarheight));
 
             setfooterlayout();
             gethelper().setdatacomposing(false);
@@ -471,8 +438,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                             setheadermargin(common.getviewheight(actionbarpercentage),scrubberheightgesture,finalvideotextureviewheight,true);
 
-                            Log.e("down bottom layout=",""+layout_videodetails.getLayoutParams().height);
-
                             float bottomlayoutheight = layout_videodetails.getLayoutParams().height - e2.getY();
                             layout_videodetails.getLayoutParams().height = (int) bottomlayoutheight;
                             layout_videodetails.requestLayout();
@@ -509,8 +474,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             int scrubberheightgesture =  common.getviewheight(scrubberviewpercentage) -50;
 
                             setheadermargin(common.getviewheight(actionbarpercentage),scrubberheightgesture,finalvideotextureviewheight,true);
-
-                            Log.e("increseheight botmlyut=",""+layout_videodetails.getLayoutParams().height);
 
                             if(layout_videodetails.getLayoutParams().height > 0){
 
@@ -662,10 +625,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         mediaseekbar.setThumbOffset(-1);
 
         final RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mediaseekbar.getLayoutParams();
-        final int leftmargin=lp.leftMargin;
         mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            private int mProgressAtStartTracking=0;
-            private final int SENSITIVITY=0;
             @Override
             public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
                    int processframe = 0,scrubberprogress = 0;
@@ -673,9 +633,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                    if (progresspercentage > 0)
                        processframe = (int) (metricmainarraylist.size() * progresspercentage) / 100;
-
-                   Log.e("metricmainarraylist",""+metricmainarraylist.size());
-                   Log.e("progresspercentage",""+progresspercentage);
 
                    if (progresspercentage > 0)
                        scrubberprogress = (int) (mbitmaplist.size() * progresspercentage) / 100;
@@ -701,9 +658,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                            encryptionarraylist.set(0,arraycontainerformetric);
                            encryptionadapter.notifyDataSetChanged();
                        }
-
-                       /*if (encryptionadapter != null && recycler_encryption != null)
-                               recycler_encryption.smoothScrollToPosition(processframe);*/
 
                        if (recyview_frames != null && recyview_frames != null)
                                recyview_frames.smoothScrollToPosition(scrubberprogress);
@@ -731,7 +685,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                mProgressAtStartTracking = seekBar.getProgress();
             }
 
             @Override
@@ -982,33 +935,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         });
     }
 
-
-    public void fadeoutcontrollers()
-    {
-        txt_section_validating_secondary.setAlpha(1f);
-        txt_section_validating_secondary.animate().alpha(0f).setDuration(1000).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-    }
-
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
         super.initviews(parent, savedInstanceState);
@@ -1081,8 +1007,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     @Override
     public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
-        videowidth = width;
-        videoheight = height;
          if(flag){
              setheadermargin(common.getviewheight(actionbarpercentage),common.getviewheight(scrubberviewpercentage),0,false);
              flag = false;
@@ -1345,7 +1269,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
 
                 case R.id.videotextureview:
-                    Log.e("ontouch","ontouch");
 
                     if(layout_videodetails.getVisibility()==View.GONE)  // Full screen view
                     {
@@ -1498,7 +1421,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
 
                 case R.id.layout_dtls:
-                    Log.e("ontouch","ontouchscrollview");
                     if(layout_halfscrnimg.getVisibility() == View.GONE){
                         layout_halfscrnimg.setVisibility(View.VISIBLE);
                         removeheadermargin();
@@ -1632,9 +1554,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
              img_fullscreen.setImageResource(R.drawable.ic_info_mode);
              layoutbackgroundcontroller.setVisibility(View.VISIBLE);
              layoutpause.setVisibility(View.VISIBLE);
-
         }
-        Log.e("onrestart","onrestart");
     }
 
     @Override
@@ -1655,15 +1575,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             player.release();
             player=null;
         }
-        Log.e("ondestroy","ondestroy");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         pause();
-       /* if(visualizer != null)
-            visualizer.release();*/
 
         progressdialog.dismisswaitdialog();
         if(validationbaranimation != null)
@@ -1681,7 +1598,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             mOrientation.startListening(this);
 
         isfragmentstopped=false;
-        Log.e("onresume","onresume");
 
         if(validationbaranimation != null)
             img_scanover.startAnimation(validationbaranimation);
@@ -1690,10 +1606,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void onStart() {
         super.onStart();
-        registerbroadcastreciver();
     }
 
-    public void fetchmetadatafromdb() {
+    public void getmediastartinfo() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -1720,6 +1635,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
                             mediaduration =  "" + cur.getString(cur.getColumnIndex("mediaduration"));
                             mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+                            sync_date = "" + cur.getString(cur.getColumnIndex("sync_date"));
 
                         }while(cur.moveToNext());
                     }
@@ -1729,9 +1645,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         final String finalMediacompleteddate = mediastartdevicedate;
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
-                            public void run() {
+                            public void run()
+                            {
                                 try {
-                                    SimpleDateFormat formatted = null;
                                     Date startdate = null;
                                     if(finalMediacompleteddate.contains("T"))
                                     {
@@ -1743,7 +1659,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                                         startdate = format.parse(finalMediacompleteddate);
                                     }
-
                                     Calendar calendar = Calendar.getInstance();
                                     calendar.setTime(startdate);
                                     if(player != null)
@@ -1751,92 +1666,26 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                         int increaseseconds=player.getDuration()/1000;
                                         calendar.add(Calendar.SECOND, increaseseconds);
                                         Date enddate = calendar.getTime();
-                                        formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a ",Locale.ENGLISH);
-
                                         DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
                                         String localTime = datee.format(enddate);
-
-                                        txt_starttime.setText(common.parsedateformat(startdate) + " "+ common.parsetimeformat(startdate) +" " +  localTime);
+                                        txt_starttime.setText(common.parsedateformat(startdate) + " "+ common.parsetimeformat(startdate) +" " +
+                                                localTime);
                                         txt_duration.setText(mediaduration);
-                                        txt_endtime.setText(common.parsedateformat(enddate) + " "+ common.parsetimeformat(enddate) +" " +  localTime);
-
-                                        //  txt_title_actionbarcomposer.setText(filecreateddate);
+                                        txt_endtime.setText(common.parsedateformat(enddate) + " "+ common.parsetimeformat(enddate) +" " +
+                                                localTime);
                                         txt_createdtime.setText(common.parsetimeformat(startdate));
                                     }
-                                    if(mediafolder.trim().length() > 0)
+                                    if(mediafolder.trim().length() > 0 && folderspinneradapter == null)
                                         setfolderspinner();
 
                                 }catch (Exception e)
                                 {
                                     e.printStackTrace();
                                 }
-
                             }
                         });
 
-                        ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
-                        if(metricmainarraylist.size()>0){
 
-                            for(int i=0;i<mitemlist.size();i++)
-                            {
-                                String sequencehash = mitemlist.get(i).getSequencehash();
-                                String hashmethod = mitemlist.get(i).getHashmethod();
-                                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
-                                String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                                String color = mitemlist.get(i).getColor();
-                                String latency = mitemlist.get(i).getLatency();
-                                String sequenceno = mitemlist.get(i).getSequenceno();
-                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,
-                                        sequencehash,serverdictionaryhash,color,latency));
-                            }
-
-                        }else{
-
-                            for(int i=0;i<mitemlist.size();i++)
-                            {
-                                String metricdata=mitemlist.get(i).getMetricdata();
-                                String sequencehash = mitemlist.get(i).getSequencehash();
-                                String hashmethod = mitemlist.get(i).getHashmethod();
-                                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
-                                String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                                String color = mitemlist.get(i).getColor();
-                                String latency = mitemlist.get(i).getLatency();
-                                String sequenceno = mitemlist.get(i).getSequenceno();
-                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,
-                                        latency,sequenceno);
-                            }
-
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    edt_medianotes.setText(medianotes);
-                                    edt_medianame.setText(medianame);
-                                }
-                            });
-                        }
-
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setseekbarlayoutcolor();
-                                if(metricmainarraylist != null && metricmainarraylist.size() > 0)
-                                {
-                                    arraycontainerformetric = new arraycontainer();
-                                    arraycontainerformetric = metricmainarraylist.get(0);
-
-                                    if(encryptionarraylist.size() == 0)
-                                        encryptionarraylist.add(metricmainarraylist.get(0));
-
-                                    if(encryptionarraylist.size() > 0)
-                                    {
-                                        encryptionarraylist.set(0,metricmainarraylist.get(0));
-                                        encryptionadapter.notifyDataSetChanged();
-                                    }
-                                }
-
-                                encryptionadapter.notifyDataSetChanged();
-                            }
-                        });
                         try
                         {
                             mdbhelper.close();
@@ -1853,11 +1702,101 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }).start();
     }
 
+    public void getmediametadata()
+    {
+
+        try {
+            databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+
+            try {
+                mdbhelper.open();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
+            if (mitemlist.size() > 0)
+            {
+                for (int i = 0; i < mitemlist.size(); i++)
+                {
+                    if(metricmainarraylist.size() == i)
+                    {
+                        String metricdata = mitemlist.get(i).getMetricdata();
+                        String sequencehash = mitemlist.get(i).getSequencehash();
+                        String hashmethod = mitemlist.get(i).getHashmethod();
+                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                        String color = mitemlist.get(i).getColor();
+                        String latency = mitemlist.get(i).getLatency();
+                        String sequenceno = mitemlist.get(i).getSequenceno();
+                        parsemetadata(metricdata, hashmethod, videostarttransactionid, sequencehash, serverdictionaryhash, color,
+                                latency, sequenceno);
+                    }
+                    else
+                    {
+                        String sequencehash = mitemlist.get(i).getSequencehash();
+                        String hashmethod = mitemlist.get(i).getHashmethod();
+                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                        String color = mitemlist.get(i).getColor();
+                        String latency = mitemlist.get(i).getLatency();
+                        String sequenceno = mitemlist.get(i).getSequenceno();
+                        metricmainarraylist.set(i, new arraycontainer(hashmethod, videostarttransactionid,
+                                sequencehash, serverdictionaryhash, color, latency));
+                    }
+
+                }
+            }
+
+            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    edt_medianotes.setText(medianotes);
+                    edt_medianame.setText(medianame);
+                }
+            });
+            try
+            {
+                mdbhelper.close();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setseekbarlayoutcolor();
+                if(metricmainarraylist != null && metricmainarraylist.size() > 0)
+                {
+                    arraycontainerformetric = new arraycontainer();
+                    arraycontainerformetric = metricmainarraylist.get(0);
+
+                    if(encryptionarraylist.size() == 0)
+                        encryptionarraylist.add(metricmainarraylist.get(0));
+
+                    if(encryptionarraylist.size() > 0)
+                    {
+                        encryptionarraylist.set(0,metricmainarraylist.get(0));
+                        encryptionadapter.notifyDataSetChanged();
+                    }
+                }
+                encryptionadapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     public void setfolderspinner()
     {
         final List<folder> folderitem=common.getalldirfolders();
         setspinnerpopupwindowheight(folderitem.size());
-        folderdirectoryspinneradapter adapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
+        folderspinneradapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
                 R.layout.row_myfolderspinneradapter,folderitem);
 
         int selectedposition=0;
@@ -1873,7 +1812,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         }
 
-        spinnermediafolder.setAdapter(adapter);
+        spinnermediafolder.setAdapter(folderspinneradapter);
         spinnermediafolder.setSelection(selectedposition,true);
         spinnermediafolder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id)
@@ -1991,38 +1930,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    public void registerbroadcastreciver()
-    {
-        IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
-        getmetadatabroadcastreceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Thread thread = new Thread() {
-                    public void run() {
-                        if(mhashesitems.size() == 0)
-                            fetchmetadatafromdb();
-                    }
-                };
-                thread.start();
-            }
-        };
-        applicationviavideocomposer.getactivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
-    }
-
     @Override
     public void onStop() {
         super.onStop();
-        try {
-            isfragmentstopped=true;
-            applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
         if(mOrientation != null)
             mOrientation.stopListening();
 
-        Log.e("onstop","onstop");
     }
 
     public class setonmediaprepared implements MediaPlayer.OnPreparedListener
@@ -2058,7 +1971,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
 
             setmetriceshashesdata();
-            Log.e("onprepared","onprepared");
         }
     }
 
@@ -2087,7 +1999,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 player.setDataSource(applicationviavideocomposer.getactivity(),selecteduri);
                 player.setSurface(surfacetexture);
                 player.prepareAsync();
-                Log.e("time","onprepare");
                 player.setOnPreparedListener(new setonmediaprepared());
                 player.setOnCompletionListener(new setonmediacompletion());
                 player.setOnVideoSizeChangedListener(this);
@@ -2114,27 +2025,30 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         myRunnable = new Runnable() {
             @Override
             public void run() {
-                if(metricmainarraylist.size() == 0)
-                    fetchmetadatafromdb();
+                if(updatemetaattempt == 0 || updatemetaattempt >= 3 &&
+                        ((sync_date.trim().isEmpty()) || sync_date.equalsIgnoreCase("0")))
+                {
+                    getmediastartinfo();
+                    getmediametadata();
+                }
+                updatemetaattempt++;
 
-                  if(arraycontainerformetric != null)
-                  {
-                      common.setgraphicalblockchainvalue(config.blockchainid, arraycontainerformetric.getVideostarttransactionid(), true);
-                      common.setgraphicalblockchainvalue(config.hashformula, arraycontainerformetric.getHashmethod(), true);
-                      common.setgraphicalblockchainvalue(config.datahash, arraycontainerformetric.getValuehash(), true);
-                      common.setgraphicalblockchainvalue(config.matrichash, arraycontainerformetric.getMetahash(), true);
+                if(arraycontainerformetric != null)
+                {
+                  common.setgraphicalblockchainvalue(config.blockchainid, arraycontainerformetric.getVideostarttransactionid(), true);
+                  common.setgraphicalblockchainvalue(config.hashformula, arraycontainerformetric.getHashmethod(), true);
+                  common.setgraphicalblockchainvalue(config.datahash, arraycontainerformetric.getValuehash(), true);
+                  common.setgraphicalblockchainvalue(config.matrichash, arraycontainerformetric.getMetahash(), true);
 
-                      common.setspannable(getResources().getString(R.string.blockchain_id), " " + arraycontainerformetric.getVideostarttransactionid(), txt_blockchainid);
-                      common.setspannable(getResources().getString(R.string.hash_formula), " " + arraycontainerformetric.getHashmethod(), txt_blockid);
-                      common.setspannable(getResources().getString(R.string.mediahash), " " + arraycontainerformetric.getValuehash(), txt_blocknumber);
-                      common.setspannable(getResources().getString(R.string.metrichash), " " + arraycontainerformetric.getMetahash(), txt_metahash);
+                  common.setspannable(getResources().getString(R.string.blockchain_id), " " + arraycontainerformetric.getVideostarttransactionid(), txt_blockchainid);
+                  common.setspannable(getResources().getString(R.string.hash_formula), " " + arraycontainerformetric.getHashmethod(), txt_blockid);
+                  common.setspannable(getResources().getString(R.string.mediahash), " " + arraycontainerformetric.getValuehash(), txt_blocknumber);
+                  common.setspannable(getResources().getString(R.string.metrichash), " " + arraycontainerformetric.getMetahash(), txt_metahash);
+                }
 
-                      ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
-
-                  }
                 if(currentprocessframe > 0 && metricmainarraylist.size() > 0 && currentprocessframe < metricmainarraylist.size())
                 {
-                    String data="",location="";
+                    String data="";
                     for(int i=0;i<currentprocessframe;i++)
                     {
                         if(data.trim().isEmpty())
@@ -2162,7 +2076,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             gethelper().setcurrentmediaposition((int) (metricmainarraylist.size() * 100) / 100);
-            Log.e("oncompletet",""+(int) ((metricmainarraylist.size() * 100) / 100));
             isvideocompleted=true;
             controller.setplaypauuse();
             maxincreasevideoduration=videoduration;
@@ -2176,11 +2089,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
 
             if(layout_videodetails.getVisibility()==View.GONE){
-                Log.e("fullscreen..","oncomplete");
                 fullscreen_showcontrollers();
                 isplaypauswebtnshow = false;
             }else{
-                Log.e("halfscreen..","oncomplete");
 
                 if(!islastdragarrow){
                     showcontrollers();
@@ -2248,7 +2159,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
             tvsize.setText(common.filesize(mediafilepath));
             playpausebutton.setImageResource(R.drawable.play_btn);
-            position = 0;
         }
     }
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
@@ -2298,10 +2208,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             if(mediafilepath!=null)
             {
-                /*setupVisualizerFxAndUI();
-                if(visualizer!= null)
-                    visualizer.setEnabled(true);*/
-
                 isplaying=true;
                 playpausebutton.setImageResource(R.drawable.pausebutton);
                 player.start();
@@ -2311,8 +2217,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
     public void pause() {
         if(player != null && player.isPlaying()){
-           /* if(visualizer!= null)
-                visualizer.setEnabled(false);*/
             playpausebutton.setImageResource(R.drawable.play_btn);
             player.pause();
         }
@@ -2393,22 +2297,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
     };
 
-    private String stringForTime(int timeMs) {
-
-        int totalSeconds = timeMs / 1000;
-
-        int seconds = totalSeconds % 60;
-        int minutes = (totalSeconds / 60) % 60;
-        int hours   = totalSeconds / 3600;
-
-        mFormatBuilder.setLength(0);
-        if (hours > 0) {
-            return mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
-        } else {
-            return mFormatter.format("%02d:%02d", minutes, seconds).toString();
-        }
-    }
-
     public void setvideodata(){
 
         Handler handler = new Handler();
@@ -2420,9 +2308,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     try
                     {
                         endtime = player.getDuration();
-                        Log.e("endtime",""+endtime);
                         videostarttime = player.getCurrentPosition();
-                        Log.e("videostarttime",""+videostarttime);
 
                         if (totalduration != null)
                             totalduration.setText(common.gettimestring(endtime));
@@ -2443,25 +2329,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
 
-     public void setplaypuasebtnondrag(int parentheight){
-
-        /* int centerheight = parentheight/2;
-         int buttonheight = playpausebutton.getHeight();
-
-         int lastvalue = (centerheight+ headerheight) - (buttonheight/2) ;*/
+     public void setplaypuasebtnondrag(){
 
          int buttonheight = playpausebutton.getHeight();
          int layoutvideotextureviewheight = rl_videotextureview.getHeight();
-
-         int centerheightoflayout = layoutvideotextureviewheight - (common.getviewheight(actionbarpercentage) + common.getviewheight(scrubberviewpercentage));
-
+         int centerheightoflayout = layoutvideotextureviewheight - (common.getviewheight(actionbarpercentage) +
+                 common.getviewheight(scrubberviewpercentage));
          int halfcenterheightoflayout = (centerheightoflayout/2);
-
-         //int percentageheight = (buttonheight / 100) * 75;
          double res = (buttonheight / 100.0f) * 70;
-
          int lastvalue = (halfcenterheightoflayout+common.getviewheight(actionbarpercentage)) - (int)res;
-
          recenterplaypause(lastvalue ,0);
      }
 
@@ -2469,16 +2345,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         int surfaceView_Width = videotextureview.getWidth();
         int surfaceView_Height = videotextureview.getHeight();
-
         float video_Width = player.getVideoWidth();
         float video_Height = player.getVideoHeight();
-
         float ratio_width = surfaceView_Width/video_Width;
         float ratio_height = surfaceView_Height/video_Height;
         float aspectratio = video_Width/video_Height;
-
         ViewGroup.LayoutParams layoutParams = videotextureview.getLayoutParams();
-
         if (ratio_width > ratio_height){
             layoutParams.width = (int) (surfaceView_Height * aspectratio);
             layoutParams.height = surfaceView_Height;
@@ -2486,22 +2358,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             layoutParams.width = surfaceView_Width;
             layoutParams.height = (int) (surfaceView_Width / aspectratio);
         }
-
         videotextureview.setLayoutParams(layoutParams);
         videotextureview.setVisibility(View.VISIBLE);
-
         int buttonheight = playpausebutton.getHeight();
         int layoutvideotextureviewheight = rl_videotextureview.getHeight();
-
         int centerheightoflayout = layoutvideotextureviewheight - (common.getviewheight(actionbarpercentage) + common.getviewheight(scrubberviewpercentage));
-
         int halfcenterheightoflayout = (centerheightoflayout/2);
-
         //int percentageheight = (buttonheight / 100) * 75;
         double res = (buttonheight / 100.0f) * 70;
-
         int lastvalue = (halfcenterheightoflayout+common.getviewheight(actionbarpercentage)) - (int)res;
-
         recenterplaypause(lastvalue ,0);
     }
 
@@ -2510,42 +2375,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         ViewGroup.LayoutParams layoutParams = videotextureview.getLayoutParams();
         layoutParams.width = surfaceView_Width;
         layoutParams.height = surfaceView_Height;
-
         videotextureview.setLayoutParams(layoutParams);
         int buttonheight = playpausebutton.getHeight();
-
         int centerheight = (surfaceView_Height + navigationbarheight)/2;
         int finalmargin = centerheight -  buttonheight/2;
-
         recenterplaypause(finalmargin,1);
-    }
-
-    private void updatetextureviewsize(int viewWidth, int viewHeight) {
-
-        float scaleX = 1.0f;
-        float scaleY = 1.0f;
-
-        if (videowidth > viewWidth && videoheight > viewHeight) {
-            scaleX = videowidth / viewWidth;
-            scaleY = videoheight / viewHeight;
-        } else if (videowidth < viewWidth && videoheight < viewHeight) {
-            scaleY = viewWidth / videowidth;
-            scaleX = viewHeight / videoheight;
-        } else if (viewWidth > videowidth) {
-            scaleY = (viewWidth / videowidth) / (viewHeight / videoheight);
-        } else if (viewHeight > videoheight) {
-            scaleX = (viewHeight / videoheight) / (viewWidth / videowidth);
-        }
-
-     // Calculate pivot points, in our case crop from center
-        int pivotPointX = viewWidth / 2;
-        int pivotPointY = viewHeight / 2;
-
-        Matrix matrix = new Matrix();
-        matrix.setScale(scaleX, scaleY, pivotPointX, pivotPointY);
-
-        videotextureview.setTransform(matrix);
-        //videotextureview.setLayoutParams(new FrameLayout.LayoutParams(viewWidth, viewHeight));
     }
 
     private void getbitmap(final int viewwidth)
@@ -2570,7 +2404,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    if(rotation != null && (! rotation.equalsIgnoreCase("null")) && (! rotation.isEmpty()))
                        videorotatedangle =Integer.parseInt(rotation);
 
-                   Log.e("rotation ",rotation);
                    String time = mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
                    long timeInmillisec = Long.parseLong( time );
                    long duration = timeInmillisec / 1000;
@@ -2720,14 +2553,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         colorsectioncount.set(colorsectioncount.size()-1,color+","+sectioncount);
                     }
                     lastcolor=color;
-
-                    if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
-                        if(latency.isEmpty()){
-                            latency = metricmainarraylist.get(i).getLatency();
-                        }else{
-                            latency = latency + "," + metricmainarraylist.get(i).getLatency();
-                        }
-                    }
                 }
             }
 
@@ -2749,7 +2574,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             }
         }
-        xdata.getinstance().saveSetting(config.latency,latency);
         gethelper().setdatacomposing(false);
     }
 
@@ -2838,21 +2662,18 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void setheadermargin(final int headerheight, final int scrubberheight, int layoutheight, boolean ifheightset){
-        if(ifheightset){
-
+        if(ifheightset)
+        {
             RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(targetwidth,(rootviewheight-navigationbarheight));
             paramsvideotextureview.setMargins(0,headerheight,0,scrubberheight);
             videotextureview.setLayoutParams(paramsvideotextureview);
-
             videotextureview.post(new Runnable() {
                 @Override
                 public void run() {
-
                     if(headerheight == 0 && scrubberheight == 0){
                         updatesurfaceviewsizefullscreen(videotextureview.getWidth(),videotextureview.getHeight());
                     }else{
-
-                        setplaypuasebtnondrag(videotextureview.getHeight());
+                        setplaypuasebtnondrag();
                     }
                 }
             });
@@ -2861,7 +2682,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
             paramsvideotextureview.setMargins(0,headerheight-1,0,scrubberheight-50);
             videotextureview.setLayoutParams(paramsvideotextureview);
-
             videotextureview.post(new Runnable() {
                 @Override
                 public void run() {
@@ -2872,8 +2692,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     }
 
-    public void setfooterlayout(){
-
+    public void setfooterlayout()
+    {
             CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.MATCH_PARENT);
             params.setMargins(0,0,0,navigationbarheight);
             layout_videoreader.setLayoutParams(params);
@@ -2884,7 +2704,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         edittext.setFocusable(false);
         edittext.setFocusableInTouchMode(false);
         layout_halfscrnimg.setVisibility(View.VISIBLE);
-
         if(isplaying)
             layout_validating.setVisibility(View.VISIBLE);
 
@@ -2910,7 +2729,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.BELOW,R.id.layout_halfscrnimg);
         params.setMargins(0,0,0,0);
-        Log.e("footerheight",""+footerheight);
 
         layout_videodetails.setPadding(0,0,0,(footerheight));
         layout_videodetails.setLayoutParams(params);
@@ -2973,108 +2791,5 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void getpausebtnheight(){
         layoutpauseheight = common.getviewheight(pauselayoutpercentage);
         setbottomimgview();
-    }
-
-    public void setupVisualizerFxAndUI() {
-
-        visualizer = new Visualizer(player.getAudioSessionId());
-        visualizer.setScalingMode(Visualizer.SCALING_MODE_NORMALIZED);
-        visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-        visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
-            @Override
-            public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
-                int decibelvalue =127- Math.abs((int) calculateRMSLevel(waveform));
-
-
-                if(decibelvalue==127){
-                    decibelvalue=0;
-                }else{
-                    decibelvalue = decibelvalue+5;
-                }
-
-                Log.e("decibelvalue=",""+decibelvalue);
-             //   gethelper().setsoundwaveinformation(0, decibelvalue);
-            }
-
-            @Override
-            public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
-            }
-        } ,Visualizer.getMaxCaptureRate() / 2, true, false);
-    }
-
-    public double calculatedecibel(byte[] audioData){
-        double sum=0;
-        for (int i = 0; i < audioData.length/2; i++) {
-            double y = ((short)audioData[i*2] | (short) audioData[i*2+1] <<16)/ 32768.0 ;
-            sum += Math.abs(y);
-        }
-        double rms = Math.sqrt(sum /audioData.length/2);
-
-        Log.e("rms=",""+rms);
-
-        double dbAmp = 20.0*Math.log10(rms);
-        return dbAmp;
-    }
-
-    /*public int calculateRMSLevel(byte[] audioData) {
-        //System.out.println("::::: audioData :::::"+audioData);
-        double amplitude = 0;
-        for (int i = 0; i < audioData.length/2; i++) {
-            double y = (audioData[i*2] | audioData[i*2+1] << 8) / 32768.0;
-            // depending on your endianness:
-            // double y = (audioData[i*2]<<8 | audioData[i*2+1]) / 32768.0
-            amplitude += Math.abs(y);
-        }
-        amplitude = amplitude / audioData.length / 2;
-
-        //Add this data to buffer for display
-       *//* if (counterPlayer < 100) {
-            drawingBufferForPlayer[counterPlayer++] = amplitude;
-        } else {
-            for (int k = 0; k < 99; k++) {
-                drawingBufferForPlayer[k] = drawingBufferForPlayer[k + 1];
-            }
-            drawingBufferForPlayer[99] = amplitude;
-        }
-
-        updateBufferDataPlayer(drawingBufferForPlayer);
-        setDataForPlayer(100,100);*//*
-
-        return (int)amplitude;
-    }*/
-
-    public double getsounddecibal(byte[] audioData){
-
-        double amplitude = 0;
-        for (int i = 0; i < audioData.length/2; i++) {
-            double y = (audioData[i*2] | audioData[i*2+1] << 8) / 32768.0;
-            // depending on your endianness:
-            // double y = (audioData[i*2]<<8 | audioData[i*2+1]) / 32768.0
-            amplitude += Math.abs(y);
-        }
-        amplitude = amplitude / audioData.length / 2;
-        return amplitude;
-    }
-
-    protected int calculateRMSLevel(byte[] audioData)
-    { // audioData might be buffered data read from a data line
-        long lSum = 0;
-
-        for(int i=0; i<audioData.length; i++)
-
-            lSum = lSum + audioData[i];
-
-        double dAvg = lSum / audioData.length;
-
-        double sumMeanSquare = 0d;
-
-        for(int j=0; j<audioData.length; j++)
-
-            sumMeanSquare = sumMeanSquare + Math.pow(audioData[j] - dAvg, 2d);
-
-        double averageMeanSquare = sumMeanSquare / audioData.length;
-
-        return (int)(Math.pow(averageMeanSquare,0.5d) + 0.2);
-
     }
 }
