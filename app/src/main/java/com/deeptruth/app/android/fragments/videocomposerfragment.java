@@ -647,6 +647,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,
                                 0,0,0,null,headercontainer,null,90);
 
+                        img_dotmenu.setVisibility(View.GONE);
+
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
@@ -670,6 +672,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,
                                 0,0,0,null,headercontainer,null,270);
 
+                        img_dotmenu.setVisibility(View.GONE);
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),
@@ -723,6 +726,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),
                                 (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,
                                 0,0,0,imgflashon,null,null,0);
+                    }else{
+                        setbottommargin(headercontainer);
                     }
                     if(headercontainer.getAngle() == 90)
                     {
@@ -2192,7 +2197,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void showhideactionbaricon(int i){
         if(i == 0){
             txt_title_actionbarcomposer.setText(config.mediarecorderformat);
-            img_dotmenu.setVisibility(View.VISIBLE);
+            img_dotmenu.setVisibility(View.INVISIBLE);
             txt_media_quality.setVisibility(View.INVISIBLE);
 
         }else{
@@ -2254,28 +2259,23 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         if(!isvideorecording) {
             String value = "";
-            if(common.isnetworkconnected(getActivity()))
-            {
+
                 if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
                         || xdata.getinstance().getSetting(config.CellProvider).trim().equalsIgnoreCase("NA")
                         || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null")
                         || xdata.getinstance().getSetting(config.airplanemode).equals("ON"))
                 {
 
-                    Log.e("nonetwork","nonetwork");
                     txt_section_network.setText(config.TEXT_NETWORK +""+getResources().getString(R.string.no_network));
                     img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
 
-                }else {
-                    Log.e("connectednetwork",common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
+                }else{
                     txt_section_network.setText(config.TEXT_NETWORK + "" + common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
                     img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
                 }
-            }
 
             if(xdata.getinstance().getSetting(config.Connectionspeed)!=null && !xdata.getinstance().getSetting(config.Connectionspeed).isEmpty()){
                 if(xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA")){
-                    Log.e("Naconcection","Naconcection");
                     txt_section_data.setText(config.TEXT_DATA+""+xdata.getinstance().getSetting(config.Connectionspeed));
                     img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
                 }else {
@@ -2293,24 +2293,23 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         }
                     }
                 }
+            }else{
+                txt_section_data.setText(config.TEXT_DATA+""+"NA");
+                img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
             }
 
             if(xdata.getinstance().getSetting(config.GPSAccuracy)!= null && (! xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty()))
             {
-                if(xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA"))
+                if(xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA")||
+                        xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                 {
-                    txt_section_gps.setText(config.TEXT_GPS+""+xdata.getinstance().getSetting(config.GPSAccuracy));
+                    txt_section_gps.setText(config.TEXT_GPS+""+"NA");
                     img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.warning_icon));
                 }else{
                     String[] arrayitem=xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
                     if(arrayitem.length > 0)
                     {
                         double gpsvalue = Double.valueOf(arrayitem[0]);
-                        if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")){
-                            // txt_weakgps.setVisibility(View.GONE);
-                            txt_section_gps.setText(config.TEXT_GPS+" 0ft");
-                            img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.warning_icon));
-                        }else{
                             if ((gpsvalue <= 50 && gpsvalue != 0)) {
                                 txt_section_gps.setText(config.TEXT_GPS+""+gpsvalue+"ft");
                                 img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
@@ -2321,7 +2320,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             }
                         }
                     }
-                }
+            }else{
+                txt_section_gps.setText(config.TEXT_GPS+""+"NA");
+                img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.warning_icon));
             }
         }
     }
@@ -2330,43 +2331,39 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         if (!isvideorecording)
         {
-            String gpsenabled=xdata.getinstance().getSetting("gpsenabled");
-            String CellProvider=xdata.getinstance().getSetting(config.CellProvider);
-            String Connectionspeed=xdata.getinstance().getSetting(config.Connectionspeed);
-            String GPSAccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
-
             if (!common.isnetworkconnected(getActivity()) ||
                     xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0") ||
                     xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA") ||
                     xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA") ||
-                    xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA")) {
+                    xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA") ||
+                    xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null") ||
+                    xdata.getinstance().getSetting(config.airplanemode).equals("ON")||
+                    xdata.getinstance().getSetting(config.Connectionspeed)!=null ||
+                    xdata.getinstance().getSetting(config.GPSAccuracy)!= null) {
 
-             //   if (layout_wifi_gps_data != null)
-                 //   layout_wifi_gps_data.setBackgroundColor(getResources().getColor(R.color.yellowtransparent));
+                actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+
 
             } else {
                 String[] arrayitemgps = xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
-                if(arrayitemgps.length > 0)
+                String[] arrayitemconnection = xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
+                if(arrayitemgps.length > 0 && arrayitemconnection.length > 0)
                 {
                     double gpsvalue=0,connectionvalue=0;
                     if(! arrayitemgps[0].trim().isEmpty())
                         gpsvalue = Double.valueOf(arrayitemgps[0]);
 
-                    String[] arrayitemconnection = xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
-                    if(arrayitemconnection.length > 0)
-                    {
-                        if(! arrayitemconnection[0].trim().isEmpty())
-                            connectionvalue = Double.valueOf(arrayitemconnection[0]);
-                    }
+                    if(! arrayitemconnection[0].trim().isEmpty())
+                        connectionvalue = Double.valueOf(arrayitemconnection[0]);
 
-                    /*if (gpsvalue > 50 || connectionvalue == 0.0)
+                    if ((gpsvalue >= 50 && gpsvalue == 0) || connectionvalue == 0.0)
                     {
-                        if (layout_wifi_gps_data != null)
-                            layout_wifi_gps_data.setBackgroundColor(getResources().getColor(R.color.yellowtransparent));
+                        actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+
                     } else {
-                        if (layout_wifi_gps_data != null)
-                            layout_wifi_gps_data.setBackgroundColor(getResources().getColor(R.color.yellowtransparent));
-                    }*/
+                        actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
+
+                    }
 
                 }
 
