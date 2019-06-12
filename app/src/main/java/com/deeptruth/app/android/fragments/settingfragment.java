@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.akash.RevealSwitch;
 import com.akash.revealswitch.OnToggleListener;
@@ -195,6 +196,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
 
             case R.id.txt_logout:
                 xdata.getinstance().saveSetting(config.authtoken,"");
+                Toast.makeText(applicationviavideocomposer.getactivity(),"Logout successfully",Toast.LENGTH_SHORT).show();
                 txt_username.setText("");
                 txt_logout.setText("");
                 break;
