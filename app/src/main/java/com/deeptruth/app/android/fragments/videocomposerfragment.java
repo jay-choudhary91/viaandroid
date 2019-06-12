@@ -2302,7 +2302,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                 {
                     txt_section_gps.setText(config.TEXT_GPS+""+"NA");
-                    img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.warning_icon));
+                    img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
                 }else{
                     String[] arrayitem=xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
                     if(arrayitem.length > 0)
