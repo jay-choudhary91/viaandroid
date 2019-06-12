@@ -635,7 +635,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             String latitudedegree  = xdata.getinstance().getSetting(config.Latitude);
             String longitudedegree = xdata.getinstance().getSetting(config.Longitude);
 
-
             if(isdatacomposing)
             {
                 String towerinfo = xdata.getinstance().getSetting(config.json_towerlist);
