@@ -49,7 +49,7 @@
                 android:id="@+id/togglebutton"
                 android:layout_width="65dp"
                 android:layout_height="35dp"
-                app:sb_button_color="@color/dark_blue_solid_a"
+                app:sb_button_color="@color/white"
                 app:sb_shadow_color="@color/gray_x"
                 app:sb_background="@color/gray_x"
                 app:sb_checkline_color="@color/transparent"
@@ -94,7 +94,7 @@
                 android:id="@+id/production_toogle"
                 android:layout_width="65dp"
                 android:layout_height="35dp"
-                app:sb_button_color="@color/dark_blue_solid_a"
+                app:sb_button_color="@color/white"
                 app:sb_shadow_color="@color/gray_x"
                 app:sb_background="@color/gray_x"
                 app:sb_checkline_color="@color/transparent"
@@ -139,7 +139,7 @@
                 android:id="@+id/dev_toogle"
                 android:layout_width="65dp"
                 android:layout_height="35dp"
-                app:sb_button_color="@color/dark_blue_solid_a"
+                app:sb_button_color="@color/white"
                 app:sb_shadow_color="@color/gray_x"
                 app:sb_background="@color/gray_x"
                 app:sb_checkline_color="@color/transparent"
@@ -201,11 +201,12 @@
                 android:id="@+id/apptitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left"
+                android:gravity="center"
                 android:layout_centerInParent="true"
                 android:textSize="15sp"
                 android:paddingRight="@dimen/margin_5dp"
                 android:text=""
+                android:lineSpacingExtra="1dp"
                 android:textColor="@color/grey_xxx"
                 app:fontType="Comfortaa-Regular"/>
 
@@ -231,102 +232,109 @@
             android:orientation="vertical"
             android:layout_below="@id/layout_devtoggle"
             android:layout_height="match_parent">
-            <LinearLayout
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:orientation="vertical"
+                android:fillViewport="true"
                 android:layout_weight="3"
-                android:layout_marginTop="15dp"
+                android:scrollbars="none"
                 android:layout_marginLeft="@dimen/margin_left"
                 android:layout_marginRight="@dimen/margin_right"
                 android:layout_marginBottom="@dimen/bottom_margin"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
                 android:layout_height="0dp">
-
-
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:padding="10dp"
-                    android:background="@drawable/round_corner_btn_setting"
-                    android:layout_marginBottom="@dimen/bottom_margin"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical"
+                    android:layout_marginTop="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:layout_height="match_parent">
 
 
-                    <ImageView
-                        style="@style/img_settings_screen"
-                        android:id="@+id/img_upgrade"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_upgrade"
-                        />
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        style="@style/btn_settings_screen"
-                        android:id="@+id/txt_upgrade"
-                        android:layout_toRightOf="@+id/img_upgrade"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        android:layout_centerVertical="true"
-                        app:fontType="Comfortaa-Regular"
-                        />
-                </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:padding="10dp"
+                        android:background="@drawable/round_corner_btn_setting"
+                        android:layout_marginBottom="@dimen/bottom_margin"
+                        android:layout_height="wrap_content">
 
 
+                        <ImageView
+                            style="@style/img_settings_screen"
+                            android:id="@+id/img_upgrade"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_upgrade"
+                            />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:padding="10dp"
-                    android:background="@drawable/round_corner_btn_setting"
-                    android:layout_marginBottom="@dimen/bottom_margin"
-                    android:layout_height="wrap_content">
-
-
-                    <ImageView
-                        style="@style/img_settings_screen"
-                        android:id="@+id/img_privacy"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_privacy"
-                        />
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        style="@style/btn_settings_screen"
-                        android:id="@+id/txt_privacy"
-                        android:layout_toRightOf="@+id/img_privacy"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        android:layout_centerVertical="true"
-                        app:fontType="Comfortaa-Regular"
-                        />
-                </RelativeLayout>
+                        <com.deeptruth.app.android.views.customfonttextview
+                            style="@style/btn_settings_screen"
+                            android:id="@+id/txt_upgrade"
+                            android:layout_toRightOf="@+id/img_upgrade"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_centerVertical="true"
+                            app:fontType="Comfortaa-Regular"
+                            />
+                    </RelativeLayout>
 
 
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:padding="10dp"
-                    android:background="@drawable/round_corner_btn_setting"
-                    android:layout_marginBottom="@dimen/bottom_margin"
-                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:padding="10dp"
+                        android:background="@drawable/round_corner_btn_setting"
+                        android:layout_marginBottom="@dimen/bottom_margin"
+                        android:layout_height="wrap_content">
 
 
-                    <ImageView
-                        style="@style/img_settings_screen"
-                        android:id="@+id/img_help"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentLeft="true"
-                        android:src="@drawable/ic_faq_help"
-                        />
+                        <ImageView
+                            style="@style/img_settings_screen"
+                            android:id="@+id/img_privacy"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_privacy"
+                            />
 
-                    <com.deeptruth.app.android.views.customfonttextview
-                        style="@style/btn_settings_screen"
-                        android:id="@+id/txt_help"
-                        android:layout_toRightOf="@+id/img_help"
-                        android:layout_gravity="center_vertical"
-                        android:gravity="center_vertical"
-                        android:layout_centerVertical="true"
-                        app:fontType="Comfortaa-Regular"
-                        />
-                </RelativeLayout>
-            </LinearLayout>
+                        <com.deeptruth.app.android.views.customfonttextview
+                            style="@style/btn_settings_screen"
+                            android:id="@+id/txt_privacy"
+                            android:layout_toRightOf="@+id/img_privacy"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_centerVertical="true"
+                            app:fontType="Comfortaa-Regular"
+                            />
+                    </RelativeLayout>
+
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:padding="10dp"
+                        android:background="@drawable/round_corner_btn_setting"
+                        android:layout_marginBottom="@dimen/bottom_margin"
+                        android:layout_height="wrap_content">
+
+
+                        <ImageView
+                            style="@style/img_settings_screen"
+                            android:id="@+id/img_help"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:src="@drawable/ic_faq_help"
+                            />
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            style="@style/btn_settings_screen"
+                            android:id="@+id/txt_help"
+                            android:layout_toRightOf="@+id/img_help"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:layout_centerVertical="true"
+                            app:fontType="Comfortaa-Regular"
+                            />
+                    </RelativeLayout>
+                </LinearLayout>
+            </ScrollView>
 
             <LinearLayout
                 android:layout_width="match_parent"
