@@ -961,11 +961,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             txt_encrypting.setVisibility(View.VISIBLE);
             layout_encryption.setVisibility(View.VISIBLE);
         } else if(i == 1){
+            layout_mediatype.setVisibility(View.VISIBLE);
             img_mediathumbnail.setVisibility(View.VISIBLE);
             txt_encrypting.setVisibility(View.INVISIBLE);
             layout_encryption.setVisibility(View.INVISIBLE);
             imgrotatecamera.setVisibility(View.VISIBLE);
-            layout_mediatype.setVisibility(View.VISIBLE);
+
         } else if( i == 2){
             layout_mediatype.setVisibility(View.GONE);
             img_mediathumbnail.setVisibility(View.INVISIBLE);
@@ -989,10 +990,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
         float pitch = orientation[1] * -57;
 
-        if(pitch <= -50)
+        if(pitch <= -80)
             return;
 
         float roll = orientation[2] * -57;
+
         float rotateangle=3600;
         if(roll < -45 && roll >= -120)
         {
@@ -1041,7 +1043,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(fragvideocomposer != null)
                 fragvideocomposer.changeiconsorientation(rotateangle);
             if(rotateangle == 90 || rotateangle == -90){
-                txt_encrypting.setTextSize(10);
+                txt_encrypting.setTextSize(9);
             }else{
                 txt_encrypting.setTextSize(10);
             }
