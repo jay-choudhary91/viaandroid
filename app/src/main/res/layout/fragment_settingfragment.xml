@@ -222,9 +222,9 @@
                     android:gravity="center"
                     android:textColor="@color/dark_blue_solid_a"
                     android:text="TM"
+                    app:fontType="OpenSans_ExtraBold"
                     android:background="@drawable/circle_trademark_background"
-                    app:fontType="Comfortaa-Regular"/>
-
+                    />
         </RelativeLayout>
 
         <LinearLayout
