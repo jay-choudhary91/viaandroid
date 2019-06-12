@@ -991,8 +991,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
 
     private void preparemetricesdata() {
+        metricitemarraylist.clear();
         if (metricitemarraylist.size() == 0) {
-            metricitemarraylist.clear();
             String[] items = common.getmetricesarray();
             for (int i = 0; i < items.length; i++)
                 metricitemarraylist.add(new metricmodel(items[i], "", true));

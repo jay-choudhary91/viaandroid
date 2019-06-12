@@ -193,6 +193,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                       try {
                           if(isvideorecording)
                           {
+                              Log.e("onSurfaceTextureUpdated","onSurfaceTextureUpdated");
+
+
                               if(mframetorecordcount == currentframenumber || (mediakey.trim().isEmpty()))
                               {
                                   /*Bitmap bitmap = textureview.getBitmap(10,10);
@@ -1226,7 +1229,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             validationbaranimation.reset();
         }
         issavedtofolder=true;
-        isvideorecording = false;
         lastrecordedvideo=new File(selectedvideofile);
 
         if(mysoundwavehandler != null && mymysoundwaverunnable != null)
@@ -1285,6 +1287,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     @Override
                     public void run()
                     {
+                        isvideorecording = false;
                         if(madapterclick != null)
                             madapterclick.onItemClicked(lastrecordedvideo.getAbsoluteFile(),2);
 
@@ -1737,6 +1740,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         public void run() {
                             if(isvideorecording)
                             {
+                                Log.e("timer","timer");
                                 //+ String.format("%01d", hours) + ":"+
                                 txt_title_actionbarcomposer.setText(
                                         "" + String.format("%02d", minutes) + ":"
@@ -1865,6 +1869,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             public void run() {
 
                 if (isvideorecording) {
+                    Log.e("sound","sound");
                     if (mediarecorder != null) {
                         int ampletudevalue = mediarecorder.getMaxAmplitude();
                         double ampletude = 20 * Math.log10(ampletudevalue / 32767.0);
