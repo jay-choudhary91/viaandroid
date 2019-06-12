@@ -1838,22 +1838,17 @@ public class common {
 
         if (!encryption_key.trim().isEmpty()) {
             String encryptionstr = encryption_key.concat(encryption_value);
-            Typeface regularfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Regular.ttf");
-            Typeface semiboldfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Semibold.ttf");
             SpannableStringBuilder encryptionstring = new SpannableStringBuilder(encryptionstr);
-            encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()), 0, encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.regularfonttype.getStyle()), 0, encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.semiboldfonttype.getStyle()), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             encryptionstring.setSpan(new RelativeSizeSpan(1.1f), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_encryption.setText(encryptionstring);
         } else {
-            String encryptionstr = encryption_value;
-            Typeface semiboldfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Semibold.ttf");
-            SpannableStringBuilder encryptionstring = new SpannableStringBuilder(encryptionstr);
-            encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()), 0, encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            encryptionstring.setSpan(new RelativeSizeSpan(1.1f), 0, encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            SpannableStringBuilder encryptionstring = new SpannableStringBuilder(encryption_value);
+            encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.semiboldfonttype.getStyle()), 0, encryption_value.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            encryptionstring.setSpan(new RelativeSizeSpan(1.1f), 0, encryption_value.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_encryption.setText(encryptionstring);
         }
-
     }
 
     public static String filesize(String imageurl) {
@@ -1861,7 +1856,6 @@ public class common {
 
         File file = new File(imageurl);
         float photosize = file.length();
-        float b = photosize;
         float k = photosize / 1024;
         float m = ((photosize / 1024) / 1024);
         float g = (((photosize / 1024) / 1024) / 1024);
@@ -1878,7 +1872,7 @@ public class common {
         } else if (k > 1) {
             img_size = dec.format(k) + "Kb";
         } else {
-            img_size = dec.format(b);
+            img_size = dec.format(photosize);
         }
         return img_size;
     }

@@ -592,9 +592,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 {
                     e.printStackTrace();
                 }
-
-
-
                 myhandler.postDelayed(this, 1000);
             }
         };
