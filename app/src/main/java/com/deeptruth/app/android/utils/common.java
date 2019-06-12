@@ -1821,12 +1821,9 @@ public class common {
 
         String encryptionstr = encryption_key.concat(encryption_value);
         // int substring=encryptionblock.lastIndexOf(":");
-        Typeface regularfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Regular.ttf");
-        Typeface semiboldfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Semibold.ttf");
-
         SpannableStringBuilder encryptionstring = new SpannableStringBuilder(encryptionstr);
-        encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()), 0, encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.regularfonttype.getStyle()), 0, encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.semiboldfonttype.getStyle()), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         encryptionstring.setSpan(new RelativeSizeSpan(1.1f), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         txt_encryption.setText(encryptionstring);
     }
@@ -1876,23 +1873,6 @@ public class common {
         }
         return img_size;
     }
-
-
-   /* public static String gettimestring(long millis) {
-        StringBuffer buf = new StringBuffer();
-
-        int hours = (int) (millis / (1000 * 60 * 60));
-        int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
-        int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
-
-        buf.append(String.format("%02d", hours))
-        .append(":")
-        .append(String.format("%02d", minutes))
-        .append(".")
-        .append(String.format("%02d", seconds));
-
-        return buf.toString();
-    }*/
 
     public static String getvideotimefromurl(Context context, String url) {
 
