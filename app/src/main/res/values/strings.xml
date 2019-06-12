@@ -144,6 +144,7 @@
     <string name="dev">Dev</string>
     <string name="locationtracking">locationtracking</string>
     <string name="orientation">orientation</string>
+    <string name="zero_frames">0 Frames</string>
 
     <string name="towerinformation">TOWER INFORMATION</string>
     <string name="locationinformation">LOCATION INFORMATION</string>

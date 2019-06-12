@@ -76,7 +76,6 @@ public abstract class basefragment extends Fragment {
     int gps_request_code =111;
     noise noise;
     LocationManager manager;
-    boolean isdraweropen=false;
     private static final int PERMISSION_RECORD_AUDIO= 92;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,16 +104,6 @@ public abstract class basefragment extends Fragment {
 
     }
 
-    public void setdraweropen(boolean isdraweropen)
-    {
-        this.isdraweropen=isdraweropen;
-    }
-
-    public boolean isdraweropened()
-    {
-        return isdraweropen;
-    }
-
     public void oncurrentlocationchanged(Location location) {
 
     }
@@ -126,16 +115,6 @@ public abstract class basefragment extends Fragment {
         {
             Log.e("Permissions","Allow or Revoke");
         }
-    }
-
-    public static boolean iscamerapermissionenabled(final Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static boolean isaudiopermissionenabled(final Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

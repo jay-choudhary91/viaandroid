@@ -134,7 +134,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
                 setdraweropen(false);
                 getcurrentfragment().showhideviewondrawer(false);
-                graphicaldrawerfragment.scrollview_meta.fullScroll(ScrollView.FOCUS_UP);
+                if(graphicaldrawerfragment != null)
+                {
+                    graphicaldrawerfragment.setdraweropen(false);
+                    graphicaldrawerfragment.scrollview_meta.fullScroll(ScrollView.FOCUS_UP);
+                }
+
                 if(getcurrentfragment() instanceof fragmentmedialist){
                     imglefthandle.setVisibility(View.GONE);
                 }else{
@@ -147,13 +152,15 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
 
+                if(graphicaldrawerfragment != null)
+                    graphicaldrawerfragment.setdraweropen(true);
+
                 //graphicaldrawerfragment.scrollview_meta.pageScroll(ScrollView.FOCUS_UP);
                 imglefthandle.setVisibility(View.GONE);
                 imgrighthandle.setVisibility(View.VISIBLE);
                 setdraweropen(true);
                 getcurrentfragment().showhideviewondrawer(true);
                 imgrighthandle.setImageResource(R.drawable.handle_left_arrow);
-
             }
 
             @Override
@@ -586,8 +593,15 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             {
                 try
                 {
-                    if((graphicaldrawerfragment!= null))
-                        graphicaldrawerfragment.setmetricesdata();
+                    if(getcurrentfragment() instanceof composeoptionspagerfragment || getcurrentfragment() instanceof videocomposerfragment ||
+                            getcurrentfragment() instanceof audiocomposerfragment || getcurrentfragment() instanceof imagecomposerfragment ||
+                            getcurrentfragment() instanceof videoreaderfragment || getcurrentfragment() instanceof imagereaderfragment ||
+                            getcurrentfragment() instanceof audioreaderfragment)
+                    {
+                        if((graphicaldrawerfragment!= null))
+                            graphicaldrawerfragment.setmetricesdata();
+                    }
+                    
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -600,8 +614,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @Override
     public void updatezoomlevel(double latitude, double longitude) {
-        if((graphicaldrawerfragment!= null))
-            graphicaldrawerfragment.zoomgooglemap(latitude,longitude);
+         if((graphicaldrawerfragment!= null))
+             graphicaldrawerfragment.zoomgooglemap(latitude,longitude);
     }
 
     @Override
@@ -612,26 +626,25 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @Override
     public void setdatacomposing(boolean isdatacomposing, String mediafilepath) {
-        if((graphicaldrawerfragment!= null))
-            graphicaldrawerfragment.setdatacomposing(isdatacomposing,mediafilepath);
+         if((graphicaldrawerfragment!= null))
+             graphicaldrawerfragment.setdatacomposing(isdatacomposing,mediafilepath);
     }
 
     @Override
     public void setcurrentmediaposition(int currentmediaposition) {
-        if(graphicaldrawerfragment!= null)
+         if(graphicaldrawerfragment!= null)
             graphicaldrawerfragment.setcurrentmediaposition(currentmediaposition);
     }
 
     @Override
     public void setisrecordrunning(boolean isrecodrunning) {
-        if(graphicaldrawerfragment!= null)
+         if(graphicaldrawerfragment!= null)
             graphicaldrawerfragment.setrecordrunning(isrecodrunning);
     }
 
     @Override
     public void setsoundwaveinformation(int ampletudevalue, int decibelvalue) {
-
-        if(graphicaldrawerfragment!= null)
+         if(graphicaldrawerfragment!= null)
             graphicaldrawerfragment.setsoundinformation(ampletudevalue,decibelvalue);
     }
 

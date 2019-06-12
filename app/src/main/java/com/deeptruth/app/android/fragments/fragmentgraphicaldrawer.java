@@ -343,14 +343,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private SensorManager msensormanager;
     private Sensor maccelerometersensormanager;
     public ScrollView scrollview_meta;
-    ArrayList<Entry> speedgraphitems = new ArrayList<Entry>();
-    ArrayList<Entry> travelledgraphitems = new ArrayList<Entry>();
-    ArrayList<Entry> altitudegraphitems = new ArrayList<Entry>();
-    ArrayList<Entry> connectionspeedvalues = new ArrayList<Entry>();
-    ArrayList<Entry> connectiondatadelayvalues = new ArrayList<Entry>();
-    ArrayList<Entry> gpsaccuracyvalues = new ArrayList<Entry>();
+    ArrayList<Entry> speedgraphitems = new ArrayList<>();
+    ArrayList<Entry> travelledgraphitems = new ArrayList<>();
+    ArrayList<Entry> altitudegraphitems = new ArrayList<>();
+    ArrayList<Entry> connectionspeedvalues = new ArrayList<>();
+    ArrayList<Entry> connectiondatadelayvalues = new ArrayList<>();
+    ArrayList<Entry> gpsaccuracyvalues = new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    private boolean isdatacomposing=false,isrecodrunning=false,ismediaplaying=false;
+    private boolean isdatacomposing=false,isrecodrunning=false;
     String lastsavedangle="";
     private float currentDegree = 0f;
     private Orientation mOrientation;
@@ -364,10 +364,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     Circle mappulsatecircle =null;
     Circle userlocationcircle =null;
     LatLng usercurrentlocation=null;
-    private PolylineOptions mappathoptions;
-    private Polyline mappathpolyline;
+    private PolylineOptions mappathoptions=null;
+    private Polyline mappathpolyline=null;
     private ArrayList<LatLng> mappathcoordinates=new ArrayList<>();
-    Highlight high =null;
     toweritemadapter toweradapter;
     ArrayList<celltowermodel> celltowers = new ArrayList<>();
 
@@ -381,7 +380,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         if (rootview == null)
         {
-
           rootview = super.onCreateView(inflater, container, savedInstanceState);
           ButterKnife.bind(this, rootview);
           applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -414,21 +412,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           ((DefaultItemAnimator) recycler_towerlist.getItemAnimator()).setSupportsChangeAnimations(false);
           recycler_towerlist.getItemAnimator().setChangeDuration(0);
           recycler_towerlist.setAdapter(toweradapter);
-
-            /*{
-                celltowermodel model=new celltowermodel();
-                    model.setMnc(404);
-                    model.setMcc(59);
-                    model.setNetwork("BSNL");
-                    model.setCountry("India");
-                    model.setIso("IN");
-                    model.setDbm(Integer.parseInt("-55"));
-                    model.setCountrycode("91");
-                    model.setCid(Integer.parseInt("595959"));
-                celltowers.add(model);
-                toweradapter.notifyDataSetChanged();
-            }*/
-
 
           TimeZone timezone = TimeZone.getDefault();
           String timezoneid=timezone.getID();
@@ -536,21 +519,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 @Override
                 public void onGlobalLayout() {
                     barvisualizerview.setBaseY(barvisualizerview.getHeight());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        barvisualizerview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    } else {
-                        barvisualizerview.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    }
+                    barvisualizerview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             });
-
-
-            /*linechart_speed.setVisibility(View.GONE);
-            linechart_traveled.setVisibility(View.GONE);
-            linechart_altitude.setVisibility(View.GONE);*/
-
-
-
         }
         return rootview;
     }
@@ -572,14 +543,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
         if(isdatacomposing)
         {
-            float pitch = orientation[1] * -57;
+            //float pitch = orientation[1] * -57;
             float roll = orientation[2] * -57;
            // attitudeindicator.setAttitude(pitch, roll);
 
             if(img_phone_orientation != null)
                 img_phone_orientation.setRotation(roll);
         }
-        //Log.e("Pitch roll ",""+pitch+" "+roll);
     }
 
     public void drawmappoints(LatLng latlng)
@@ -637,6 +607,257 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(isdatacomposing)
             {
+                    if(! latitudedegree.isEmpty() && (! latitudedegree.equalsIgnoreCase("NA")))
+                    {
+                        String latitude = common.convertlatitude(Double.parseDouble(latitudedegree));
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude),"\n"+latitude, tvlatitude);
+                    }
+                    else
+                    {
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude),"\n"+"NA", tvlatitude);
+                    }
+
+                    if(! longitudedegree.isEmpty() && (! longitudedegree.equalsIgnoreCase("NA")))
+                    {
+                        String longitude = common.convertlongitude(Double.parseDouble(longitudedegree));
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+longitude, tvlongitude);
+                    }
+                    else
+                    {
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+"NA", tvlongitude);
+                    }
+
+                    if(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)).equalsIgnoreCase("NA")) {
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.address),": "+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
+                    }else{ // remove "/n" from address
+                        common.setdrawabledata("",common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
+
+                    }
+
+                    String altitude=xdata.getinstance().getSetting(config.Altitude);
+                    String speed=common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
+
+                    String traveled=common.travelleddistanceformatter(xdata.getinstance().getSetting(config.distancetravelled));
+                    String strconnectionspeed=xdata.getinstance().getSetting(config.Connectionspeed);
+                    String gpsaccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
+                    String connectiontimedelaystr=xdata.getinstance().getSetting(config.connectiondatadelay);
+
+                    if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
+                    {
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+altitude, tvaltitude);
+                    }
+                    else
+                    {
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+"NA", tvaltitude);
+                    }
+
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.xaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_x), tvxaxis);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.yaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_y), tvyaxis);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.zaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_z), tvzaxis);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.phone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.PhoneType)), tvphone);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.network),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)), tvnetwork);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.version),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.OSversion)), tvversion);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)), tvwifi);
+
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.screen),"\n"+xdata.getinstance().getSetting(config.ScreenWidth) +"*" +xdata.getinstance().getSetting(config.ScreenHeight), tvscreen);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.country),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Country)), tvcountry);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.brightness),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Brightness)), tvbrightness);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.timezone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.TimeZone)), tvtimezone);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.bluetooth),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Bluetooth)), tvbluetooth);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.localtime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.LocalTime)), tvlocaltime);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
+
+
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),
+                            "\n"+ common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)))
+                            , tvspeed);
+
+                    if((! gpsaccuracy.trim().isEmpty()) && (! gpsaccuracy.equalsIgnoreCase("NA"))
+                            && (! gpsaccuracy.equalsIgnoreCase("null")))
+                    {
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                                "\n"+gpsaccuracy+" feet", tvgpsaccuracy);
+                    }
+                    else
+                    {
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                                "\n"+ gpsaccuracy , tvgpsaccuracy);
+                    }
+
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
+                            "\n"+traveled, tvtraveled);
+
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),"\n"+
+                            common.getxdatavalue(strconnectionspeed), tvconnection);
+
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay),
+                            "\n"+connectiontimedelaystr, txt_datatimedelay);
+
+                    if(phone_time_clock != null)
+                        phone_time_clock.setpostrecorddata(true,"");
+
+                    if(world_time_clock != null)
+                        world_time_clock.setpostrecorddata(true,"");
+
+                    common.setdrawabledata("",common.getdate(), tvdate);
+                    common.setdrawabledata("",common.gettime(), tvtime);
+
+                    String latitude=xdata.getinstance().getSetting("lat");
+                    String longitude=xdata.getinstance().getSetting("lng");
+
+                    common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
+                    common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.availablewifinetwork),"\n"+
+                            common.getxdatavalue(xdata.getinstance().getSetting(config.availablewifis)), txt_availablewifinetwork);
+                    if(chart_memoeyusage!= null)
+                        sethalfpaichartData(chart_memoeyusage,common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
+
+                    if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                            (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                    {
+                        populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                    }
+
+                    if(chart_cpuusage!= null){
+                        String cpuusagevalue = common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage));
+                        cpuusagevalue = cpuusagevalue.substring(cpuusagevalue.lastIndexOf(" ")+1);
+                        if(cpuusagevalue.contains("total")){
+                            sethalfpaichartData(chart_cpuusage,"33%");
+                            common.setdrawabledata("","\n"+"33%", tvcpuusage);
+                        }else{
+                            sethalfpaichartData(chart_cpuusage,common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
+                            common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
+                        }
+                    }
+                    if(chart_battery!= null)
+                        sethalfpaichartData(chart_battery,common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)));
+
+                    if(isrecodrunning)
+                    {
+                        setvisibility(false);
+                        showhideverticalbar(false);
+                        {
+                            Float connectionspeed=0.0f;
+                            if((! strconnectionspeed.trim().isEmpty()) && (! strconnectionspeed.equalsIgnoreCase("null")) &&
+                                    (! strconnectionspeed.equalsIgnoreCase("NA")))
+                            {
+                                String[] array=strconnectionspeed.split(" ");
+                                if(array.length >0)
+                                    connectionspeed=Float.parseFloat(array[0]);
+                            }
+                            setlinechartdata(linechart_connectionspeed,connectionspeed,connectionspeedvalues);
+                        }
+
+                        {
+                            Float connectiondelay=0.0f;
+                            if((! connectiontimedelaystr.trim().isEmpty()) && (! connectiontimedelaystr.equalsIgnoreCase("null")) &&
+                                    (! connectiontimedelaystr.equalsIgnoreCase("NA")))
+                            {
+                                String[] array=connectiontimedelaystr.split(" ");
+                                if(array.length >0)
+                                    connectiondelay=Float.parseFloat(array[0]);
+                            }
+                            setlinechartdata(linechart_datatimedelay,connectiondelay,connectiondatadelayvalues);
+                        }
+
+                        {
+                            String gps=xdata.getinstance().getSetting(config.GPSAccuracy);
+                            Float gpsaccuracydata=0.0f;
+                            if((! gps.trim().isEmpty()) && (! gps.equalsIgnoreCase("null")) &&
+                                    (! gps.equalsIgnoreCase("NA")))
+                            {
+                                String[] array=gps.split(" ");
+                                if(array.length >0)
+                                    gpsaccuracydata=Float.parseFloat(array[0]);
+                            }
+                            setlinechartdata(linechart_gpsaccuracy,gpsaccuracydata,gpsaccuracyvalues);
+                        }
+
+                        {
+                            Float data=0.0f;
+                            if((! speed.trim().isEmpty()) && (! speed.equalsIgnoreCase("null")) &&
+                                    (! speed.equalsIgnoreCase("NA")))
+                            {
+                                String[] array=speed.split(" ");
+                                if(array.length >0)
+                                    data=Float.parseFloat(array[0]);
+                            }
+                            setspeedtraveledaltitudechart(linechart_speed,data,speedgraphitems);
+                        }
+
+                        {
+                            Float data=0.0f;
+                            if((! traveled.trim().isEmpty()) && (! traveled.equalsIgnoreCase("null")) &&
+                                    (! traveled.equalsIgnoreCase("NA")))
+                            {
+                                String[] array=traveled.split(" ");
+                                if(array.length >0)
+                                    data=Float.parseFloat(array[0]);
+                            }
+                            setspeedtraveledaltitudechart(linechart_traveled,data,travelledgraphitems);
+                        }
+
+                        {
+                            Float data=0.0f;
+                            if((! altitude.trim().isEmpty()) && (! altitude.equalsIgnoreCase("null")) &&
+                                    (! altitude.equalsIgnoreCase("NA")))
+                            {
+                                String[] array=altitude.split(" ");
+                                if(array.length >0)
+                                    data=Float.parseFloat(array[0]);
+                            }
+                            setspeedtraveledaltitudechart(linechart_altitude,data,altitudegraphitems);
+                        }
+
+                        common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
+                        common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
+                        common.setdrawabledata("", " "+common.getxdatavalue(xdata.getinstance().getSetting(config.datahash)), tvblocknumber);
+                        common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);
+                    }
+                    else if(! isrecodrunning)
+                    {
+                        myvisualizerview.clear();
+                        setvisibility(true);
+                        layout_soundiformation.setVisibility(View.GONE);
+                        showhideverticalbar(true);
+                        updateverticalsliderlocationdata(speed,vertical_slider_speed);
+                        updateverticalsliderlocationdata(altitude,vertical_slider_altitude);
+                        updateverticalsliderlocationdata(traveled,vertical_slider_traveled);
+
+                        updateverticalsliderlocationdata(gpsaccuracy,vertical_slider_gpsaccuracy);
+                        updateverticalsliderlocationdata(strconnectionspeed,vertical_slider_connectionspeed);
+                        updateverticalsliderlocationdata(connectiontimedelaystr,vertical_slider_connectiondatatimedely);
+
+                        if(mappathpolyline != null)
+                            mappathpolyline.remove();
+
+                        mappathpolyline=null;
+                        mappathcoordinates.clear();
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
+                                "\n"+common.travelleddistanceformatter("0.0"), tvtraveled);
+
+                        if(altitudegraphitems.size() > 0 || speedgraphitems.size() > 0 || travelledgraphitems.size() > 0)
+                        {
+                            altitudegraphitems.clear();
+                            speedgraphitems.clear();
+                            travelledgraphitems.clear();
+                            linechart_speed.clear();
+                            linechart_traveled.clear();
+                            linechart_altitude.clear();
+                        }
+
+                        if(connectionspeedvalues.size() > 0 || connectiondatadelayvalues.size() > 0 || gpsaccuracyvalues.size() > 0)
+                            clearlinegraphs();
+
+                        tvblockchainid.setText("");
+                        tvblockid.setText("");
+                        tvblocknumber.setText("");
+                        tvmetahash.setText("");
+                    }
+
                 String towerinfo = xdata.getinstance().getSetting(config.json_towerlist);
                 if(towerinfo.trim().length() == 0)
                 {
@@ -648,307 +869,53 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
                 else if(towerinfo.trim().length() > 0)
                 {
-                        try
+                    try
+                    {
+                        JSONArray jsonArray=new JSONArray(towerinfo);
+                        if(jsonArray.length() > 0 && (celltowers.size() != jsonArray.length()))
                         {
-                            JSONArray jsonArray=new JSONArray(towerinfo);
-                            if(jsonArray.length() > 0 && (celltowers.size() != jsonArray.length()))
-                            {
-                                celltowers.clear();
-                                toweradapter.notifyDataSetChanged();
-
-                                for(int i=0;i<jsonArray.length();i++)
-                                {
-                                    celltowermodel model=new celltowermodel();
-                                    JSONObject object=jsonArray.getJSONObject(i);
-                                    if(object.has("mnc"))
-                                        model.setMnc(Integer.parseInt(object.getString("mnc")));
-                                    if(object.has("mcc"))
-                                        model.setMcc(Integer.parseInt(object.getString("mcc")));
-                                    if(object.has("network"))
-                                        model.setNetwork(object.getString("network"));
-                                    if(object.has("country"))
-                                        model.setCountry(object.getString("country"));
-                                    if(object.has("iso"))
-                                        model.setIso(object.getString("iso"));
-                                    if(object.has("dbm"))
-                                        model.setDbm(Integer.parseInt(object.getString("dbm")));
-                                    if(object.has("country_code"))
-                                        model.setCountrycode(object.getString("country_code"));
-                                    if(object.has("cid"))
-                                        model.setCid(Integer.parseInt(object.getString("cid")));
-                                    celltowers.add(model);
-                                }
-                            }
+                            celltowers.clear();
                             toweradapter.notifyDataSetChanged();
-                            if(celltowers.size() > 0)
-                                layout_towerinfo.setVisibility(View.VISIBLE);
-                            else
-                                layout_towerinfo.setVisibility(View.GONE);
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
+
+                            for(int i=0;i<jsonArray.length();i++)
+                            {
+                                celltowermodel model=new celltowermodel();
+                                JSONObject object=jsonArray.getJSONObject(i);
+                                if(object.has("mnc"))
+                                    model.setMnc(Integer.parseInt(object.getString("mnc")));
+                                if(object.has("mcc"))
+                                    model.setMcc(Integer.parseInt(object.getString("mcc")));
+                                if(object.has("network"))
+                                    model.setNetwork(object.getString("network"));
+                                if(object.has("country"))
+                                    model.setCountry(object.getString("country"));
+                                if(object.has("iso"))
+                                    model.setIso(object.getString("iso"));
+                                if(object.has("dbm"))
+                                    model.setDbm(Integer.parseInt(object.getString("dbm")));
+                                if(object.has("country_code"))
+                                    model.setCountrycode(object.getString("country_code"));
+                                if(object.has("cid"))
+                                    model.setCid(Integer.parseInt(object.getString("cid")));
+                                celltowers.add(model);
+                            }
                         }
-                }
-
-                if(! latitudedegree.isEmpty() && (! latitudedegree.equalsIgnoreCase("NA")))
-                {
-                    String latitude = common.convertlatitude(Double.parseDouble(latitudedegree));
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude),"\n"+latitude, tvlatitude);
-                }
-                else
-                {
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude),"\n"+"NA", tvlatitude);
-                }
-
-                if(! longitudedegree.isEmpty() && (! longitudedegree.equalsIgnoreCase("NA")))
-                {
-                    String longitude = common.convertlongitude(Double.parseDouble(longitudedegree));
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+longitude, tvlongitude);
-                }
-                else
-                {
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+"NA", tvlongitude);
-                }
-
-            /**/
-
-                if(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)).equalsIgnoreCase("NA")) {
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.address),": "+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
-                }else{ // remove "/n" from address
-                    common.setdrawabledata("",common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
-
-                }
-
-                String altitude=xdata.getinstance().getSetting(config.Altitude);
-                String speed=common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
-
-                String traveled=common.travelleddistanceformatter(xdata.getinstance().getSetting(config.distancetravelled));
-                String strconnectionspeed=xdata.getinstance().getSetting(config.Connectionspeed);
-                String gpsaccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
-                String connectiontimedelaystr=xdata.getinstance().getSetting(config.connectiondatadelay);
-
-                if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
-                {
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+altitude, tvaltitude);
-                }
-                else
-                {
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+"NA", tvaltitude);
-                }
-
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.xaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_x), tvxaxis);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.yaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_y), tvyaxis);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.zaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_z), tvzaxis);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.phone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.PhoneType)), tvphone);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.network),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)), tvnetwork);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.version),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.OSversion)), tvversion);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)), tvwifi);
-
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.screen),"\n"+xdata.getinstance().getSetting(config.ScreenWidth) +"*" +xdata.getinstance().getSetting(config.ScreenHeight), tvscreen);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.country),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Country)), tvcountry);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.brightness),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Brightness)), tvbrightness);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.timezone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.TimeZone)), tvtimezone);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.bluetooth),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Bluetooth)), tvbluetooth);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.localtime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.LocalTime)), tvlocaltime);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
-
-
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),
-                        "\n"+ common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)))
-                        , tvspeed);
-
-                if((! gpsaccuracy.trim().isEmpty()) && (! gpsaccuracy.equalsIgnoreCase("NA"))
-                        && (! gpsaccuracy.equalsIgnoreCase("null")))
-                {
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                            "\n"+gpsaccuracy+" feet", tvgpsaccuracy);
-                }
-                else
-                {
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                            "\n"+ gpsaccuracy , tvgpsaccuracy);
-                }
-
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
-                        "\n"+traveled, tvtraveled);
-
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),"\n"+
-                        common.getxdatavalue(strconnectionspeed), tvconnection);
-
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay),
-                        "\n"+connectiontimedelaystr, txt_datatimedelay);
-
-                if(phone_time_clock != null)
-                    phone_time_clock.setpostrecorddata(true,"");
-
-                if(world_time_clock != null)
-                    world_time_clock.setpostrecorddata(true,"");
-
-                common.setdrawabledata("",common.getdate(), tvdate);
-                common.setdrawabledata("",common.gettime(), tvtime);
-
-                String latitude=xdata.getinstance().getSetting("lat");
-                String longitude=xdata.getinstance().getSetting("lng");
-
-                common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
-                common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
-                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.availablewifinetwork),"\n"+
-                        common.getxdatavalue(xdata.getinstance().getSetting(config.availablewifis)), txt_availablewifinetwork);
-                if(chart_memoeyusage!= null)
-                    sethalfpaichartData(chart_memoeyusage,common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
-
-                if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                        (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                {
-                    populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                    drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                }
-
-                if(chart_cpuusage!= null){
-                    String cpuusagevalue = common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage));
-                    cpuusagevalue = cpuusagevalue.substring(cpuusagevalue.lastIndexOf(" ")+1);
-                    if(cpuusagevalue.contains("total")){
-                        sethalfpaichartData(chart_cpuusage,"33%");
-                        common.setdrawabledata("","\n"+"33%", tvcpuusage);
-                    }else{
-                        sethalfpaichartData(chart_cpuusage,common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
-                        common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
-                    }
-                }
-                if(chart_battery!= null)
-                    sethalfpaichartData(chart_battery,common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)));
-
-                if(isrecodrunning)
-                {
-                    setvisibility(false);
-                    showhideverticalbar(false);
+                        toweradapter.notifyDataSetChanged();
+                        if(celltowers.size() > 0)
+                            layout_towerinfo.setVisibility(View.VISIBLE);
+                        else
+                            layout_towerinfo.setVisibility(View.GONE);
+                    }catch (Exception e)
                     {
-                        Float connectionspeed=0.0f;
-                        if((! strconnectionspeed.trim().isEmpty()) && (! strconnectionspeed.equalsIgnoreCase("null")) &&
-                                (! strconnectionspeed.equalsIgnoreCase("NA")))
-                        {
-                            String[] array=strconnectionspeed.split(" ");
-                            if(array.length >0)
-                                connectionspeed=Float.parseFloat(array[0]);
-                        }
-                        setlinechartdata(linechart_connectionspeed,connectionspeed,connectionspeedvalues);
+                        e.printStackTrace();
                     }
-
-                    {
-                        Float connectiondelay=0.0f;
-                        if((! connectiontimedelaystr.trim().isEmpty()) && (! connectiontimedelaystr.equalsIgnoreCase("null")) &&
-                                (! connectiontimedelaystr.equalsIgnoreCase("NA")))
-                        {
-                            String[] array=connectiontimedelaystr.split(" ");
-                            if(array.length >0)
-                                connectiondelay=Float.parseFloat(array[0]);
-                        }
-                        setlinechartdata(linechart_datatimedelay,connectiondelay,connectiondatadelayvalues);
-                    }
-
-                    {
-                        String gps=xdata.getinstance().getSetting(config.GPSAccuracy);
-                        Float gpsaccuracydata=0.0f;
-                        if((! gps.trim().isEmpty()) && (! gps.equalsIgnoreCase("null")) &&
-                                (! gps.equalsIgnoreCase("NA")))
-                        {
-                            String[] array=gps.split(" ");
-                            if(array.length >0)
-                                gpsaccuracydata=Float.parseFloat(array[0]);
-                        }
-                        setlinechartdata(linechart_gpsaccuracy,gpsaccuracydata,gpsaccuracyvalues);
-                    }
-
-                    {
-                        Float data=0.0f;
-                        if((! speed.trim().isEmpty()) && (! speed.equalsIgnoreCase("null")) &&
-                                (! speed.equalsIgnoreCase("NA")))
-                        {
-                            String[] array=speed.split(" ");
-                            if(array.length >0)
-                                data=Float.parseFloat(array[0]);
-                        }
-                        setspeedtraveledaltitudechart(linechart_speed,data,speedgraphitems);
-                    }
-
-                    {
-                        Float data=0.0f;
-                        if((! traveled.trim().isEmpty()) && (! traveled.equalsIgnoreCase("null")) &&
-                                (! traveled.equalsIgnoreCase("NA")))
-                        {
-                            String[] array=traveled.split(" ");
-                            if(array.length >0)
-                                data=Float.parseFloat(array[0]);
-                        }
-                        setspeedtraveledaltitudechart(linechart_traveled,data,travelledgraphitems);
-                    }
-
-                    {
-                        Float data=0.0f;
-                        if((! altitude.trim().isEmpty()) && (! altitude.equalsIgnoreCase("null")) &&
-                                (! altitude.equalsIgnoreCase("NA")))
-                        {
-                            String[] array=altitude.split(" ");
-                            if(array.length >0)
-                                data=Float.parseFloat(array[0]);
-                        }
-                        setspeedtraveledaltitudechart(linechart_altitude,data,altitudegraphitems);
-                    }
-
-                    common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
-                    common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
-                    common.setdrawabledata("", " "+common.getxdatavalue(xdata.getinstance().getSetting(config.datahash)), tvblocknumber);
-                    common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);
                 }
-                else
-                {
-                    myvisualizerview.clear();
-                    setvisibility(true);
-                    layout_soundiformation.setVisibility(View.GONE);
-                    showhideverticalbar(true);
-                    updateverticalsliderlocationdata(speed,vertical_slider_speed);
-                    updateverticalsliderlocationdata(altitude,vertical_slider_altitude);
-                    updateverticalsliderlocationdata(traveled,vertical_slider_traveled);
 
-                    updateverticalsliderlocationdata(gpsaccuracy,vertical_slider_gpsaccuracy);
-                    updateverticalsliderlocationdata(strconnectionspeed,vertical_slider_connectionspeed);
-                    updateverticalsliderlocationdata(connectiontimedelaystr,vertical_slider_connectiondatatimedely);
-
-                    if(mappathpolyline != null)
-                        mappathpolyline.remove();
-
-                    mappathpolyline=null;
-                    mappathcoordinates.clear();
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
-                            "\n"+common.travelleddistanceformatter("0.0"), tvtraveled);
-
-                    if(altitudegraphitems.size() > 0 || speedgraphitems.size() > 0 || travelledgraphitems.size() > 0)
-                    {
-                        altitudegraphitems.clear();
-                        speedgraphitems.clear();
-                        travelledgraphitems.clear();
-                        linechart_speed.clear();
-                        linechart_traveled.clear();
-                        linechart_altitude.clear();
-                    }
-
-                    if(connectionspeedvalues.size() > 0 || connectiondatadelayvalues.size() > 0 || gpsaccuracyvalues.size() > 0)
-                        clearlinegraphs();
-
-                    tvblockchainid.setText("");
-                    tvblockid.setText("");
-                    tvblocknumber.setText("");
-                    tvmetahash.setText("");
-
-                }
             }
-
-            if(! isdatacomposing)
+            else if(! isdatacomposing)
             {
                 setvisibility(true);
-                if(xdata.getinstance().getSetting(config.Heading).toString().trim().length() > 0)
+                if(xdata.getinstance().getSetting(config.Heading).trim().length() > 0)
                 {
                     String strdegree=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
 
@@ -973,46 +940,43 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
             }
 
-            if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
+            if(xdata.getinstance().getSetting(config.orientation).trim().length() > 0)
             {
                 String strdegree=xdata.getinstance().getSetting(config.orientation);
                 if(! strdegree.equals(lastsavedangle))
                 {
                     if(strdegree.equalsIgnoreCase("NA"))
                         strdegree="0.0";
-
-                    int degree = Math.abs((int)Double.parseDouble(strdegree));
-                 //   rotatecompass(degree);
                 }
                 lastsavedangle=strdegree;
             }
 
-        if(! xdata.getinstance().getSetting(config.attitude_data).trim().isEmpty() && (! xdata.getinstance().getSetting(config.attitude_data).equalsIgnoreCase("NA")))
-        {
-            try {
-                float[] adjustedRotationMatrix = new float[9];
-                String attitude = xdata.getinstance().getSetting(config.attitude_data).toString();
-                String[] attitudearray = attitude.split(",");
-                for(int i = 0 ;i< attitudearray.length;i++){
-                    //float val = (float) (Math.random() * 20) + 3;
-                    adjustedRotationMatrix[i]=Float.parseFloat(attitudearray[i]);
-                }
-                // Transform rotation matrix into azimuth/pitch/roll
-                float[] orientation = new float[3];
-                SensorManager.getOrientation(adjustedRotationMatrix, orientation);
-
-                float pitch = orientation[1] * -57;
-                float roll = orientation[2] * -57;
-
-                if(img_phone_orientation != null)
-                    img_phone_orientation.setRotation(roll);
-
-            }catch (Exception e)
+            if(! xdata.getinstance().getSetting(config.attitude_data).trim().isEmpty() && (! xdata.getinstance().getSetting(config.attitude_data).equalsIgnoreCase("NA")))
             {
-                e.printStackTrace();
-            }
+                try {
+                    float[] adjustedRotationMatrix = new float[9];
+                    String attitude = xdata.getinstance().getSetting(config.attitude_data);
+                    String[] attitudearray = attitude.split(",");
+                    for(int i = 0 ;i< attitudearray.length;i++){
+                        //float val = (float) (Math.random() * 20) + 3;
+                        adjustedRotationMatrix[i]=Float.parseFloat(attitudearray[i]);
+                    }
+                    // Transform rotation matrix into azimuth/pitch/roll
+                    float[] orientation = new float[3];
+                    SensorManager.getOrientation(adjustedRotationMatrix, orientation);
 
-        }
+                    //float pitch = orientation[1] * -57;
+                    float roll = orientation[2] * -57;
+
+                    if(img_phone_orientation != null)
+                        img_phone_orientation.setRotation(roll);
+
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+            }
     }
 
     public void setsoundinformation(int ampletudevalue,int decibelvalue){
@@ -1085,11 +1049,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         this.isrecodrunning=isrecodrunning;
     }
 
-
-    public void setmediaplaying(boolean ismediaplaying)
+    public void setdraweropen(boolean isdraweropen)
     {
-        this.ismediaplaying=ismediaplaying;
+
     }
+
 
     public void cleargooglemap()
     {
@@ -1176,16 +1140,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         try
         {
-            txt_videoaudio_validframes.setText("0 Frames");
-            txt_videoaudio_cautionframes.setText("0 Frames");
-            txt_videoaudio_invalidframes.setText("0 Frames");
-            txt_meta_validframes.setText("0 Frames");
-            txt_meta_cautionframes.setText("0 Frames");
-            txt_meta_invalidframes.setText("0 Frames");
-
-            // emptymediapiechartdata(pie_videoaudiochart);
-          //  emptymediapiechartdata(pie_metadatachart);
-
+            txt_videoaudio_validframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
+            txt_videoaudio_cautionframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
+            txt_videoaudio_invalidframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
+            txt_meta_validframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
+            txt_meta_cautionframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
+            txt_meta_invalidframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
 
             if(seekbar_mediametadata != null)
                 seekbar_mediametadata.setProgress(0);
@@ -1256,7 +1216,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         layout_soundiformation.setVisibility(View.GONE);
 
         mappathoptions = new PolylineOptions().width(7).color(Color.BLUE).geodesic(true);
-        Log.e("mainarraylistsize=",""+metricmainarraylist.size());
         for (int i = 0; i < metricmainarraylist.size(); i++)
         {
             arraycontainer container=metricmainarraylist.get(i);
@@ -2123,14 +2082,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
-    private int adjustAlpha(int color, float factor) {
-        int alpha = Math.round(Color.alpha(color) * factor);
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
-        return Color.argb(40, red, green, blue);
-    }
-
     protected float getDisplayPulseRadius() {
         if(mgooglemap == null)
             return 0.0f;
@@ -2232,7 +2183,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     }
                 });
                 int degree = Math.round(event.values[0]);
-                //  Log.e("degree ",""+degree);
                 rotatecompass(degree);
             }
         }
