@@ -41,7 +41,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:textSize="15sp"
-                android:textColor="@color/grey_xxx"
+                android:textColor="@color/dark_blue_solid_a"
                 app:fontType="Comfortaa-Regular"
                 />
 
@@ -87,7 +87,7 @@
                 android:layout_alignParentLeft="true"
                 android:textSize="15sp"
                 app:fontType="Comfortaa-Regular"
-                android:textColor="@color/grey_xxx"
+                android:textColor="@color/dark_blue_solid_a"
                 />
 
             <com.suke.widget.SwitchButton
@@ -132,7 +132,7 @@
                 android:layout_alignParentLeft="true"
                 android:textSize="15sp"
                 app:fontType="Comfortaa-Regular"
-                android:textColor="@color/grey_xxx"
+                android:textColor="@color/dark_blue_solid_a"
                 />
 
             <com.suke.widget.SwitchButton
@@ -204,10 +204,10 @@
                 android:gravity="center"
                 android:layout_centerInParent="true"
                 android:textSize="15sp"
-                android:paddingRight="@dimen/margin_5dp"
+                android:paddingRight="@dimen/margin_8dp"
                 android:text=""
                 android:lineSpacingExtra="1dp"
-                android:textColor="@color/grey_xxx"
+                android:textColor="@color/dark_blue_solid_a"
                 app:fontType="Comfortaa-Regular"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
@@ -220,7 +220,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="1dp"
                     android:gravity="center"
-                    android:textColor="@color/wave_color"
+                    android:textColor="@color/dark_blue_solid_a"
                     android:text="TM"
                     android:background="@drawable/circle_trademark_background"
                     app:fontType="Comfortaa-Regular"/>
