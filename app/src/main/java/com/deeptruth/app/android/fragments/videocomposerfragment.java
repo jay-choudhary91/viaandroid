@@ -2271,6 +2271,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     txt_section_network.setText(config.TEXT_NETWORK + "" + common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
                     img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
                 }
+            }else{
+                txt_section_network.setText(config.TEXT_NETWORK +""+getResources().getString(R.string.no_network));
+                img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
             }
 
             if(xdata.getinstance().getSetting(config.Connectionspeed)!=null && !xdata.getinstance().getSetting(config.Connectionspeed).isEmpty()){
