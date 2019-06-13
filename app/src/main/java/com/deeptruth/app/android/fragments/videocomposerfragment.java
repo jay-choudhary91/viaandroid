@@ -483,7 +483,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_media_high.setOnClickListener(this);
 
         txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
-        expandable_layout.setVisibility(View.VISIBLE);
+        expandable_layout.setVisibility(View.GONE);
         txt_media_quality.setVisibility(View.VISIBLE);
 
         txt_media_quality.setText(config.mediaquality720);

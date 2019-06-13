@@ -52,8 +52,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginLeft="@dimen/margin_10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="@dimen/margin_15dp"
                     android:src="@drawable/icon_flashoff"/>
 
                 <Spinner
@@ -76,7 +76,7 @@
                     android:textSize="12sp"
                     android:visibility="gone"
                     android:padding="5dp"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="@dimen/margin_3dp"
                     android:textColor="@color/white"
                     app:fontType="Comfortaa-Regular"/>
 
