@@ -1,18 +1,11 @@
 package com.deeptruth.app.android.fragments;
 
 
-import android.Manifest;
 import android.animation.ValueAnimator;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
@@ -38,7 +30,6 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -64,21 +55,13 @@ import com.deeptruth.app.android.models.customedittext;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
-import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.simpledivideritemdecoration;
 import com.deeptruth.app.android.utils.xdata;
-import com.deeptruth.app.android.views.customfonttextview;
 import com.github.mikephil.charting.utils.Utils;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -86,7 +69,6 @@ import org.json.JSONTokener;
 
 import java.io.File;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -198,18 +180,21 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     FrameLayout metainfocontainer;
     metainformationfragment fragmentmetainformation;
 
-    private String imageurl = null,selectedmetrices = "";
+    private Handler myHandler;
+    private Runnable myRunnable;
+    private String mediafilepath = "",sync_date = "";
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private int flingactionmindstvac,footerheight,navigationbarheight = 0,targetheight=0,previousheight=0,bottompadding,
-            rootviewheight, devidedheight,actionbarheight;
+            rootviewheight, devidedheight,actionbarheight,updatemetaattempt=0;
     private String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",
-            screenheight = "",screenwidth = "",lastsavedangle="",mediatoken="";
+            screenheight = "",screenwidth = "",mediastartdevicedate="",mediatoken="";
     private float currentDegree = 0f;
     private adapteritemclick mcontrollernavigator;
-    private BroadcastReceiver getmetadatabroadcastreceiver;
     private TranslateAnimation validationbaranimation;
     private encryptiondataadapter encryptionadapter;
     private ArrayList<arraycontainer> encryptionarraylist = new ArrayList<>();
+    private folderdirectoryspinneradapter folderspinneradapter;
+    private arraycontainer arraycontainerformetric =null;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_phototabreaderfrag;
@@ -499,8 +484,54 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
         });
 
-        fetchmetadatafromdb();
-        gethelper().setcurrentmediaposition(0);
+        setmetriceshashesdata();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+    }
+
+
+    public void setmetriceshashesdata()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        myHandler=new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if(updatemetaattempt == 0 || updatemetaattempt >= 3 &&
+                        ((sync_date.trim().isEmpty()) || sync_date.equalsIgnoreCase("0")))
+                {
+                    updatemetaattempt=0;
+                    getmediastartinfo();
+                    getmediametadata();
+                    gethelper().setcurrentmediaposition(0);
+                }
+                updatemetaattempt++;
+
+                if(arraycontainerformetric != null)
+                {
+                    common.setgraphicalblockchainvalue(config.blockchainid,arraycontainerformetric.getVideostarttransactionid(),true);
+                    common.setgraphicalblockchainvalue(config.hashformula,arraycontainerformetric.getHashmethod(),true);
+                    common.setgraphicalblockchainvalue(config.datahash,arraycontainerformetric.getValuehash(),true);
+                    common.setgraphicalblockchainvalue(config.matrichash,arraycontainerformetric.getMetahash(),true);
+
+                    common.setspannable(getResources().getString(R.string.blockchain_id), " " + arraycontainerformetric.getVideostarttransactionid(), txt_blockchainid);
+                    common.setspannable(getResources().getString(R.string.hash_formula), " " + arraycontainerformetric.getHashmethod(), txt_blockid);
+                    common.setspannable(getResources().getString(R.string.mediahash), " " + arraycontainerformetric.getValuehash(), txt_blocknumber);
+                    common.setspannable(getResources().getString(R.string.metrichash), " " + arraycontainerformetric.getMetahash(), txt_metahash);
+
+                }
+                myHandler.postDelayed(this, 1000);
+            }
+        };
+        myHandler.post(myRunnable);
     }
 
     @Override
@@ -582,9 +613,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         img_share_media.setEnabled(true);
                     }
                 }, 1500);
-                if (imageurl != null && (!imageurl.isEmpty()))
-                    gethelper().showsharepopupsub(imageurl,"image",mediatoken);
-                    //common.shareimage(getActivity(), imageurl);
+                if (mediafilepath != null && (!mediafilepath.isEmpty()))
+                    gethelper().showsharepopupsub(mediafilepath,"image",mediatoken);
+                    //common.shareimage(getActivity(), mediafilepath);
 
                 break;
 
@@ -720,32 +751,17 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void setupimagedata() {
-        imageurl = xdata.getinstance().getSetting(config.selectedphotourl);
-        tvsize.setText(common.filesize(imageurl));
-        if (imageurl != null && (!imageurl.isEmpty())) {
-            setupphoto(Uri.parse(imageurl));
-            new Thread() {
-                public void run() {
-                    try {
-                        fetchmetadatafromdb();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }.start();
+        mediafilepath = xdata.getinstance().getSetting(config.selectedphotourl);
+        tvsize.setText(common.filesize(mediafilepath));
+        if (mediafilepath != null && (!mediafilepath.isEmpty())) {
+            setupphoto(Uri.parse(mediafilepath));
         }
     }
 
     public void setupphoto(final Uri selectedphotouri) {
-        if (imageurl != null) {
+        if (mediafilepath != null) {
             tab_photoreader.setImageURI(selectedphotouri);
         }
-    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -762,7 +778,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-
         if(validationbaranimation != null)
             img_scanover.startAnimation(validationbaranimation);
     }
@@ -770,31 +785,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void onStart() {
         super.onStart();
-        registerbroadcastreciver();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        try {
-            applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
-    public void registerbroadcastreciver() {
-        IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
-        getmetadatabroadcastreceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                fetchmetadatafromdb();
-            }
-        };
-        getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
-    }
-
-    public void fetchmetadatafromdb() {
+    public void getmediastartinfo() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -811,8 +809,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         e.printStackTrace();
                     }
 
-                    Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(imageurl));
-                    String mediastartdevicedate = "";
+                    Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(mediafilepath));
                     if (cur != null && cur.getCount() > 0 && cur.moveToFirst()) {
                         do {
                             //mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
@@ -822,147 +819,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             mediatoken = "" + cur.getString(cur.getColumnIndex("token"));
                             mediafolder = "" + cur.getString(cur.getColumnIndex("media_folder"));
                             mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+                            sync_date = "" + cur.getString(cur.getColumnIndex("sync_date"));
                         } while (cur.moveToNext());
                     }
 
-                    if (!mediastartdevicedate.isEmpty()) {
-
-                        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
-
-                        for (int i = 0; i < mitemlist.size(); i++) {
-                            String metricdata = mitemlist.get(i).getMetricdata();
-                            String sequencehash = mitemlist.get(i).getSequencehash();
-                            String hashmethod = mitemlist.get(i).getHashmethod();
-                            String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
-                            String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                            String latency = mitemlist.get(i).getLatency();
-                            String color = mitemlist.get(i).getColor();
-                            String sequenceno = mitemlist.get(i).getSequenceno();
-                            parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,
-                                    latency,sequenceno);
-                        }
-
-                        if ((!mediastartdevicedate.isEmpty() && mediastartdevicedate != null) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate != null)) {
-
-                            final String finalMediacompleteddate = mediastartdevicedate;
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        SimpleDateFormat formatted = null;
-                                        Date mediadate = null;
-                                        if (finalMediacompleteddate.contains("T")) {
-                                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                            mediadate = format.parse(finalMediacompleteddate);
-                                        } else {
-                                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                                            mediadate = format.parse(finalMediacompleteddate);
-                                        }
-
-                                        DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
-                                        String localTime = datee.format(mediadate);
-
-                                        SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
-                                        SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH);
-
-                                        tvdate.setText(common.parsedateformat(mediadate));
-                                        tvtime.setText(common.parsetimeformat(mediadate) + " "+localTime);
-                                       // txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
-                                        txt_createdtime.setText(common.parsetimeformat(mediadate));
-                                        edt_medianame.setText(medianame);
-                                        edt_medianotes.setText(medianotes);
-
-                                        if (mediafolder.trim().length() > 0)
-                                            setfolderspinner();
-
-                                        ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size() - 1).getMetricItemArraylist();
-
-                                        if(metricmainarraylist.get(0) != null)
-                                        {
-                                            String color = "white";
-                                            if (metricmainarraylist.get(0).getColor() != null && (!metricmainarraylist.get(0).getColor().isEmpty()))
-                                                color = metricmainarraylist.get(0).getColor();
-
-                                            switch (color) {
-                                                case "green":
-                                                    txt_section_validating_secondary.setText(config.validating);
-                                                    try {
-                                                        DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                                                , R.color.scanover_green));
-                                                    }catch (Exception e)
-                                                    {
-                                                        e.printStackTrace();
-                                                    }
-                                                    layout_validating.setVisibility(View.VISIBLE);
-                                                    //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
-                                                    break;
-                                                case "white":
-                                                    layout_validating.setVisibility(View.GONE);
-                                                    break;
-                                                case "red":
-                                                    txt_section_validating_secondary.setText(config.invalid);
-                                                    try {
-                                                        DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                                                , R.color.scanover_red));
-                                                    }catch (Exception e)
-                                                    {
-                                                        e.printStackTrace();
-                                                    }
-                                                    layout_validating.setVisibility(View.VISIBLE);
-                                                    //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
-                                                    break;
-                                                case "yellow":
-                                                    txt_section_validating_secondary.setText(config.caution);
-                                                    try {
-                                                        DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                                                , R.color.scanover_yellow));
-                                                    }catch (Exception e)
-                                                    {
-                                                        e.printStackTrace();
-                                                    }
-                                                    layout_validating.setVisibility(View.VISIBLE);
-                                                    //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
-                                                    break;
-                                            }
-
-                                            if(encryptionarraylist.size() == 0)
-                                                encryptionarraylist.add(metricmainarraylist.get(0));
-
-                                            if(encryptionarraylist.size() > 0)
-                                            {
-                                                encryptionarraylist.set(0,metricmainarraylist.get(0));
-                                                encryptionadapter.notifyDataSetChanged();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            layout_validating.setVisibility(View.GONE);
-                                        }
-
-
-                                        common.setgraphicalblockchainvalue(config.blockchainid, metricmainarraylist.get(0).getVideostarttransactionid(), true);
-                                        common.setgraphicalblockchainvalue(config.hashformula, metricmainarraylist.get(0).getHashmethod(), true);
-                                        common.setgraphicalblockchainvalue(config.datahash, metricmainarraylist.get(0).getValuehash(), true);
-                                        common.setgraphicalblockchainvalue(config.matrichash, metricmainarraylist.get(0).getMetahash(), true);
-
-                                        common.setspannable(getResources().getString(R.string.blockchain_id), " " + metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
-                                        common.setspannable(getResources().getString(R.string.hash_formula), " " + metricmainarraylist.get(0).getHashmethod(), txt_blockid);
-                                        common.setspannable(getResources().getString(R.string.mediahash), " " + metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
-                                        common.setspannable(getResources().getString(R.string.metrichash), " " + metricmainarraylist.get(0).getMetahash(), txt_metahash);
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-                            });
-                        }
-                        try {
-                            mdbhelper.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -970,10 +830,174 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }).start();
     }
 
+    public void getmediametadata()
+    {
+
+        try {
+            databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+
+            try {
+                mdbhelper.open();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
+            if (mitemlist.size() > 0)
+            {
+                for (int i = 0; i < mitemlist.size(); i++)
+                {
+                    if(metricmainarraylist.size() == i)
+                    {
+                        String metricdata = mitemlist.get(i).getMetricdata();
+                        String sequencehash = mitemlist.get(i).getSequencehash();
+                        String hashmethod = mitemlist.get(i).getHashmethod();
+                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                        String color = mitemlist.get(i).getColor();
+                        String latency = mitemlist.get(i).getLatency();
+                        String sequenceno = mitemlist.get(i).getSequenceno();
+                        parsemetadata(metricdata, hashmethod, videostarttransactionid, sequencehash, serverdictionaryhash, color,
+                                latency, sequenceno);
+                    }
+                    else
+                    {
+                        String sequencehash = mitemlist.get(i).getSequencehash();
+                        String hashmethod = mitemlist.get(i).getHashmethod();
+                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                        String color = mitemlist.get(i).getColor();
+                        String latency = mitemlist.get(i).getLatency();
+                        String sequenceno = mitemlist.get(i).getSequenceno();
+                        metricmainarraylist.set(i, new arraycontainer(hashmethod, videostarttransactionid,
+                                sequencehash, serverdictionaryhash, color, latency));
+                    }
+                }
+            }
+
+            try
+            {
+                mdbhelper.close();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+
+                    edt_medianotes.setText(medianotes);
+                    edt_medianame.setText(medianame);
+
+                    if(metricmainarraylist.size()>0 && metricmainarraylist.get(0) != null)
+                    {
+                        arraycontainerformetric = metricmainarraylist.get(0);
+                        String color = "white";
+                        if (metricmainarraylist.get(0).getColor() != null && (!metricmainarraylist.get(0).getColor().isEmpty()))
+                            color = metricmainarraylist.get(0).getColor();
+
+                        switch (color) {
+                            case "green":
+                                txt_section_validating_secondary.setText(config.validating);
+                                try {
+                                    DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                            , R.color.scanover_green));
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                layout_validating.setVisibility(View.VISIBLE);
+                                //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
+                                break;
+                            case "white":
+                                layout_validating.setVisibility(View.GONE);
+                                break;
+                            case "red":
+                                txt_section_validating_secondary.setText(config.invalid);
+                                try {
+                                    DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                            , R.color.scanover_red));
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                layout_validating.setVisibility(View.VISIBLE);
+                                //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
+                                break;
+                            case "yellow":
+                                txt_section_validating_secondary.setText(config.caution);
+                                try {
+                                    DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                            , R.color.scanover_yellow));
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                layout_validating.setVisibility(View.VISIBLE);
+                                //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
+                                break;
+                        }
+
+                        if(encryptionarraylist.size() == 0)
+                            encryptionarraylist.add(metricmainarraylist.get(0));
+
+                        if(encryptionarraylist.size() > 0)
+                        {
+                            encryptionarraylist.set(0,metricmainarraylist.get(0));
+                            encryptionadapter.notifyDataSetChanged();
+                        }
+                    }
+                    else
+                    {
+                        layout_validating.setVisibility(View.GONE);
+                    }
+                    SimpleDateFormat formatted = null;
+                    Date mediadate = null;
+                    if (mediastartdevicedate.contains("T")) {
+                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                        mediadate = format.parse(mediastartdevicedate);
+                    } else {
+                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        mediadate = format.parse(mediastartdevicedate);
+                    }
+
+                    DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+                    String localTime = datee.format(mediadate);
+
+                    SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
+                    SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH);
+
+                    tvdate.setText(common.parsedateformat(mediadate));
+                    tvtime.setText(common.parsetimeformat(mediadate) + " "+localTime);
+                    // txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
+                    txt_createdtime.setText(common.parsetimeformat(mediadate));
+
+                    if (mediafolder.trim().length() > 0 && folderspinneradapter == null)
+                        setfolderspinner();
+
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+
     public void setfolderspinner()
     {
         final List<folder> folderitem=common.getalldirfolders();
-        folderdirectoryspinneradapter adapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
+        folderspinneradapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
                 R.layout.row_myfolderspinneradapter,folderitem);
 
         int selectedposition=0;
@@ -987,7 +1011,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
         }
 
-        spinnermediafolder.setAdapter(adapter);
+        spinnermediafolder.setAdapter(folderspinneradapter);
         spinnermediafolder.setSelection(selectedposition,true);
         spinnermediafolder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id)
@@ -1001,14 +1025,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                             try {
                                 String folderpath=folderitem.get(position).getFolderdir();
-                                if(! folderpath.equalsIgnoreCase(new File(imageurl).getParent()))
+                                if(! folderpath.equalsIgnoreCase(new File(mediafilepath).getParent()))
                                 {
-                                    if(common.movemediafile(new File(imageurl),new File(folderpath)))
+                                    if(common.movemediafile(new File(mediafilepath),new File(folderpath)))
                                     {
-                                        File destinationmediafile = new File(folderpath + File.separator + new File(imageurl).getName());
-                                        updatefilemediafolderdirectory(imageurl,destinationmediafile.getAbsolutePath(),folderpath);
-                                        imageurl=destinationmediafile.getAbsolutePath();
-                                        xdata.getinstance().saveSetting(config.selectedphotourl,imageurl);
+                                        File destinationmediafile = new File(folderpath + File.separator + new File(mediafilepath).getName());
+                                        updatefilemediafolderdirectory(mediafilepath,destinationmediafile.getAbsolutePath(),folderpath);
+                                        mediafilepath =destinationmediafile.getAbsolutePath();
+                                        xdata.getinstance().saveSetting(config.selectedphotourl, mediafilepath);
                                     }
                                 }
                             }catch (Exception e)
@@ -1020,7 +1044,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                 public void run() {
                                     progressdialog.dismisswaitdialog();
                                     if(mcontrollernavigator != null)
-                                        mcontrollernavigator.onItemClicked(imageurl,3);
+                                        mcontrollernavigator.onItemClicked(mediafilepath,3);
 
                                     loadviewdata();
                                 }
@@ -1119,40 +1143,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    public void expand(final View v, int duration, int targetHeight) {
-        Log.e("targetheight", ""+targetHeight);
-        int prevHeight  = v.getHeight();
-
-        v.setVisibility(View.VISIBLE);
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(prevHeight, targetHeight);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                v.getLayoutParams().height = (int) animation.getAnimatedValue();
-                v.requestLayout();
-            }
-        });
-        valueAnimator.setInterpolator(new DecelerateInterpolator());
-        valueAnimator.setDuration(duration);
-        valueAnimator.start();
-    }
-
-    public void collapse(final View v, int duration, int targetHeight) {
-
-        int prevHeight  = v.getHeight();
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(prevHeight, targetHeight);
-        valueAnimator.setInterpolator(new DecelerateInterpolator());
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                v.getLayoutParams().height = (int) animation.getAnimatedValue();
-                v.requestLayout();
-            }
-        });
-        valueAnimator.setInterpolator(new DecelerateInterpolator());
-        valueAnimator.setDuration(duration);
-        valueAnimator.start();
-    }
 
     public void updatemediainfo(String transactionid,String medianame,String medianotes)
     {
@@ -1183,10 +1173,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void setdata(adapteritemclick mcontrollernavigator) {
         this.mcontrollernavigator = mcontrollernavigator;
-    }
-    public static float dpToPx(Context context, float valueInDp) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
 
     @Override

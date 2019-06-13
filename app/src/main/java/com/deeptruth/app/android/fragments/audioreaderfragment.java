@@ -1,11 +1,8 @@
 package com.deeptruth.app.android.fragments;
 
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -20,7 +17,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,7 +36,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -76,11 +71,6 @@ import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.simpledivideritemdecoration;
 import com.deeptruth.app.android.utils.xdata;
 import com.github.mikephil.charting.utils.Utils;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -217,52 +207,34 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.metainfocontainer)
     FrameLayout metainfocontainer;
 
-    private String audiourl = null,latency="";
-
+    private String mediafilepath = "",latency="",
+            medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",thumbnailurl="",
+            mediatoken="",sync_date="",keytype = config.prefs_md5;
+    private int rootviewheight , audioviewheight,audiodetailviewheight ,mediatypeheight,starttime =0, endtime =0,
+            flingactionmindspdvac = 10,flingactionmindstvac=0,currentprocessframe=0,footerheight=0,navigationbarheight = 0,updatemetaattempt=0;
+    private long audioduration =0,maxincreasevideoduration=0, currentaudioduration =0,playerposition=0,frameduration =15;
+    public boolean islastdragarrow = false,isplaypauswebtnshow = false,issurafcedestroyed=false,ismediacompleted =false;
     private MediaPlayer player;
     private View rootview = null;
-    private String selectedmetrics="";
-    private ImageView righthandle;
     private LinearLayout linearLayout;
-    private String keytype = config.prefs_md5;
-    private long currentframenumber =0,playerposition=0;
-    private long frameduration =15, mframetorecordcount =0;
     private Uri selectedvideouri =null;
-    private boolean issurafcedestroyed=false;
-    private Handler myHandler,handlerrecycler;
-    private Runnable myRunnable,runnablerecycler;
-    private long audioduration =0,maxincreasevideoduration=0, currentaudioduration =0, currentaudiodurationseconds =0;
-    private boolean isdraweropen=false;
+    private Handler myHandler;
+    private Runnable myRunnable;
+
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private ArrayList<arraycontainer> encryptionarraylist = new ArrayList<>();
-    public boolean ismediacompleted =false,ismapzoomed=false;
-    circularImageview playpausebutton;
-    private TextView songName, time_current, time;
-    StringBuilder mFormatBuilder;
-    Formatter mFormatter;
+    private circularImageview playpausebutton;
+    private TextView time_current, time;
     private SeekBar mediaseekbar;
-    private int ontime =0, starttime =0, endtime =0, fTime = 5000, bTime = 5000;
     private Handler hdlr = new Handler();
-    RelativeLayout rlcontrollerview;
-    public int flingactionmindstvac;
-    private  final int flingactionmindspdvac = 10;
-    ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
-    private BroadcastReceiver getmetadatabroadcastreceiver;
-    private float currentDegree = 0f;
-    boolean ismediaplayer = false;
-    String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="",mediatoken="";
-    adapteritemclick mcontrollernavigator;
-    arraycontainer arraycontainerformetric =null;
-    int currentprocessframe=0;
-    int rootviewheight , audioviewheight,audiodetailviewheight ,mediatypeheight ,bottompadding;
-    int footerheight;
-    encryptiondataadapter encryptionadapter;
-    int navigationbarheight = 0;
-    GestureDetector detector;
-    public boolean islastdragarrow = false,isplaypauswebtnshow = false;
-    metainformationfragment fragmentmetainformation;
-    Visualizer visualizer;
+    private RelativeLayout rlcontrollerview;
+    private adapteritemclick mcontrollernavigator;
+    private arraycontainer arraycontainerformetric =null;
+    private encryptiondataadapter encryptionadapter;
+    private GestureDetector detector;
+
+    private metainformationfragment fragmentmetainformation;
+    private folderdirectoryspinneradapter folderspinneradapter;
 
     public audioreaderfragment() {
     }
@@ -330,8 +302,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             rlcontrollerview.requestLayout();
                             rlcontrollerview.animate().setDuration(500);
 
-                            Log.e("down bottom layout=",""+layout_audiodetails.getLayoutParams().height);
-
                             float bottomlayoutheight = layout_audiodetails.getLayoutParams().height - e2.getY();
                             layout_audiodetails.getLayoutParams().height = (int) bottomlayoutheight;
                             layout_audiodetails.requestLayout();
@@ -358,8 +328,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             rlcontrollerview.getLayoutParams().height = (int) height;
                             rlcontrollerview.requestLayout();
                             rlcontrollerview.animate().setDuration(500);
-
-                            Log.e("increseheight botmlyut=",""+layout_audiodetails.getLayoutParams().height);
 
                             if(layout_audiodetails.getLayoutParams().height > 0){
 
@@ -394,7 +362,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
                     }
 
-                    Log.e("singleclcik=","songleclcik");
                     return super.onSingleTapConfirmed(e);
                 }
 
@@ -438,8 +405,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             public void run() {
                 rootviewheight = audiorootview.getHeight();
                 mediatypeheight = layout_mediatype.getHeight();
-                bottompadding = layout_audiodetails.getPaddingBottom();
-                //rootviewheight = rootviewheight - layout_mediatype.getHeight();
                 audioviewheight = ((rootviewheight * 60 )/100);
                 rlcontrollerview.getLayoutParams().height = audioviewheight;
                 rlcontrollerview.setVisibility(View.VISIBLE);
@@ -457,9 +422,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         });
         recenterplaypause(0);
         mediaseekbar.setPadding(0,0,0,0);
-
-        mFormatBuilder = new StringBuilder();
-        mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
         playpausebutton.setImageResource(R.drawable.play_btn);
 
         frameduration= common.checkframeduration();
@@ -494,7 +456,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
                 if(progress > 0)
                 {
-                    //Log.e("Max current",""+mediaseekbar.getMax()+" "+mediaseekbar.getProgress());
                     int processframe=0;
                     int progresspercentage = (progress*100)/mediaseekbar.getMax();
                     if(progresspercentage > 0)
@@ -548,12 +509,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         mediaseekbar.post(new Runnable() {
             @Override
             public void run() {
-
-                RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mediaseekbar.getHeight());
+                RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        mediaseekbar.getHeight());
                 parms.setMargins(20,0,20,0);
                 linearseekbarcolorview.setLayoutParams(parms);
-
-                Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
             }
         });
 
@@ -754,9 +713,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         img_share_media.setEnabled(true);
                     }
                 }, 1500);
-                if (audiourl != null && (!audiourl.isEmpty()))
-                    gethelper().showsharepopupsub(audiourl,"audio",mediatoken);
-                    //common.shareaudio(getActivity(), audiourl);
+                if (mediafilepath != null && (!mediafilepath.isEmpty()))
+                    gethelper().showsharepopupsub(mediafilepath,"audio",mediatoken);
+                    //common.shareaudio(getActivity(), mediafilepath);
                 break;
 
             case R.id.img_dotmenu:
@@ -885,12 +844,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 break;
 
             case R.id.rl_controllerview:
-                Log.e("ontouch","ontouch");
                 if(layout_audiodetails.getVisibility()==View.GONE)  // Full screen view
                 {
                     if(layout_mediatype.getVisibility()==View.GONE)  // Action bar is hidden
                     {
-                      //  rlcontrollerview.getLayoutParams().height = rootviewheight;
                         setimageview();
                         gethelper().updateactionbar(1);
 
@@ -899,7 +856,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                         if(player != null && (! player.isPlaying()))  // Player is pause
                         {
-                          //  rlcontrollerview.getLayoutParams().height = rootviewheight ;
                             gethelper().updateactionbar(1);
                             img_fullscreen.setVisibility(View.VISIBLE);
                             layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
@@ -922,7 +878,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         }
                         else   // Player is playing
                         {
-                          //  rlcontrollerview.getLayoutParams().height = rootviewheight;
                             gethelper().updateactionbar(0);
                             gethelper().drawerenabledisable(true);
                             layout_mediatype.setVisibility(View.GONE);
@@ -941,7 +896,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                     else  // Action bar is showing
                     {
-                       // rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) +mediatypeheight ;
                         playpausebutton.setVisibility(View.GONE);
                         audio_downwordarrow.setVisibility(View.GONE);
                         rl_audio_downwordarrow.setVisibility(View.GONE);
@@ -952,7 +906,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                         if(player != null && (! player.isPlaying()))
                         {
-                           // rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) +mediatypeheight ;
                             if(islastdragarrow){
                                 return;
                             }else{
@@ -968,7 +921,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         }
                         else
                         {
-                          //  rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) +mediatypeheight;
                             if(islastdragarrow){
                                 return;
                             }else{
@@ -998,7 +950,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     rl_audio_downwordarrow.setVisibility(View.VISIBLE);
                     img_fullscreen.setVisibility(View.VISIBLE);
                     img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
-                    //imgpause.setVisibility(View.GONE);
                 }
 
                 break;
@@ -1020,8 +971,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     pause();
                 }else{
                     if(layout_audiodetails.getVisibility()==View.GONE){
-                       // rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) +mediatypeheight ;
-                        //  removebottommargin();
                            isplaypauswebtnshow = true;
                           img_pause.setImageResource(R.drawable.ic_pause);
                           layout_mediatype.setVisibility(View.GONE);
@@ -1044,28 +993,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
         }
     }
-
-    public void showalertdialog(String message){
-        new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
-                .setTitle("Alert!!")
-                .setMessage(message)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(mcontrollernavigator != null)
-                            mcontrollernavigator.onItemClicked(audiourl,2);
-
-                        gethelper().onBack();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
-    }
-
 
     public void launchbottombarfragment()
     {
@@ -1156,21 +1083,17 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void swipelefttoright()
     {
-        isdraweropen=true;
         Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
         linearLayout.startAnimation(rightswipe);
         linearLayout.setVisibility(View.VISIBLE);
         rightswipe.start();
-     //   righthandle.setVisibility(View.VISIBLE);
         rightswipe.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-               // righthandle.setImageResource(R.drawable.righthandle);
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-             //   righthandle.setImageResource(R.drawable.lefthandle);
             }
 
             @Override
@@ -1182,7 +1105,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void swiperighttoleft()
     {
-        isdraweropen=false;
         Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
         linearLayout.startAnimation(leftswipe);
         linearLayout.setVisibility(View.INVISIBLE);
@@ -1226,7 +1148,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onPause() {
         super.onPause();
-      //  visualizer.release();
         pause();
         progressdialog.dismisswaitdialog();
     }
@@ -1242,7 +1163,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
             linearseekbarcolorview.setVisibility(View.VISIBLE);
         }
-        Log.e("onrestart","onrestart");
     }
 
     @Override
@@ -1254,7 +1174,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 return;
 
             player = new MediaPlayer();
-            if(audiourl != null && (! audiourl.isEmpty()))
+            if(mediafilepath != null && (! mediafilepath.isEmpty()))
             {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(applicationviavideocomposer.getactivity(),selectedvideouri);
@@ -1283,7 +1203,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-    // Implement SurfaceHolder.Callback
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
@@ -1293,7 +1212,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void surfaceCreated(SurfaceHolder holder) {
         if (player != null)
         {
-            //holder.setFixedSize(1000,500);
             player.setDisplay(holder);
         }
         issurafcedestroyed=false;
@@ -1337,18 +1255,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
-
-        getmediadata();
     }
 
     public void start() {
         if(player != null)
         {
-            if(audiourl!=null)
+            if(mediafilepath !=null)
             {
                 playpausebutton.setImageResource(R.drawable.pausebutton);
-                /*setupVisualizerFxAndUI();
-                visualizer.setEnabled(true);*/
                 player.start();
                 player.setOnCompletionListener(this);
             }
@@ -1359,9 +1273,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void pause() {
         if(player != null && player.isPlaying()){
                 player.pause();
-               /* if(visualizer != null)
-                     visualizer.setEnabled(false);*/
-
                 playpausebutton.setImageResource(R.drawable.play_btn);
         }
     }
@@ -1426,7 +1337,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if(player!=null){
                     changeactionbarcolor();
-                    // wavevisualizerslist.clear();
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -1456,6 +1366,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             @Override
             public void run() {
 
+                if(updatemetaattempt == 0 || updatemetaattempt >= 3 &&
+                        ((sync_date.trim().isEmpty()) || sync_date.equalsIgnoreCase("0")))
+                {
+                    updatemetaattempt=0;
+                    getmediastartinfo();
+                    getmediametadata();
+                }
+                updatemetaattempt++;
+
                 if(arraycontainerformetric != null)
                 {
                     common.setgraphicalblockchainvalue(config.blockchainid,arraycontainerformetric.getVideostarttransactionid(),true);
@@ -1469,23 +1388,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     common.setspannable(getResources().getString(R.string.metrichash), " " + arraycontainerformetric.getMetahash(), txt_metahash);
 
                 }
-                if(currentprocessframe > 0 && metricmainarraylist.size() > 0 && currentprocessframe < metricmainarraylist.size())
-                {
-                    String data="",location="";
-                    for(int i=0;i<currentprocessframe;i++)
-                    {
-                        if(data.trim().isEmpty())
-                        {
-                            data=metricmainarraylist.get(i).getLatency();
-                        }
-                        else
-                        {
-                            data=data+","+metricmainarraylist.get(i).getLatency();
-                        }
-                    }
-                    xdata.getinstance().saveSetting(config.currentlatency,data);
-                }
-                myHandler.postDelayed(this, 1500);
+                myHandler.postDelayed(this, 1000);
             }
         };
         myHandler.post(myRunnable);
@@ -1496,11 +1399,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         ismediacompleted =true;
         isplaypauswebtnshow =false;
         maxincreasevideoduration= audioduration;
-      //  visualizer.setEnabled(false);
 
         if(layout_audiodetails.getVisibility() == View.GONE){
-           // rlcontrollerview.getLayoutParams().height = rootviewheight ;
-          //  wavevisualizerslist.clear();
             playpausebutton.setVisibility(View.VISIBLE);
             layout_scrubberview.setVisibility(View.VISIBLE);
             linearseekbarcolorview.setVisibility(View.VISIBLE);
@@ -1518,7 +1418,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         }else{
             player.seekTo(0);
-        //    wavevisualizerslist.clear();
             playpausebutton.setVisibility(View.VISIBLE);
             playpausebutton.setImageResource(R.drawable.play_btn);
         }
@@ -1529,7 +1428,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(player != null )
                 {
                     player.seekTo(0);
-                  //  wavevisualizerslist.clear();
                     playpausebutton.setVisibility(View.VISIBLE);
                     playpausebutton.setImageResource(R.drawable.play_btn);
 
@@ -1548,10 +1446,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     maxincreasevideoduration=player.getCurrentPosition();
 
                 if(currentaudioduration == 0 || (player.getCurrentPosition() > currentaudioduration))
-                {
                     currentaudioduration =player.getCurrentPosition();  // suppose its on 4th pos means 4000
-                    currentaudiodurationseconds = currentaudioduration /1000;  // Its 4
-                }
 
                 starttime = player.getCurrentPosition();
                 mediaseekbar.setProgress(player.getCurrentPosition());
@@ -1566,18 +1461,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     switch (color) {
                         case "green":
                             img_verified.setVisibility(View.VISIBLE);
-                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
                             break;
                         case "white":
                             img_verified.setVisibility(View.GONE);
                             break;
                         case "red":
                             img_verified.setVisibility(View.VISIBLE);
-                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
                             break;
                         case "yellow":
                             img_verified.setVisibility(View.VISIBLE);
-                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
                             break;
                     }
                 }
@@ -1590,22 +1482,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
         }
     };
-
-    private String stringForTime(int timeMs) {
-
-        int totalSeconds = timeMs / 1000;
-
-        int seconds = totalSeconds % 60;
-        int minutes = (totalSeconds / 60) % 60;
-        int hours   = totalSeconds / 3600;
-
-        mFormatBuilder.setLength(0);
-        if (hours > 0) {
-            return mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
-        } else {
-            return mFormatter.format("%02d:%02d", minutes, seconds).toString();
-        }
-    }
 
    public void setaudiodata(){
        endtime = player.getDuration();
@@ -1623,17 +1499,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
    }
 
    public void setupaudiodata() {
-       audiourl = xdata.getinstance().getSetting(config.selectedaudiourl);
-       if (audiourl != null && (!audiourl.isEmpty())) {
+       mediafilepath = xdata.getinstance().getSetting(config.selectedaudiourl);
+       if (mediafilepath != null && (!mediafilepath.isEmpty())) {
 
            audioduration = 0;
            playpausebutton.setImageResource(R.drawable.play_btn);
            rlcontrollerview.setVisibility(View.VISIBLE);
            playerposition = 0;
-        //   righthandle.setVisibility(View.VISIBLE);
 
-           setupaudioplayer(Uri.parse(audiourl));
-           tvsize.setText(common.filesize(audiourl));
+           setupaudioplayer(Uri.parse(mediafilepath));
+           tvsize.setText(common.filesize(mediafilepath));
        }
    }
 
@@ -1641,38 +1516,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onStart() {
         super.onStart();
-        registerbroadcastreciver();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        try {
-            applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
-    public void registerbroadcastreciver()
-    {
-        IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
-        getmetadatabroadcastreceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Thread thread = new Thread() {
-                    public void run() {
-                               getmediadata();
-                    }
-                };
-                thread.start();
-            }
-        };
-        getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
-    }
-
-    public void getmediadata()
+    public void getmediastartinfo()
     {
         try {
             databasemanager mdbhelper = null;
@@ -1686,7 +1537,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(audiourl));
+            Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(mediafilepath));
             String mediastartdevicedate="";
             if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
             {
@@ -1699,6 +1550,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     mediaduration =  "" + cur.getString(cur.getColumnIndex("mediaduration"));
                     mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
                     thumbnailurl = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
+                    sync_date = "" + cur.getString(cur.getColumnIndex("sync_date"));
 
                 }while(cur.moveToNext());
             }
@@ -1742,93 +1594,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                           //  txt_title_actionbarcomposer.setText(filecreateddate);
                             txt_createdtime.setText(common.parsedateformat(startdate) + " "+ common.parsetimeformat(startdate));
 
-                            if(mediafolder.trim().length() > 0)
+                            if(mediafolder.trim().length() > 0 && folderspinneradapter == null)
                                 setfolderspinner();
                         }catch (Exception e)
                         {
                             e.printStackTrace();
                         }
 
-                    }
-                });
-
-               // img_verified.setVisibility(View.VISIBLE);
-                ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
-                if(metricmainarraylist.size()>0){
-
-                    for(int i=0;i<mitemlist.size();i++)
-                    {
-                        String sequencehash = mitemlist.get(i).getSequencehash();
-                        String hashmethod = mitemlist.get(i).getHashmethod();
-                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
-                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                        String color = mitemlist.get(i).getColor();
-                        metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,
-                                serverdictionaryhash,color));
-                    }
-
-                }else{
-
-                    for(int i=0;i<mitemlist.size();i++)
-                    {
-                        String metricdata=mitemlist.get(i).getMetricdata();
-                        String sequencehash = mitemlist.get(i).getSequencehash();
-                        String hashmethod = mitemlist.get(i).getHashmethod();
-                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
-                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                        String color = mitemlist.get(i).getColor();
-                        String sequenceno = mitemlist.get(i).getSequenceno();
-                        parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,
-                                latency,sequenceno);
-                    }
-
-                    if((!mediastartdevicedate.isEmpty()) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate!= null)){
-
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                if(! thumbnailurl.trim().isEmpty() && new File(thumbnailurl).exists())
-                                {
-                                    Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                                            BuildConfig.APPLICATION_ID + ".provider", new File(thumbnailurl));
-                                    Glide.with(applicationviavideocomposer.getactivity()).
-                                            load(uri).
-                                            thumbnail(0.1f).
-                                            into(img_audiowave);
-                                }
-                            }
-                        });
-                    }
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            edt_medianame.setText(medianame);
-                            edt_medianotes.setText(medianotes);
-
-                            encryptionadapter.notifyDataSetChanged();
-                        }
-                    });
-                }
-
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setseekbarlayoutcolor();
-                        if(metricmainarraylist != null && metricmainarraylist.size() > 0)
-                        {
-                            arraycontainerformetric = new arraycontainer();
-                            arraycontainerformetric = metricmainarraylist.get(0);
-
-                            if(encryptionarraylist.size() == 0)
-                                encryptionarraylist.add(metricmainarraylist.get(0));
-
-                            if(encryptionarraylist.size() > 0)
-                            {
-                                encryptionarraylist.set(0,metricmainarraylist.get(0));
-                                encryptionadapter.notifyDataSetChanged();
-                            }
-                        }
                     }
                 });
 
@@ -1840,20 +1612,112 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     e.printStackTrace();
                 }
             }
-            else
-            {
-
-            }
         }catch (Exception e)
         {
             e.printStackTrace();
         }
     }
 
+    public void getmediametadata()
+    {
+
+        try {
+            databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+
+            try {
+                mdbhelper.open();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
+            if (mitemlist.size() > 0)
+            {
+                for (int i = 0; i < mitemlist.size(); i++)
+                {
+                    if(metricmainarraylist.size() == i)
+                    {
+                        String metricdata = mitemlist.get(i).getMetricdata();
+                        String sequencehash = mitemlist.get(i).getSequencehash();
+                        String hashmethod = mitemlist.get(i).getHashmethod();
+                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                        String color = mitemlist.get(i).getColor();
+                        String latency = mitemlist.get(i).getLatency();
+                        String sequenceno = mitemlist.get(i).getSequenceno();
+                        parsemetadata(metricdata, hashmethod, videostarttransactionid, sequencehash, serverdictionaryhash, color,
+                                latency, sequenceno);
+                    }
+                    else
+                    {
+                        String sequencehash = mitemlist.get(i).getSequencehash();
+                        String hashmethod = mitemlist.get(i).getHashmethod();
+                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                        String color = mitemlist.get(i).getColor();
+                        String latency = mitemlist.get(i).getLatency();
+                        String sequenceno = mitemlist.get(i).getSequenceno();
+                        metricmainarraylist.set(i, new arraycontainer(hashmethod, videostarttransactionid,
+                                sequencehash, serverdictionaryhash, color, latency));
+                    }
+
+                }
+            }
+            try
+            {
+                mdbhelper.close();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setseekbarlayoutcolor();
+
+                edt_medianotes.setText(medianotes);
+                edt_medianame.setText(medianame);
+
+                if(! thumbnailurl.trim().isEmpty() && new File(thumbnailurl).exists())
+                {
+                    Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                            BuildConfig.APPLICATION_ID + ".provider", new File(thumbnailurl));
+                    Glide.with(applicationviavideocomposer.getactivity()).
+                            load(uri).
+                            thumbnail(0.1f).
+                            into(img_audiowave);
+                }
+
+                if(metricmainarraylist != null && metricmainarraylist.size() > 0)
+                {
+                    arraycontainerformetric = new arraycontainer();
+                    arraycontainerformetric = metricmainarraylist.get(0);
+
+                    if(encryptionarraylist.size() == 0)
+                        encryptionarraylist.add(metricmainarraylist.get(0));
+
+                    if(encryptionarraylist.size() > 0)
+                    {
+                        encryptionarraylist.set(0,metricmainarraylist.get(0));
+                        encryptionadapter.notifyDataSetChanged();
+                    }
+                }
+                encryptionadapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     public void setfolderspinner()
     {
         final List<folder> folderitem=common.getalldirfolders();
-        folderdirectoryspinneradapter adapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
+        folderspinneradapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
                 R.layout.row_myfolderspinneradapter,folderitem);
 
         int selectedposition=0;
@@ -1867,7 +1731,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
         }
 
-        spinnermediafolder.setAdapter(adapter);
+        spinnermediafolder.setAdapter(folderspinneradapter);
         spinnermediafolder.setSelection(selectedposition,true);
         spinnermediafolder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             public void onItemSelected(AdapterView<?> parent, View view, final int position, long id)
@@ -1881,14 +1745,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                             try {
                                 String folderpath=folderitem.get(position).getFolderdir();
-                                if(! folderpath.equalsIgnoreCase(new File(audiourl).getParent()))
+                                if(! folderpath.equalsIgnoreCase(new File(mediafilepath).getParent()))
                                 {
-                                    if(common.movemediafile(new File(audiourl),new File(folderpath)))
+                                    if(common.movemediafile(new File(mediafilepath),new File(folderpath)))
                                     {
-                                        File destinationmediafile = new File(folderpath + File.separator + new File(audiourl).getName());
-                                        updatefilemediafolderdirectory(audiourl,destinationmediafile.getAbsolutePath(),folderpath);
-                                        audiourl=destinationmediafile.getAbsolutePath();
-                                        xdata.getinstance().saveSetting(config.selectedaudiourl,audiourl);
+                                        File destinationmediafile = new File(folderpath + File.separator + new File(mediafilepath).getName());
+                                        updatefilemediafolderdirectory(mediafilepath,destinationmediafile.getAbsolutePath(),folderpath);
+                                        mediafilepath =destinationmediafile.getAbsolutePath();
+                                        xdata.getinstance().saveSetting(config.selectedaudiourl, mediafilepath);
                                     }
                                 }
                             }catch (Exception e)
@@ -1900,7 +1764,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                 public void run() {
                                     progressdialog.dismisswaitdialog();
                                     if(mcontrollernavigator != null)
-                                        mcontrollernavigator.onItemClicked(audiourl,3);
+                                        mcontrollernavigator.onItemClicked(mediafilepath,3);
 
                                     loadviewdata();
                                 }
@@ -2098,7 +1962,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0,0,0,38);
         params.addRule(RelativeLayout.ABOVE,R.id.layout_scrubberview);
-      //  params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         img_fullscreen.setLayoutParams(params);
     }
@@ -2134,7 +1997,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     rlcontrollerview.getLayoutParams().height = (rootviewheight - navigationbarheight);
                     gethelper().updateactionbar(0);
                     layout_mediatype.setVisibility(View.GONE);
-                    // common.slidetoabove(layout_mediatype); //gone mediatype
                     layout_audiodetails.setVisibility(View.GONE);
                     playpausebutton.setVisibility(View.GONE);
                     img_fullscreen.setVisibility(View.GONE);
@@ -2163,7 +2025,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             if(!islastdragarrow){
                 rlcontrollerview.getLayoutParams().height = (rootviewheight - navigationbarheight);
 
-
                 if(player != null && player.isPlaying())
                 {
                     layout_scrubberview.setVisibility(View.VISIBLE);
@@ -2171,15 +2032,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     layout_seekbartiming.setVisibility(View.VISIBLE);
                     linearseekbarcolorview.setVisibility(View.VISIBLE);
                     img_pause.setVisibility(View.VISIBLE);
-
                     setseekbarlayoutcolor();
                 }
-                //      layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                 else
                 {
-
                     gethelper().updateactionbar(1);
-                    // common.slidetodown(layout_mediatype);//visible
                     layout_mediatype.setVisibility(View.VISIBLE);
                     layout_scrubberview.setVisibility(View.GONE);
                     layout_mediatype.setVisibility(View.VISIBLE);
@@ -2206,7 +2063,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 gethelper().updateactionbar(1);
             }
         }
-
     }
 
 
@@ -2248,8 +2104,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mediaseekbarheight);
         parms.setMargins(20,0,20,0);
         linearseekbarcolorview.setLayoutParams(parms);
-
-        Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
     }
 
     public void hidefocus(EditText edittext){
@@ -2281,8 +2135,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.BELOW,R.id.rl_controllerview);
         params.setMargins(0,0,0,0);
-        Log.e("bottompadding",""+bottompadding);
-
         layout_audiodetails.setPadding(0,0,0,(footerheight));
         layout_audiodetails.setLayoutParams(params);
         layout_audiodetails.requestLayout();
@@ -2320,34 +2172,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
         });
     }
-
-    public void setupVisualizerFxAndUI() {
-
-        visualizer = new Visualizer(player.getAudioSessionId());
-        visualizer.setScalingMode(Visualizer.SCALING_MODE_NORMALIZED);
-        visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-        visualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
-            @Override
-            public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
-                int decibelvalue =127- Math.abs((int) calculateRMSLevel(waveform));
-
-
-                if(decibelvalue==127){
-                    decibelvalue=0;
-                }else{
-                    decibelvalue = decibelvalue+5;
-                }
-
-                Log.e("decibelvalue=",""+decibelvalue);
-                gethelper().setsoundwaveinformation(0, decibelvalue);
-            }
-
-            @Override
-            public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
-            }
-        } ,Visualizer.getMaxCaptureRate() / 2, true, false);
-    }
-
 
     protected int calculateRMSLevel(byte[] audioData)
     { // audioData might be buffered data read from a data line

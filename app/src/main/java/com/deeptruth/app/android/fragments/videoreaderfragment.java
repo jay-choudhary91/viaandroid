@@ -2028,6 +2028,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if(updatemetaattempt == 0 || updatemetaattempt >= 3 &&
                         ((sync_date.trim().isEmpty()) || sync_date.equalsIgnoreCase("0")))
                 {
+                    updatemetaattempt=0;
                     getmediastartinfo();
                     getmediametadata();
                 }

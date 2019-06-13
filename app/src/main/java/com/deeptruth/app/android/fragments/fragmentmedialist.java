@@ -1006,24 +1006,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                         lastcolor=framecolor;
                                     }while (cursor2.moveToNext());
                                 }
-
-                                /*for(int i=0;i<colorsectioncount.size();i++)
-                                {
-                                    String item=colorsectioncount.get(i);
-                                    if(! item.trim().isEmpty())
-                                    {
-                                        String[] itemarray=item.split(",");
-                                        if(itemarray.length >= 2)
-                                        {
-                                            String writecolor=itemarray[0];
-                                            String weight=itemarray[1];
-                                            if(! weight.trim().isEmpty())
-                                            {
-                                                layout.addView(getmediaseekbarbackgroundview(weight,writecolor));
-                                            }
-                                        }
-                                    }
-                                }*/
                                 videoobject.setColorsectionsarray(colorsectioncount);
                                 //videoobject.setColorbarview(layout);
                                 videoobject.setMediabarcolor(arrayList);
@@ -1289,31 +1271,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     || unsentcount != arraymediaitemlist.get(i).getUnsentcount()) {
                                 isneedtonotify = true;
                             }
-
-                            /*if(validcount != arraymediaitemlist.get(i).getValidcount() || cautioncount != arraymediaitemlist.get(i).getCautioncount()
-                                    || unsentcount != arraymediaitemlist.get(i).getUnsentcount())
-                            {
-                                isneedtonotify=true;
-                                cursor2.moveToFirst();
-                                do{
-                                    String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
-
-                                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                            LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
-                                    View view = new View(applicationviavideocomposer.getactivity());
-                                    view.setLayoutParams(param);
-                                    if(framecolor != null && (! framecolor.isEmpty()))
-                                    {
-                                        view.setBackgroundColor(Color.parseColor(common.getcolorbystring( framecolor)));
-                                    }
-                                    else
-                                    {
-                                        view.setBackgroundColor(Color.parseColor(config.color_code_transparent));
-                                    }
-                                    layout.addView(view);
-                                }while (cursor2.moveToNext());
-                                arraymediaitemlist.get(i).setColorbarview(layout);
-                            }*/
                             arraymediaitemlist.get(i).setColorsectionsarray(colorsectioncount);
                             arraymediaitemlist.get(i).setMediabarcolor(arrayList);
                             arraymediaitemlist.get(i).setValidcount(validcount);
