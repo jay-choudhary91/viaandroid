@@ -240,6 +240,7 @@
     <string name="view_dummy4">Dummy4</string>
 
     <string name="phone_time">Phone Time</string>
+    <string name="satellite_altitudes_at">Satellite altitudes at:</string>
     <string name="world_clock_time">World Clock Time</string>
 
     <string name="json_parsing_failed">Failed to parse json!</string>

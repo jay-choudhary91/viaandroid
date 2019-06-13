@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <com.deeptruth.app.android.views.customfonttextview
+        app:fontType="OpenSans_Regular"
+        style="@style/txt_satellite_items"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:id="@+id/txt_satellite_number"
+        android:layout_width="wrap_content"
+        android:text=""/>
+
+    <com.deeptruth.app.android.views.customfonttextview
+        app:fontType="OpenSans_Semibold"
+        style="@style/txt_satellite_items"
+        android:gravity="center"
+        android:textSize="13sp"
+        android:padding="3dp"
+        android:id="@+id/txt_satellite_altitude"
+        android:layout_width="wrap_content"
+        android:text=""/>
+
+</LinearLayout>

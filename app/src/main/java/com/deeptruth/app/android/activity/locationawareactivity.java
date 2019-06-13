@@ -45,16 +45,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.telephony.CellIdentityCdma;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellIdentityLte;
 import android.telephony.CellIdentityWcdma;
 import android.telephony.CellInfo;
-import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
 import android.telephony.CellInfoWcdma;
-import android.telephony.CellSignalStrengthCdma;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthWcdma;
@@ -444,13 +441,13 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             xdata.getinstance().saveSetting(config.sister_metric, object.getJSONObject("metrics").toString());
                             JSONObject metricobject = object.getJSONObject("metrics");
                             if (metricobject.has("satellitedate"))
-                                xdata.getinstance().saveSetting(config.satellitedate, metricobject.getString("satellitedate"));
+                                xdata.getinstance().saveSetting(config.item_satellitesdate, metricobject.getString("satellitedate"));
 
                             if (metricobject.has("satellites"))
-                                xdata.getinstance().saveSetting(config.satellitesdata, metricobject.getJSONArray("satellites").toString());
+                                xdata.getinstance().saveSetting(config.item_satellitesdata, metricobject.getJSONArray("satellites").toString());
 
                             if (metricobject.has("remote_ip"))
-                                xdata.getinstance().saveSetting(config.remoteip, metricobject.getString("remote_ip"));
+                                xdata.getinstance().saveSetting(config.item_remoteip, metricobject.getString("remote_ip"));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1058,8 +1055,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                             servermetricsgetupdatecounter++;
 
-                            if ((servermetricsgetupdatecounter >= 60 && common.isnetworkconnected(locationawareactivity.this)) ||
-                                    (xdata.getinstance().getSetting(config.satellitedate).trim().isEmpty())) {
+                            if ((servermetricsgetupdatecounter >= 10 && common.isnetworkconnected(locationawareactivity.this)) ||
+                                    (xdata.getinstance().getSetting(config.item_satellitesdate).trim().isEmpty())) {
                                 servermetricsgetupdatecounter = 0;
                                 currentsatellitecounter++;
                                 getsistermetric();
@@ -1625,7 +1622,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             ;
         } else if (key.equalsIgnoreCase("attitude")) {
             metricItemValue = xdata.getinstance().getSetting(config.phone_attitude);
-            ;
         } else if (key.equalsIgnoreCase(config.airplanemode)) {
             metricItemValue = "ON";
             if (Settings.Global.getInt(locationawareactivity.this.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) == 0) {
@@ -1638,6 +1634,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             getwifinetworks();
            //  metricItemValue = availablewifinetwork;
              metricItemValue = xdata.getinstance().getSetting(config.availablewifis);
+        }
+        else if (key.equalsIgnoreCase(config.satellitedate)) {
+            metricItemValue = xdata.getinstance().getSetting(config.item_satellitesdate);
+        }
+        else if (key.equalsIgnoreCase(config.satellitesdata)) {
+            metricItemValue = xdata.getinstance().getSetting(config.item_satellitesdata);
+        }
+        else if (key.equalsIgnoreCase(config.remoteip)) {
+            metricItemValue = xdata.getinstance().getSetting(config.item_remoteip);
         }
         /*else if (key.equalsIgnoreCase(config.sister_metric)) {
             metricItemValue=xdata.getinstance().getSetting(config.sister_metric);

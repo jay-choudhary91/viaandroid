@@ -473,6 +473,19 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_satellite_informations"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <include layout="@layout/row_satellite_information"></include>
+
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/layout_soundiformation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -12,11 +12,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,9 +34,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.satellitesdataadapter;
 import com.deeptruth.app.android.adapter.toweritemadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
@@ -45,6 +45,7 @@ import com.deeptruth.app.android.models.arraycontainer;
 import com.deeptruth.app.android.models.celltowermodel;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
+import com.deeptruth.app.android.models.satellites;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.AnalogClock;
@@ -98,7 +99,6 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.List;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -337,6 +337,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     RecyclerView recycler_towerlist;
     @BindView(R.id.layout_towerinfo)
     LinearLayout layout_towerinfo;
+    @BindView(R.id.recycler_satellite_itemlist)
+    RecyclerView recycler_satellit;
+    @BindView(R.id.txt_satellite_altitudes_at)
+    TextView txt_satellite_altitudes_at;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -357,7 +361,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private String[] transparentarray=common.gettransparencyvalues();
     int navigationbarheight = 0;
     arraycontainer arraycontainerformetric =null;
-    String screenwidth,screenheight;
+    String screenwidth,screenheight,satellitedate="",satellitedata="";
     private Marker locationindicatemarker=null;
 
     ValueAnimator lastPulseAnimator=null;
@@ -368,7 +372,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private Polyline mappathpolyline=null;
     private ArrayList<LatLng> mappathcoordinates=new ArrayList<>();
     toweritemadapter toweradapter;
+    satellitesdataadapter satelliteadapter;
     ArrayList<celltowermodel> celltowers = new ArrayList<>();
+    ArrayList<satellites> satelliteslist = new ArrayList<>();
 
     @Override
     public int getlayoutid() {
@@ -405,13 +411,23 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
 
-          toweradapter =new toweritemadapter(applicationviavideocomposer.getactivity(),celltowers) ;
-          LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
-          layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-          recycler_towerlist.setLayoutManager(layoutManager);
-          ((DefaultItemAnimator) recycler_towerlist.getItemAnimator()).setSupportsChangeAnimations(false);
-          recycler_towerlist.getItemAnimator().setChangeDuration(0);
-          recycler_towerlist.setAdapter(toweradapter);
+          {
+              toweradapter =new toweritemadapter(applicationviavideocomposer.getactivity(),celltowers) ;
+              LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+              layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+              recycler_towerlist.setLayoutManager(layoutManager);
+              ((DefaultItemAnimator) recycler_towerlist.getItemAnimator()).setSupportsChangeAnimations(false);
+              recycler_towerlist.getItemAnimator().setChangeDuration(0);
+              recycler_towerlist.setAdapter(toweradapter);
+          }
+
+
+          {
+              satelliteadapter =new satellitesdataadapter(applicationviavideocomposer.getactivity(),satelliteslist) ;
+              recycler_satellit.setLayoutManager(new GridLayoutManager(applicationviavideocomposer.getactivity(), 3));
+              recycler_satellit.setAdapter(satelliteadapter);
+          }
+
 
           TimeZone timezone = TimeZone.getDefault();
           String timezoneid=timezone.getID();
@@ -858,6 +874,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         tvmetahash.setText("");
                     }
 
+
+                showsatellitesinfo(xdata.getinstance().getSetting(config.item_satellitesdate),
+                        xdata.getinstance().getSetting(config.item_satellitesdata));
+
                 String towerinfo = xdata.getinstance().getSetting(config.json_towerlist);
                 if(towerinfo.trim().length() == 0)
                 {
@@ -977,6 +997,41 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
 
             }
+    }
+
+    public void showsatellitesinfo(String date,String data)
+    {
+        txt_satellite_altitudes_at.setText(" "+date);
+
+        try
+        {
+            if(! data.trim().isEmpty() && (! satellitedata.equalsIgnoreCase(data)))
+            {
+                satelliteslist.clear();
+                satelliteadapter.notifyDataSetChanged();
+                JSONArray array=new JSONArray(data);
+                for(int i=0;i<array.length();i++)
+                {
+                    String number="",altitude="",name="";
+                    JSONObject object=array.getJSONObject(i);
+                    if(object.has("number"))
+                        number=object.getString("number");
+                    if(object.has("altitude"))
+                        altitude=object.getString("altitude");
+                    if(object.has("name"))
+                        name=object.getString("name");
+
+                    satelliteslist.add(new satellites(number,altitude,name));
+                }
+                satelliteadapter.notifyDataSetChanged();
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        satellitedate=date;
+        satellitedata=data;
     }
 
     public void setsoundinformation(int ampletudevalue,int decibelvalue){
@@ -1557,7 +1612,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     }
 
                     ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
-                    String latitude="",longitude="";
+                    String latitude="",longitude="",satellitedate="",satellitedata="";
                     for (int j = 0; j < metricItemArraylist.size(); j++)
                     {
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude))
@@ -1766,6 +1821,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             updateverticalsliderlocationdata(value,vertical_slider_connectiondatatimedely);
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay),
                                     "\n"+metricItemArraylist.get(j).getMetricTrackValue() ,txt_datatimedelay);
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.satellitedate))
+                        {
+                            satellitedate=metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! satellitedate.trim().isEmpty()) && (! satellitedata.trim().isEmpty()))
+                                showsatellitesinfo(satellitedate,satellitedata);
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.satellitesdata))
+                        {
+                            satellitedata=metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! satellitedate.trim().isEmpty()) && (! satellitedata.trim().isEmpty()))
+                                showsatellitesinfo(satellitedate,satellitedata);
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))

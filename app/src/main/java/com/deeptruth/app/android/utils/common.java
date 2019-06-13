@@ -1549,20 +1549,22 @@ public class common {
 
     public static String[] getmetricesarray() {
         String[] items = {"battery", "phonetype", "imeinumber", "simserialnumber", "version", "osversion", "softwareversion", "model",
-                "manufacturer", "brightness", "gpslatitude", "gpslongitude", config.gpslatitudedegree, config.gpslongitudedegree, config.gpsaltitude, "gpsquality", "carrier", "screenwidth",
-                "screenheight", "systemuptime", "multitaskingenabled", "proximitysensorenabled", "pluggedin", "devicedate", "devicetime",
-                "deviceregion", "devicelanguage", "devicecurrency", "timezone", "headphonesattached", "accessoriesattached",
-                "nameattachedaccessories", "attachedaccessoriescount", "totalspace", "usedspace", "memoryusage", "freespace",
-                "orientation", "deviceorientation", "rammemory", "usedram", "freeram", "wificonnect", "cellnetworkconnect", "internalip",
-                "externalip", "networktype", config.connectedphonenetworkquality, "gravitysensorenabled", "gyroscopesensorenabled",
+                "manufacturer", "brightness", "gpslatitude", "gpslongitude", config.gpslatitudedegree, config.gpslongitudedegree,
+                config.gpsaltitude, "gpsquality", "carrier", "screenwidth","screenheight", "systemuptime", "multitaskingenabled",
+                "proximitysensorenabled", "pluggedin", "devicedate", "devicetime","deviceregion", "devicelanguage", "devicecurrency",
+                "timezone", "headphonesattached", "accessoriesattached", "nameattachedaccessories", "attachedaccessoriescount",
+                "totalspace", "usedspace", "memoryusage", "freespace","orientation", "deviceorientation", "rammemory", "usedram",
+                "freeram", "wificonnect", "cellnetworkconnect", "internalip","externalip", "networktype",
+                config.connectedphonenetworkquality, "gravitysensorenabled", "gyroscopesensorenabled",
                 "lightsensorenabled", "debuggerattached", "deviceid", "bluetoothonoff", "wifiname", config.wifinetworkavailable,
                 "processorcount", "activeprocessorcount", config.cpuusageuser, config.cpuusagesystem, config.cpuusageiow,
                 config.cpuusageirq, config.compass, config.decibel, config.barometer, config.acceleration_x, config.acceleration_y,
                 config.acceleration_z, config.distancetravelled, config.currentcallinprogress, config.currentcalldurationseconds,
                 config.currentcallremotenumber, config.currentcalldecibel, config.airplanemode,
                 "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country",
-                "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid", "numberoftowers", "numberofsatellites",
-                "satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork, "phoneclocktime", "worldclocktime", config.connectiondatadelay};
+                "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid", "numberoftowers",
+                "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,
+                "phoneclocktime", "worldclocktime", config.connectiondatadelay,config.satellitedate,config.satellitesdata,config.remoteip};
 
         return items;
     }

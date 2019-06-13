@@ -232,6 +232,10 @@ public class config {
     public static final String json_blob="json blob";
     public static final String json_towerlist="json_towerlist";
 
+    public static final String item_satellitesdate ="item_satellitesdate";
+    public static final String item_remoteip="item_remoteip";
+    public static final String item_satellitesdata="item_satellitesdata";
+
     public static final String selected_folder="selected_folder";
     public static final String selectedphotourl="selectedphotourl";
     public static final String selectedaudiourl="selectedaudiourl";

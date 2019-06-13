@@ -656,14 +656,16 @@ public class readmediadataservice extends Service {
     {
         int sequenceno=0;
         databasemanager mdbhelper=null;
+
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(getApplicationContext());
+            mdbhelper.createDatabase();
+        }
+
         try {
             mdbhelper.open();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(getApplicationContext());
-            mdbhelper.createDatabase();
         }
 
         try {

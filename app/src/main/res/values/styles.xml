@@ -110,6 +110,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="txt_satellite_items">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="txt_xapi_detail">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
