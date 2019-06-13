@@ -647,6 +647,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,
                                 0,0,0,null,headercontainer,null,90);
 
+                        img_dotmenu.setVisibility(View.GONE);
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
