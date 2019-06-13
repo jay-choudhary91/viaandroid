@@ -68,7 +68,7 @@
 
                 <com.deeptruth.app.android.views.customfontedittext
                     style="@style/edt_login"
-                    android:hint="@string/username"
+                    android:hint="@string/email"
                     app:fontType="Comfortaa-Regular"
                     android:background="@drawable/edittext_shap"
                     android:maxLength="50"
