@@ -17,13 +17,15 @@ public class applicationviavideocomposer extends Application {
 
     public static Typeface regularfonttype = null;
     public static Typeface semiboldfonttype = null;
+    public static Typeface boldfonttype = null;
+
     @Override
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         mcontext = this;
         xdata.getinstance().init(this);
-        xdata.getinstance().saveSetting(xdata.developer_mode,"0");
+        xdata.getinstance().saveSetting(xdata.developer_mode, "0");
 
         //common.setting_check(xdata.xapi_url, "http://console.dev.crypto-servers.com/xapi.php?");
         common.setting_check(xdata.xapi_url, "http://dev.api.deeptruth.com/xapi.php?");  // Make changes on 2019-06-03 (matraex)
@@ -34,6 +36,7 @@ public class applicationviavideocomposer extends Application {
 
         regularfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Regular.ttf");
         semiboldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Semibold.ttf");
+        boldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Bold.ttf");
     }
 
     @Override

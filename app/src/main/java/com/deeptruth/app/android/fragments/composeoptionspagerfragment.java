@@ -130,12 +130,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private String[] transparentarray=common.gettransparencyvalues();
     GradientDrawable gradientDrawablebutton;
     private volatile boolean iscircle = true;
-    Typeface fontfaceregular, fontfacebold;
-    private String OPEN_SANS_BOLD = "fonts/OpenSans-Bold.ttf";
-    private String OPEN_SANS_REGULAR = "fonts/OpenSans-Regular.ttf";
     private Animator currentAnimator;
     private int shortAnimationDuration;
-    boolean zoominout = false;
 
 
     @Override
@@ -164,8 +160,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             img_mediathumbnail.setOnClickListener(this);
             layoutbottom.setOnTouchListener(this);
 
-            fontfaceregular =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), OPEN_SANS_REGULAR);
-            fontfacebold =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), OPEN_SANS_BOLD);
             gethelper().drawerenabledisable(false);
 
             navigationbarheight =  common.getnavigationbarheight();
@@ -222,7 +216,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     }
                     else if(currentpagerpos == 2){
                         currentpagerpos=4;
-                        expandedImageView.setBackgroundColor(getResources().getColor(R.color.dark_blue_solid_a));
+                        expandedImageView.setBackgroundColor(getResources().getColor(R.color.transparent));
                     }
 
                     for(int i = 0; i<= mediatypepagerenum.values().length; i++)
@@ -237,13 +231,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                                 {
                                     txt_mediatype.setTextColor(applicationviavideocomposer.getactivity().getResources().
                                             getColor(R.color.wave_blue));
-                                    txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
+                                    txt_mediatype.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
                                     txt_mediatype.setTextSize(13f);
                                 }
                                 else
                                 {
                                     txt_mediatype.setTextColor(Color.WHITE);
-                                    txt_mediatype.setTypeface(fontfaceregular, Typeface.NORMAL);
+                                    txt_mediatype.setTypeface(applicationviavideocomposer.regularfonttype, Typeface.NORMAL);
                                     txt_mediatype.setTextSize(12f);
                                 }
                             }
@@ -476,14 +470,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         {
                             txt_mediatype.setTextColor(applicationviavideocomposer.getactivity().getResources().
                                     getColor(R.color.wave_blue));
-                            txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
+                            txt_mediatype.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
                             txt_mediatype.setTextSize(13f);
 
                         }
                         else
                         {
                             txt_mediatype.setTextColor(Color.WHITE);
-                            txt_mediatype.setTypeface(fontfaceregular, Typeface.NORMAL);
+                            txt_mediatype.setTypeface(applicationviavideocomposer.regularfonttype, Typeface.NORMAL);
                             txt_mediatype.setTextSize(12f);
 
                         }
