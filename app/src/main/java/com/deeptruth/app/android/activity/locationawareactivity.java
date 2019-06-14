@@ -1819,7 +1819,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             xAngle=xAngle+180;
                             Log.e("Case ","Case3");
                         }
-                        else if(xAngle >= 0 && xAngle <= 90 && yAngle >= 0 && yAngle <= 90)
+                        else if(xAngle > 0 && xAngle <= 90 && yAngle > 0 && yAngle <= 90)
                         {
                             // xAxis is between 270-360
                             xAngle=Math.abs(xAngle);
