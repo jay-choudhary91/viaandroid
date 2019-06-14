@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.satellites;
@@ -24,10 +25,12 @@ public class satellitesdataadapter extends RecyclerView.Adapter<satellitesdataad
 
     ArrayList<satellites> dataarrayList;
     private Context mContext;
+    boolean isfrommetaordrawer =false ;
 
-    public satellitesdataadapter(Context mContext, ArrayList<satellites> dataarrayList ) {
+    public satellitesdataadapter(Context mContext, ArrayList<satellites> dataarrayList , boolean isfrommetaordrawer ) {
         this.mContext = mContext;
         this.dataarrayList = dataarrayList;
+        this.isfrommetaordrawer = isfrommetaordrawer;
     }
 
     @NonNull
@@ -41,6 +44,14 @@ public class satellitesdataadapter extends RecyclerView.Adapter<satellitesdataad
 
     @Override
     public void onBindViewHolder(@NonNull satellitesdataadapter.ViewHolder holder, final int position) {
+
+        if(isfrommetaordrawer){
+            holder.txt_satellite_number.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+            holder.txt_satellite_altitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        }else{
+            holder.txt_satellite_number.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+            holder.txt_satellite_altitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        }
         holder.txt_satellite_number.setText("#"+dataarrayList.get(position).getNumber()+": ");
         holder.txt_satellite_altitude.setText(dataarrayList.get(position).getAltitude()+" km");
     }

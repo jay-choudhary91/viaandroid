@@ -18,6 +18,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,12 +36,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.satellitesdataadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.itemupdatelistener;
 import com.deeptruth.app.android.models.arraycontainer;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
+import com.deeptruth.app.android.models.satellites;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.AnalogClock;
@@ -297,6 +302,12 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     verticalseekbar vertical_slider_connectiondatatimedely;
     @BindView(R.id.layout_soundiformation)
     LinearLayout layout_soundiformation;
+    @BindView(R.id.recycler_satellite_itemlist)
+    RecyclerView recycler_satellit;
+    @BindView(R.id.txt_satellite_altitudes_at)
+    TextView txt_satellite_altitudes_at;
+    @BindView(R.id.txt_satellite_altitude)
+    TextView txt_satellite_altitude;
 
 
     GoogleMap mgooglemap;
@@ -310,7 +321,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     ArrayList<Entry> connectiondatadelayvalues = new ArrayList<Entry>();
     ArrayList<Entry> gpsaccuracyvalues = new ArrayList<Entry>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    private boolean isdatacomposing=false,isrecodrunning=false;
+    private boolean isdatacomposing=false,isrecodrunning=false , isfrommeta=false;
     String lastsavedangle="";
     private float currentDegree = 0f;
     private Orientation mOrientation;
@@ -318,7 +329,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     int navigationbarheight = 0;
     arraycontainer arraycontainerformetric =null;
     View rootview;
-    String screenwidth,screenheight;
+    String screenwidth,screenheight, satellitedata="",satellitedate="";
+    ArrayList<satellites> satelliteslist = new ArrayList<>();
+    satellitesdataadapter satelliteadapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -392,6 +405,12 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
                 }
             });
+
+            {
+                satelliteadapter =new satellitesdataadapter(applicationviavideocomposer.getactivity(),satelliteslist,isfrommeta) ;
+                recycler_satellit.setLayoutManager(new GridLayoutManager(applicationviavideocomposer.getactivity(), 3));
+                recycler_satellit.setAdapter(satelliteadapter);
+            }
 
             navigationbarheight =  common.getnavigationbarheight();
 
@@ -493,7 +512,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     arraycontainerformetric = metricmainarraylist.get(currentmediaposition);
 
                     ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
-                    String latitude="",longitude="";
+                    String latitude="",longitude="",satellitedate="",satellitedata="";
                     for (int j = 0; j < metricItemArraylist.size(); j++)
                     {
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude))
@@ -546,6 +565,19 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlanguage);
+                        }
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.satellitedate))
+                        {
+                            satellitedate=metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! satellitedate.trim().isEmpty()) && (! satellitedata.trim().isEmpty()))
+                                showsatellitesinfo(satellitedate,satellitedata);
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.satellitesdata))
+                        {
+                            satellitedata=metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! satellitedate.trim().isEmpty()) && (! satellitedata.trim().isEmpty()))
+                                showsatellitesinfo(satellitedate,satellitedata);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("country")) {
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.country), "\n" + metricItemArraylist.get(j).getMetricTrackValue(), tvcountry);
@@ -1854,6 +1886,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         txt_datatimedelay.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_world_time.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_phone_time.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_satellite_altitudes_at.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_satellite_altitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         tvblockchainid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         tvblockchainid.setVisibility(View.GONE);
         tvblockid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
@@ -1881,5 +1915,42 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         ra.setFillAfter(true);
         img_niddle.startAnimation(ra);
         currentDegree = -degree;
+    }
+
+    public void showsatellitesinfo(String date,String data)
+    {
+        txt_satellite_altitudes_at.setText(" "+date);
+
+        try
+        {
+            Log.e("data",""+data +"date" +date +"satellitedata" +satellitedata );
+            if(! data.trim().isEmpty() && (! satellitedata.equalsIgnoreCase(data)))
+            {
+                satelliteslist.clear();
+                satelliteadapter.notifyDataSetChanged();
+                JSONArray array=new JSONArray(data);
+                for(int i=0;i<array.length();i++)
+                {
+                    String number="",altitude="",name="";
+                    JSONObject object=array.getJSONObject(i);
+                    if(object.has("number"))
+                        number=object.getString("number");
+                    if(object.has("altitude"))
+                        altitude=object.getString("altitude");
+                    if(object.has("name"))
+                        name=object.getString("name");
+
+                    satelliteslist.add(new satellites(number,altitude,name));
+                }
+                satelliteadapter.notifyDataSetChanged();
+            }
+
+            satellitedate=date;
+            satellitedata=data;
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 }
