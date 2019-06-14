@@ -2282,7 +2282,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         || xdata.getinstance().getSetting(config.airplanemode).equals("ON"))
                 {
 
-                    txt_section_network.setText(config.TEXT_NETWORK +""+getResources().getString(R.string.no_network));
+                    txt_section_network.setText(config.TEXT_NETWORK +"NA");
                     img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
 
                 }else{
