@@ -216,7 +216,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     }
                     else if(currentpagerpos == 2){
                         currentpagerpos=4;
-                        expandedImageView.setBackgroundColor(getResources().getColor(R.color.transparent));
+                        expandedImageView.setBackgroundColor(getResources().getColor(R.color.dark_blue_solid_a));
                     }
 
                     for(int i = 0; i<= mediatypepagerenum.values().length; i++)
