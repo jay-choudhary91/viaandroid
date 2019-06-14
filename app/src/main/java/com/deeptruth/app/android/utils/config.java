@@ -261,9 +261,11 @@ public class config {
     public static final String sidecar_xapi_actions = "sidecar_xapi_actions_item_";
     public static final String frame_complete = "frame_complete";
     public static final String frame_completeness = "frame_completeness";
+    public static final String frame_started = "frame_started";
 
     public static final String completed_frames = "completed_frames";
     public static final String incompleted_frames = "incompleted_frames";
+    public static final String started_frames = "started_frames";
 
     public static final String PREFS_NAME = "main_prefs";
     public static final String LIST_XAPI = "Xapi";

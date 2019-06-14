@@ -344,6 +344,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     ArrayList<dbitemcontainer> dbmiddleitemcontainer =new ArrayList<>();
     String hashvalue = "",metrichashvalue = "";
     RelativeLayout layoutbottom,layout_seekbarzoom;
+    boolean isexpandview =false;
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
      */
@@ -569,7 +570,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 if(state == 0)
                 {
                     expandable_layout.setVisibility(View.GONE);
-                    actionbarcomposer.setVisibility(View.VISIBLE);
+                    txt_media_quality.setVisibility(View.VISIBLE);
+                    if(isexpandview)
+                        txt_media_quality.setVisibility(View.GONE);
+                    //actionbarcomposer.setVisibility(View.VISIBLE);
                 }
                 else if(state == 3)
                 {
@@ -1160,7 +1164,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 return;
 
             if(expandable_layout != null && expandable_layout.isExpanded())
-                expendcollpaseview();
+                expendcollpaseview(true);
 
             final Activity activity = getActivity();
             metadatametricesjson=new JSONObject();
@@ -1246,12 +1250,16 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             madapterclick.onItemClicked(""+zoomLevel+" x",5);
 
                         unlockfocus();
+
+                        txt_media_quality.setVisibility(View.VISIBLE);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
                     isimagecaptureprocessing=false;
                 }
             };
+
+
 
             capturesession.stopRepeating();
             capturesession.abortCaptures();
@@ -1317,23 +1325,27 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         return false;
     }
 
-    public void expendcollpaseview()
+    public void expendcollpaseview(boolean isplaying)
     {
         if(expandable_layout.isExpanded())
         {
+            isexpandview =isplaying;
             qualityoptionanimations(1.0f,0f);
             expandable_layout.setDuration(100);
             expandable_layout.collapse();
             expandable_layout.setVisibility(View.GONE);
-            actionbarcomposer.setVisibility(View.VISIBLE);
+            txt_media_quality.setVisibility(View.VISIBLE);
+            if(isplaying)
+                txt_media_quality.setVisibility(View.GONE);
         }
         else
         {
+            isexpandview =isplaying;
             qualityoptionanimations(0f,1.0f);
             expandable_layout.setDuration(100);
             expandable_layout.expand();
             expandable_layout.setVisibility(View.VISIBLE);
-            actionbarcomposer.setVisibility(View.GONE);
+            txt_media_quality.setVisibility(View.GONE);
         }
     }
 
@@ -1388,7 +1400,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 break;
 
             case R.id.txt_media_quality:
-                expendcollpaseview();
+                expendcollpaseview(false);
                 break;
 
             case R.id.img_stop_watch:
