@@ -1829,6 +1829,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         }
 
                         xAngle=Math.abs(xAngle);
+                        yAngle=Math.abs(yAngle);
+                        zAngle=Math.abs(zAngle);
 
                         /*updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(Math.abs(xAngle)) + "° ");
                         updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(Math.abs(yAngle)) + "° ");
