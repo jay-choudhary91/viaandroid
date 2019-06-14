@@ -141,6 +141,13 @@
 
                             </RelativeLayout>
 
+                            <ProgressBar
+                                android:id="@+id/progressmediasync"
+                                style="@style/CustomProgressBar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="invisible"
+                                android:layout_below="@+id/layout_scrubberview"/>
 
                             <LinearLayout
                                 android:id="@+id/linear_seekbarcolorview"

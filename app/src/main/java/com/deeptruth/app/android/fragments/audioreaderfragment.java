@@ -43,6 +43,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -206,10 +207,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     RecyclerView recycler_encryption;
     @BindView(R.id.metainfocontainer)
     FrameLayout metainfocontainer;
+    @BindView(R.id.progressmediasync)
+    ProgressBar progressmediasync;
 
-    private String mediafilepath = "",latency="",
-            medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",thumbnailurl="",
-            mediatoken="",sync_date="",keytype = config.prefs_md5;
+    private String mediafilepath = "",medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",
+            thumbnailurl="",mediatoken="",sync_date="",keytype = config.prefs_md5;
     private int rootviewheight , audioviewheight,audiodetailviewheight ,mediatypeheight,starttime =0, endtime =0,
             flingactionmindspdvac = 10,flingactionmindstvac=0,currentprocessframe=0,footerheight=0,navigationbarheight = 0,updatemetaattempt=0;
     private long audioduration =0,maxincreasevideoduration=0, currentaudioduration =0,playerposition=0,frameduration =15;
@@ -513,6 +515,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         mediaseekbar.getHeight());
                 parms.setMargins(20,0,20,0);
                 linearseekbarcolorview.setLayoutParams(parms);
+                progressmediasync.setLayoutParams(parms);
             }
         });
 
@@ -1850,11 +1853,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         this.mcontrollernavigator = mcontrollernavigator;
     }
 
-    public static float dpToPx(Context context, float valueInDp) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
-    }
-
     private void setseekbarlayoutcolor(){
         try
         {
@@ -1873,7 +1871,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             String color=metricmainarraylist.get(i).getColor();
             sectioncount++;
             if(color.trim().isEmpty())
-                color=config.color_white;
+                color=config.color_transparent;
 
             if(! lastcolor.equalsIgnoreCase(color))
             {
@@ -1886,14 +1884,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 colorsectioncount.set(colorsectioncount.size()-1,color+","+sectioncount);
             }
             lastcolor=color;
-
-            if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
-                if(latency.isEmpty()){
-                    latency = metricmainarraylist.get(i).getLatency();
-                }else{
-                    latency = latency + "," + metricmainarraylist.get(i).getLatency();
-                }
-            }
 
             int layoutheight =linearseekbarcolorview.getHeight();
             if(layoutheight == 0)
@@ -1917,22 +1907,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             }
         }
-
-        xdata.getinstance().saveSetting(config.latency,latency);
+        progressmediasync.setVisibility(View.VISIBLE);
         gethelper().setdatacomposing(false);
-    }
-
-    public void recenterplaypause()
-    {
-        rlcontrollerview.post(new Runnable() {
-            @Override
-            public void run() {
-                RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.CENTER_IN_PARENT);
-                playpausebutton.setLayoutParams(params);
-            }
-        });
     }
 
     @Override
@@ -1955,8 +1931,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         layout_audiowave.requestLayout();
     }
 
-
-
     public void setbottomimgview(){
         RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -1973,11 +1947,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         img_fullscreen.setLayoutParams(params);
     }
 
-    public void setfooterlayout(){
-
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0,0,0,navigationbarheight);
-            layout_photoreader.setLayoutParams(params);
+    public void setfooterlayout()
+    {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,0,0,navigationbarheight);
+        layout_photoreader.setLayoutParams(params);
     }
 
     @Override
