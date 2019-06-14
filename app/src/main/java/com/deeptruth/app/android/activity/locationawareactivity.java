@@ -1958,7 +1958,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             final String[] value3 = {cpuArray[2]};
                             final String[] value4 = {cpuArray[3]};
 
-                            final float finalTotalcpu = totalcpu;
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
