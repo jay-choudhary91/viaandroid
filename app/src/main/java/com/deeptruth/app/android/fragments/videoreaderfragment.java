@@ -55,6 +55,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -269,6 +270,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     RelativeLayout rl_video_downwordarrow;
     @BindView(R.id.metainfocontainer)
     FrameLayout metainfocontainer;
+    @BindView(R.id.progressmediasync)
+    ProgressBar progressmediasync;
 
     int footerheight=0;
     int lastrotatedangle =-1,videorotatedangle=-1;
@@ -770,6 +773,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 parms.setMargins(lp.leftMargin,0,lp.rightMargin,0);
                 parms.addRule(RelativeLayout.BELOW,R.id.layout_scrubberview);
                 linearseekbarcolorview.setLayoutParams(parms);
+                progressmediasync.setLayoutParams(parms);
             }
         });
 
@@ -2541,7 +2545,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     String color=metricmainarraylist.get(i).getColor();
                     sectioncount++;
                     if(color.trim().isEmpty())
-                        color=config.color_white;
+                        color=config.color_transparent;
 
                     if(! lastcolor.equalsIgnoreCase(color))
                     {
@@ -2575,6 +2579,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             }
         }
+        progressmediasync.setVisibility(View.VISIBLE);
         gethelper().setdatacomposing(false);
     }
 

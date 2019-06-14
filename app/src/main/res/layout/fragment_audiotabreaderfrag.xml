@@ -83,6 +83,13 @@
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical">
 
+                <ProgressBar
+                    android:id="@+id/progressmediasync"
+                    style="@style/CustomProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"/>
+
                     <LinearLayout
                         android:id="@+id/linear_seekbarcolorview"
                         android:layout_width="match_parent"

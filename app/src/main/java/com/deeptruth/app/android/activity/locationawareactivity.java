@@ -1797,9 +1797,49 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         yAngle /= 3.141592;
                         zAngle /= 3.141592;
 
-                        updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(Math.abs(xAngle)) + "° ");
+                        // calculation for x-axis
+                        if(xAngle >= -90 && xAngle <= 0 && yAngle >= 0 && yAngle <= 90)
+                        {
+                            // xAxis is between 0-90
+                            xAngle=Math.abs(xAngle);
+                            Log.e("Case ","Case1");
+                        }
+                        else if(xAngle >= -90 && xAngle <= 0 && yAngle >= -90 && yAngle <= -1)
+                        {
+                            // xAxis is between 90-180
+                            xAngle=Math.abs(xAngle);
+                            xAngle=(90-xAngle);
+                            xAngle=90+xAngle;
+                            Log.e("Case ","Case2");
+                        }
+                        else if(xAngle >= 0 && xAngle <= 90 && yAngle >= -90 && yAngle <= 0)
+                        {
+                            // xAxis is between 180-270
+                            xAngle=Math.abs(xAngle);
+                            xAngle=xAngle+180;
+                            Log.e("Case ","Case3");
+                        }
+                        else if(xAngle >= 0 && xAngle <= 90 && yAngle >= 0 && yAngle <= 90)
+                        {
+                            // xAxis is between 270-360
+                            xAngle=Math.abs(xAngle);
+                            //xAngle=(90-xAngle);
+                            //xAngle=270+xAngle;
+                            Log.e("Case ","Case4");
+                        }
+
+                        xAngle=Math.abs(xAngle);
+                        yAngle=Math.abs(yAngle);
+                        zAngle=Math.abs(zAngle);
+
+                        /*updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(Math.abs(xAngle)) + "° ");
                         updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(Math.abs(yAngle)) + "° ");
-                        updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(Math.abs(zAngle)) + "° ");
+                        updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(Math.abs(zAngle)) + "° ");*/
+
+                        updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(xAngle) + "° ");
+                        updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(yAngle) + "° ");
+                        updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(zAngle) + "° ");
+
                         //lastinclination = inclination;
                         // Source link of degree conversion http://wizmoz.blogspot.com/2013/01/simple-accelerometer-data-conversion-to.html
                     }
