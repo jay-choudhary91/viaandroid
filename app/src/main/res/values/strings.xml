@@ -270,5 +270,6 @@
     <string name="request_time">Request Time :</string>
     <string name="xapi_complete">Complete :</string>
     <string name="xapi_completeness">Completeness :</string>
+    <string name="xapi_started">Started :</string>
 
 </resources>

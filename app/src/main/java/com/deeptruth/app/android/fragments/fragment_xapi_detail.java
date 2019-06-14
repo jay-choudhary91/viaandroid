@@ -48,6 +48,8 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
     customfonttextview tv_delete;
     @BindView(R.id.txt_complete)
     customfonttextview tv_complete;
+    @BindView(R.id.txt_started)
+    customfonttextview txt_started;
     @BindView(R.id.txt_completeless)
     customfonttextview tv_completeless;
     @BindView(R.id.view_complet)
@@ -85,6 +87,7 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
 
             String completed_frames = xapidatamap.get(config.completed_frames);
             String incompleted_frames = xapidatamap.get(config.incompleted_frames);
+            String started_frames = xapidatamap.get(config.started_frames);
 
 
 
@@ -96,6 +99,7 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
 
                 setvalue( tv_complete,getActivity().getResources().getString(R.string.xapi_complete),completed_frames);
                 setvalue( tv_completeless,getActivity().getResources().getString(R.string.xapi_completeness),incompleted_frames);
+                setvalue( txt_started,getActivity().getResources().getString(R.string.xapi_started),started_frames);
             }
             try {
                 JSONObject obj = new JSONObject(result);

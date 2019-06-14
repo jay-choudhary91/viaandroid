@@ -17,6 +17,7 @@ public class pair {
     public String ImageIcon = "";
     public String completevalue = "";
     public String completelessvalue = "";
+    public String startedvalue = "";
 
     public HashMap<String,String> keyvaluemap;
 

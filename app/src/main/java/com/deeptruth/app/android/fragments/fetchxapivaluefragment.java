@@ -108,6 +108,7 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
             String key = pairdata.KeyName;
             String completevalue = pairdata.completevalue;
             String completelessvalue = pairdata.completelessvalue;
+            String startedvalue = pairdata.startedvalue;
             HashMap<String,String> xapidatamap = pairdata.getKeyvaluemap();
 
             fragment_xapi_detail xapi_detail=new fragment_xapi_detail();
