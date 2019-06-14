@@ -44,8 +44,6 @@ import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.dbitemcontainer;
 import com.deeptruth.app.android.models.frameinfo;
-import com.deeptruth.app.android.models.mediacompletiondialogmain;
-import com.deeptruth.app.android.models.mediacompletiondialogsub;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.models.wavevisualizer;
@@ -155,8 +153,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     ArrayList<dbitemcontainer> dbstartitemcontainer =new ArrayList<>();
     ArrayList<dbitemcontainer> dbmiddleitemcontainer =new ArrayList<>();
     ArrayList<frameinfo> uploadframelist =new ArrayList<>();
-    mediacompletiondialogmain mediacompletionpopupmain;
-    mediacompletiondialogsub mediacompletionpopupsub;
     FragmentManager fragmentmanager;
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
@@ -1185,10 +1181,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public void setaudiohashes()
-    {
-
-    }
 
     public String getkeyvalue(byte[] data)
     {
@@ -1449,82 +1441,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     {
         if(layout_no_gps_wifi != null)
             layout_no_gps_wifi.setVisibility(View.GONE);
-    }
-
-
-    public void showsharepopupmain()
-    {
-        fragmentmanager = getActivity().getSupportFragmentManager();
-        popupclickmain=new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-                int i= (int) object;
-                if(i==1){
-                    Log.e("popup","popup");
-                    showsharepopupsub();
-                }
-                else if(i==2){
-                    Log.e("popup 2","popup 2");
-
-                }
-                else if(i==3){
-                    xdata.getinstance().saveSetting("selectedaudiourl",""+ recordedmediafile);
-                    audioreaderfragment audiotabfrag = new audioreaderfragment();
-                    gethelper().addFragment(audiotabfrag, false, true);
-                }
-            }
-
-            @Override
-            public void onItemClicked(Object object, int type) {
-
-            }
-        };
-
-        mediacompletionpopupmain=new mediacompletiondialogmain(popupclickmain,getResources().getString(R.string.share),getResources().getString(R.string.new_audio),getResources().getString(R.string.listen),getResources().getString(R.string.audio_has_been_encrypted),getResources().getString(R.string.congratulations_audio));
-        mediacompletionpopupmain.show(fragmentmanager, "fragment_name");
-
-    }
-
-
-    public void showsharepopupsub()
-    {
-
-        fragmentmanager = getActivity().getSupportFragmentManager();
-        popupclicksub=new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-                int i= (int) object;
-                if(i==4){
-                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            common.exportaudio(new File(recordedmediafile),true);
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressdialog.dismisswaitdialog();
-                                    launchmedialist();
-                                }
-                            });
-                        }
-                    }).start();
-                }
-                else if(i==5){
-
-                }
-                else if(i==6){
-                    launchmedialist();
-                }
-            }
-
-            @Override
-            public void onItemClicked(Object object, int type) {
-
-            }
-        };
-        mediacompletionpopupsub=new mediacompletiondialogsub(popupclicksub,getResources().getString(R.string.save_to_camera),getResources().getString(R.string.share_partial_audio),getResources().getString(R.string.cancel_viewlist),getResources().getString(R.string.audio_how_would_you),"");
-        mediacompletionpopupsub.show(fragmentmanager, "fragment_name");
     }
 
     public void launchmedialist()
