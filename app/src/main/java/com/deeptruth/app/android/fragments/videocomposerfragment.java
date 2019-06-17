@@ -2272,8 +2272,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     public void visibleconnection(){
-
-        if(!isvideorecording) {
             String value = "";
 
                 if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
@@ -2354,7 +2352,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 txt_section_gps.setText(config.TEXT_GPS+""+"NA");
                 img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
             }
-        }
     }
 
     public void setactionbarbackgroundcolor() {
@@ -2366,11 +2363,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA") ||
                     xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null") ||
                     xdata.getinstance().getSetting(config.airplanemode).equals("ON")||
-                    xdata.getinstance().getSetting(config.Connectionspeed)!=null ||
-                    xdata.getinstance().getSetting(config.GPSAccuracy)!= null) {
+                    xdata.getinstance().getSetting(config.Connectionspeed) == null ||
+                    xdata.getinstance().getSetting(config.GPSAccuracy) == null) {
 
                 actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
-
 
             } else {
                 String[] arrayitemgps = xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
@@ -2383,12 +2379,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     if (!arrayitemconnection[0].trim().isEmpty())
                         connectionvalue = Double.valueOf(arrayitemconnection[0]);
 
-                    if ((gpsvalue >= 50 && gpsvalue == 0) || connectionvalue == 0.0) {
+                    if ((gpsvalue >= 50 || gpsvalue == 0) || connectionvalue == 0.0) {
                         actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
                     } else {
-                        actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
-
+                        actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.greentransparent));
                     }
                 }
             }
