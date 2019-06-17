@@ -56,6 +56,65 @@
                     android:layout_marginLeft="@dimen/margin_15dp"
                     android:src="@drawable/icon_flashoff"/>
 
+
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:id="@+id/expandable_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:el_duration="500"
+                    android:visibility="gone"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/transparent"
+                    app:el_expanded="false">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:weightSum="6"
+                        android:orientation="horizontal"
+                        >
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            android:id="@+id/txt_media_low"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textSize="12sp"
+                            android:padding="5dp"
+                            android:text="720dp"
+                            android:textColor="@color/white"
+                            app:fontType="Comfortaa-Regular"/>
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            android:id="@+id/txt_media_medium"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textSize="12sp"
+                            android:text="720dp"
+                            android:padding="5dp"
+                            android:textColor="@color/white"
+                            app:fontType="Comfortaa-Regular"/>
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            android:id="@+id/txt_media_high"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textSize="12sp"
+                            android:padding="5dp"
+                            android:text="720dp"
+                            android:textColor="@color/white"
+                            app:fontType="Comfortaa-Regular"/>
+
+                    </LinearLayout>
+
+                </net.cachapa.expandablelayout.ExpandableLayout>
+
                 <Spinner
                     android:id="@+id/spinner_mediaquality"
                     android:layout_width="wrap_content"
@@ -110,7 +169,7 @@
 
         </RelativeLayout>
 
-        <net.cachapa.expandablelayout.ExpandableLayout
+        <!--<net.cachapa.expandablelayout.ExpandableLayout
             android:id="@+id/expandable_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -163,7 +222,7 @@
 
             </LinearLayout>
 
-        </net.cachapa.expandablelayout.ExpandableLayout>
+        </net.cachapa.expandablelayout.ExpandableLayout>-->
 
     </RelativeLayout>
 

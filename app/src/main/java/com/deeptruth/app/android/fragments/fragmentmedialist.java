@@ -157,10 +157,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     long lastTapTimeMs = 0;
     long touchDownMs = 0;
     boolean iskeyboardopen = false,shouldnavigatelist=true;
-    Typeface fontfaceregular, fontfacebold;
-    private String OPEN_SANS_BOLD = "fonts/OpenSans-Bold.ttf";
-    private String OPEN_SANS_REGULAR = "fonts/OpenSans-Regular.ttf";
-
 
     @Override
     public int getlayoutid() {
@@ -258,8 +254,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             listlayout=rootview.findViewById(R.id.listlayout);
            // setheadermargin();
 
-            fontfaceregular =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), OPEN_SANS_REGULAR);
-            fontfacebold =Typeface.createFromAsset(applicationviavideocomposer.getactivity().getAssets(), OPEN_SANS_BOLD);
             gethelper().drawerenabledisable(false);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
@@ -711,12 +705,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                     if(mediatype == i)
                     {
-                        txt_mediatype.setTypeface(fontfacebold, Typeface.BOLD);
+                        txt_mediatype.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
                         txt_mediatype.setTextSize(12f);
                     }
                     else
                     {
-                        txt_mediatype.setTypeface(fontfaceregular, Typeface.NORMAL);
+                        txt_mediatype.setTypeface(applicationviavideocomposer.regularfonttype, Typeface.NORMAL);
                         txt_mediatype.setTextSize(12f);
                     }
                 }

@@ -198,7 +198,7 @@
     <string name="no_internet">No Internet</string>
     <string name="no_gps">No GPS</string>
     <string name="validating">VALIDATING</string>
-    <string name="no_network">NA</string>
+    <string name="no_network">No Network</string>
 
     <string name="address">Address</string>
     <string name="latitude">Latitude</string>
@@ -270,5 +270,6 @@
     <string name="request_time">Request Time :</string>
     <string name="xapi_complete">Complete :</string>
     <string name="xapi_completeness">Completeness :</string>
+    <string name="xapi_started">Started :</string>
 
 </resources>

@@ -354,7 +354,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ArrayList<Entry> connectiondatadelayvalues = new ArrayList<>();
     ArrayList<Entry> gpsaccuracyvalues = new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    private boolean isdatacomposing=false,isrecodrunning=false;
+    private boolean isdatacomposing=false,isrecodrunning=false,isfromdrawer=true;
     String lastsavedangle="";
     private float currentDegree = 0f;
     private Orientation mOrientation;
@@ -423,7 +423,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
 
           {
-              satelliteadapter =new satellitesdataadapter(applicationviavideocomposer.getactivity(),satelliteslist) ;
+              satelliteadapter =new satellitesdataadapter(applicationviavideocomposer.getactivity(),satelliteslist,isfromdrawer) ;
               recycler_satellit.setLayoutManager(new GridLayoutManager(applicationviavideocomposer.getactivity(), 3));
               recycler_satellit.setAdapter(satelliteadapter);
           }

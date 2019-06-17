@@ -2734,6 +2734,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
             if (mediametadatainfosarray != null && mediametadatainfosarray.size() > 0) {
 
+
+                xdata.getinstance().saveSetting(config.frame_started,""+mediametadatainfosarray.get(0).getId());
+
                 for(int i=0;i<mediametadatainfosarray.size();i++)
                 {
                     selectedid = mediametadatainfosarray.get(i).getId();

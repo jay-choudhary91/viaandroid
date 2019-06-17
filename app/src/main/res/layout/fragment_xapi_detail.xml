@@ -53,10 +53,26 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             style="@style/txt_xapi_detail"
+            android:id="@+id/txt_started"
+            app:fontType="Comfortaa-Regular"
+            android:textColor="@color/black"
+            android:visibility="visible"
+            />
+
+        <View
+            android:id="@+id/view_started"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="visible"
+            android:background="@color/grey_x"
+            />
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/txt_xapi_detail"
             android:id="@+id/txt_complete"
             app:fontType="Comfortaa-Regular"
             android:textColor="@color/black"
-            android:visibility="gone"
+            android:visibility="visible"
             />
 
         <View
