@@ -558,13 +558,25 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             spinner_mediaquality.setSelection(1,true);*/
 
         txt_media_quality.setText(config.mediaquality720);
-        if(!xdata.getinstance().getSetting("imagequality").isEmpty())
-            txt_media_quality.setText(xdata.getinstance().getSetting("imagequality"));
+        if(!xdata.getinstance().getSetting(config.imagequality).isEmpty())
+        {
+            txt_media_quality.setText(xdata.getinstance().getSetting(config.imagequality));
+            if(xdata.getinstance().getSetting(config.imagequality).contains("480"))
+                expendcollpaseviewcolor(txt_media_low,txt_media_medium,txt_media_high);
+            else if(xdata.getinstance().getSetting(config.imagequality).contains("720"))
+                expendcollpaseviewcolor(txt_media_medium,txt_media_low,txt_media_high);
+            else if(xdata.getinstance().getSetting(config.imagequality).contains("1080"))
+                expendcollpaseviewcolor(txt_media_high,txt_media_low,txt_media_high);
+        }
+        else
+        {
+            txt_media_quality.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+        }
+
 
         txt_media_low.setText(config.mediaquality480);
         txt_media_medium.setText(config.mediaquality720);
         txt_media_high.setText(config.mediaquality1080);
-        txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
 
         expandable_layout.setOnExpansionUpdateListener(new ExpandableLayout.OnExpansionUpdateListener() {
             @Override
@@ -590,6 +602,13 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         });
 
         return rootview;
+    }
+
+    public void expendcollpaseviewcolor(TextView textview1,TextView textview2,TextView textview3)
+    {
+        textview1.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+        textview2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        textview3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
     }
 
     public void changeiconsorientation(float angle)
@@ -1362,11 +1381,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         txt_media_medium.startAnimation(animation1);
     }
 
-    public void setmediaquility(String quality)
+    public void setmediaquality(String quality)
     {
         selectedmediaquality=quality;
         txt_media_quality.setText(quality);
-        xdata.getinstance().saveSetting("imagequality",quality);
+        xdata.getinstance().saveSetting(config.imagequality,quality);
         expandable_layout.collapse();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -1383,21 +1402,21 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         switch (view.getId()) {
 
             case R.id.txt_media_low:
-                setmediaquility(config.mediaquality480);
+                setmediaquality(config.mediaquality480);
                 txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                 txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 break;
 
             case R.id.txt_media_medium:
-                setmediaquility(config.mediaquality720);
+                setmediaquality(config.mediaquality720);
                 txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                 txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 break;
 
             case R.id.txt_media_high:
-                setmediaquility(config.mediaquality1080);
+                setmediaquality(config.mediaquality1080);
                 txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                 txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));

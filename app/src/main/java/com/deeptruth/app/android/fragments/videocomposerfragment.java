@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -30,7 +29,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -61,7 +59,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -482,18 +479,29 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_media_medium.setOnClickListener(this);
         txt_media_high.setOnClickListener(this);
 
-        txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
         expandable_layout.setVisibility(View.GONE);
         txt_media_quality.setVisibility(View.VISIBLE);
 
         txt_media_quality.setText(config.mediaquality720);
-        if(!xdata.getinstance().getSetting("videoquality").isEmpty())
-             txt_media_quality.setText(xdata.getinstance().getSetting("videoquality"));
+        if(! xdata.getinstance().getSetting(config.videoquality).isEmpty())
+        {
+            txt_media_quality.setText(xdata.getinstance().getSetting(config.videoquality));
+            if(xdata.getinstance().getSetting(config.videoquality).contains("480"))
+                expendcollpaseviewcolor(txt_media_low,txt_media_medium,txt_media_high);
+            else if(xdata.getinstance().getSetting(config.videoquality).contains("720"))
+                expendcollpaseviewcolor(txt_media_medium,txt_media_low,txt_media_high);
+            else if(xdata.getinstance().getSetting(config.videoquality).contains("1080"))
+                expendcollpaseviewcolor(txt_media_high,txt_media_low,txt_media_high);
+        }
+        else
+        {
+            txt_media_quality.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+        }
 
         txt_media_low.setText(config.mediaquality480);
         txt_media_medium.setText(config.mediaquality720);
         txt_media_high.setText(config.mediaquality1080);
-        txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+
 
         expandable_layout.setOnExpansionUpdateListener(new ExpandableLayout.OnExpansionUpdateListener() {
             @Override
@@ -1417,6 +1425,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
+    public void expendcollpaseviewcolor(TextView textview1,TextView textview2,TextView textview3)
+    {
+        textview1.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+        textview2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        textview3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -1426,21 +1441,21 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
 
             case R.id.txt_media_low:
-                setmediaquility(config.mediaquality480);
+                setmediaquality(config.mediaquality480);
                 txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                 txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 break;
 
             case R.id.txt_media_medium:
-                setmediaquility(config.mediaquality720);
+                setmediaquality(config.mediaquality720);
                 txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                 txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 break;
 
             case R.id.txt_media_high:
-                setmediaquility(config.mediaquality1080);
+                setmediaquality(config.mediaquality1080);
                 txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                 txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
@@ -1498,15 +1513,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_media_medium.startAnimation(animation1);
     }
 
-    public void setmediaquility(String quality)
+    public void setmediaquality(String quality)
     {
+        xdata.getinstance().saveSetting(config.videoquality,quality);
         expandable_layout.setDuration(100);
         qualityoptionanimations(1.0f,0f);
         expandable_layout.collapse();
         if(! selectedvideoquality.equalsIgnoreCase(quality))
         {
             txt_media_quality.setText(quality);
-            xdata.getinstance().saveSetting("videoquality",quality);
             selectedvideoquality=quality;
         }
     }
