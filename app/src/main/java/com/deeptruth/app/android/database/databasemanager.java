@@ -354,16 +354,16 @@ public class databasemanager {
         return  mCur;
     }
 
-    public Cursor fetchmetacompletedata(int value) {
+    public Cursor fetchmetacompletedata(int value,String finallocalkey) {
 
         Cursor mCur=null;
         String sql="";
         try {
             lock.lock();
             if(value==1){
-                 sql = "SELECT * FROM tblmetadata where rsequenceno != 0" ;
+                 sql = "SELECT * FROM tblmetadata where rsequenceno != 0 AND localkey = '"+finallocalkey+"'" ;
             }else{
-                 sql = "SELECT * FROM tblmetadata where rsequenceno = 0" ;
+                 sql = "SELECT * FROM tblmetadata where rsequenceno == 0 AND localkey = '"+finallocalkey+"'" ;
             }
             //String sql = "SELECT * FROM tblmetadata";
             if(mDb == null)

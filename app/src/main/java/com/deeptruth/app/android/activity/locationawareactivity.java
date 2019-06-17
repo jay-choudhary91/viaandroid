@@ -2714,7 +2714,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
     }
 
-    public void runmediaupdate(String finalheader, String finallocalkey, String finalvideokey, String finaltoken, String finalsync,
+    public void runmediaupdate(String finalheader, final String finallocalkey, String finalvideokey, String finaltoken, String finalsync,
                                String finaldevicetimeoffset, String finalapirequestdevicedate, String startselectedid,
                                String finalvideocompletedevicedate, String type) {
 
@@ -2753,6 +2753,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
 
             if (mediametadatainfosarray != null && mediametadatainfosarray.size() > 0) {
+
+
+                Log.e("mediametadatfosaray= ",""+mediametadatainfosarray.size());
 
 
                 xdata.getinstance().saveSetting(config.frame_started,""+mediametadatainfosarray.get(0).getId());
@@ -2890,7 +2893,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                                 }
 
-                                updatevideoupdateapiresponse();
+                                updatevideoupdateapiresponse(finallocalkey);
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -3126,7 +3129,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     //**
-    public void updatevideoupdateapiresponse() {
+    public void updatevideoupdateapiresponse(String finallocalkey) {
 
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
@@ -3139,7 +3142,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         try {
 
-            Cursor cursorcomplete = mdbhelper.fetchmetacompletedata(1);
+            Cursor cursorcomplete = mdbhelper.fetchmetacompletedata(1,finallocalkey);
             if(cursorcomplete !=null ){
                 int count = cursorcomplete.getCount();
                 /*for (int i = 0; i < Integer.MAX_VALUE; i++) {
@@ -3152,7 +3155,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 Log.e("countcomplete",""+count);
             }
 
-            Cursor cursor = mdbhelper.fetchmetacompletedata(0);
+            Cursor cursor = mdbhelper.fetchmetacompletedata(0,finallocalkey);
             if(cursor!=null ){
                 int count = cursor.getCount();
                 xdata.getinstance().saveSetting(config.frame_completeness,""+count);

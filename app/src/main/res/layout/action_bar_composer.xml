@@ -24,11 +24,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="18sp"
+                android:layout_marginTop="@dimen/margin_2dp"
                 android:text="@string/deeptruth_small"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:visibility="visible"
                 android:textColor="@color/white"
                 app:fontType="OpenSans_Regular"/>
+
 
             <ImageView
                 android:id="@+id/img_roundblink"
