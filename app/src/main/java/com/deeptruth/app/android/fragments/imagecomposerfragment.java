@@ -558,6 +558,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             spinner_mediaquality.setSelection(1,true);*/
 
         txt_media_quality.setText(config.mediaquality720);
+        if(!xdata.getinstance().getSetting("imagequality").isEmpty())
+            txt_media_quality.setText(xdata.getinstance().getSetting("imagequality"));
+
         txt_media_low.setText(config.mediaquality480);
         txt_media_medium.setText(config.mediaquality720);
         txt_media_high.setText(config.mediaquality1080);
@@ -1363,6 +1366,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     {
         selectedmediaquality=quality;
         txt_media_quality.setText(quality);
+        xdata.getinstance().saveSetting("imagequality",quality);
         expandable_layout.collapse();
         new Handler().postDelayed(new Runnable() {
             @Override

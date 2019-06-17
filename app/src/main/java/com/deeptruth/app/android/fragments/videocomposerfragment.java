@@ -487,6 +487,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_media_quality.setVisibility(View.VISIBLE);
 
         txt_media_quality.setText(config.mediaquality720);
+        if(!xdata.getinstance().getSetting("videoquality").isEmpty())
+             txt_media_quality.setText(xdata.getinstance().getSetting("videoquality"));
+
         txt_media_low.setText(config.mediaquality480);
         txt_media_medium.setText(config.mediaquality720);
         txt_media_high.setText(config.mediaquality1080);
@@ -1435,6 +1438,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(! selectedvideoquality.equalsIgnoreCase(quality))
         {
             txt_media_quality.setText(quality);
+            xdata.getinstance().saveSetting("videoquality",quality);
             selectedvideoquality=quality;
         }
     }
