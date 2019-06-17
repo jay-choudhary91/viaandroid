@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.arch.lifecycle.Lifecycle;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -99,6 +102,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        applicationviavideocomposer.setActivity(baseactivity.this);
         prefs = getSharedPreferences(config.prefs_name, Context.MODE_PRIVATE);
 
         isapprunning = true;
@@ -498,19 +502,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             double height = widthHeight[1] / 1.6;
             subdialogshare.getWindow().setLayout(width - 20, (int) height);
 
-            final TextView txt_share_btn1 = (TextView) subdialogshare.findViewById(R.id.txt_share_btn1);
-            final TextView txt_share_btn2 = (TextView) subdialogshare.findViewById(R.id.txt_share_btn2);
-            final TextView txt_share_btn3 = (TextView) subdialogshare.findViewById(R.id.txt_share_btn3);
-            final TextView txt_share_btn4 = (TextView) subdialogshare.findViewById(R.id.txt_share_btn4);
+            final LinearLayout linear_share_btn1 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn1);
+            final LinearLayout linear_share_btn2 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn2);
+            final LinearLayout linear_share_btn3 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn3);
+            final LinearLayout linear_share_btn4 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn4);
             TextView txt_title1 = (TextView) subdialogshare.findViewById(R.id.txt_title1);
             TextView txt_title2 = (TextView) subdialogshare.findViewById(R.id.txt_title2);
             ImageView img_cancel = subdialogshare.findViewById(R.id.img_cancelicon);
 
-            txt_share_btn4.setVisibility(View.GONE);
+        linear_share_btn4.setVisibility(View.GONE);
             if(type.equalsIgnoreCase(config.item_video))
-                txt_share_btn4.setVisibility(View.VISIBLE);
+                linear_share_btn4.setVisibility(View.VISIBLE);
 
-            txt_share_btn1.setOnClickListener(new View.OnClickListener() {
+        linear_share_btn1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mediamethod = config.type_private;
@@ -522,7 +526,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }
             });
 
-            txt_share_btn2.setOnClickListener(new View.OnClickListener() {
+        linear_share_btn2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mediamethod = config.type_public;
@@ -534,7 +538,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }
             });
 
-            txt_share_btn3.setOnClickListener(new View.OnClickListener() {
+        linear_share_btn3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mediamethod = config.type_linkinvite;
@@ -546,9 +550,15 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }
             });
 
-            txt_share_btn4.setOnClickListener(new View.OnClickListener() {
+        linear_share_btn4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    if(common.getapppaidlevel() <= 0)
+                    {
+                        showtrimfeaturealert();
+                        return;
+                    }
 
                     if (subdialogshare != null && subdialogshare.isShowing())
                         subdialogshare.dismiss();
@@ -584,6 +594,27 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
         subdialogshare.show();
     }
+
+    public void showtrimfeaturealert() {
+        try
+        {
+            new AlertDialog.Builder(baseactivity.this, R.style.customdialogtheme)
+                    .setTitle("Alert")
+                    .setMessage("Sharing a trimmed version is an advanced feature.")
+                    .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dialog != null)
+                                dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     public void callmediashareapi(final String mediatype, final String mediatoken, final String path, String method) {
 

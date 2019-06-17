@@ -61,6 +61,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
+import android.view.WindowManager;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -323,6 +324,25 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             startmetrices();
         }
     }
+
+    public static void showvideorecordlengthalert() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(applicationviavideocomposer.getactivity());
+        alertDialogBuilder.setTitle("Alert");
+        alertDialogBuilder.setMessage("Recording is limited to "+ xdata.getinstance().getSetting(xdata.unpaid_video_record_length)+" seconds" +
+                " in the basic version.   Upgrade");
+        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialog != null)
+                    dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        alertDialog.show();
+    }
+
 
     public void loadtowerinfofromassets() {
         if(cellinfofromassets.size() > 0)

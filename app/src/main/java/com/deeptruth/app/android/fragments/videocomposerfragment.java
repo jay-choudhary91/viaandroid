@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -38,7 +39,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -61,6 +61,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -85,7 +86,6 @@ import com.google.gson.Gson;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -1102,6 +1102,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mediarecorder.setAudioSamplingRate(profile.audioSampleRate);
         mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        if(common.getapppaidlevel() <= 0)
+        {
+            int length=common.getunpaidvideorecordlength();
+            int maxduartion=length * 1000;
+            mediarecorder.setMaxDuration(maxduartion);
+            mediarecorder.setOnInfoListener(mediainfolistener);
+        }
+
         // edited
         /*
         mMediaRecorder.setVideoFrameRate(profile.videoFrameRate);
@@ -1158,6 +1166,52 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         mediarecorder.prepare();
     }
+
+
+    MediaRecorder.OnInfoListener mediainfolistener=new MediaRecorder.OnInfoListener() {
+        @Override
+        public void onInfo(MediaRecorder mediarecorder, int what, int extra) {
+            if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
+                Log.v("VIDEOCAPTURE","Maximum Duration Reached");
+                try {
+
+                    resetpreviewsession();
+                    startmetaservices();
+                    stopblinkanimation();
+
+                    mediarecorder.stop();
+                    mediarecorder.release();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                showvideorecordlengthalert();
+            }
+        }
+    };
+
+    public void showvideorecordlengthalert() {
+        try
+        {
+            new AlertDialog.Builder(getActivity(), R.style.customdialogtheme)
+                    .setTitle("Alert")
+                    .setMessage("Recording is limited to "+ xdata.getinstance().getSetting(xdata.unpaid_video_record_length)+" seconds" +
+                            " in the basic version.")
+                    .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dialog != null)
+                                dialog.dismiss();
+                        }
+                    })
+                    .show();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     private File getVideoFile(Context context) {
         String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -1224,7 +1278,42 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             e.printStackTrace();
         }
     }
-    private void stopRecordingVideo() {
+
+    public void resetpreviewsession()
+    {
+        try
+        {
+            previewsession.stopRepeating();
+            previewsession.abortCaptures();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopresetmediarecorder()
+    {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            if(mediarecorder != null)
+                mediarecorder.stop();
+        }catch(Exception stopException){
+            Log.e("exception", String.valueOf(stopException));
+        }
+
+        try{
+            if(mediarecorder != null)
+                mediarecorder.reset();
+        }catch(Exception stopException){
+            Log.e("exception", String.valueOf(stopException));
+        }
+    }
+
+    private void startmetaservices() {
         // UI
         if(validationbaranimation != null)
         {
@@ -1237,31 +1326,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(mysoundwavehandler != null && mymysoundwaverunnable != null)
             mysoundwavehandler.removeCallbacks(mymysoundwaverunnable);
 
-        try {
-            previewsession.stopRepeating();
-            previewsession.abortCaptures();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        try{
-            mediarecorder.stop();
-        }catch(RuntimeException stopException){
-            Log.e("exception", String.valueOf(stopException));
-        }
-        mediarecorder.reset();
-
         startPreview(false);
         stopvideotimer();
 
         resetvideotimer();
-        clearvideolist();
 
         new Thread(new Runnable() {
             @Override
@@ -1449,7 +1517,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if (isvideorecording) {
             gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
-            stopRecordingVideo();
+            resetpreviewsession();
+            stopresetmediarecorder();
+            startmetaservices();
             stopblinkanimation();
         } else {
             selectedhashes="";
@@ -1768,23 +1838,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     };
 
-
-
-    public void clearvideolist()
-    {
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-             //   layout_bottom.setVisibility(View.VISIBLE);
-             //   imgflashon.setVisibility(View.VISIBLE);
-              //  rotatecamera.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
-    public void setvideoadapter() {
-
-    }
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)
     {

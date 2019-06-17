@@ -514,14 +514,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }, 1000);
 
                 if(currentselectedcomposer == 1 || currentselectedcomposer == 2)
-                {
-                    if (iscircle) {
-                        makesquare();
-                    }
-                    else {
-                        makecircle();
-                    }
-                }
+                    startcirclesquareanimation();
 
                 if(currentselectedcomposer == 0)
                 {
@@ -605,6 +598,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 gethelper().switchtomedialist();
                 break;
         }
+    }
+
+    public void startcirclesquareanimation()
+    {
+        if (iscircle)
+            makesquare();
+        else
+            makecircle();
     }
 
     public void enableDisableView(View view, boolean enabled) {
@@ -772,15 +773,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(type == stoprecorder) // for video record stop,audio record stop and image captured button click
         {
+            if(! iscircle)
+                makecircle();
+
             gethelper().setisrecordrunning(false);
             if(currentselectedcomposer == 1)
-            {
                 showhideactionbottombaricon(1);
-            }
             else if(currentselectedcomposer == 2)
-            {
                 showhideactionbottombaricon(3);
-            }
+
             xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
             stopblinkencryption();
         }

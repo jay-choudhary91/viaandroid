@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -32,6 +33,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -46,12 +48,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.utils.noise;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.xdata;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -190,6 +194,21 @@ public abstract class basefragment extends Fragment {
         } else {
             return false;
         }
+    }
+
+    public void showvideorecordlengthalert() {
+        new AlertDialog.Builder(getContext(), R.style.customdialogtheme)
+        .setTitle("Alert")
+        .setMessage("Recording is limited to "+ xdata.getinstance().getSetting(xdata.unpaid_video_record_length)+" seconds" +
+                " in the basic version.   Upgrade")
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialog != null)
+                    dialog.dismiss();
+            }
+        })
+        .show();
     }
 
     public View getmediaseekbarbackgroundview(String weight,String color)
