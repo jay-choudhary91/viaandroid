@@ -325,25 +325,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
     }
 
-    public static void showvideorecordlengthalert() {
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(applicationviavideocomposer.getactivity());
-        alertDialogBuilder.setTitle("Alert");
-        alertDialogBuilder.setMessage("Recording is limited to "+ xdata.getinstance().getSetting(xdata.unpaid_video_record_length)+" seconds" +
-                " in the basic version.   Upgrade");
-        alertDialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (dialog != null)
-                    dialog.dismiss();
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        alertDialog.show();
-    }
-
-
     public void loadtowerinfofromassets() {
         if(cellinfofromassets.size() > 0)
             return;
@@ -2754,11 +2735,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
             if (mediametadatainfosarray != null && mediametadatainfosarray.size() > 0) {
 
-
-                Log.e("mediametadatfosaray= ",""+mediametadatainfosarray.size());
-
-
-                xdata.getinstance().saveSetting(config.frame_started,""+mediametadatainfosarray.get(0).getId());
+                xdata.getinstance().saveSetting(config.frame_started,""+mediametadatainfosarray.get(0).getSequenceno());
 
                 for(int i=0;i<mediametadatainfosarray.size();i++)
                 {
