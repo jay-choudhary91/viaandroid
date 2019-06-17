@@ -227,33 +227,34 @@
                     />
         </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
+            android:id="@+id/layout_webviewdetails"
             android:layout_below="@id/layout_devtoggle"
+            android:layout_above="@+id/layoutbottom"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_marginRight="@dimen/margin_right"
+            android:layout_marginBottom="@dimen/bottom_margin"
             android:layout_height="match_parent">
 
             <ScrollView
                 android:layout_width="match_parent"
                 android:fillViewport="true"
-                android:layout_weight="3"
                 android:scrollbars="none"
-                android:layout_marginLeft="@dimen/margin_left"
-                android:layout_marginRight="@dimen/margin_right"
-                android:layout_marginBottom="@dimen/bottom_margin"
-                android:layout_height="0dp">
+                android:id="@+id/scrollview"
+                android:layout_height="match_parent">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="vertical"
-                    android:layout_marginTop="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
                     android:layout_height="match_parent">
 
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:padding="10dp"
+                        android:layout_marginTop="@dimen/bottom_margin"
                         android:background="@drawable/round_corner_btn_setting"
                         android:layout_marginBottom="@dimen/bottom_margin"
                         android:layout_height="wrap_content">
@@ -310,6 +311,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:padding="10dp"
+                        android:id="@+id/layout_bottom"
                         android:background="@drawable/round_corner_btn_setting"
                         android:layout_marginBottom="@dimen/bottom_margin"
                         android:layout_height="wrap_content">
@@ -335,28 +337,29 @@
                     </RelativeLayout>
                 </LinearLayout>
             </ScrollView>
+        </RelativeLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/bottom_margin"
-                android:gravity="center_vertical"
-                android:layout_weight="1"
-                android:layout_height="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/margin_20dp"
+            android:id="@+id/layoutbottom"
+            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content">
 
 
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="55dp"
-                    android:layout_marginLeft="20dp"
-                    android:src="@drawable/deeptruth_img" />
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/deeptruth_img" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/deeptruth_text"
-                    android:layout_marginLeft="1dp"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/deeptruth_text"
+                android:layout_marginLeft="1dp"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <WebView

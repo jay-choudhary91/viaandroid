@@ -934,7 +934,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
             else if(! isdatacomposing)
             {
-                setvisibility(true);
+               /* setvisibility(true);
                 if(xdata.getinstance().getSetting(config.Heading).trim().length() > 0)
                 {
                     String strdegree=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
@@ -957,7 +957,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"NA", tvheading);
                     }
 
-                }
+                }*/
             }
 
             if(xdata.getinstance().getSetting(config.orientation).trim().length() > 0)
@@ -1632,6 +1632,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),
                                         "\n"+metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), tvheading);
+                                rotatecompass(degree);
                             }
                             else
                             {

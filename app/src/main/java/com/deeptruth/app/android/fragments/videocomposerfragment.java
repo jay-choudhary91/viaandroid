@@ -1923,18 +1923,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                 }
 
-                if(!isvideorecording){
+                {
                     //layout_no_gps_wifi.setVisibility(View.VISIBLE);
                     layout_wifi_gps_data.setVisibility(View.VISIBLE);
                     actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
                     visibleconnection();
                     setactionbarbackgroundcolor();
-                }else{
+                }/*else{
                     actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
                     //layout_no_gps_wifi.setVisibility(View.GONE);
                     layout_wifi_gps_data.setVisibility(View.GONE);
-                }
+                }*/
 
                 if(! isvideorecording)
                 {
@@ -2359,8 +2359,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void setactionbarbackgroundcolor() {
 
-        if (!isvideorecording)
-        {
             if (!common.isnetworkconnected(getActivity()) ||
                     xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0") ||
                     xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA") ||
@@ -2377,17 +2375,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             } else {
                 String[] arrayitemgps = xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
                 String[] arrayitemconnection = xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
-                if(arrayitemgps.length > 0 && arrayitemconnection.length > 0)
-                {
-                    double gpsvalue=0,connectionvalue=0;
-                    if(! arrayitemgps[0].trim().isEmpty())
+                if (arrayitemgps.length > 0 && arrayitemconnection.length > 0) {
+                    double gpsvalue = 0, connectionvalue = 0;
+                    if (!arrayitemgps[0].trim().isEmpty())
                         gpsvalue = Double.valueOf(arrayitemgps[0]);
 
-                    if(! arrayitemconnection[0].trim().isEmpty())
+                    if (!arrayitemconnection[0].trim().isEmpty())
                         connectionvalue = Double.valueOf(arrayitemconnection[0]);
 
-                    if ((gpsvalue >= 50 && gpsvalue == 0) || connectionvalue == 0.0)
-                    {
+                    if ((gpsvalue >= 50 && gpsvalue == 0) || connectionvalue == 0.0) {
                         actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
                     } else {
@@ -2396,7 +2392,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                 }
             }
-        }
     }
 
     public void setbottommargin(RotateLayout headercontainer){
