@@ -61,6 +61,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
+import android.view.WindowManager;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -1819,7 +1820,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             xAngle=xAngle+180;
                             Log.e("Case ","Case3");
                         }
-                        else if(xAngle >= 0 && xAngle <= 90 && yAngle >= 0 && yAngle <= 90)
+                        else if(xAngle > 0 && xAngle <= 90 && yAngle > 0 && yAngle <= 90)
                         {
                             // xAxis is between 270-360
                             xAngle=Math.abs(xAngle);
@@ -1958,7 +1959,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             final String[] value3 = {cpuArray[2]};
                             final String[] value4 = {cpuArray[3]};
 
-                            final float finalTotalcpu = totalcpu;
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -2735,11 +2735,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
             if (mediametadatainfosarray != null && mediametadatainfosarray.size() > 0) {
 
-
-                Log.e("mediametadatfosaray= ",""+mediametadatainfosarray.size());
-
-
-                xdata.getinstance().saveSetting(config.frame_started,""+mediametadatainfosarray.get(0).getId());
+                xdata.getinstance().saveSetting(config.frame_started,""+mediametadatainfosarray.get(0).getSequenceno());
 
                 for(int i=0;i<mediametadatainfosarray.size();i++)
                 {

@@ -1526,6 +1526,23 @@ public class common {
         return builder.toString();
     }
 
+    public static int getapppaidlevel()
+    {
+        int paidlevel=0;
+        if(! xdata.getinstance().getSetting(xdata.app_paid_level).isEmpty())
+            paidlevel = Integer.parseInt(xdata.getinstance().getSetting(xdata.app_paid_level));
+
+        return paidlevel;
+    }
+
+    public static int getunpaidvideorecordlength()
+    {
+        int unpaidvideorecordlength=30;
+        if(! xdata.getinstance().getSetting(xdata.unpaid_video_record_length).isEmpty())
+            unpaidvideorecordlength = Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_video_record_length));
+
+        return unpaidvideorecordlength;
+    }
 
     public static String convertlongitude(double longitude) {
         StringBuilder builder = new StringBuilder();

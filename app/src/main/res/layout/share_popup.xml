@@ -20,6 +20,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center">
+
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_title1"
             app:fontType="OpenSans_Regular"
@@ -34,37 +35,71 @@
             android:visibility="gone"
             android:text="@string/congratulations_video" />
 
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            android:id="@+id/txt_share_btn1"
-            android:text="@string/str_private"
-            style="@style/btn_share_screen"
-            android:background="@color/black"
-            />
+        <LinearLayout
+            android:id="@+id/linear_share_btn1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/layout_share_screen">
 
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            android:id="@+id/txt_share_btn2"
-            android:text="@string/str_public"
-            style="@style/btn_share_screen"
-            android:background="@color/black"
-            />
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                android:text="@string/str_private"
+                style="@style/btn_share_screen"
+                />
 
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            android:id="@+id/txt_share_btn3"
-            android:text="@string/str_direct_link"
-            style="@style/btn_share_screen"
-            android:background="@color/black"
-            />
+        </LinearLayout>
 
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            android:id="@+id/txt_share_btn4"
-            android:text="@string/str_trim_share"
-            style="@style/btn_share_screen"
-            android:background="@color/black"
-            />
+
+        <LinearLayout
+            android:id="@+id/linear_share_btn2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/layout_share_screen">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                android:text="@string/str_public"
+                style="@style/btn_share_screen"
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linear_share_btn3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/layout_share_screen">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                android:text="@string/str_direct_link"
+                style="@style/btn_share_screen"    />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linear_share_btn4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/layout_share_screen">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/lock_icon"
+                />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                android:text="@string/str_trim_share"
+                android:layout_marginLeft="5dp"
+                style="@style/btn_share_screen"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 
