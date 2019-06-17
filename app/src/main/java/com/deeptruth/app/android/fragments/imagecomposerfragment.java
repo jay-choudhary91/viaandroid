@@ -531,7 +531,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         txt_title_actionbarcomposer.setText("");
 
-        expandable_layout.setVisibility(View.VISIBLE);
+        expandable_layout.setVisibility(View.GONE);
         txt_media_quality.setVisibility(View.VISIBLE);
 
         /*spinner_mediaquality.setVisibility(View.VISIBLE);
