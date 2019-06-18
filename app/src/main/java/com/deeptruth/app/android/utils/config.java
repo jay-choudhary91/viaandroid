@@ -202,6 +202,14 @@ public class config {
     public static final String color_code_transparent ="#00000000";
     public static final String color_code_white="#ffffff";
 
+    public static final String color_code_drawer_location="00a0dc";
+    public static final String color_code_drawer_time="00aaa0";
+    public static final String color_code_drawer_sound="a0aa00";
+    public static final String color_code_drawer_phone="ff9600";
+    public static final String color_code_drawer_connection="ff8278";
+    public static final String color_code_drawer_summary="d27ddc";
+    public static final String color_code_drawer_encryption="8282ff";
+
 
     public static final String item_valid="Valid";
     public static final String item_caution="Caution";

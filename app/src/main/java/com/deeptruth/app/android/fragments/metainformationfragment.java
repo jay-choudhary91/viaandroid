@@ -240,8 +240,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     LineChart linechart_gpsaccuracy;
     @BindView(R.id.txt_mediainformation)
     TextView txt_mediainformation;
-    @BindView(R.id.layout_videoaudiodata)
-    LinearLayout layout_videoaudiodata;
+    @BindView(R.id.layout_mediasummary)
+    LinearLayout layout_mediasummary;
     @BindView(R.id.layout_mediametadata)
     LinearLayout layout_mediametadata;
     @BindView(R.id.txt_timeinformation)
@@ -429,7 +429,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
 
             //visiblity gone of media information
-            layout_videoaudiodata.setVisibility(View.GONE);
+            layout_mediasummary.setVisibility(View.GONE);
             layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
 
@@ -485,7 +485,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             fetchmetadatafromdb(mediafilepath);
             if(metricmainarraylist != null && metricmainarraylist.size() > 0)
             {
-                layout_videoaudiodata.setVisibility(View.VISIBLE);
+                layout_mediasummary.setVisibility(View.VISIBLE);
                 layout_mediametadata.setVisibility(View.VISIBLE);
                 txt_mediainformation.setVisibility(View.VISIBLE);
                 drawmappath();
@@ -494,7 +494,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         }
         else
         {
-            layout_videoaudiodata.setVisibility(View.GONE);
+            layout_mediasummary.setVisibility(View.GONE);
             layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
             resetmediainformation();

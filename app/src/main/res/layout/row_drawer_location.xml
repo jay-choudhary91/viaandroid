@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/drawer_frames"
+    android:id="@+id/layout_locationanalytics">
+
+    <LinearLayout
+        android:id="@+id/layout_googlemap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_locationtracking"
+                style="@style/txt_drawer_graphical_title_big"
+                android:text="LOCATION"
+                app:fontType="OpenSans_Semibold"
+                />
+
+            <ImageView
+                android:id="@+id/img_drawer_location"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_drawer_location"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:visibility="visible"
+            >
+
+            <FrameLayout
+                android:id="@+id/googlemap"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:layout_marginTop="10dp"
+                android:layout_height="200dp"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_address"
+                app:fontType="OpenSans_Regular"
+                style="@style/txt_normalview"
+                android:layout_marginTop="5dp"
+                android:text=""/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_locationanalytics"
+            style="@style/txt_drawer_graphical_title"
+            android:text="@string/locationanalytics"
+            app:fontType="OpenSans_Regular"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:visibility="visible"
+            android:weightSum="1">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.4"
+                android:layout_marginTop="5dp"
+                android:layout_height="150dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/layout_compass"
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    android:layout_above="@+id/txt_degree"
+                    android:layout_height="150dp">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center"
+                        android:id="@+id/layoutcompass"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/img_compass">
+                    </ImageView>
+
+                    <ImageView
+                        android:id="@+id/img_niddle"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="4dp"
+                        android:visibility="visible"
+                        android:src="@drawable/niddle_withshadow" />
+
+                </RelativeLayout>
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_degree"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_degreeview"
+                    android:visibility="gone"
+                    android:layout_alignParentBottom="true"
+                    android:text="Degree"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.6"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_heading"
+                        app:fontType="OpenSans_Regular"
+                        android:gravity="center"
+                        style="@style/txt_row_locationinfo"
+                        android:layout_weight="0.3"
+                        android:text="Heading"/>
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_latitude"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_locationinfo"
+                        android:gravity="center"
+                        android:layout_weight="0.3"
+                        android:text="Latitude"/>
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_longitude"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_locationinfo"
+                        android:gravity="center"
+                        android:layout_weight="0.3"
+                        android:text="Longitude"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_speed"
+                    app:fontType="OpenSans_Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:lines="2"
+                    android:text="Speed"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="20dp"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="70dp"
+                            android:background="@color/white"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginBottom="14dp"
+                            android:layout_alignParentBottom="true"></View>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:background="@color/white"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginRight="@dimen/margin_8dp"
+                        android:layout_marginBottom="14dp"
+                        android:layout_alignParentBottom="true"></View>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/linechart_speed"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="match_parent"/>
+
+
+                    <com.deeptruth.app.android.views.verticalseekbar
+                        android:id="@+id/vertical_slider_speed"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:thumb="@drawable/blue_black_ball"
+                        android:max="100"
+                        android:layout_marginLeft="@dimen/margin_6dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:progressDrawable="@drawable/verticalseekbarprogress"
+                        android:layout_marginBottom="3dp"
+                        android:min="0"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_traveled"
+                    app:fontType="OpenSans_Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:lines="2"
+                    android:gravity="center"
+                    android:text="Traveled"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="20dp"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="70dp"
+                            android:background="@color/white"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginBottom="14dp"
+                            android:layout_alignParentBottom="true"></View>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:background="@color/white"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginRight="@dimen/margin_8dp"
+                        android:layout_marginBottom="14dp"
+                        android:layout_alignParentBottom="true"></View>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/linechart_traveled"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="match_parent"/>
+
+                    <com.deeptruth.app.android.views.verticalseekbar
+                        android:id="@+id/vertical_slider_traveled"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:thumb="@drawable/blue_black_ball"
+                        android:max="100"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/margin_6dp"
+                        android:progressDrawable="@drawable/verticalseekbarprogress"
+                        android:layout_marginBottom="3dp"
+                        android:min="0"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_altitude"
+                    app:fontType="OpenSans_Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:lines="2"
+                    android:text="Altitude"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="20dp"
+                        android:gravity="center"
+                        android:visibility="visible"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="70dp"
+                            android:background="@color/white"
+                            android:layout_marginLeft="12dp"
+                            android:layout_marginBottom="14dp"
+                            android:layout_alignParentBottom="true"></View>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:background="@color/white"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginRight="@dimen/margin_8dp"
+                        android:layout_marginBottom="14dp"
+                        android:layout_alignParentBottom="true"></View>
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/linechart_altitude"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="match_parent"/>
+
+                    <com.deeptruth.app.android.views.verticalseekbar
+                        android:id="@+id/vertical_slider_altitude"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:thumb="@drawable/blue_black_ball"
+                        android:max="100"
+                        android:layout_marginLeft="@dimen/margin_6dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:progressDrawable="@drawable/verticalseekbarprogress"
+                        android:min="0"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_gps_accuracy"
+            app:fontType="OpenSans_Regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:lines="2"
+            android:text=""/>
+
+        <!--<com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_gps_accuracy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fontType="OpenSans_Regular"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text=""/>-->
+
+        <include layout="@layout/row_gpsaccuracy"></include>
+
+    </LinearLayout>
+
+
+</LinearLayout>

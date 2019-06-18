@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.GradientDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
@@ -1062,5 +1063,12 @@ public abstract class basefragment extends Fragment {
 
     public void settextviewcolor(TextView view, int color){
         view.setTextColor(color);
+    }
+
+    public void setframeborder(View view, String bordercolor,String viewcolor){
+        GradientDrawable gd = (GradientDrawable) view.getBackground().getCurrent();
+        gd.setColor(Color.parseColor(viewcolor));
+        gd.setCornerRadius(30);
+        gd.setStroke(15, Color.parseColor(bordercolor), 0, 0);
     }
 }

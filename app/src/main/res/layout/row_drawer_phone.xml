@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/drawer_frames"
+    android:id="@+id/layout_phoneanalytics">
+
+    <LinearLayout
+        android:id="@+id/layout_orientationanalytics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_orientation"
+                style="@style/txt_drawer_graphical_title_big"
+                android:text="PHONE"
+                app:fontType="OpenSans_Semibold"
+                />
+
+            <ImageView
+                android:id="@+id/img_drawer_phone"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_drawer_phone"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:gravity="right"
+                android:layout_weight="0.5">
+
+                <com.deeptruth.app.android.sensor.AttitudeIndicator
+                    android:id="@+id/attitude_indicator"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"/>
+
+                <ImageView
+                    android:id="@+id/img_phone_orientation"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/phoneorentation"/>
+
+
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/cordinatesxyz" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:layout_marginRight="@dimen/margin_10dp"
+                android:orientation="vertical">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_xaxis"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_normalview"
+                    android:gravity="center"
+                    android:layout_weight="0.2"
+                    android:text="X-Axis"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_yaxis"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_normalview"
+                    android:gravity="center"
+                    android:layout_weight="0.2"
+                    android:text="Y-Axis"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_zaxis"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_normalview"
+                    android:gravity="center"
+                    android:layout_weight="0.2"
+                    android:text="Z-Axis"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/txt_drawer_graphical_title"
+            android:id="@+id/txt_Phoneanalytics"
+            app:fontType="OpenSans_Regular"
+            android:visibility="gone"
+            android:text="@string/Phoneanalytics" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        app:fontType="OpenSans_Regular"
+                        android:id="@+id/txt_Memory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="@dimen/margin_15dp"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/white"
+                        android:text="Memory Usage"/>
+
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/chart_memoeyusage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/txt_Memory"/>
+
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_memoryusage"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:gravity="center_horizontal"
+                        android:layout_alignParentBottom="true"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        app:fontType="OpenSans_Regular"
+                        android:id="@+id/txt_cpuusage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="@dimen/margin_15dp"
+                        android:textColor="@color/white"
+                        android:gravity="center_horizontal"
+                        android:text="CPU Usage"/>
+
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/chart_cpuusage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/txt_cpuusage"/>
+
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_cpu_usage"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:gravity="center_horizontal"
+                        android:layout_alignParentBottom="true" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        app:fontType="OpenSans_Regular"
+                        android:id="@+id/txtbattery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="@dimen/margin_15dp"
+                        android:textColor="@color/white"
+                        android:gravity="center_horizontal"
+                        android:text="Battery"/>
+
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/chart_battery"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/txtbattery"/>
+
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_battery"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:gravity="center_horizontal"
+                        android:layout_alignParentBottom="true"
+                        />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10dp"
+                android:orientation="horizontal">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_phone"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.5"
+                    android:text="Phone"/>
+
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_version"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.5"
+                    android:text="Version"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_language"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.5"
+                    android:text="language"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_country"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="5dp"
+                    android:text="Country"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_network"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="Network"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_wifi"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="5dp"
+                    android:text="WiFi"/>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_storagefree"
+                    app:fontType="OpenSans_Regular"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    style="@style/txt_row_encryption"
+                    android:layout_weight="0.5"
+                    android:text="Storage Free"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_screen"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="5dp"
+                    android:text="Screen"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_brightness"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="5dp"
+                    android:text="Brightness"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_localtime"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.5"
+                    android:text="localtime"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_timezone"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:layout_marginTop="5dp"
+                    android:text="Time Zone"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_uptime"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:layout_weight="0.5"
+                    android:text="Phone UpTime"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_bluetooth"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="left"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.5"
+                    android:text="Bluetooth"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:visibility="visible"
+                android:orientation="horizontal">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_availablewifinetwork"
+                    app:fontType="OpenSans_Regular"
+                    style="@style/txt_row_encryption"
+                    android:gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.5"
+                    android:text="@string/availablewifinetwork"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

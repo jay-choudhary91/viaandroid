@@ -305,8 +305,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     LineChart linechart_gpsaccuracy;
     @BindView(R.id.txt_mediainformation)
     TextView txt_mediainformation;
-    @BindView(R.id.layout_videoaudiodata)
-    LinearLayout layout_videoaudiodata;
     @BindView(R.id.layout_mediametadata)
     LinearLayout layout_mediametadata;
     @BindView(R.id.vertical_slider_speed)
@@ -341,6 +339,32 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     RecyclerView recycler_satellit;
     @BindView(R.id.txt_satellite_altitudes_at)
     TextView txt_satellite_altitudes_at;
+    @BindView(R.id.layout_timeinformation)
+    LinearLayout layout_timeinformation;
+    @BindView(R.id.layout_locationanalytics)
+    LinearLayout layout_locationanalytics;
+    @BindView(R.id.layout_phoneanalytics)
+    LinearLayout layout_phoneanalytics;
+    @BindView(R.id.layout_connection)
+    LinearLayout layout_connection;
+    @BindView(R.id.layout_mediasummary)
+    LinearLayout layout_mediasummary;
+    @BindView(R.id.layout_encryptioninfo)
+    LinearLayout layout_encryptioninfo;
+    @BindView(R.id.img_drawer_encryption)
+    ImageView img_drawer_encryption;
+    @BindView(R.id.img_drawer_phone)
+    ImageView img_drawer_phone;
+    @BindView(R.id.img_drawer_sound)
+    ImageView img_drawer_sound;
+    @BindView(R.id.img_drawer_time)
+    ImageView img_drawer_time;
+    @BindView(R.id.img_drawer_location)
+    ImageView img_drawer_location;
+    @BindView(R.id.img_drawer_connection)
+    ImageView img_drawer_connection;
+    @BindView(R.id.img_drawer_summary)
+    ImageView img_drawer_summary;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -395,6 +419,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           world_time_clock_black.setVisibility(View.GONE);
           settextviewcolor();
 
+          img_drawer_encryption.setColorFilter(Color.argb(255, 255, 255, 255));
+          img_drawer_phone.setColorFilter(Color.argb(255, 255, 255, 255));
+          img_drawer_sound.setColorFilter(Color.argb(255, 255, 255, 255));
+          img_drawer_time.setColorFilter(Color.argb(255, 255, 255, 255));
+          img_drawer_location.setColorFilter(Color.argb(255, 255, 255, 255));
+          img_drawer_connection.setColorFilter(Color.argb(255, 255, 255, 255));
+          img_drawer_summary.setColorFilter(Color.argb(255, 255, 255, 255));
+
           seekbar_mediavideoaudio.setEnabled(false);
           seekbar_mediametadata.setEnabled(false);
           vertical_slider_speed.setEnabled(false);
@@ -407,7 +439,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
           //visiblity gone of media information
-            layout_videoaudiodata.setVisibility(View.GONE);
+            layout_mediasummary.setVisibility(View.GONE);
             layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
 
@@ -546,8 +578,47 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     {
         xdata.getinstance().saveSetting(config.drawer_transparency,""+progress);
         progress= transparentarray.length-progress;
-        String colorString="#"+transparentarray[progress]+"0E6479";
-        layout_constraint.setBackgroundColor(Color.parseColor(colorString));
+        {
+            //String colorString="#"+transparentarray[progress]+"0E6479";
+            String colorString="#00000000";
+            layout_constraint.setBackgroundColor(Color.parseColor(colorString));
+        }
+
+        {
+            String colorString="#"+transparentarray[progress]+config.color_code_drawer_location;
+            setframeborder(layout_locationanalytics,config.color_code_white,colorString);
+        }
+
+        {
+            String colorString="#"+transparentarray[progress]+config.color_code_drawer_time;
+            setframeborder(layout_timeinformation,config.color_code_white,colorString);
+        }
+
+        {
+            String colorString="#"+transparentarray[progress]+config.color_code_drawer_sound;
+            setframeborder(layout_soundiformation,config.color_code_white,colorString);
+        }
+
+        {
+            String colorString="#"+transparentarray[progress]+config.color_code_drawer_phone;
+            setframeborder(layout_phoneanalytics,config.color_code_white,colorString);
+        }
+
+        {
+            String colorString="#"+transparentarray[progress]+config.color_code_drawer_connection;
+            setframeborder(layout_connection,config.color_code_white,colorString);
+        }
+
+        {
+            String colorString="#"+transparentarray[progress]+config.color_code_drawer_summary;
+            setframeborder(layout_mediasummary,config.color_code_white,colorString);
+        }
+
+        {
+            String colorString="#"+transparentarray[progress]+config.color_code_drawer_encryption;
+            setframeborder(layout_encryptioninfo,config.color_code_white,colorString);
+        }
+
     }
 
     @Override
@@ -1150,7 +1221,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             fetchmetadatafromdb(mediafilepath);
             if(metricmainarraylist != null && metricmainarraylist.size() > 0)
             {
-                layout_videoaudiodata.setVisibility(View.VISIBLE);
+                layout_mediasummary.setVisibility(View.VISIBLE);
                 layout_mediametadata.setVisibility(View.VISIBLE);
                 txt_mediainformation.setVisibility(View.VISIBLE);
                 showhideverticalbar(false);
@@ -1160,7 +1231,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
         else
         {
-            layout_videoaudiodata.setVisibility(View.GONE);
+            layout_mediasummary.setVisibility(View.GONE);
             layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
             showhideverticalbar(true);

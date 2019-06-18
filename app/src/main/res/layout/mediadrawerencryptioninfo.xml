@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    style="@style/drawer_frames"
     android:id="@+id/layout_encryptioninfo"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -12,12 +10,26 @@
     android:layout_marginBottom="50dp"
     android:orientation="vertical">
 
-    <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/text_encryption"
-        app:fontType="OpenSans_Regular"
-        android:layout_marginTop="20dp"
-        style="@style/txt_drawer_graphical_title"
-        android:text="@string/encryption_information" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/text_encryption"
+            style="@style/txt_drawer_graphical_title_big"
+            android:text="ENCRYPTION"
+            app:fontType="OpenSans_Semibold" />
+
+        <ImageView
+            android:id="@+id/img_drawer_encryption"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_drawer_encryption"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

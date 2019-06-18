@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/drawer_frames"
+    android:id="@+id/layout_connection">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_connectioninformation"
+                style="@style/txt_drawer_graphical_title_big"
+                android:text="CONNECTION"
+                app:fontType="OpenSans_Semibold"
+                />
+
+            <ImageView
+                android:id="@+id/img_drawer_connection"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_drawer_connection"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+
+
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_connection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fontType="OpenSans_Regular"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:text=""/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp"
+            android:layout_height="120dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="@dimen/margin_7dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.7"
+                    android:orientation="vertical"
+                    android:background="@color/green_background"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.2"
+                    android:orientation="vertical"
+                    android:background="@color/yellow_background"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="20dp"
+                android:gravity="center"
+                android:visibility="visible"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_alignParentBottom="true"></View>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="@color/white"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="@dimen/margin_7dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentBottom="true"></View>
+
+            <View
+                android:id="@+id/view_connectionspeed"
+                android:layout_width="2dp"
+                android:layout_height="120dp"
+                android:background="@color/white"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"></View>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/linechart_connectionspeed"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"/>
+
+            <com.deeptruth.app.android.views.verticalseekbar
+                android:id="@+id/vertical_slider_connectionspeed"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:thumb="@drawable/blue_black_ball"
+                android:max="100"
+                android:layout_marginLeft="@dimen/margin_7dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:progressDrawable="@drawable/verticalseekbarprogress"
+                android:min="0"/>
+
+
+        </RelativeLayout>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_datatimedelay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fontType="OpenSans_Regular"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:text=""/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp"
+            android:layout_height="120dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="@dimen/margin_7dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical"
+                    android:background="@color/yellow_background"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical"
+                    android:background="@color/green_background"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="20dp"
+                android:gravity="center"
+                android:visibility="visible"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_alignParentBottom="true"></View>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="@color/white"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="@dimen/margin_7dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentBottom="true"></View>
+
+            <View
+                android:id="@+id/view_datatimedelay"
+                android:layout_width="2dp"
+                android:layout_height="120dp"
+                android:background="@color/white"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"></View>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/linechart_datatimedelay"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"/>
+
+
+            <com.deeptruth.app.android.views.verticalseekbar
+                android:id="@+id/vertical_slider_connectiondatatimedely"
+                android:layout_width="20dp"
+                android:layout_height="match_parent"
+                android:thumb="@drawable/blue_black_ball"
+                android:max="100"
+                android:layout_marginLeft="@dimen/margin_7dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:progressDrawable="@drawable/verticalseekbarprogress"
+                android:min="0"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_towerinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:orientation="vertical">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_towerinfo"
+            style="@style/txt_drawer_graphical_title"
+            android:text="@string/towerinformation"
+            app:fontType="OpenSans_Regular"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_towerlist"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_satellite_informations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/satellite_dashboard_image"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                style="@style/txt_normalview"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:id="@+id/txt_satellite_altitude"
+                android:layout_width="wrap_content"
+                android:text="@string/satellite_altitudes_at"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Semibold"
+                style="@style/txt_normalview"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:id="@+id/txt_satellite_altitudes_at"
+                android:text="@string/satellite_altitudes_at"/>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_satellite_itemlist"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
