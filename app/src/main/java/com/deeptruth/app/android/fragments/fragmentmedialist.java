@@ -302,7 +302,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             try {
                 DrawableCompat.setTint(img_header_search.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.blue));
+                        , R.color.white));
             }catch (Exception e)
             {
                 e.printStackTrace();
