@@ -62,6 +62,8 @@ public class config {
     public static final String imagequality = "imagequality";
     public static final String videoquality = "videoquality";
 
+    public static final String development_url = "http://dev.api.deeptruth.com/xapi.php?";
+    public static final String production_url = "http://prod.api.deeptruth.com/xapi.php?";
     public static final String build_flavor_reader = "reader";
     public static final String build_flavor_composer = "composer";
     public static Location MyLastLocation = null;
@@ -222,7 +224,7 @@ public class config {
     public static final String istravelleddistanceneeded="istravelleddistanceneeded";
     public static final String enableintroscreen="enableintroscreen";
     public static final String enableproduction="enableproduction";
-    public static final String enabledev="enabledev";
+    public static final String enabledevelopment ="enabledevelopment";
     public static final String authtoken="authtoken";
     public static final String clientemail="clientemail";
     public static final String usernameemailaddress="usernameemailaddress";

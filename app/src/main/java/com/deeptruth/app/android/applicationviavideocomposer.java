@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.support.multidex.MultiDex;
 
 import com.deeptruth.app.android.utils.common;
+import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
@@ -28,11 +29,14 @@ public class applicationviavideocomposer extends Application {
         xdata.getinstance().saveSetting(xdata.developer_mode, "0");
 
         //common.setting_check(xdata.xapi_url, "http://console.dev.crypto-servers.com/xapi.php?");
-        common.setting_check(xdata.xapi_url, "http://dev.api.deeptruth.com/xapi.php?");  // Make changes on 2019-06-03 (matraex)
+        common.setting_check(xdata.xapi_url, config.development_url);  // Make changes on 2019-06-03 (matraex)
         //common.setting_check(xdata.xapi_url, "http://prod.api.deeptruth.com/xapi.php?");  // Make changes on 2019-06-03 (videolock production)
         common.setting_check(xdata.app_paid_level, "0");
         common.setting_check(xdata.developer_mode, "0");// 0 - false, 1 - true
         common.setting_check(xdata.unpaid_video_record_length, "300");
+
+        common.setting_check(config.enabledevelopment, "1");
+        common.setting_check(config.enableproduction, "0");
 
         regularfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Regular.ttf");
         semiboldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Semibold.ttf");

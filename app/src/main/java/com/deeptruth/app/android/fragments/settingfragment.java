@@ -15,8 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.akash.RevealSwitch;
-import com.akash.revealswitch.OnToggleListener;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.utils.common;
@@ -41,11 +39,11 @@ public class settingfragment extends basefragment implements View.OnClickListene
     @BindView(R.id.setting_webview)
     WebView webview;
     @BindView(R.id.togglebutton)
-    com.suke.widget.SwitchButton togglebutton;
+    SwitchButton togglebutton;
     @BindView(R.id.production_toogle)
-    com.suke.widget.SwitchButton production_toogle;
+    SwitchButton production_toogle;
     @BindView(R.id.dev_toogle)
-    com.suke.widget.SwitchButton dev_toogle;
+    SwitchButton dev_toogle;
     @BindView(R.id.ll_rootlayout)
     LinearLayout llrootlayout;
     int navigationbarheight = 0;
@@ -62,8 +60,6 @@ public class settingfragment extends basefragment implements View.OnClickListene
     @BindView(R.id.txt_username)
     TextView txt_username;
 
-    boolean toogleonoff = false;
-
     public settingfragment() {
         // Required empty public constructor
     }
@@ -72,73 +68,72 @@ public class settingfragment extends basefragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         if (rootview == null)
         {
-          rootview = super.onCreateView(inflater, container, savedInstanceState);
-          ButterKnife.bind(this, rootview);
-          gethelper().drawerenabledisable(false);
+            rootview = super.onCreateView(inflater, container, savedInstanceState);
+            ButterKnife.bind(this, rootview);
+            gethelper().drawerenabledisable(false);
 
             txt_upgrade.setText(getResources().getString(R.string.upgrade));
             txt_privacy.setText(getResources().getString(R.string.privacy));
             txt_help.setText(getResources().getString(R.string.faq));
             txt_logout.setOnClickListener(this);
 
-            if(gethelper().isuserlogin()){
+            txt_username.setText("");
+
+            if(gethelper().isuserlogin())
+            {
                 if(!xdata.getinstance().getSetting(config.clientemail).isEmpty())
+                {
                     txt_logout.setText(getResources().getString(R.string.logout));
                     txt_logout.setVisibility(View.VISIBLE);
                     txt_username.setText(xdata.getinstance().getSetting(config.clientemail));
-            }else{
-                txt_username.setText("");
+                }
             }
 
+            title.setText(common.getapplicationname(applicationviavideocomposer.getactivity()) + "\n" +
+                    applicationviavideocomposer.getactivity().getResources().getString(R.string.appversion) +
+                    common.getapplicationversion(applicationviavideocomposer.getactivity()));
 
-            title.setText(common.getapplicationname(getActivity()) + "\n" +getResources().getString(R.string.appversion) +common.getapplicationversion(getActivity()));
-
-            if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes")){
+            if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() ||
+                    xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("1"))
+            {
                 togglebutton.setChecked(true);
-                togglebutton.setVisibility(View.VISIBLE);
 
             }else{
                 togglebutton.setChecked(false);
-                togglebutton.setVisibility(View.VISIBLE);
             }
 
-          navigationbarheight =  common.getnavigationbarheight();
-          setlayoutmargin();
+            navigationbarheight =  common.getnavigationbarheight();
+            setlayoutmargin();
 
 
-            if(xdata.getinstance().getSetting(config.enableproduction).isEmpty() || xdata.getinstance().getSetting(config.enableproduction).equalsIgnoreCase("yes")){
-                production_toogle.setChecked(true);
-                production_toogle.setVisibility(View.VISIBLE);
-                dev_toogle.setChecked(false);
-                dev_toogle.setVisibility(View.VISIBLE);
-
-            }else{
-                production_toogle.setChecked(false);
-                production_toogle.setVisibility(View.VISIBLE);
+            if(xdata.getinstance().getSetting(config.enabledevelopment).isEmpty() ||
+                    xdata.getinstance().getSetting(config.enabledevelopment).equalsIgnoreCase("1"))
+            {
                 dev_toogle.setChecked(true);
-                dev_toogle.setVisibility(View.VISIBLE);
+                production_toogle.setChecked(false);
+                common.switchtodevelopmentconnection(true);
             }
-            if(xdata.getinstance().getSetting(config.enableproduction).isEmpty() || xdata.getinstance().getSetting(config.enableproduction).equalsIgnoreCase("yes")){
-                dev_toogle.setChecked(true);
-                dev_toogle.setVisibility(View.VISIBLE);
-                production_toogle.setChecked(false);
-                production_toogle.setVisibility(View.VISIBLE);
-
-            }else{
-                dev_toogle.setChecked(false);
-                dev_toogle.setVisibility(View.VISIBLE);
+            else if(xdata.getinstance().getSetting(config.enableproduction).isEmpty() ||
+                xdata.getinstance().getSetting(config.enableproduction).equalsIgnoreCase("1"))
+            {
                 production_toogle.setChecked(true);
-                production_toogle.setVisibility(View.VISIBLE);
+                dev_toogle.setChecked(false);
+                common.switchtodevelopmentconnection(false);
+            }
+            else
+            {
+                dev_toogle.setChecked(false);
+                production_toogle.setChecked(true);
+                common.switchtodevelopmentconnection(true);
             }
 
             togglebutton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(SwitchButton view, boolean isChecked) {
-                    if(isChecked){
-                        xdata.getinstance().saveSetting(config.enableintroscreen,"yes");
-                    }else{
-                        xdata.getinstance().saveSetting(config.enableintroscreen,"no");
-                    }
+                    if(isChecked)
+                        xdata.getinstance().saveSetting(config.enableintroscreen,"1");
+                    else
+                        xdata.getinstance().saveSetting(config.enableintroscreen,"0");
                 }
             });
 
@@ -146,13 +141,13 @@ public class settingfragment extends basefragment implements View.OnClickListene
                 @Override
                 public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                     if(isChecked){
-                        xdata.getinstance().saveSetting(config.enableproduction,"yes");
-                        xdata.getinstance().saveSetting(config.enabledev,"no");
-                        toogleonoff = true;
+                        xdata.getinstance().saveSetting(config.enableproduction,"1");
+                        xdata.getinstance().saveSetting(config.enabledevelopment,"0");
+                        common.switchtodevelopmentconnection(false);
                     }else{
-                        xdata.getinstance().saveSetting(config.enableproduction,"no");
-                        xdata.getinstance().saveSetting(config.enabledev,"yes");
-                        toogleonoff = false;
+                        xdata.getinstance().saveSetting(config.enableproduction,"0");
+                        xdata.getinstance().saveSetting(config.enabledevelopment,"1");
+                        common.switchtodevelopmentconnection(true);
                     }
                     dev_toogle.setChecked(!isChecked);
                 }
@@ -162,22 +157,24 @@ public class settingfragment extends basefragment implements View.OnClickListene
                 @Override
                 public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                     if(isChecked){
-                        xdata.getinstance().saveSetting(config.enableproduction,"no");
-                        xdata.getinstance().saveSetting(config.enabledev,"yes");
+                        xdata.getinstance().saveSetting(config.enableproduction,"0");
+                        xdata.getinstance().saveSetting(config.enabledevelopment,"1");
+                        common.switchtodevelopmentconnection(true);
                     }else{
-                        xdata.getinstance().saveSetting(config.enableproduction,"yes");
-                        xdata.getinstance().saveSetting(config.enabledev,"no");
+                        xdata.getinstance().saveSetting(config.enableproduction,"1");
+                        xdata.getinstance().saveSetting(config.enabledevelopment,"0");
+                        common.switchtodevelopmentconnection(false);
                     }
                     production_toogle.setChecked(!isChecked);
                 }
             });
 
-          img_arrow_back.setOnClickListener(this);
-          /*webview.getSettings().setJavaScriptEnabled(true);
-          webview.getSettings().setSupportZoom(true);       //Zoom Control on web (You don't need this
-          webview.getSettings().setBuiltInZoomControls(true); //Enable Multitouch if supported by ROM
-          webview.loadUrl(config.settingpageurl);
-          webview.setWebViewClient(new mywebview());*/
+            img_arrow_back.setOnClickListener(this);
+            /*webview.getSettings().setJavaScriptEnabled(true);
+            webview.getSettings().setSupportZoom(true);       //Zoom Control on web (You don't need this
+            webview.getSettings().setBuiltInZoomControls(true); //Enable Multitouch if supported by ROM
+            webview.loadUrl(config.settingpageurl);
+            webview.setWebViewClient(new mywebview());*/
         }
         return rootview;
     }
