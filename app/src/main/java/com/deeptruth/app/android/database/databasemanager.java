@@ -381,6 +381,32 @@ public class databasemanager {
         return  mCur;
     }
 
+
+    public Cursor fetchcompletedata(String finallocalkey) {
+
+        Cursor mCur=null;
+        String sql="";
+        try {
+            lock.lock();
+                 sql = "SELECT * FROM tblmetadata where localkey = '"+finallocalkey+"'" ; ;
+                 //sql = "SELECT * FROM  tblmetadata WHERE   localkey = (SELECT  MAX('"+finallocalkey+"') FROM tblmetadata)"; ;
+
+            //String sql = "SELECT * FROM tblmetadata";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur != null) {
+                mCur.moveToNext();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
     /*public ArrayList<metadatahash> getlocalkeyfrommedia(String frame) {
         ArrayList<metadatahash> mitemlist=new ArrayList<>();
         Cursor cur=null;

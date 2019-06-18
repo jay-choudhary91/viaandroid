@@ -2441,9 +2441,12 @@ public class common {
         xapivalue.put(config.API_START_DATE, "" + starttime);
         xapivalue.put(config.API_RESPONCE_DATE, timedifference(starttime, endtime));
 
+        xapivalue.put(config.end_frames, xdata.getinstance().getSetting(config.end_frame));
         xapivalue.put(config.started_frames, xdata.getinstance().getSetting(config.frame_started));
         xapivalue.put(config.completed_frames, xdata.getinstance().getSetting(config.frame_complete));
-        xapivalue.put(config.incompleted_frames, xdata.getinstance().getSetting(config.frame_completeness));
+        xapivalue.put(config.total_frames, xdata.getinstance().getSetting(config.total_frame));
+        xapivalue.put(config.key_media, xdata.getinstance().getSetting(config.media_key));
+        xapivalue.put(config.tokan_media, xdata.getinstance().getSetting(config.media_token));
 
         timedifference(starttime, endtime);
 
