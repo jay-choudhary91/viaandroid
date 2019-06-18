@@ -74,7 +74,7 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
 
             navigationbarheight =  common.getnavigationbarheight();
             setlayoutmargin();
-            edt_inputdata.setText(config.XAPI_BASE_URL);
+            edt_inputdata.setText(xdata.getinstance().getSetting(xdata.xapi_url));
             img_arrow_back.setOnClickListener(this);
             tv_delete.setOnClickListener(this);
 

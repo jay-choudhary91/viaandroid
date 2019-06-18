@@ -57,7 +57,7 @@ public class popupview {
             case config.LIST_XAPI:
                 {
                     //HashMap<String, String> map= xdata.getinstance().getSettingArray();
-                    edtInputData2.setText(config.XAPI_BASE_URL);
+                    edtInputData2.setText(xdata.getinstance().getSetting(xdata.xapi_url));
                 }
                 break;
 
@@ -95,7 +95,7 @@ public class popupview {
 
                     switch (mController.getTxtName()) {
                         case config.LIST_XAPI:
-                            if(edtInputData2.getText().toString().trim().equalsIgnoreCase(config.XAPI_BASE_URL)){
+                            if(edtInputData2.getText().toString().trim().equalsIgnoreCase(xdata.getinstance().getSetting(xdata.xapi_url))){
                                 xdata.getinstance().saveSettingArray(config.XAPI_URL,edtInputData2.getText().toString().trim());
                                 showPopup("Alert","URL saved successfully.");
                                 dialog.dismiss();

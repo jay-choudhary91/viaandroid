@@ -277,7 +277,6 @@ public class config {
     public static final String LIST_CONFIGACTION = "configaction";
     public static final String LIST_SETTINGS = "Settings";
     public static final String XAPI_URL = "api_fullurl";
-    public static final String XAPI_BASE_URL = "http://console.dev.crypto-servers.com/xapi.php?";
 
 
     public static final String API_STORE_URL = "api_url";
