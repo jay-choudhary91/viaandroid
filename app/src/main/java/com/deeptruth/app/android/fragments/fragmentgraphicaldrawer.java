@@ -579,47 +579,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     {
         xdata.getinstance().saveSetting(config.drawer_transparency,""+progress);
         progress= transparentarray.length-progress;
-        {
-            //String colorString="#"+transparentarray[progress]+"0E6479";
-            String colorString="#00000000";
-            layout_constraint.setBackgroundColor(Color.parseColor(colorString));
-        }
+        layout_constraint.setBackgroundColor(Color.parseColor("#00000000"));
 
-        {
-            String colorString="#"+transparentarray[progress]+config.color_code_drawer_location;
-            setframeborder(layout_locationanalytics,config.color_code_white,colorString);
-        }
-
-        {
-            String colorString="#"+transparentarray[progress]+config.color_code_drawer_time;
-            setframeborder(layout_timeinformation,config.color_code_white,colorString);
-        }
-
-        {
-            String colorString="#"+transparentarray[progress]+config.color_code_drawer_sound;
-            setframeborder(layout_soundiformation,config.color_code_white,colorString);
-        }
-
-        {
-            String colorString="#"+transparentarray[progress]+config.color_code_drawer_phone;
-            setframeborder(layout_phoneanalytics,config.color_code_white,colorString);
-        }
-
-        {
-            String colorString="#"+transparentarray[progress]+config.color_code_drawer_connection;
-            setframeborder(layout_connection,config.color_code_white,colorString);
-        }
-
-        {
-            String colorString="#"+transparentarray[progress]+config.color_code_drawer_summary;
-            setframeborder(layout_mediasummary,config.color_code_white,colorString);
-        }
-
-        {
-            String colorString="#"+transparentarray[progress]+config.color_code_drawer_encryption;
-            setframeborder(layout_encryptioninfo,config.color_code_white,colorString);
-        }
-
+        setframeborder(layout_locationanalytics,config.color_code_white,"#"+transparentarray[progress]+config.color_code_drawer_location);
+        setframeborder(layout_timeinformation,config.color_code_white,"#"+transparentarray[progress]+config.color_code_drawer_time);
+        setframeborder(layout_soundiformation,config.color_code_white,"#"+transparentarray[progress]+config.color_code_drawer_sound);
+        setframeborder(layout_phoneanalytics,config.color_code_white,"#"+transparentarray[progress]+config.color_code_drawer_phone);
+        setframeborder(layout_connection,config.color_code_white,"#"+transparentarray[progress]+config.color_code_drawer_connection);
+        setframeborder(layout_mediasummary,config.color_code_white,"#"+transparentarray[progress]+config.color_code_drawer_summary);
+        setframeborder(layout_encryptioninfo,config.color_code_white,"#"+transparentarray[progress]+config.color_code_drawer_encryption);
     }
 
     @Override

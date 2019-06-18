@@ -63,8 +63,6 @@
 
                 <include layout="@layout/mediametainfo" />
 
-                <include layout="@layout/mediadrawerencryptioninfo" />
-
             </LinearLayout>
 
         </ScrollView>

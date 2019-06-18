@@ -41,6 +41,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"></include>
 
+        <include layout="@layout/mediadrawerencryptioninfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"/>
+
 <!--        <include layout="@layout/row_drawer_encryption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
