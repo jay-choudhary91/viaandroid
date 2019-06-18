@@ -78,6 +78,7 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
+import com.google.android.gms.common.internal.service.Common;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -639,7 +640,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
-    public void drawmappoints(LatLng latlng)
+    public void drawmappoints(LatLng latlng,String linecolor)
     {
         if(mgooglemap != null)
         {
@@ -651,8 +652,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         mappathcoordinates.add(latlng);
                         if(mappathpolyline == null)
                         {
-                            mappathpolyline = mgooglemap.addPolyline(new PolylineOptions()
-                                    .add(latlng,latlng).width(7).color(Color.BLUE));
+                            if(linecolor.trim().isEmpty())
+                            {
+                                mappathpolyline = mgooglemap.addPolyline(new PolylineOptions()
+                                        .add(latlng,latlng).width(7).color(Color.BLUE));
+                            }
+                            else
+                            {
+                                mappathpolyline = mgooglemap.addPolyline(new PolylineOptions()
+                                        .add(latlng,latlng).width(7).color(Color.parseColor(common.getcolorbystring(linecolor))));
+                            }
+
                         }
                         else
                         {
@@ -805,7 +815,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                     {
                         populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)),"");
                     }
 
                     if(chart_cpuusage!= null){
@@ -1683,6 +1693,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     }
 
                     ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
+                    String framecolor = arraycontainerformetric.getColor();
                     String latitude="",longitude="",satellitedate="",satellitedata="";
                     for (int j = 0; j < metricItemArraylist.size(); j++)
                     {
@@ -1931,7 +1942,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                     {
                         populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)),framecolor);
                     }
 
                     tvblockchainid.setText(arraycontainerformetric.getVideostarttransactionid());
