@@ -486,16 +486,19 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(! xdata.getinstance().getSetting(config.videoquality).isEmpty())
         {
             txt_media_quality.setText(xdata.getinstance().getSetting(config.videoquality));
-            if(xdata.getinstance().getSetting(config.videoquality).contains("480"))
+            if(xdata.getinstance().getSetting(config.videoquality).contains("480")){
                 expendcollpaseviewcolor(txt_media_low,txt_media_medium,txt_media_high);
-            else if(xdata.getinstance().getSetting(config.videoquality).contains("720"))
+            }
+            else if(xdata.getinstance().getSetting(config.videoquality).contains("720")){
                 expendcollpaseviewcolor(txt_media_medium,txt_media_low,txt_media_high);
-            else if(xdata.getinstance().getSetting(config.videoquality).contains("1080"))
-                expendcollpaseviewcolor(txt_media_high,txt_media_low,txt_media_high);
+            }
+            else if(xdata.getinstance().getSetting(config.videoquality).contains("1080")){
+                expendcollpaseviewcolor(txt_media_high,txt_media_low,txt_media_medium);
+            }
         }
         else
         {
-            txt_media_quality.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+            expendcollpaseviewcolor(txt_media_medium,txt_media_low,txt_media_high);
         }
 
         txt_media_low.setText(config.mediaquality480);

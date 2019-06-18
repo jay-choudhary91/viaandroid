@@ -566,13 +566,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             else if(xdata.getinstance().getSetting(config.imagequality).contains("720"))
                 expendcollpaseviewcolor(txt_media_medium,txt_media_low,txt_media_high);
             else if(xdata.getinstance().getSetting(config.imagequality).contains("1080"))
-                expendcollpaseviewcolor(txt_media_high,txt_media_low,txt_media_high);
+                expendcollpaseviewcolor(txt_media_high,txt_media_low,txt_media_medium);
         }
         else
         {
-            txt_media_quality.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+            expendcollpaseviewcolor(txt_media_medium,txt_media_low,txt_media_high);
         }
-
 
         txt_media_low.setText(config.mediaquality480);
         txt_media_medium.setText(config.mediaquality720);
