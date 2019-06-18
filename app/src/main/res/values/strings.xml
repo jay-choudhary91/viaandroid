@@ -268,8 +268,11 @@
     <string name="result">Result :</string>
     <string name="elapsed">Elapsed Time :</string>
     <string name="request_time">Request Time :</string>
-    <string name="xapi_complete">Complete :</string>
-    <string name="xapi_completeness">Completeness :</string>
-    <string name="xapi_started">Started :</string>
+    <string name="xapi_complete">Completed frames :</string>
+    <string name="xapi_end_frames">End frames :</string>
+    <string name="xapi_started_frames">Start frames :</string>
+    <string name="xapi_key">key :</string>
+    <string name="xapi_token">Token :</string>
+    <string name="xapi_total_frames">Total frames :</string>
 
 </resources>

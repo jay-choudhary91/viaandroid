@@ -31,72 +31,22 @@
                 app:fontType="Comfortaa-Regular"
                 android:textColor="@color/black"
                 />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_x"
-            />
-
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_x"
+                />
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_xapi_detail"
                 android:id="@+id/txt_endtime"
                 app:fontType="Comfortaa-Regular"
                 android:textColor="@color/black"
                 />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_x"
-            />
-
-        <com.deeptruth.app.android.views.customfonttextview
-            style="@style/txt_xapi_detail"
-            android:id="@+id/txt_started"
-            app:fontType="Comfortaa-Regular"
-            android:textColor="@color/black"
-            android:visibility="visible"
-            />
-
-        <View
-            android:id="@+id/view_started"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:visibility="visible"
-            android:background="@color/grey_x"
-            />
-
-        <com.deeptruth.app.android.views.customfonttextview
-            style="@style/txt_xapi_detail"
-            android:id="@+id/txt_complete"
-            app:fontType="Comfortaa-Regular"
-            android:textColor="@color/black"
-            android:visibility="visible"
-            />
-
-        <View
-            android:id="@+id/view_complet"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:visibility="gone"
-            android:background="@color/grey_x"
-            />
-
-        <com.deeptruth.app.android.views.customfonttextview
-            style="@style/txt_xapi_detail"
-            android:id="@+id/txt_completeless"
-            app:fontType="Comfortaa-Regular"
-            android:textColor="@color/black"
-            android:visibility="gone"
-            />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_x"
-            />
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_x"
+                />
 
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_xapi_detail"
@@ -105,27 +55,119 @@
                 android:textColor="@color/black"
                 />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_x"
-            />
+            <View
+                android:id="@+id/view_started"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="visible"
+                android:background="@color/grey_x"
+                />
 
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_xapi_detail"
-                android:id="@+id/txt_parameter"
+                android:id="@+id/txt_key"
                 app:fontType="Comfortaa-Regular"
                 android:textColor="@color/black"
                 />
 
+            <View
+                android:id="@+id/view_key"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="visible"
+                android:background="@color/grey_x"
+                />
 
-        <View
-            android:id="@+id/view_completless"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:visibility="gone"
-            android:background="@color/grey_x"
-            />
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:id="@+id/txt_token"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                />
+
+            <View
+                android:id="@+id/view_token"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="visible"
+                android:background="@color/grey_x"
+                />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:id="@+id/txt_startframe"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:visibility="visible"
+                />
+
+            <View
+                android:id="@+id/view_startframe"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="visible"
+                android:background="@color/grey_x"
+                />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:id="@+id/txt_endframe"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:visibility="visible"
+                />
+
+            <View
+                android:id="@+id/view_endframe"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="visible"
+                android:background="@color/grey_x"
+                />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:id="@+id/txt_complete"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:visibility="visible"
+                />
+
+                <View
+                    android:id="@+id/view_completeframe"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey_x"
+                    />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txt_xapi_detail"
+                android:id="@+id/txt_totleframe"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/black"
+                android:visibility="visible"
+                />
+
+                <View
+                    android:id="@+id/view_totleframe"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey_x"
+                    />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                    style="@style/txt_xapi_detail"
+                    android:id="@+id/txt_parameter"
+                    app:fontType="Comfortaa-Regular"
+                    android:textColor="@color/black"
+                    />
+                <View
+                    android:id="@+id/view_completless"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:visibility="visible"
+                    android:background="@color/grey_x"
+                    />
 
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_xapi_detail"
@@ -137,13 +179,11 @@
                 android:gravity="center_horizontal"
                 android:textColor="@color/black"
                 />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_x"
-            />
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_x"
+                />
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_xapi_detail"
                 android:id="@+id/txt_result"
