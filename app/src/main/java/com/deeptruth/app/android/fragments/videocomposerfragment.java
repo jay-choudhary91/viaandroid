@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -30,7 +29,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -61,7 +59,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -482,15 +479,32 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_media_medium.setOnClickListener(this);
         txt_media_high.setOnClickListener(this);
 
-        txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
         expandable_layout.setVisibility(View.GONE);
         txt_media_quality.setVisibility(View.VISIBLE);
 
         txt_media_quality.setText(config.mediaquality720);
+        if(! xdata.getinstance().getSetting(config.videoquality).isEmpty())
+        {
+            txt_media_quality.setText(xdata.getinstance().getSetting(config.videoquality));
+            if(xdata.getinstance().getSetting(config.videoquality).contains("480")){
+                expendcollpaseviewcolor(txt_media_low,txt_media_medium,txt_media_high);
+            }
+            else if(xdata.getinstance().getSetting(config.videoquality).contains("720")){
+                expendcollpaseviewcolor(txt_media_medium,txt_media_low,txt_media_high);
+            }
+            else if(xdata.getinstance().getSetting(config.videoquality).contains("1080")){
+                expendcollpaseviewcolor(txt_media_high,txt_media_low,txt_media_medium);
+            }
+        }
+        else
+        {
+            expendcollpaseviewcolor(txt_media_medium,txt_media_low,txt_media_high);
+        }
+
         txt_media_low.setText(config.mediaquality480);
         txt_media_medium.setText(config.mediaquality720);
         txt_media_high.setText(config.mediaquality1080);
-        txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+
 
         expandable_layout.setOnExpansionUpdateListener(new ExpandableLayout.OnExpansionUpdateListener() {
             @Override
@@ -1414,6 +1428,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
+    public void expendcollpaseviewcolor(TextView textview1,TextView textview2,TextView textview3)
+    {
+        textview1.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+        textview2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        textview3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -1423,21 +1444,21 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
 
             case R.id.txt_media_low:
-                setmediaquility(config.mediaquality480);
+                setmediaquality(config.mediaquality480);
                 txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                 txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 break;
 
             case R.id.txt_media_medium:
-                setmediaquility(config.mediaquality720);
+                setmediaquality(config.mediaquality720);
                 txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                 txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 break;
 
             case R.id.txt_media_high:
-                setmediaquility(config.mediaquality1080);
+                setmediaquality(config.mediaquality1080);
                 txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                 txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
                 txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
@@ -1495,8 +1516,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_media_medium.startAnimation(animation1);
     }
 
-    public void setmediaquility(String quality)
+    public void setmediaquality(String quality)
     {
+        xdata.getinstance().saveSetting(config.videoquality,quality);
         expandable_layout.setDuration(100);
         qualityoptionanimations(1.0f,0f);
         expandable_layout.collapse();
@@ -1976,18 +1998,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                 }
 
-                if(!isvideorecording){
+                {
                     //layout_no_gps_wifi.setVisibility(View.VISIBLE);
                     layout_wifi_gps_data.setVisibility(View.VISIBLE);
                     actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
                     visibleconnection();
                     setactionbarbackgroundcolor();
-                }else{
+                }/*else{
                     actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
                     //layout_no_gps_wifi.setVisibility(View.GONE);
                     layout_wifi_gps_data.setVisibility(View.GONE);
-                }
+                }*/
 
                 if(! isvideorecording)
                 {
@@ -2325,8 +2347,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     public void visibleconnection(){
-
-        if(!isvideorecording) {
             String value = "";
 
                 if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
@@ -2407,13 +2427,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 txt_section_gps.setText(config.TEXT_GPS+""+"NA");
                 img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
             }
-        }
     }
 
     public void setactionbarbackgroundcolor() {
 
-        if (!isvideorecording)
-        {
             if (!common.isnetworkconnected(getActivity()) ||
                     xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0") ||
                     xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA") ||
@@ -2421,35 +2438,30 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA") ||
                     xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null") ||
                     xdata.getinstance().getSetting(config.airplanemode).equals("ON")||
-                    xdata.getinstance().getSetting(config.Connectionspeed)!=null ||
-                    xdata.getinstance().getSetting(config.GPSAccuracy)!= null) {
+                    xdata.getinstance().getSetting(config.Connectionspeed) == null ||
+                    xdata.getinstance().getSetting(config.GPSAccuracy) == null) {
 
                 actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
-
 
             } else {
                 String[] arrayitemgps = xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
                 String[] arrayitemconnection = xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
-                if(arrayitemgps.length > 0 && arrayitemconnection.length > 0)
-                {
-                    double gpsvalue=0,connectionvalue=0;
-                    if(! arrayitemgps[0].trim().isEmpty())
+                if (arrayitemgps.length > 0 && arrayitemconnection.length > 0) {
+                    double gpsvalue = 0, connectionvalue = 0;
+                    if (!arrayitemgps[0].trim().isEmpty())
                         gpsvalue = Double.valueOf(arrayitemgps[0]);
 
-                    if(! arrayitemconnection[0].trim().isEmpty())
+                    if (!arrayitemconnection[0].trim().isEmpty())
                         connectionvalue = Double.valueOf(arrayitemconnection[0]);
 
-                    if ((gpsvalue >= 50 && gpsvalue == 0) || connectionvalue == 0.0)
-                    {
+                    if ((gpsvalue >= 50 || gpsvalue == 0) || connectionvalue == 0.0) {
                         actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
                     } else {
-                        actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
-
+                        actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.greentransparent));
                     }
                 }
             }
-        }
     }
 
     public void setbottommargin(RotateLayout headercontainer){

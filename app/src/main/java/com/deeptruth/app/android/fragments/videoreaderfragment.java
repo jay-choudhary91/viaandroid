@@ -2591,6 +2591,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
             if(!islastdragarrow){
                 if (player != null && player.isPlaying()){
+                    img_colapseicon.setVisibility(View.GONE);
                     if(imgpause.getVisibility()==View.GONE && layoutbackgroundcontroller.getVisibility() == View.GONE){
                         layoutbackgroundcontroller.setVisibility(View.GONE);
                         imgpause.setVisibility(View.GONE);
@@ -2627,7 +2628,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
             if (!islastdragarrow) {
                 if (player != null && player.isPlaying()) {
-
+                    img_colapseicon.setVisibility(View.VISIBLE);
 
                     if(imgpause.getVisibility()==View.GONE && layoutbackgroundcontroller.getVisibility() == View.GONE){
                         layoutbackgroundcontroller.setVisibility(View.GONE);

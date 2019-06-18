@@ -59,6 +59,9 @@ public class config {
     public static final String mediaquality1080 = "1080P";
     public static final String mediarecorderformat = "00:00.00";
 
+    public static final String imagequality = "imagequality";
+    public static final String videoquality = "videoquality";
+
     public static final String development_url = "http://dev.api.deeptruth.com/xapi.php?";
     public static final String production_url = "http://prod.api.deeptruth.com/xapi.php?";
     public static final String build_flavor_reader = "reader";

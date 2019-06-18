@@ -209,6 +209,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     FrameLayout metainfocontainer;
     @BindView(R.id.progressmediasync)
     ProgressBar progressmediasync;
+    @BindView(R.id.img_colapseicon)
+    ImageView img_colapseicon;
 
     private String mediafilepath = "",medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",
             thumbnailurl="",mediatoken="",sync_date="",keytype = config.prefs_md5;
@@ -638,6 +640,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         txtslotencyption.setOnClickListener(this);
         txtslotmeta.setOnClickListener(this);
         txtslotmedia.setOnClickListener(this);
+        img_colapseicon.setOnClickListener(this);
         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
 
         setmetriceshashesdata();
@@ -743,6 +746,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 gethelper().onBack();
                 break;
+            case R.id.img_colapseicon:
+                resizeviewtohalfscreen();
+                break;
+
             case R.id.img_fullscreen:
                   if(layout_audiodetails.getVisibility() == View.VISIBLE){
                       removebottommargin();
@@ -768,38 +775,19 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                           img_fullscreen.setVisibility(View.GONE);
                           playpausebutton.setVisibility(View.GONE);
                           img_pause.setImageResource(R.drawable.ic_pause);
+                          img_colapseicon.setVisibility(View.VISIBLE);
                           img_pause.setVisibility(View.VISIBLE);
                       }else{
                           playpausebutton.setVisibility(View.VISIBLE);
                           img_fullscreen.setImageResource(R.drawable.ic_info_mode);
+                          img_colapseicon.setVisibility(View.GONE);
                           img_fullscreen.setVisibility(View.VISIBLE);
                       }
 
                       islastdragarrow =false;
 
                   }else{
-
-                      setbottomimgview();
-                      removeheaderpadding();
-                      recenterplaypause(0);
-                      img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
-                      img_fullscreen.setVisibility(View.VISIBLE);
-                      addbottommargin(mediatypeheight);
-                      rlcontrollerview.getLayoutParams().height = audioviewheight;
-                      layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
-                      layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                      layout_audiodetails.setVisibility(View.VISIBLE);
-                      layout_mediatype.setVisibility(View.VISIBLE);
-                      layout_scrubberview.setVisibility(View.VISIBLE);
-                      linearseekbarcolorview.setVisibility(View.VISIBLE);
-                      mediaseekbar.setVisibility(View.VISIBLE);
-                      layout_seekbartiming.setVisibility(View.VISIBLE);
-                      audio_downwordarrow.setVisibility(View.VISIBLE);
-                      rl_audio_downwordarrow.setVisibility(View.VISIBLE);
-                      img_pause.setVisibility(View.GONE);
-                      gethelper().drawerenabledisable(false);
-                      gethelper().updateactionbar(1);
-
+                      resizeviewtohalfscreen();
                   }
                 break;
             case R.id.img_pause:
@@ -808,8 +796,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     if(player != null && player.isPlaying()){
                         pause();
                         img_pause.setImageResource(R.drawable.ic_play);
-                        playpausebutton.setImageResource(R.drawable.play_btn);
                         playpausebutton.setVisibility(View.GONE);
+                        img_colapseicon.setVisibility(View.GONE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         img_fullscreen.setVisibility(View.VISIBLE);
                         layout_scrubberview.setVisibility(View.VISIBLE);
@@ -827,6 +815,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         img_pause.setImageResource(R.drawable.ic_pause);
                         layout_mediatype.setVisibility(View.GONE);
                         layout_scrubberview.setVisibility(View.VISIBLE);
+                        img_colapseicon.setVisibility(View.VISIBLE);
                         linearseekbarcolorview.setVisibility(View.VISIBLE);
                         playpausebutton.setVisibility(View.GONE);
                         mediaseekbar.setVisibility(View.VISIBLE);
@@ -837,8 +826,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         gethelper().drawerenabledisable(true);
                         layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                         getcontrollerheight();
-                        playpausebutton.setImageResource(R.drawable.play_btn);
-
                     }
                 }
                 break;
@@ -983,6 +970,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                           mediaseekbar.setVisibility(View.VISIBLE);
                           layout_seekbartiming.setVisibility(View.VISIBLE);
                           img_pause.setVisibility(VISIBLE);
+                          img_colapseicon.setVisibility(View.VISIBLE);
                           img_fullscreen.setVisibility(View.GONE);
                           gethelper().updateactionbar(0);
                           gethelper().drawerenabledisable(true);
@@ -1402,6 +1390,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         ismediacompleted =true;
         isplaypauswebtnshow =false;
         maxincreasevideoduration= audioduration;
+        img_colapseicon.setVisibility(View.GONE);
 
         if(layout_audiodetails.getVisibility() == View.GONE){
             playpausebutton.setVisibility(View.VISIBLE);
@@ -1420,6 +1409,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             setbottomimgview();
 
         }else{
+            img_colapseicon.setVisibility(View.GONE);
             player.seekTo(0);
             playpausebutton.setVisibility(View.VISIBLE);
             playpausebutton.setImageResource(R.drawable.play_btn);
@@ -1967,6 +1957,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if (player != null && player.isPlaying()){
                     layout_scrubberview.setVisibility(View.VISIBLE);
                     img_pause.setVisibility(View.VISIBLE);
+                    img_colapseicon.setVisibility(View.GONE);
                 }else {
                     rlcontrollerview.getLayoutParams().height = (rootviewheight - navigationbarheight);
                     gethelper().updateactionbar(0);
@@ -1995,7 +1986,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
         else
         {
-
             if(!islastdragarrow){
                 rlcontrollerview.getLayoutParams().height = (rootviewheight - navigationbarheight);
 
@@ -2007,6 +1997,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     linearseekbarcolorview.setVisibility(View.VISIBLE);
                     img_pause.setVisibility(View.VISIBLE);
                     setseekbarlayoutcolor();
+                    img_colapseicon.setVisibility(View.VISIBLE);
                 }
                 else
                 {
@@ -2167,5 +2158,29 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         return (int)(Math.pow(averageMeanSquare,0.5d) + 0.2);
 
+    }
+
+    public void resizeviewtohalfscreen(){
+        setbottomimgview();
+        removeheaderpadding();
+        recenterplaypause(0);
+        img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
+        img_fullscreen.setVisibility(View.VISIBLE);
+        addbottommargin(mediatypeheight);
+        rlcontrollerview.getLayoutParams().height = audioviewheight;
+        layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
+        layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+        layout_audiodetails.setVisibility(View.VISIBLE);
+        layout_mediatype.setVisibility(View.VISIBLE);
+        layout_scrubberview.setVisibility(View.VISIBLE);
+        linearseekbarcolorview.setVisibility(View.VISIBLE);
+        mediaseekbar.setVisibility(View.VISIBLE);
+        layout_seekbartiming.setVisibility(View.VISIBLE);
+        audio_downwordarrow.setVisibility(View.VISIBLE);
+        rl_audio_downwordarrow.setVisibility(View.VISIBLE);
+        img_pause.setVisibility(View.GONE);
+        img_colapseicon.setVisibility(View.GONE);
+        gethelper().drawerenabledisable(false);
+        gethelper().updateactionbar(1);
     }
 }
