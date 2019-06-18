@@ -1214,7 +1214,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 setonmediathumbnail(expandedImageView,startBounds,startScaleFinal,thumbView,uri);
                 expandedImageView.setVisibility(View.VISIBLE);
             }
-        },1000);
+        },750);
 
 
     }
