@@ -1526,6 +1526,14 @@ public class common {
         return builder.toString();
     }
 
+    public static void switchtodevelopmentconnection(boolean switchtodevelopment)
+    {
+        if(switchtodevelopment)
+            xdata.getinstance().saveSetting(xdata.xapi_url,config.development_url);
+        else
+            xdata.getinstance().saveSetting(xdata.xapi_url,config.production_url);
+    }
+
     public static int getapppaidlevel()
     {
         int paidlevel=0;

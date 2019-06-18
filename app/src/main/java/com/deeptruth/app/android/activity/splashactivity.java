@@ -57,10 +57,11 @@ public class splashactivity extends Activity {
                 else
                 {
 
-                    if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
+                    if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() ||
+                            xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("1"))
                     {
                         if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
-                            xdata.getinstance().saveSetting(config.enableintroscreen,"no");
+                            xdata.getinstance().saveSetting(config.enableintroscreen,"0");
 
                         Intent intent=new Intent(splashactivity.this,introscreenactivity.class);
                         startActivity(intent);
@@ -74,7 +75,7 @@ public class splashactivity extends Activity {
                     }
 
                     // Login portion commented on app launch till furthure notice.
-                   /* if(xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
+                    /*if(xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
                     {
                         Intent intent=new Intent(splashactivity.this,signinactivity.class);
                         startActivity(intent);
@@ -82,10 +83,11 @@ public class splashactivity extends Activity {
                     }
                     else
                     {
-                        if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
+                        if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() ||
+                                xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("1"))
                         {
                             if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
-                                xdata.getinstance().saveSetting(config.enableintroscreen,"no");
+                                xdata.getinstance().saveSetting(config.enableintroscreen,"0");
 
                             Intent intent=new Intent(splashactivity.this,introscreenactivity.class);
                             startActivity(intent);
