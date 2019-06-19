@@ -145,7 +145,7 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
                 HashMap<String,String> geturl=xapivalue;
                 String a=geturl.get(config.API_STORE_URL);
                 if(a.trim().length() >= 300)
-                    a=a.substring(0,300);
+                    a=a.substring(0,299);
 
                 pair.setKeyvaluemap(xapivalue);
                 pair.setKeyValue(a);
