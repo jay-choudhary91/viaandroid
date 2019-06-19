@@ -26,7 +26,7 @@ public class applicationviavideocomposer extends Application {
         Fabric.with(this, new Crashlytics());
         mcontext = this;
         xdata.getinstance().init(this);
-        xdata.getinstance().saveSetting(xdata.developer_mode, "0");
+        //xdata.getinstance().saveSetting(xdata.developer_mode, "0");
 
         //common.setting_check(xdata.xapi_url, "http://console.dev.crypto-servers.com/xapi.php?");
         common.setting_check(xdata.xapi_url, config.development_url);  // Make changes on 2019-06-03 (matraex)
