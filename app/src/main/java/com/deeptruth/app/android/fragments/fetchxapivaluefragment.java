@@ -83,8 +83,8 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
             mControllerAdapter = new xapidetailadapter(getActivity(),mItemList,mItemClick);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             recyviewItem.setLayoutManager(mLayoutManager);
+            recyviewItem.setHasFixedSize(true);
             recyviewItem.addItemDecoration(new divideritemdecoration(getActivity()));
-            recyviewItem.setItemAnimator(new DefaultItemAnimator());
             recyviewItem.setAdapter(mControllerAdapter);
         }
         return rootview;
@@ -141,7 +141,15 @@ public class fetchxapivaluefragment extends basefragment implements itemchanged,
                     }.getType();
                     xapivalue = gson.fromJson(value, type);
                 }
+
+                HashMap<String,String> geturl=xapivalue;
+                String a=geturl.get(config.API_STORE_URL);
+                if(a.trim().length() >= 300)
+                    a=a.substring(0,300);
+
                 pair.setKeyvaluemap(xapivalue);
+                pair.setKeyValue(a);
+
                 mItemList.add(pair);
             }
             else

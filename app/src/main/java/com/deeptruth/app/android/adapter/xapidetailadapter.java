@@ -75,7 +75,7 @@ public class xapidetailadapter extends RecyclerView.Adapter<xapidetailadapter.My
 
         holder.tvrequesttime.setText(context.getResources().getString(R.string.request_time)+" "+geturl.get(config.API_START_DATE));
 
-        holder.tvKeyValue.setText(geturl.get(config.API_STORE_URL));
+        holder.tvKeyValue.setText(mItemList.get(position).getKeyValue());
 
         holder.root_view.setOnClickListener(new View.OnClickListener() {
             @Override
