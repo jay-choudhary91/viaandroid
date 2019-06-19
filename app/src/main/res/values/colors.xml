@@ -50,6 +50,12 @@
     <color name="visualizer_primary">#20a5df</color>
     <color name="visualizer_secondary">#000785</color>
 
+
+    <color name="visualizer_firstcolor">#F24B83</color>
+    <color name="visualizer_secondcolor">#964A83</color>
+    <color name="visualizer_thiredcolor">#634884</color>
+    <color name="visualizer_forthcolor">#0AAD69</color>
+
     <color name="btn_background">#00ADE5</color>
     <color name="dark_green">#19B16D</color>
     <color name="green_background">#4CD964</color>
@@ -71,7 +77,6 @@
     <color name="blue_radar_middle">#004860</color>
 
     <color name="translucent_dark_blue_solid">#50004860</color>
-
 
     <!-- VIDEO TRIMMER -->
     <color name="background_video_color">#2f3031</color>
