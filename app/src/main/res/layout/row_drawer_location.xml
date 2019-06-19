@@ -44,19 +44,19 @@
             android:visibility="visible"
             >
 
-            <FrameLayout
-                android:id="@+id/googlemap"
-                android:layout_width="match_parent"
-                android:visibility="visible"
-                android:layout_marginTop="10dp"
-                android:layout_height="200dp"/>
-
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_address"
                 app:fontType="OpenSans_Regular"
                 style="@style/txt_normalview"
                 android:layout_marginTop="5dp"
                 android:text=""/>
+
+            <FrameLayout
+                android:id="@+id/googlemap"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:layout_marginTop="10dp"
+                android:layout_height="200dp"/>
 
         </LinearLayout>
 
