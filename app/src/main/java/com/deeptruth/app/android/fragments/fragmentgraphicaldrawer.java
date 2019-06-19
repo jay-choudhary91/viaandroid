@@ -608,7 +608,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
-    public void drawmappoints(LatLng latlng,String linecolor)
+    public void drawmappoints(LatLng latlng)
     {
         if(mgooglemap != null)
         {
@@ -620,17 +620,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         mappathcoordinates.add(latlng);
                         if(mappathpolyline == null)
                         {
-                            if(linecolor.trim().isEmpty())
-                            {
-                                mappathpolyline = mgooglemap.addPolyline(new PolylineOptions()
-                                        .add(latlng,latlng).width(7).color(Color.BLUE));
-                            }
-                            else
-                            {
-                                mappathpolyline = mgooglemap.addPolyline(new PolylineOptions()
-                                        .add(latlng,latlng).width(7).color(Color.parseColor(common.getcolorbystring(linecolor))));
-                            }
-
+                            mappathpolyline = mgooglemap.addPolyline(new PolylineOptions()
+                                    .add(latlng,latlng).width(7).color(Color.BLUE));
                         }
                         else
                         {
@@ -783,7 +774,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                     {
                         populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)),"");
+                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
                     }
 
                     if(chart_cpuusage!= null){
@@ -1320,9 +1311,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         layout_soundiformation.setVisibility(View.GONE);
 
         mappathoptions = new PolylineOptions().width(7).color(Color.BLUE).geodesic(true);
+        String linecolor="";
         for (int i = 0; i < metricmainarraylist.size(); i++)
         {
             arraycontainer container=metricmainarraylist.get(i);
+            linecolor=container.getColor();
             ArrayList<metricmodel> arraylist=container.getMetricItemArraylist();
             double latitude=0.0,longitude=0.0;
             for(int j=0;j<arraylist.size();j++)
@@ -1516,13 +1509,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
             }
 
+            if(linecolor.trim().length() == 0)
+                linecolor="BLUE";
+
             LatLng point = new LatLng(latitude,longitude);
-            mappathoptions.add(point);
+            mappathoptions.add(point).color(Color.parseColor(common.getcolorbystring(linecolor)));
         }
+
         if(mgooglemap != null)
             mgooglemap.addPolyline(mappathoptions);
 
-            // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
+        // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
 
         linechart_speed.setVisibility(View.VISIBLE);
         linechart_traveled.setVisibility(View.VISIBLE);
@@ -1911,7 +1908,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                     {
                         populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)),framecolor);
+                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
                     }
 
                     tvblockchainid.setText(arraycontainerformetric.getVideostarttransactionid());

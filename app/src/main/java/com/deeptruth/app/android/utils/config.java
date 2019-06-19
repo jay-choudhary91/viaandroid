@@ -282,6 +282,7 @@ public class config {
 
     public static final String PREFS_NAME = "main_prefs";
     public static final String LIST_XAPI = "Xapi";
+    public static final String LIST_XAPI_SYNC_LOG = "Xapi Sync Log";
     public static final String LIST_SYNC_LOG = "Sync Log";
     public static final String LIST_In_APP_PURCHASE = "In App purchase";
     public static final String LIST_IMAGES = "images";

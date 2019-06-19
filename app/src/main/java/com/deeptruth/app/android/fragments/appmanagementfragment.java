@@ -97,10 +97,15 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
                 fetchsettingvaluefragment fragment=new fetchsettingvaluefragment();
                 gethelper().addFragment(fragment, false, true);
             }
-            else if(managecontroller.getTxtName().equals(config.LIST_SYNC_LOG) && managecontroller.getAction().isEmpty())
+            else if(managecontroller.getTxtName().equals(config.LIST_XAPI_SYNC_LOG) && managecontroller.getAction().isEmpty())
             {
                 fetchxapivaluefragment fragment=new fetchxapivaluefragment();
                 fragment.setdata(false);
+                gethelper().addFragment(fragment, false, true);
+            }
+            else if(managecontroller.getTxtName().equals(config.LIST_SYNC_LOG) && managecontroller.getAction().isEmpty())
+            {
+                inapppurchasecontrollerfragment fragment=new inapppurchasecontrollerfragment();
                 gethelper().addFragment(fragment, false, true);
             }
         }
@@ -124,6 +129,9 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
     public void  getdata(){
 
       managementcontroller managementControllers = new managementcontroller(config.LIST_XAPI,false);
+      managementcontrollers.add(managementControllers);
+
+      managementControllers = new managementcontroller(config.LIST_XAPI_SYNC_LOG,false);
       managementcontrollers.add(managementControllers);
 
       managementControllers = new managementcontroller(config.LIST_SYNC_LOG,false);
