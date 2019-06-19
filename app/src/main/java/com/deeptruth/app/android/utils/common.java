@@ -2222,6 +2222,8 @@ public class common {
             color = config.color_code_transparent;
         } else if (colorname.equalsIgnoreCase("white")) {
             color = config.color_code_white;
+        } else if (colorname.equalsIgnoreCase("blue")) {
+            color = config.color_code_blue;
         }
         return color;
     }
