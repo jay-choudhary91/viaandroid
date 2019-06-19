@@ -59,7 +59,7 @@
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:id="@+id/phone_time_clock_white"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="0dp"
                     android:elevation="10dp"
                     app:showSecondHand="true"/>
 
@@ -67,7 +67,7 @@
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:id="@+id/phone_time_clock_black"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:elevation="10dp"
                     app:showSecondHand="true"/>
 
@@ -77,7 +77,7 @@
                     style="@style/txt_normalview"
                     android:textColor="@color/white"
                     android:gravity="center"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="0dp"
                     android:text=""/>
 
             </LinearLayout>
@@ -104,7 +104,7 @@
                     android:layout_height="130dp"
                     android:id="@+id/world_time_clock_white"
                     android:elevation="10dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="0dp"
                     app:showSecondHand="true"/>
 
                 <com.deeptruth.app.android.utils.AnalogClockBlack
@@ -112,7 +112,7 @@
                     android:layout_height="130dp"
                     android:id="@+id/world_time_clock_black"
                     android:elevation="10dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     app:showSecondHand="true"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
@@ -121,7 +121,7 @@
                     style="@style/txt_normalview"
                     android:textColor="@color/white"
                     android:gravity="center"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="0dp"
                     android:text=""/>
 
             </LinearLayout>
