@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.4"
+            android:text="Token"
+            app:fontType="OpenSans_Regular"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_token"
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.6"
+            app:fontType="OpenSans_Semibold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.4"
+            android:text="Media Key"
+            app:fontType="OpenSans_Regular"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_mediakey"
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.6"
+            app:fontType="OpenSans_Semibold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.4"
+            android:text="Local Key"
+            app:fontType="OpenSans_Regular"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_localkey"
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.6"
+            app:fontType="OpenSans_Semibold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.4"
+            android:text="Transaction Id"
+            app:fontType="OpenSans_Regular"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_mediatranid"
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.6"
+            app:fontType="OpenSans_Semibold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.4"
+            android:text="Sync Date"
+            app:fontType="OpenSans_Regular"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_syncdate"
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.6"
+            app:fontType="OpenSans_Semibold"/>
+
+    </LinearLayout>
+
+</LinearLayout>

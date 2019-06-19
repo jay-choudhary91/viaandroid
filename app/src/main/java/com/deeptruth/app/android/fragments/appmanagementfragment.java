@@ -105,7 +105,7 @@ public class appmanagementfragment extends basefragment implements itemchanged,V
             }
             else if(managecontroller.getTxtName().equals(config.LIST_SYNC_LOG) && managecontroller.getAction().isEmpty())
             {
-                inapppurchasecontrollerfragment fragment=new inapppurchasecontrollerfragment();
+                synclogfragment fragment=new synclogfragment();
                 gethelper().addFragment(fragment, false, true);
             }
         }

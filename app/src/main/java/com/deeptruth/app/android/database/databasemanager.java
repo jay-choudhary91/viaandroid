@@ -918,6 +918,26 @@ public class databasemanager {
     }
 
 
+    public Cursor fetchallmediastartinfo() {
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sqlquery = "SELECT * FROM tblstartmediainfo order by id DESC";
+
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            cur = mDb.rawQuery(sqlquery, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return cur;
+    }
+
+
+
 
     public String[] getreaderlocalkeybylocation(String filename) {
         String[] localkey ={"","",""};

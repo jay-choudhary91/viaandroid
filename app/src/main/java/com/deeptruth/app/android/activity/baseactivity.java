@@ -483,12 +483,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     @Override
     public void showsharepopupsub(final String path, final String type, final String mediatoken) {
-        if (subdialogshare != null && subdialogshare.isShowing())
-            subdialogshare.dismiss();
+            if (subdialogshare != null && subdialogshare.isShowing())
+                subdialogshare.dismiss();
 
-             mediapath = path;
-             mediatype = type;
-             mediavideotoken = mediatoken;
+            mediapath = path;
+            mediatype = type;
+            mediavideotoken = mediatoken;
 
             subdialogshare = new Dialog(applicationviavideocomposer.getactivity());
             subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -509,90 +509,94 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             TextView txt_title1 = (TextView) subdialogshare.findViewById(R.id.txt_title1);
             TextView txt_title2 = (TextView) subdialogshare.findViewById(R.id.txt_title2);
             ImageView img_cancel = subdialogshare.findViewById(R.id.img_cancelicon);
+            ImageView img_lock_trimmer = subdialogshare.findViewById(R.id.img_lock_trimmer);
 
-        linear_share_btn4.setVisibility(View.GONE);
+            if(common.getapppaidlevel() <= 0)
+                img_lock_trimmer.setVisibility(View.VISIBLE);
+
+            linear_share_btn4.setVisibility(View.GONE);
             if(type.equalsIgnoreCase(config.item_video))
-                linear_share_btn4.setVisibility(View.VISIBLE);
+            linear_share_btn4.setVisibility(View.VISIBLE);
 
-        linear_share_btn1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mediamethod = config.type_private;
-                    if(!isuserlogin()){
-                        redirecttologin();
-                        return;
-                    }
-                    callmediashareapi(type, mediatoken, path, mediamethod);
-                }
-            });
-
-        linear_share_btn2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mediamethod = config.type_public;
-                    if(!isuserlogin()){
-                        redirecttologin();
-                        return;
-                    }
-                    callmediashareapi(type , mediatoken, path, mediamethod);
-                }
-            });
-
-        linear_share_btn3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mediamethod = config.type_linkinvite;
-                    if(!isuserlogin()){
-                        redirecttologin();
-                        return;
-                    }
-                    callmediashareapi(type, mediatoken, path, mediamethod);
-                }
-            });
-
-        linear_share_btn4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if(common.getapppaidlevel() <= 0)
-                    {
-                        showtrimfeaturealert();
-                        return;
-                    }
-
-                    if (subdialogshare != null && subdialogshare.isShowing())
-                        subdialogshare.dismiss();
-
-                    if(getcurrentfragment() instanceof fragmentrimvideo)
-                        return;
-
-                    if(type.equalsIgnoreCase(config.item_video))
-                    {
-                        Uri selectedimageuri = Uri.fromFile(new File(path));
-                        final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), selectedimageuri);
-                        if (mp != null) {
-                            mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                @Override
-                                public void onPrepared(MediaPlayer mediaPlayer) {
-                                    int duration = mediaPlayer.getDuration();
-                                    fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
-                                    fragtrimvideo.setdata(mediapath, duration,mediatoken);
-                                    addFragment(fragtrimvideo, false, true);
-                                }
-                            });
-                        }
-                    }
-                }
-            });
-
-        img_cancel.setOnClickListener(new View.OnClickListener() {
+            linear_share_btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mediamethod = config.type_private;
+                if(!isuserlogin()){
+                    redirecttologin();
+                    return;
+                }
+                callmediashareapi(type, mediatoken, path, mediamethod);
+            }
+            });
+
+            linear_share_btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediamethod = config.type_public;
+                if(!isuserlogin()){
+                    redirecttologin();
+                    return;
+                }
+                callmediashareapi(type , mediatoken, path, mediamethod);
+            }
+            });
+
+            linear_share_btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediamethod = config.type_linkinvite;
+                if(!isuserlogin()){
+                    redirecttologin();
+                    return;
+                }
+                callmediashareapi(type, mediatoken, path, mediamethod);
+            }
+            });
+
+            linear_share_btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(common.getapppaidlevel() <= 0)
+                {
+                    showtrimfeaturealert();
+                    return;
+                }
+
                 if (subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
+
+                if(getcurrentfragment() instanceof fragmentrimvideo)
+                    return;
+
+                if(type.equalsIgnoreCase(config.item_video))
+                {
+                    Uri selectedimageuri = Uri.fromFile(new File(path));
+                    final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), selectedimageuri);
+                    if (mp != null) {
+                        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                int duration = mediaPlayer.getDuration();
+                                fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
+                                fragtrimvideo.setdata(mediapath, duration,mediatoken);
+                                addFragment(fragtrimvideo, false, true);
+                            }
+                        });
+                    }
+                }
             }
-        });
-        subdialogshare.show();
+            });
+
+            img_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            if (subdialogshare != null && subdialogshare.isShowing())
+                subdialogshare.dismiss();
+            }
+            });
+            subdialogshare.show();
     }
 
     public void showtrimfeaturealert() {
