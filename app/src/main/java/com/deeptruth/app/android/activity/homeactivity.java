@@ -43,6 +43,7 @@ import com.deeptruth.app.android.fragments.imagereaderfragment;
 import com.deeptruth.app.android.fragments.inapppurchasecontrollerfragment;
 import com.deeptruth.app.android.fragments.myfolderfragment;
 import com.deeptruth.app.android.fragments.settingfragment;
+import com.deeptruth.app.android.fragments.synclogfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
 import com.deeptruth.app.android.services.callservice;
@@ -528,7 +529,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          }else if(fragment instanceof fetchxapivaluefragment)
          {
 
-         }else if(fragment instanceof fragment_xapi_detail)
+         }else if(fragment instanceof fragment_xapi_detail || fragment instanceof synclogfragment)
          {
 
          }else if(fragment instanceof inapppurchasecontrollerfragment)
