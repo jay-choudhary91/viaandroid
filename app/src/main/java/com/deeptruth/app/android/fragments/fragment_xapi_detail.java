@@ -102,48 +102,31 @@ public class fragment_xapi_detail extends basefragment implements View.OnClickLi
             String parameter = xapidatamap.get(config.API_PARAMETER);
 
             String completed_frames = xapidatamap.get(config.completed_frames);
-            String end_frames = xapidatamap.get(config.end_frames);
+            String incompleted_frames = xapidatamap.get(config.incompleted_frames);
             String started_frames = xapidatamap.get(config.started_frames);
-            String total_frames = xapidatamap.get(config.total_frames);
-            String media_key = xapidatamap.get(config.key_media);
-            String media_token = xapidatamap.get(config.tokan_media);
 
-            if(!completed_frames.isEmpty() && !end_frames.isEmpty()){
-                txt_key.setVisibility(View.VISIBLE);
-                txt_token.setVisibility(View.VISIBLE);
+
+            if(!completed_frames.isEmpty() && !incompleted_frames.isEmpty()){
                 txt_startframe.setVisibility(View.VISIBLE);
                 tv_complete.setVisibility(View.VISIBLE);
                 txt_endframe.setVisibility(View.VISIBLE);
-                txt_totleframe.setVisibility(View.VISIBLE);
 
-                view_key.setVisibility(View.VISIBLE);
-                view_token.setVisibility(View.VISIBLE);
                 view_startframe.setVisibility(View.VISIBLE);
                 view_endframe.setVisibility(View.VISIBLE);
                 view_completeframe.setVisibility(View.VISIBLE);
-                view_totleframe.setVisibility(View.VISIBLE);
 
-                setvalue( txt_key,getActivity().getResources().getString(R.string.xapi_key),media_key);
-                setvalue( txt_token,getActivity().getResources().getString(R.string.xapi_token),media_token);
                 setvalue( txt_startframe,getActivity().getResources().getString(R.string.xapi_started_frames),started_frames);
-                setvalue( txt_endframe,getActivity().getResources().getString(R.string.xapi_end_frames),end_frames);
+                setvalue( txt_endframe,getActivity().getResources().getString(R.string.xapi_end_frames),incompleted_frames);
                 setvalue( tv_complete,getActivity().getResources().getString(R.string.xapi_complete),completed_frames);
-                setvalue( txt_totleframe,getActivity().getResources().getString(R.string.xapi_total_frames),total_frames);
             }else {
 
-                txt_key.setVisibility(View.GONE);
-                txt_token.setVisibility(View.GONE);
                 txt_startframe.setVisibility(View.GONE);
                 tv_complete.setVisibility(View.GONE);
                 txt_endframe.setVisibility(View.GONE);
-                txt_totleframe.setVisibility(View.GONE);
 
-                view_key.setVisibility(View.GONE);
-                view_token.setVisibility(View.GONE);
                 view_startframe.setVisibility(View.GONE);
                 view_endframe.setVisibility(View.GONE);
                 view_completeframe.setVisibility(View.GONE);
-                view_totleframe.setVisibility(View.GONE);
             }
 
             try {

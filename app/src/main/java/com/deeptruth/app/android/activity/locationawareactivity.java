@@ -2712,7 +2712,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
         String currentdate[] = common.getcurrentdatewithtimezone();
         videoupdatedevicedate = currentdate[0];
-        fetchcompletedata(finallocalkey);
 
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
@@ -2725,9 +2724,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         try {
 
-            xdata.getinstance().saveSetting(config.media_key,""+finalvideokey);
-            xdata.getinstance().saveSetting(config.media_token,""+finaltoken);
-
             ArrayList<mediametadatainfo> mediametadatainfosarray = mdbhelper.setmediametadatainfo(finallocalkey);
             if (mediametadatainfosarray == null || mediametadatainfosarray.size() == 0)
             {
@@ -2739,18 +2735,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
             if (mediametadatainfosarray != null && mediametadatainfosarray.size() > 0){
 
-                if(!xdata.getinstance().getSetting(config.end_frame).isEmpty()){
-                    String completed = xdata.getinstance().getSetting(config.end_frame).toString();
-                    xdata.getinstance().saveSetting(config.frame_complete,""+completed);
-                }else{
-                    xdata.getinstance().saveSetting(config.frame_complete,""+0);
-                }
-
                 xdata.getinstance().saveSetting(config.frame_started,""+mediametadatainfosarray.get(0).getSequenceno());
-                xdata.getinstance().saveSetting(config.end_frame,""+mediametadatainfosarray.get(mediametadatainfosarray.size()-1).getSequenceno());
-
-
-
 
               for(int i=0;i<mediametadatainfosarray.size();i++)
                 {
@@ -2885,6 +2870,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                                 }
 
+
+
+                                updatevideoupdateapiresponse(finallocalkey);
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -2916,13 +2905,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
         String currentdate[] = common.getcurrentdatewithtimezone();
         String Lastdate = currentdate[0];
-
-        xdata.getinstance().saveSetting(config.frame_started,"");
-        xdata.getinstance().saveSetting(config.end_frame,"");
-        xdata.getinstance().saveSetting(config.frame_complete,"");
-        xdata.getinstance().saveSetting(config.total_frame,"");
-        xdata.getinstance().saveSetting(config.media_token,"");
-        xdata.getinstance().saveSetting(config.media_key,"");
 
         try {
 
@@ -3126,34 +3108,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
 
 
-    public void fetchcompletedata(String finallocalkey){
-
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(locationawareactivity.this);
-            mdbhelper.createDatabase();
-        }
-        try {
-            mdbhelper.open();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-
-            Cursor cursorcomplete = mdbhelper.fetchcompletedata(finallocalkey);
-            if(cursorcomplete !=null ){
-                int count = cursorcomplete.getCount();
-
-                String totalcount = cursorcomplete.getString(cursorcomplete.getColumnIndex("sequenceno"));
-
-                xdata.getinstance().saveSetting(config.total_frame,""+count);
-                Log.e("countcomplete",""+count);
-            }
-            mdbhelper.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     //**
     public void updatevideoupdateapiresponse(String finallocalkey) {
 
@@ -3184,7 +3138,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             Cursor cursor = mdbhelper.fetchmetacompletedata(0,finallocalkey);
             if(cursor!=null ){
                 int count = cursor.getCount();
-                xdata.getinstance().saveSetting(config.total_frame,""+count);
+                xdata.getinstance().saveSetting(config.frame_completeness,""+count);
                 /*for (int i = 0; i < Integer.MAX_VALUE; i++) {
                     if (xdata.getinstance().getSetting(config.sidecar_xapi_completeless + i).isEmpty()) {
                         xdata.getinstance().saveSetting(config.sidecar_xapi_completeless + i, ""+ count);
@@ -3199,6 +3153,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             e.printStackTrace();
         }
     }
+
     //** end code of media composer sync process
     public void getwifinetworks(){
         if(wifiReceiver == null)

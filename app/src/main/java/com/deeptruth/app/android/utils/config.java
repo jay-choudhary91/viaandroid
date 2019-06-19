@@ -273,18 +273,12 @@ public class config {
     public static final String all_xapi_list = "xapi_list_item_";
     public static final String sidecar_xapi_actions = "sidecar_xapi_actions_item_";
     public static final String frame_complete = "frame_complete";
-    public static final String end_frame = "end_frame";
+    public static final String frame_completeness = "frame_completeness";
     public static final String frame_started = "frame_started";
-    public static final String total_frame = "frame_started";
-    public static final String media_key = "media_key";
-    public static final String media_token = "media_token";
 
-    public static final String end_frames = "end_frames";
     public static final String completed_frames = "completed_frames";
+    public static final String incompleted_frames = "incompleted_frames";
     public static final String started_frames = "started_frames";
-    public static final String total_frames = "total_frames";
-    public static final String key_media = "key_media";
-    public static final String tokan_media = "tokan_media";
 
     public static final String PREFS_NAME = "main_prefs";
     public static final String LIST_XAPI = "Xapi";
