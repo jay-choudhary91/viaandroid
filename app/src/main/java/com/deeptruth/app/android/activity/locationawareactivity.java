@@ -232,24 +232,22 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     float mps = location.getSpeed();
                                     xdata.getinstance().saveSetting("gpsspeed", "" + mps);
 
-                                    double mph = common.convertmpstomph(mps);
                                     DecimalFormat precision = new DecimalFormat("0.0");
-                                    xdata.getinstance().saveSetting("gpsspeed", "" + precision.format(mph));
                                     if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
                                     {
-                                        double miles = common.convertmetertomiles(mps);
                                         if(! xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
                                         {
                                             try
                                             {
                                                 double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
-                                                miles=miles+value;
+                                                double miles=mps+value;
+                                                //double miles=common.convertmetertomiles(mps+value);
+                                                xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
                                             }catch (Exception e)
                                             {
                                                 e.printStackTrace();
                                             }
                                         }
-                                        xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
                                     }
                                 }
                                 else

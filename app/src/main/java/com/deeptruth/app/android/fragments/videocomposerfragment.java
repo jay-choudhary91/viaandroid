@@ -10,10 +10,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -46,6 +48,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -59,9 +62,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
+import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.dbitemcontainer;
 import com.deeptruth.app.android.models.frameinfo;
 import com.deeptruth.app.android.models.metricmodel;
@@ -76,9 +81,12 @@ import com.deeptruth.app.android.utils.camerautil;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
+import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.sha;
+import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
+import com.goodiebag.pinview.Pinview;
 import com.google.gson.Gson;
 
 
@@ -1209,7 +1217,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void showvideorecordlengthalert() {
         try
         {
-            appdialog.showinapppurchasepopup(applicationviavideocomposer.getactivity(),"Recording is limited to "+ xdata.getinstance().getSetting(xdata.unpaid_video_record_length)+" seconds" +
+            showinapppurchasepopup(applicationviavideocomposer.getactivity(),"Recording is limited to "+ xdata.getinstance().getSetting(xdata.unpaid_video_record_length)+" seconds" +
                     " in the basic version. Upgrade",null);
 
             /*new AlertDialog.Builder(getActivity(), R.style.customdialogtheme)
@@ -1228,6 +1236,96 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         {
             e.printStackTrace();
         }
+    }
+
+    public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
+    {
+        final Dialog dialog =new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_inapppurchase_options);
+
+        TextView txt_purchase1 = (TextView) dialog.findViewById(R.id.txt_purchase1);
+        TextView txt_purchase2 = (TextView) dialog.findViewById(R.id.txt_purchase2);
+        TextView TxtPositiveButton = (TextView) dialog.findViewById(R.id.tv_positive);
+        TextView txt_message = (TextView) dialog.findViewById(R.id.txt_message);
+        ImageView img_cancelicon = (ImageView) dialog.findViewById(R.id.img_cancelicon);
+        final Pinview pinview = (Pinview) dialog.findViewById(R.id.pinview);
+
+        txt_message.setText(message);
+        TxtPositiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(pinview.getValue().trim().length() >= 6)
+                {
+
+                    HashMap<String,String> requestparams=new HashMap<>();
+                    requestparams.put("code",pinview.getValue().trim());
+                    requestparams.put("action","appunlockcode_use");
+                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                    gethelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
+                        @Override
+                        public void onResponse(taskresult response) {
+                            progressdialog.dismisswaitdialog();
+                            if(response.isSuccess())
+                            {
+                                try {
+                                    JSONObject object=new JSONObject(response.getData().toString());
+                                    if(object.has("success"))
+                                    {
+                                        if(object.has("message"))
+                                            Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    Toast.makeText(applicationviavideocomposer.getactivity(), "Please enter 6 digit code!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        txt_purchase1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if(mitemclick != null)
+                    mitemclick.onItemClicked("ABC");
+            }
+        });
+
+        txt_purchase2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if(mitemclick != null)
+                    mitemclick.onItemClicked("ABC");
+            }
+        });
+
+        img_cancelicon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     private File getVideoFile(Context context) {
