@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/round_corner"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Alert!"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            app:fontType="OpenSans_Semibold"
+            android:gravity="center"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/img_cancelicon"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="3dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/error"/>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            app:fontType="OpenSans_Regular"
+            android:gravity="center"
+            android:textStyle="bold"/>
+
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_purchase1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Purchase for $10/year"
+            android:textSize="15dp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            app:fontType="OpenSans_Regular"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:background="@drawable/roundcorner_payment_option_btn"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_purchase2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Purchase for $1/month"
+            android:textSize="15dp"
+            android:layout_marginTop="15dp"
+            android:padding="5dp"
+            app:fontType="OpenSans_Regular"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:background="@drawable/roundcorner_payment_option_btn"/>
+
+
+        <com.goodiebag.pinview.Pinview
+            android:id="@+id/pinview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cursorVisible="false"
+            app:forceKeyboard="false"
+            app:hint="0"
+            android:layout_marginTop="10dp"
+            app:inputType="number"
+            app:password="false"
+            app:splitWidth="10dp"
+            app:pinBackground="@drawable/roundcorner_payment_option_btn"
+            app:pinHeight="40dp"
+            app:pinLength="6"
+            app:pinWidth="40dp" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="@color/grey_x"
+            android:layout_marginTop="20dp"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_positive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:padding="12dp"
+            app:fontType="OpenSans_Semibold"
+            android:text="Submit"
+            android:textSize="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/tv_negative"
+            android:layout_toEndOf="@+id/tv_negative" />
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
