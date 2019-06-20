@@ -21,6 +21,8 @@
     <string name="synced_media">Synced Media</string>
     <string name="asynced_media">Asynced Media</string>
 
+    <string name="sharing_a_trimmed_video">Sharing a trimmed version is an advanced feature. Upgrade</string>
+
     <string name="send_to">Send To</string>
     <string name="capture">CAPTURE</string>
     <string name="start_by_documenting">Start by documenting what you\'re experiencing. Use DeepTruth to create audio, video and photo files.</string>

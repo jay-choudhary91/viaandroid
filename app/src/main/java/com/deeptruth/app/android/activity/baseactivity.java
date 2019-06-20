@@ -563,7 +563,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 {
                     //showtrimfeaturealert();
                     appdialog.showinapppurchasepopup(applicationviavideocomposer.
-                            getactivity(),"Sharing a trimmed version is an advanced feature. Upgrade",null);
+                            getactivity(),applicationviavideocomposer.getactivity().getResources().getString(R.string.sharing_a_trimmed_video),null);
                     return;
                 }
 
