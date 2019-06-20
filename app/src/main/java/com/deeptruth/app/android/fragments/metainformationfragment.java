@@ -2,6 +2,7 @@ package com.deeptruth.app.android.fragments;
 
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -31,6 +32,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -77,8 +79,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
@@ -308,6 +314,16 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     TextView txt_satellite_altitudes_at;
     @BindView(R.id.txt_satellite_altitude)
     TextView txt_satellite_altitude;
+    @BindView(R.id.layout_timeinformation)
+    LinearLayout layout_timeinformation;
+    @BindView(R.id.layout_locationanalytics)
+    LinearLayout layout_locationanalytics;
+    @BindView(R.id.layout_phoneanalytics)
+    LinearLayout layout_phoneanalytics;
+    @BindView(R.id.layout_connection)
+    LinearLayout layout_connection;
+    @BindView(R.id.layout_towerinfo)
+    LinearLayout layout_towerinfo;
 
 
     GoogleMap mgooglemap;
@@ -321,17 +337,25 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     ArrayList<Entry> connectiondatadelayvalues = new ArrayList<Entry>();
     ArrayList<Entry> gpsaccuracyvalues = new ArrayList<Entry>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
+    private PolylineOptions mappathoptions=null;
+    private Polyline mappathpolyline=null;
+    private ArrayList<LatLng> mappathcoordinates=new ArrayList<>();
     private boolean isdatacomposing=false,isrecodrunning=false , isfrommeta=false;
     String lastsavedangle="";
     private float currentDegree = 0f;
     private Orientation mOrientation;
     private String[] transparentarray= common.gettransparencyvalues();
     int navigationbarheight = 0;
+    ValueAnimator lastPulseAnimator=null;
+    LatLng usercurrentlocation=null;
+    Circle mappulsatecircle =null;
+    Circle userlocationcircle =null;
     arraycontainer arraycontainerformetric =null;
     View rootview;
     String screenwidth,screenheight, satellitedata="",satellitedate="";
     ArrayList<satellites> satelliteslist = new ArrayList<>();
     satellitesdataadapter satelliteadapter;
+    private Marker locationindicatemarker=null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -419,26 +443,27 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
             loadmap();
 
+            setchartmargin(linechart_altitude);
+            setchartmargin(linechart_speed);
+            setchartmargin(linechart_traveled);
+
             halfpaichartdate(chart_memoeyusage);
             halfpaichartdate(chart_cpuusage);
             halfpaichartdate(chart_battery);
 
-            setchartdata(linechart_speed,60);
-            setchartdata(linechart_traveled,100);
+            setchartdata(linechart_speed,80);
             setchartdata(linechart_altitude,2000);
-
-
-            //visiblity gone of media information
-            layout_mediasummary.setVisibility(View.GONE);
-            layout_mediametadata.setVisibility(View.GONE);
-            txt_mediainformation.setVisibility(View.GONE);
+            setchartdata(linechart_traveled,100);
+            vertical_slider_speed.setMax(80);
+            vertical_slider_altitude.setMax(2000);
+            vertical_slider_traveled.setMax(100);
 
             initlinechart(linechart_connectionspeed,25f);
             initlinechart(linechart_datatimedelay,10f);
             initlinechart(linechart_gpsaccuracy,100f);
-            vertical_slider_gpsaccuracy.setMax(100);
             vertical_slider_connectionspeed.setMax(25);
             vertical_slider_connectiondatatimedely.setMax(10);
+            vertical_slider_gpsaccuracy.setMax(100);
 
             vertical_slider_speed.setMax(60);
             vertical_slider_altitude.setMax(2000);
@@ -476,18 +501,24 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     public void setdatacomposing(boolean isdatacomposing,String mediafilepath)
     {
         this.isdatacomposing=isdatacomposing;
+        if(locationindicatemarker != null)
+        {
+            locationindicatemarker.remove();
+            locationindicatemarker=null;
+        }
+
+        metricmainarraylist.clear();
+        cleargooglemap();
+
         if(! isdatacomposing)
         {
-            metricmainarraylist.clear();
-            if(mgooglemap != null)
-                mgooglemap.clear();
-
             fetchmetadatafromdb(mediafilepath);
             if(metricmainarraylist != null && metricmainarraylist.size() > 0)
             {
                 layout_mediasummary.setVisibility(View.VISIBLE);
                 layout_mediametadata.setVisibility(View.VISIBLE);
                 txt_mediainformation.setVisibility(View.VISIBLE);
+                showhideverticalbar(false);
                 drawmappath();
                 drawmediainformation();
             }
@@ -497,7 +528,30 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             layout_mediasummary.setVisibility(View.GONE);
             layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
+            showhideverticalbar(true);
             resetmediainformation();
+        }
+    }
+
+    public void showhideverticalbar(boolean shouldtrue)
+    {
+        if(shouldtrue)
+        {
+            vertical_slider_connectiondatatimedely.setVisibility(View.VISIBLE);
+            vertical_slider_connectionspeed.setVisibility(View.VISIBLE);
+            vertical_slider_gpsaccuracy.setVisibility(View.VISIBLE);
+            vertical_slider_traveled.setVisibility(View.VISIBLE);
+            vertical_slider_altitude.setVisibility(View.VISIBLE);
+            vertical_slider_speed.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            vertical_slider_connectiondatatimedely.setVisibility(View.GONE);
+            vertical_slider_connectionspeed.setVisibility(View.GONE);
+            vertical_slider_gpsaccuracy.setVisibility(View.GONE);
+            vertical_slider_traveled.setVisibility(View.GONE);
+            vertical_slider_altitude.setVisibility(View.GONE);
+            vertical_slider_speed.setVisibility(View.GONE);
         }
     }
 
@@ -507,11 +561,17 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         {
             if(! isdatacomposing)
             {
-                if (currentmediaposition < metricmainarraylist.size() && metricmainarraylist.size() > 0) {
+                if (currentmediaposition <= metricmainarraylist.size() && metricmainarraylist.size() > 0) {
                     arraycontainerformetric = new arraycontainer();
-                    arraycontainerformetric = metricmainarraylist.get(currentmediaposition);
+
+                    if(currentmediaposition == metricmainarraylist.size()){
+                        arraycontainerformetric = metricmainarraylist.get(currentmediaposition-1);
+                    }else{
+                        arraycontainerformetric = metricmainarraylist.get(currentmediaposition);
+                    }
 
                     ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
+                    String framecolor = arraycontainerformetric.getColor();
                     String latitude="",longitude="",satellitedate="",satellitedata="";
                     for (int j = 0; j < metricItemArraylist.size(); j++)
                     {
@@ -530,9 +590,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                     && (! value.equalsIgnoreCase("null")))
                             {
                                 int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
-                                rotatecompass(degree);
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),
                                         "\n"+metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), tvheading);
+                                rotatecompass(degree);
                             }
                             else
                             {
@@ -565,19 +625,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlanguage);
-                        }
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.satellitedate))
-                        {
-                            satellitedate=metricItemArraylist.get(j).getMetricTrackValue();
-                            if((! satellitedate.trim().isEmpty()) && (! satellitedata.trim().isEmpty()))
-                                showsatellitesinfo(satellitedate,satellitedata);
-                        }
-
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.satellitesdata))
-                        {
-                            satellitedata=metricItemArraylist.get(j).getMetricTrackValue();
-                            if((! satellitedate.trim().isEmpty()) && (! satellitedata.trim().isEmpty()))
-                                showsatellitesinfo(satellitedate,satellitedata);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("country")) {
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.country), "\n" + metricItemArraylist.get(j).getMetricTrackValue(), tvcountry);
@@ -658,7 +705,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             }
                         }
 
-                        /*if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicedate")){
+                       /* if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicedate")){
                             tvdate.setText(common.convertstringintodate(metricItemArraylist.get(j).getMetricTrackValue()));
                         }
 
@@ -667,8 +714,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("sequenceendtime"))
-                            tvtime.setText(tvtime.getText()+" - "+common.getFormattedTime(metricItemArraylist.get(j).getMetricTrackValue()));*/
-
+                            tvtime.setText(tvtime.getText()+" - "+common.getFormattedTime(metricItemArraylist.get(j).getMetricTrackValue()));
+*/
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclocktime))
                         {
                             String time=metricItemArraylist.get(j).getMetricTrackValue();
@@ -737,6 +784,20 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                     "\n"+metricItemArraylist.get(j).getMetricTrackValue() ,txt_datatimedelay);
                         }
 
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.satellitedate))
+                        {
+                            satellitedate=metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! satellitedate.trim().isEmpty()) && (! satellitedata.trim().isEmpty()))
+                                showsatellitesinfo(satellitedate,satellitedata);
+                        }
+
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.satellitesdata))
+                        {
+                            satellitedata=metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! satellitedate.trim().isEmpty()) && (! satellitedata.trim().isEmpty()))
+                                showsatellitesinfo(satellitedate,satellitedata);
+                        }
+
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))
                         {
                             String value=metricItemArraylist.get(j).getMetricTrackValue();
@@ -767,6 +828,26 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     tvblockid.setText(arraycontainerformetric.getHashmethod());
                     tvblocknumber.setText(arraycontainerformetric.getValuehash());
                     tvmetahash.setText(arraycontainerformetric.getMetahash());
+
+                    int mediarunningpercentage = (currentmediaposition * 100) / metricmainarraylist.size();
+
+                    if(linechart_connectionspeed != null)
+                        updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage,vertical_slider_connectionspeed);
+
+                    if(linechart_datatimedelay != null)
+                        updatelinegraphwithposition(linechart_datatimedelay,connectiondatadelayvalues,mediarunningpercentage,vertical_slider_connectiondatatimedely);
+
+                    if(linechart_gpsaccuracy != null)
+                        updatelinegraphwithposition(linechart_gpsaccuracy,gpsaccuracyvalues,mediarunningpercentage,vertical_slider_gpsaccuracy);
+
+                    if(linechart_speed != null && speedgraphitems.size() > 0)
+                        updatelinegraphwithposition(linechart_speed,speedgraphitems,mediarunningpercentage,vertical_slider_speed);
+
+                    if(linechart_traveled != null && travelledgraphitems.size() > 0)
+                        updatelinegraphwithposition(linechart_traveled,travelledgraphitems,mediarunningpercentage,vertical_slider_traveled);
+
+                    if(linechart_altitude != null && altitudegraphitems.size() > 0)
+                        updatelinegraphwithposition(linechart_altitude,altitudegraphitems,mediarunningpercentage,vertical_slider_altitude);
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -817,6 +898,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         colors.add(getResources().getColor(R.color.drawer_seekbar_max));
         dataSet.setColors(colors);
 
+
         PieData data = new PieData(dataSet);
         data.setDrawValues(false);
         chart.setData(data);
@@ -836,7 +918,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             if(array.length > 0)
             {
                 try {
-                    seekbar.setProgress((int)Float.parseFloat(array[0]));
+                    Float data=Float.parseFloat(array[0]);
+                    seekbar.setProgress(Math.round(data));
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -930,15 +1013,18 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         gpsaccuracyvalues.clear();
         speedgraphitems.clear();
         travelledgraphitems.clear();
-        speedgraphitems.clear();
+        altitudegraphitems.clear();
+        linechart_speed.clear();
+        linechart_traveled.clear();
+        linechart_altitude.clear();
+        layout_soundiformation.setVisibility(View.GONE);
 
-        ArrayList<Float> arrayspeed=new ArrayList<>();
-        ArrayList<Float> arraytravelled=new ArrayList<>();
-        ArrayList<Float> arrayaltitude=new ArrayList<>();
-        PolylineOptions options = new PolylineOptions().width(7).color(Color.BLUE).geodesic(true);
+        mappathoptions = new PolylineOptions().width(7).color(Color.BLUE).geodesic(true);
+        String linecolor="";
         for (int i = 0; i < metricmainarraylist.size(); i++)
         {
             arraycontainer container=metricmainarraylist.get(i);
+            linecolor=container.getColor();
             ArrayList<metricmodel> arraylist=container.getMetricItemArraylist();
             double latitude=0.0,longitude=0.0;
             for(int j=0;j<arraylist.size();j++)
@@ -968,8 +1054,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         {
                             if(connectionspeedvalues.size() > 0)
                             {
-                                if(connectionspeedvalues.get(connectionspeedvalues.size()-1).getY() != Float.parseFloat(speedarray[0]))
-                                    connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
+                                //if(connectionspeedvalues.get(connectionspeedvalues.size()-1).getY() != Float.parseFloat(speedarray[0]))
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
                             }
                             else
                             {
@@ -994,13 +1080,14 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         {
                             if(connectiondatadelayvalues.size() > 0)
                             {
-                                if(connectiondatadelayvalues.get(connectiondatadelayvalues.size()-1).getY() != Float.parseFloat(array[0]))
-                                    connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), Float.parseFloat(array[0]), 0));
+                                //if(connectiondatadelayvalues.get(connectiondatadelayvalues.size()-1).getY() != Float.parseFloat(array[0]))
+                                connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), Float.parseFloat(array[0]), 0));
                             }
                             else
                             {
                                 connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(array[0]), 0));
                             }
+
                         }
                         catch (Exception e)
                         {
@@ -1021,13 +1108,14 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         {
                             if(gpsaccuracyvalues.size() > 0)
                             {
-                                if(gpsaccuracyvalues.get(gpsaccuracyvalues.size()-1).getY() != Float.parseFloat(itemarray[0]))
-                                    gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
+                                //if(gpsaccuracyvalues.get(gpsaccuracyvalues.size()-1).getY() != Float.parseFloat(itemarray[0]))
+                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
                             }
                             else
                             {
                                 gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
                             }
+
                         }
                         catch (Exception e)
                         {
@@ -1039,21 +1127,26 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 if(model.getMetricTrackKeyName().equalsIgnoreCase("speed") && (! model.getMetricTrackValue().trim().isEmpty()) && (! model.getMetricTrackValue().equalsIgnoreCase("NA"))
                         && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
                 {
-                    String speed=model.getMetricTrackValue();
+                    String speed=common.speedformatter(model.getMetricTrackValue());
                     String[] itemarray=speed.split(" ");
                     if(itemarray.length > 0)
                     {
                         try
                         {
+                            float value=1.0f;
+                            if(Float.parseFloat(itemarray[0]) != 0)
+                                value=Float.parseFloat(itemarray[0]);
+
                             if(speedgraphitems.size() > 0)
                             {
-                                if(speedgraphitems.get(speedgraphitems.size()-1).getY() != Float.parseFloat(itemarray[0]))
-                                    speedgraphitems.add(new Entry(speedgraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                                //if(speedgraphitems.get(speedgraphitems.size()-1).getY() != value)
+                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
                             }
                             else
                             {
-                                speedgraphitems.add(new Entry(speedgraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
                             }
+
                         }
                         catch (Exception e)
                         {
@@ -1065,21 +1158,26 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 if(model.getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled) && (! model.getMetricTrackValue().trim().isEmpty()) && (! model.getMetricTrackValue().equalsIgnoreCase("NA"))
                         && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
                 {
-                    String travelled=model.getMetricTrackValue();
+                    String travelled=common.travelleddistanceformatter(model.getMetricTrackValue());
                     String[] itemarray=travelled.split(" ");
                     if(itemarray.length > 0)
                     {
                         try
                         {
+                            float value=1.0f;
+                            if(Float.parseFloat(itemarray[0]) != 0)
+                                value=Float.parseFloat(itemarray[0]);
+
                             if(travelledgraphitems.size() > 0)
                             {
-                                if(travelledgraphitems.get(travelledgraphitems.size()-1).getY() != Float.parseFloat(itemarray[0]))
-                                    travelledgraphitems.add(new Entry(travelledgraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                                //if(travelledgraphitems.get(travelledgraphitems.size()-1).getY() != value)
+                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
                             }
                             else
                             {
-                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
                             }
+
                         }
                         catch (Exception e)
                         {
@@ -1097,14 +1195,18 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     {
                         try
                         {
+                            float value=1.0f;
+                            if(Float.parseFloat(itemarray[0]) != 0)
+                                value=Float.parseFloat(itemarray[0]);
+
                             if(altitudegraphitems.size() > 0)
                             {
-                                if(altitudegraphitems.get(altitudegraphitems.size()-1).getY() != Float.parseFloat(itemarray[0]))
-                                    altitudegraphitems.add(new Entry(altitudegraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                                //if(altitudegraphitems.get(altitudegraphitems.size()-1).getY() != value)
+                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
                             }
                             else
                             {
-                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), Float.parseFloat(itemarray[0]), 0));
+                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
                             }
                         }
                         catch (Exception e)
@@ -1115,15 +1217,16 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 }
             }
 
+            if(linecolor.trim().length() == 0)
+                linecolor="blue";
+
             LatLng point = new LatLng(latitude,longitude);
-            if(latitude != 0){
-                populatelocationonmap(new LatLng(latitude,longitude));
-                drawmappoints(new LatLng(latitude,longitude));
-            }
-            options.add(point);
+            mappathoptions.add(point).color(Color.parseColor(common.getcolorbystring(linecolor)));
         }
+
         if(mgooglemap != null)
-            mgooglemap.addPolyline(options);
+            mgooglemap.addPolyline(mappathoptions);
+
         // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
 
         linechart_speed.setVisibility(View.VISIBLE);
@@ -1179,19 +1282,21 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 }
                 lastsequenceno=sequenceno;   // 15  30   45
 
-                if(! metricmainarraylist.get(i).getColor().trim().isEmpty())
+                sectioncount++;
+                if(metricmainarraylist.get(i).getColor().trim().isEmpty())
+                    metricmainarraylist.get(i).setColor(config.color_gray);
+
+                if(! lastcolor.equalsIgnoreCase(metricmainarraylist.get(i).getColor()))
                 {
+                    sectioncount=0;
                     sectioncount++;
-                    if(! lastcolor.equalsIgnoreCase(metricmainarraylist.get(i).getColor()))
-                    {
-                        colorsectioncount.add(metricmainarraylist.get(i).getColor()+","+sectioncount);
-                    }
-                    else
-                    {
-                        colorsectioncount.set(colorsectioncount.size()-1,metricmainarraylist.get(i).getColor()+","+sectioncount);
-                    }
-                    lastcolor=metricmainarraylist.get(i).getColor();
+                    colorsectioncount.add(metricmainarraylist.get(i).getColor()+","+sectioncount);
                 }
+                else
+                {
+                    colorsectioncount.set(colorsectioncount.size()-1,metricmainarraylist.get(i).getColor()+","+sectioncount);
+                }
+                lastcolor=metricmainarraylist.get(i).getColor();
             }
         }
 
@@ -1244,31 +1349,57 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         seekbar_mediavideoaudio.setMax(metricmainarraylist.size());
         seekbar_mediametadata.setMax(metricmainarraylist.size());
     }
-    public void setlinechartdata(final LineChart chart, Float value, ArrayList<Entry> gpsaccuracyvalues)
+    public void setlinechartdata(final LineChart chart, Float value, ArrayList<Entry> valuesarray)
     {
-        if(gpsaccuracyvalues.size() > 0)
+        chart.setVisibility(View.VISIBLE);
+       /* if(valuesarray.size() > 0)
         {
-            if(gpsaccuracyvalues.get(gpsaccuracyvalues.size()-1).getY() == value)
+            if(valuesarray.get(valuesarray.size()-1).getY() == value)
                 return;
-        }
+        }*/
 
-        if(value != -1)
-            gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), value, 0));
+        if(value == 0)
+            value=1.0f;
+
+        if(value != -1)  // It means chart is preparing on recording time
+            valuesarray.add(new Entry(valuesarray.size(), value, 0));
 
         LineDataSet set1;
 
-        if (chart.getData() != null &&
-                chart.getData().getDataSetCount() > 0) {
+        if (chart.getData() != null &&  chart.getData().getDataSetCount() > 0)
+        {
             set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
-            set1.setValues(gpsaccuracyvalues);
+            set1.setValues(valuesarray);
+            if(value != -1)
+            {
+                for(int i=0;i<set1.getEntryCount();i++)
+                    set1.getEntryForIndex(i).setIcon(null);
+
+                /*Highlight   high = new Highlight(set1.getEntryForIndex(set1.getEntryCount()-1).getX(), 0, set1.getEntryCount()-1);
+                chart.highlightValue(high, false);*/
+
+                set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
+                        R.drawable.blue_black_ball));
+
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,getActivity().getResources().getDimension(R.dimen.margin_50dp),getActivity().getResources().getDimension(R.dimen.margin_6dp));
+            }
+            else
+            {
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
+            }
+
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
+            chart.refreshDrawableState();
+            chart.setVisibleXRangeMaximum(80);
+            chart.moveViewToX(set1.getEntryCount());
+            //chart.invalidate();
         } else {
             // create a dataset and give it a type
-            set1 = new LineDataSet(gpsaccuracyvalues, "");
-
-            set1.setDrawIcons(false);
+            set1 = new LineDataSet(valuesarray, "");
+            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set1.setDrawIcons(true);
             set1.setColor(Color.WHITE);
             set1.setCircleColor(Color.GREEN);
             set1.setLineWidth(2f);
@@ -1277,6 +1408,10 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             set1.setDrawCircleHole(false);
             set1.setValueTextSize(0f);
             set1.setDrawFilled(false);
+            set1.setHighLightColor(Color.WHITE);
+            set1.setHighlightLineWidth(3);
+            set1.setHighlightEnabled(true);
+            set1.setDrawHorizontalHighlightIndicator(false);
             set1.setFillFormatter(new IFillFormatter() {
                 @Override
                 public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
@@ -1284,16 +1419,21 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 }
             });
 
-            set1.setFillColor(Color.TRANSPARENT);
 
+            set1.setFillColor(Color.TRANSPARENT);
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1); // add the data sets
-
             // create a data object with the data sets
             LineData data = new LineData(dataSets);
 
             // set data
             chart.setData(data);
+            if(value == -1)
+                chart.setVisibleXRangeMaximum(80);
+
+            chart.setScaleMinima((float) set1.getEntryCount() / 90f, 1f);
+
+            chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
         }
 
         chart.animateX(0);
@@ -1301,47 +1441,71 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         l.setForm(Legend.LegendForm.LINE);
     }
 
-    private void setspeedtraveledaltitudechart(LineChart linechart,Float value, ArrayList<Entry> arrayitems) {
+    private void setspeedtraveledaltitudechart(final LineChart linechart, Float value, ArrayList<Entry> arrayitems) {
 
-        if(arrayitems.size() > 0)
-        {
-            if(arrayitems.get(arrayitems.size()-1).getY() == value)
-                return;
-        }
+        linechart.setVisibility(View.VISIBLE);
+
+        Log.e("speed value",""+value);
+
+
+        if(value == 0)
+            value=1.0f;
 
         if(value != -1)
-            arrayitems.add(new Entry(arrayitems.size(), value, 0));
+        {
 
+            arrayitems.add(new Entry(arrayitems.size(), value, 0));
+        }
         LineDataSet set1;
         if (linechart.getData() != null && linechart.getData().getDataSetCount() > 0 && arrayitems.size() > 0)
         {
             set1 = (LineDataSet) linechart.getData().getDataSetByIndex(0);
             set1.setValues(arrayitems);
             set1.setHighlightEnabled(true);
+            if(value != -1)
+            {
+                for(int i=0;i<set1.getEntryCount();i++)
+                    set1.getEntryForIndex(i).setIcon(null);
+
+                set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
+                        R.drawable.blue_black_ball));
+
+                linechart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
+
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_7dp));
+            }
+            else
+            {
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_6dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
+            }
             LineData data = new LineData(set1);
             linechart.setData(data);
+            linechart.setVisibleXRangeMaximum(80);
+            linechart.getData().notifyDataChanged();
             linechart.notifyDataSetChanged();
+            linechart.refreshDrawableState();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(arrayitems, "");
             set1.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-
-            set1.setDrawIcons(false);
-
-            // set the line to be drawn like this "- - - - - -"
-            set1.enableDashedLine(10f, 0f, 0f);
-            set1.enableDashedHighlightLine(10f, 0f, 0f);
-            //set1.setColor(Color.BLACK);
-            //set1.setCircleColor(Color.BLACK);
+            set1.setDrawIcons(true);
+            set1.setColor(Color.WHITE);
+            set1.setCircleColor(Color.GREEN);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(3f);
             set1.setDrawCircles(false);
-            set1.setLineWidth(1f);
-            set1.setCircleRadius(0f);
             set1.setDrawCircleHole(false);
             set1.setValueTextSize(0f);
             set1.setDrawFilled(true);
-            set1.setFormLineWidth(1f);
-            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-            set1.setFormSize(15.f);
+            set1.setHighlightEnabled(false);
+            set1.setDrawHorizontalHighlightIndicator(false);
+            set1.setDrawVerticalHighlightIndicator(false);
+            set1.setFillFormatter(new IFillFormatter() {
+                @Override
+                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                    return linechart.getAxisLeft().getAxisMinimum();
+                }
+            });
 
             if (Utils.getSDKInt() >= 18) {
                 // fill drawable only supported on api level 18 and above
@@ -1349,12 +1513,17 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 set1.setFillDrawable(drawable);
             }
 
-            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-            dataSets.add(set1); // add the datasets
-            // create a data object with the datasets
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1); // add the data sets
+            // create a data object with the data sets
             LineData data = new LineData(dataSets);
             // set data
             linechart.setData(data);
+
+            if(value == -1)
+                linechart.setVisibleXRangeMaximum(80);
+
+            linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
         }
 
         linechart.animateX(0);
@@ -1364,8 +1533,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
     public View getmediaseekbarbackgroundview(String weight,String color)
     {
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,Float.parseFloat(weight));
         View view = new View(applicationviavideocomposer.getactivity());
         view.setLayoutParams(param);
         if((! color.isEmpty()))
@@ -1374,7 +1543,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         }
         else
         {
-            view.setBackgroundColor(Color.parseColor(config.color_code_gray));
+            view.setBackgroundColor(Color.parseColor(config.color_code_white_transparent));
         }
         return view;
     }
@@ -1423,16 +1592,12 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
         try
         {
-            txt_videoaudio_validframes.setText("0 Frames");
-            txt_videoaudio_cautionframes.setText("0 Frames");
-            txt_videoaudio_invalidframes.setText("0 Frames");
-            txt_meta_validframes.setText("0 Frames");
-            txt_meta_cautionframes.setText("0 Frames");
-            txt_meta_invalidframes.setText("0 Frames");
-
-            // emptymediapiechartdata(pie_videoaudiochart);
-            //  emptymediapiechartdata(pie_metadatachart);
-
+            txt_videoaudio_validframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
+            txt_videoaudio_cautionframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
+            txt_videoaudio_invalidframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
+            txt_meta_validframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
+            txt_meta_cautionframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
+            txt_meta_invalidframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
 
             if(seekbar_mediametadata != null)
                 seekbar_mediametadata.setProgress(0);
@@ -1582,6 +1747,15 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     public void onNothingSelected() {
 
     }
+    public void setchartmargin(LineChart chart){
+        Log.e("leftbottommargin=","left ="+(int)getActivity().getResources().getDimension(R.dimen.margin_10dp)+"-"+"bottom"+(int)getActivity().getResources().getDimension(R.dimen.margin_10dp));
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+        params.setMargins((int)getActivity().getResources().getDimension(R.dimen.margin_10dp),0,0,(int)getActivity().getResources().getDimension(R.dimen.margin_10dp));
+        chart.setLayoutParams(params);
+        chart.requestLayout();
+    }
+
     public void halfpaichartdate(PieChart chart){
         chart.setNoDataText("");
         chart.setBackgroundColor(Color.TRANSPARENT);
@@ -1608,15 +1782,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
     public void setchartdata(LineChart linechart,int maximumrangeY)
     {
-        // set an alternative background color
-        // linechart_speed.setBackgroundColor(Color.GRAY);
-
-        // create a custom MarkerView (extend MarkerView) and specify the layout
-        // to use for it
-
         linechart.setNoDataText("");
-        // x-axis limit line
-        LimitLine llXAxis = new LimitLine(10f, "Index 10");
+        LimitLine llXAxis = new LimitLine(10f, "");
         llXAxis.setLineWidth(4f);
         llXAxis.enableDashedLine(10f, 10f, 0f);
         llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
@@ -1624,64 +1791,36 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
         XAxis xAxis = linechart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
-        //xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
-        //xAxis.addLimitLine(llXAxis); // add x-axis limit line
-
-
-        //  Typeface tf = Typeface.createFromAsset(getAssets(), "OpenSans-Regular.ttf");
-
         LimitLine ll1 = new LimitLine(150f, "");
         ll1.setLineWidth(0f);
         ll1.enableDashedLine(10f, 10f, 0f);
         ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         ll1.setTextSize(0f);
-        // ll1.setTypeface(tf);
-
         LimitLine ll2 = new LimitLine(-30f, "");
         ll2.setLineWidth(0f);
         ll2.enableDashedLine(10f, 10f, 0f);
         ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
         ll2.setTextSize(0f);
-        //  ll2.setTypeface(tf);
-
         YAxis leftAxis = linechart.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
         leftAxis.setAxisMaximum(maximumrangeY);
         leftAxis.setAxisMinimum(0);
-
-        //leftAxis.setYOffset(20f);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
-
-        // limit lines are drawn behind data (and not on top)
+        linechart.getLegend().setEnabled(false);
         leftAxis.setDrawLimitLinesBehindData(false);
-
         linechart.getAxisRight().setEnabled(false);
         linechart.getAxisLeft().setEnabled(false);
         xAxis.setEnabled(false);
-
-        //linechart_speed.getViewPortHandler().setMaximumScaleY(2f);
-        //linechart_speed.getViewPortHandler().setMaximumScaleX(2f);
-
         linechart.setOnChartGestureListener(this);
         linechart.setOnChartValueSelectedListener(this);
         linechart.setDrawGridBackground(false);
-
-        // no description text
         linechart.getDescription().setEnabled(false);
-
-        // enable touch gestures
         linechart.setTouchEnabled(false);
-
-        // enable scaling and dragging
         linechart.setDragEnabled(false);
         linechart.setScaleEnabled(false);
-        // linechart_speed.setScaleXEnabled(true);
-        // linechart_speed.setScaleYEnabled(true);
-
-        // if disabled, scaling can be done on x- and y-axis separately
         linechart.setPinchZoom(false);
     }
 
@@ -1697,15 +1836,16 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         YAxis yAxis;
         yAxis = chart.getAxisLeft();
         chart.getAxisRight().setEnabled(false);
-        yAxis.setAxisMaximum(maxrange);
+        //yAxis.setAxisMaximum(maxrange);
         yAxis.setAxisMinimum(0f);
 
         // // Create Limit Lines // //
-        LimitLine llXAxis = new LimitLine(9f, "Index 10");
+        LimitLine llXAxis = new LimitLine(10f, "");
         llXAxis.setLineWidth(0f);
         llXAxis.enableDashedLine(10f, 10f, 0f);
         llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
         llXAxis.setTextSize(0f);
+
         LimitLine ll1 = new LimitLine(150f, "");
         ll1.setLineWidth(0f);
         ll1.enableDashedLine(10f, 10f, 0f);
@@ -1720,6 +1860,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         xAxis.setDrawLimitLinesBehindData(true);
         yAxis.addLimitLine(ll1);
         yAxis.addLimitLine(ll2);
+        chart.getLegend().setEnabled(false);
         xAxis.setDrawLimitLinesBehindData(false);
         chart.getAxisRight().setEnabled(false);
         chart.getAxisLeft().setEnabled(false);
@@ -1759,9 +1900,16 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         if (mgooglemap == null)
             return;
 
+        usercurrentlocation=location;
         googlemap.setVisibility(View.VISIBLE);
 
         zoomgooglemap(location.latitude,location.longitude);
+
+        if(lastPulseAnimator == null)
+            addPulsatingEffect();
+        else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
+            addPulsatingEffect();
+
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -1811,19 +1959,180 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             try {
                 if(isdatacomposing)
                 {
-                    mgooglemap.clear();
-                }
-                else
-                {
-                    mgooglemap.addMarker(new MarkerOptions()
-                            .position(latlng)
-                            .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),
-                                    R.drawable.rounded_gps_dot)));
+                    if(isrecodrunning)
+                    {
+                        mappathcoordinates.add(latlng);
+                        if(mappathpolyline == null)
+                        {
+                            mappathpolyline = mgooglemap.addPolyline(new PolylineOptions()
+                                    .add(latlng,latlng).width(7).color(Color.BLUE));
+                        }
+                        else
+                        {
+                            mappathpolyline.setPoints(mappathcoordinates);
+                        }
+
+                    }
                 }
             }catch (Exception e)
             {
                 e.printStackTrace();
             }
+        }
+    }
+    public void cleargooglemap()
+    {
+        if(mgooglemap != null)
+        {
+            mgooglemap.clear();
+
+            if(lastPulseAnimator != null)
+                lastPulseAnimator.cancel();
+
+            if(mappulsatecircle != null && mgooglemap != null)
+            {
+                mappulsatecircle.remove();
+                mappulsatecircle=null;
+            }
+
+            if(userlocationcircle != null && mgooglemap != null)
+            {
+                userlocationcircle.remove();
+                userlocationcircle=null;
+            }
+        }
+    }
+    protected float getDisplayPulseRadius() {
+        if(mgooglemap == null)
+            return 0.0f;
+
+        float currentzoomlevel=mgooglemap.getCameraPosition().zoom;
+        Log.e("zoom level ",""+currentzoomlevel);
+
+        if(currentzoomlevel >= 20)
+        {
+            return 30f;
+        }
+        else if(currentzoomlevel >= 18)
+        {
+            return 30f;
+        }
+        else if(currentzoomlevel >= 16)
+        {
+            return 50f;
+        }
+        else if(currentzoomlevel >= 15)
+        {
+            return 100f;
+        }
+        else if(currentzoomlevel >= 14)
+        {
+            return 300f;
+        }
+        else if(currentzoomlevel >= 13)
+        {
+            return 400f;
+        }
+        else if(currentzoomlevel >= 12)
+        {
+            return 500f;
+        }
+        else if(currentzoomlevel >= 11)
+        {
+            return 600f;
+        }
+        else if(currentzoomlevel >= 10)
+        {
+            return 700f;
+        }
+        return 500f;
+        /*float diff = (mgooglemap.getMaxZoomLevel() - mgooglemap.getCameraPosition().zoom);
+        if (diff < 3)
+            return radius;
+        if (diff < 3.7)
+            return radius * (diff / 2);
+        if (diff < 4.5)
+            return (radius * diff);
+        if (diff < 5.5)
+            return (radius * diff) * 1.5f;
+        if (diff < 7)
+            return (radius * diff) * 2f;
+        if (diff < 7.8)
+            return (radius * diff) * 3.5f;
+        if (diff < 8.5)
+            return (float) (radius * diff) * 5;
+        if (diff < 10)
+            return (radius * diff) * 10f;
+        if (diff < 12)
+            return (radius * diff) * 18f;
+        if (diff < 13)
+            return (radius * diff) * 28f;
+        if (diff < 16)
+            return (radius * diff) * 40f;
+        if (diff < 18)
+            return (radius * diff) * 60;
+        return (radius * diff) * 80;*/
+    }
+
+    protected ValueAnimator valueAnimate(float accuracy,long duration, ValueAnimator.AnimatorUpdateListener updateListener){
+        Log.d( "valueAnimate: ", "called");
+        ValueAnimator va = ValueAnimator.ofFloat(0,accuracy);
+        va.setDuration(duration);
+        va.addUpdateListener(updateListener);
+        va.setRepeatCount(ValueAnimator.INFINITE);
+        va.setRepeatMode(ValueAnimator.RESTART);
+        va.setStartDelay(200);
+        va.start();
+        return va;
+    }
+
+    private void addPulsatingEffect(){
+
+        try {
+            if(lastPulseAnimator != null)
+                lastPulseAnimator.cancel();
+
+            lastPulseAnimator = valueAnimate(getDisplayPulseRadius(), 3500,
+                    new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            if(mappulsatecircle != null)
+                                mappulsatecircle.setRadius((Float) animation.getAnimatedValue());
+                            else {
+                                mappulsatecircle = mgooglemap.addCircle(new CircleOptions()
+                                        .center(usercurrentlocation)
+                                        .radius((Float) animation.getAnimatedValue())
+                                        .strokeWidth(0)
+                                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
+
+                                userlocationcircle= mgooglemap.addCircle(new CircleOptions()
+                                        .center(usercurrentlocation)
+                                        .radius(15)
+                                        .strokeWidth(0)
+                                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.selectedimagehash)));
+                            }
+                            if(mappulsatecircle != null)
+                                mappulsatecircle.setCenter(usercurrentlocation);
+
+                            if(userlocationcircle != null)
+                                userlocationcircle.setCenter(usercurrentlocation);
+
+                        /*if(! isdatacomposing)
+                        {
+                            if(lastPulseAnimator != null)
+                                lastPulseAnimator.cancel();
+
+                            if(mappulsatecircle != null && mgooglemap != null)
+                            {
+                                mappulsatecircle.remove();
+                                mappulsatecircle=null;
+                            }
+                        }*/
+                        }
+                    });
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -1899,6 +2208,11 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         text_encryption.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         text_encryption.setVisibility(View.GONE);
         layout_encryptioninfo.setVisibility(View.GONE);
+        layout_locationanalytics.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        layout_phoneanalytics.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        layout_connection.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        layout_mediasummary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        layout_timeinformation.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
     }
 
     public void rotatecompass(int degree)
@@ -1923,7 +2237,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
         try
         {
-            Log.e("data",""+data +"date" +date +"satellitedata" +satellitedata );
             if(! data.trim().isEmpty() && (! satellitedata.equalsIgnoreCase(data)))
             {
                 satelliteslist.clear();
@@ -1944,13 +2257,87 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 }
                 satelliteadapter.notifyDataSetChanged();
             }
-
-            satellitedate=date;
-            satellitedata=data;
         }catch (Exception e)
         {
             e.printStackTrace();
         }
 
+        satellitedate=date;
+        satellitedata=data;
+    }
+
+    public void updatelinegraphwithposition(final LineChart chart, final ArrayList<Entry> valuesarray, final int mediarunningpercentage, final verticalseekbar vertical_seekbar)
+    {
+        if (chart.getData() != null &&  chart.getData().getDataSetCount() > 0)
+        {
+            final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+            set1.setValues(valuesarray);
+            set1.notifyDataSetChanged();
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    int totalsize=set1.getEntryCount();
+                    int selectedchartposition = (mediarunningpercentage * totalsize) / 100;
+                    Log.e("selectedchartposition",""+selectedchartposition);
+
+                    int count = 0;
+
+                    if(selectedchartposition <= set1.getEntryCount())
+                    {
+                        for(int i=0;i<set1.getEntryCount();i++)
+                            set1.getEntryForIndex(i).setIcon(null);
+
+                        count =  set1.getEntryCount();
+                        Log.e("count",""+count);
+                        if (count != 1) {
+                            if(selectedchartposition ==set1.getEntryCount())
+                                selectedchartposition = selectedchartposition-1;
+
+                            final int finalSelectedchartposition = selectedchartposition;
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    /*Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
+                                    chart.highlightValue(high, false);*/
+
+                                    if(finalSelectedchartposition <=39){
+                                        chart.moveViewToX(set1.getEntryForIndex(0).getX());
+                                    }else{
+                                        chart.moveViewToX(set1.getEntryForIndex(finalSelectedchartposition -39).getX());
+                                    }
+                                }
+                            });
+
+
+
+                            set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
+                                    R.drawable.blue_black_ball));
+                        }
+                    }
+                    final int finalCount = count;
+                    final int finalSelectedchartposition1 = selectedchartposition;
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            //chart.invalidate();
+                            if(finalCount != 1){
+                                if(vertical_seekbar.getVisibility() == View.VISIBLE)
+                                    vertical_seekbar.setVisibility(View.GONE);
+                            }else{
+                                vertical_seekbar.setVisibility(View.VISIBLE);
+                                float sizey = set1.getEntryForIndex(finalSelectedchartposition1).getY();
+                                updateverticalsliderlocationdata(Float.toString(sizey),vertical_seekbar);
+                            }
+
+                        }
+                    });
+                }
+            }).start();
+        }
     }
 }
