@@ -3,20 +3,26 @@ package com.deeptruth.app.android.activity;
 import android.app.Dialog;
 import android.arch.lifecycle.Lifecycle;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.android.billingclient.api.Purchase;
+import com.android.vending.billing.IInAppBillingService;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
@@ -40,6 +48,7 @@ import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
+import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.interfaces.homepressedlistener;
 import com.deeptruth.app.android.netutils.connectivityreceiver;
@@ -47,13 +56,16 @@ import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
 import com.deeptruth.app.android.netutils.xapipostjson;
 import com.deeptruth.app.android.netutils.xapipostfile;
-import com.deeptruth.app.android.utils.appdialog;
+import com.deeptruth.app.android.inapputils.IabBroadcastReceiver;
+import com.deeptruth.app.android.inapputils.IabHelper;
+import com.deeptruth.app.android.inapputils.IabResult;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.homewatcher;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
+import com.goodiebag.pinview.Pinview;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,6 +92,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     String mediatype = "";
     String mediavideotoken = "",mediamethod = "";
 
+    // The helper object
+    IabHelper mHelper;
+
+    // Debug tag, for logging
+    final String TAG = "TestInApp";
+    String SelectedSku = "";
+    //String SKU_ID="com.matraex.xapi.hackcheck.inapp.credits";
+    //String ItemApple = "android.test.purchased";
+
+    // Provides purchase notification while this app is running
+    IabBroadcastReceiver mBroadcastReceiver;
+
+    String Base64Key="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkeYT6cIVSzimdAdqOBYjDawrRzLzKLXhcsPquXMb+ICvc9aPCGE5txPbYCNkuK72lTGYfGYUBgJqCItyEE0LDLi49YZQKPbcwf8Zs13L0X9Lnrw0lDdWhoN815+Z5YZ4ZfZ0KXxJU3gvpfg8vroYf3twEH87XTp13+lNHuUecj7djJy8N+oV0x0XAb3JlfZ1JoDaQuQ6Sry+0Ab8AIPHwWBLtnAPjE+m1RTD5PXFHQCSf7jiBvSJb6JkzvM0EDiwBE1YuW9BM7iPcqY4jgW0qyDfUzdwG+tV1durLw0qr7/VN7P7TCYt2mYBrRBc+vE0Xini5Fw47o3+e3C0O3LiVwIDAQAB";
+
+    IInAppBillingService mService;
+    ServiceConnection mServiceConn;
+    Bundle skuDetails;
 
     public boolean isisapprunning() {
         return isapprunning;
@@ -129,6 +158,110 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
         mHomeWatcher.startWatch();
 
+
+        mHelper = new IabHelper(baseactivity.this, Base64Key.trim());
+
+        mHelper.startSetup(new
+                                   IabHelper.OnIabSetupFinishedListener() {
+                                       public void onIabSetupFinished(IabResult result)
+                                       {
+                                           if (!result.isSuccess()) {
+                                               Log.d(TAG, "In-app Billing setup failed: " +
+                                                       result);
+                                           } else {
+                                               Log.d(TAG, "In-app Billing is set up OK");
+                                           }
+                                       }
+                                   });
+
+        mServiceConn = new ServiceConnection() {
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mService = null;
+            }
+
+            @Override
+            public void onServiceConnected(ComponentName name,IBinder service) {
+                mService = IInAppBillingService.Stub.asInterface(service);
+            }
+        };
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+
+    }
+
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+        @Override
+        public void onIabPurchaseFinished(IabResult result, com.deeptruth.app.android.inapputils.Purchase info) {
+
+        }
+
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+            Log.d(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
+
+            /*if (result.isFailure()) {
+                return;
+            }*/
+
+            switch (result.getResponse())
+            {
+                /*case 0:
+                    ConfigUtil.configaction("alert|"+result.getMessage());
+                    break;
+                case 1:
+                    ConfigUtil.configaction("alert|"+result.getMessage());
+                    break;
+                case 2:
+                    ConfigUtil.configaction("alert|"+result.getMessage());
+                    break;
+                case 3:
+                    configutil.configaction("alert|"+result.getMessage());
+                    break;
+                case 4:
+                {
+                    String message=xData.getInstance().getSetting("inapppurchase_invalidproduct_message");
+                    message=message.replaceAll("PRODUCT",SelectedSku);
+                    ConfigUtil.configaction("alert|"+message);
+                }
+                break;
+                case 5:
+                    ConfigUtil.configaction("alert|"+result.getMessage());
+                    break;
+                case 6:
+                    ConfigUtil.configaction("alert|"+result.getMessage());
+                    break;
+                case 7:
+                    ConfigUtil.configaction("alert|"+result.getMessage());
+                    break;
+                case 8:
+                    ConfigUtil.configaction("alert|"+result.getMessage());
+                    break;*/
+            }
+
+
+            // Response code 7 => item already purchased
+        }
+    };
+
+
+    public void inappPurchase(final String productId)
+    {
+        SelectedSku=productId;
+        if (mHelper != null)
+            mHelper.flagEndAsync();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    mHelper.launchPurchaseFlow(baseactivity.this, productId, 10001,
+                            mPurchaseFinishedListener, "mypurchasetoken");
+                } catch (IabHelper.IabAsyncInProgressException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -562,8 +695,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 if(common.getapppaidlevel() <= 0)
                 {
                     //showtrimfeaturealert();
-                    appdialog.showinapppurchasepopup(applicationviavideocomposer.
-                            getactivity(),applicationviavideocomposer.getactivity().getResources().getString(R.string.sharing_a_trimmed_video),null);
+                    showinapppurchasepopup(applicationviavideocomposer.
+                            getactivity(), applicationviavideocomposer.getactivity().getResources().
+                            getString(R.string.sharing_a_trimmed_video), new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+                            //inappPurchase(object.toString());
+                        }
+
+                        @Override
+                        public void onItemClicked(Object object, int type) {
+
+                        }
+                    });
                     return;
                 }
 
@@ -600,6 +744,97 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
             });
             subdialogshare.show();
+    }
+
+    public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
+    {
+        final Dialog dialog =new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_inapppurchase_options);
+
+        TextView txt_purchase1 = (TextView) dialog.findViewById(R.id.txt_purchase1);
+        TextView txt_purchase2 = (TextView) dialog.findViewById(R.id.txt_purchase2);
+        TextView TxtPositiveButton = (TextView) dialog.findViewById(R.id.tv_positive);
+        TextView txt_message = (TextView) dialog.findViewById(R.id.txt_message);
+        ImageView img_cancelicon = (ImageView) dialog.findViewById(R.id.img_cancelicon);
+        final Pinview pinview = (Pinview) dialog.findViewById(R.id.pinview);
+
+        txt_message.setText(message);
+        TxtPositiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(pinview.getValue().trim().length() >= 6)
+                {
+
+                    HashMap<String,String> requestparams=new HashMap<>();
+                    requestparams.put("code",pinview.getValue().trim());
+                    requestparams.put("action","appunlockcode_use");
+                    progressdialog.showwaitingdialog(baseactivity.this);
+                    xapipost_send(baseactivity.this,requestparams, new apiresponselistener() {
+                        @Override
+                        public void onResponse(taskresult response) {
+                            progressdialog.dismisswaitdialog();
+                            if(response.isSuccess())
+                            {
+                                try {
+                                    JSONObject object=new JSONObject(response.getData().toString());
+                                    if(object.has("success"))
+                                    {
+                                        if(object.has("message"))
+                                            Toast.makeText(baseactivity.this, object.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    Toast.makeText(baseactivity.this, "Please enter 6 digit code!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        txt_purchase1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if(mitemclick != null)
+                    mitemclick.onItemClicked("ABC");
+            }
+        });
+
+        txt_purchase2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+
+                if(mitemclick != null)
+                    mitemclick.onItemClicked("ABC");
+            }
+        });
+
+        img_cancelicon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     public void showtrimfeaturealert() {

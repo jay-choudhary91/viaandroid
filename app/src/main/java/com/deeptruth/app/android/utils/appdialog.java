@@ -180,40 +180,6 @@ public class appdialog
 
     }
 
-    public static void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick){
-
-        final Dialog dialog =new Dialog(activity);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.dialog_inapppurchase_options);
-
-        TextView TxtPositiveButton = (TextView) dialog.findViewById(R.id.tv_positive);
-        TextView txt_message = (TextView) dialog.findViewById(R.id.txt_message);
-        ImageView img_cancelicon = (ImageView) dialog.findViewById(R.id.img_cancelicon);
-
-        txt_message.setText(message);
-        TxtPositiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(dialog != null && dialog.isShowing())
-                    dialog.dismiss();
-            }
-        });
-
-        img_cancelicon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(dialog != null && dialog.isShowing())
-                    dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-
-    }
-
 
     public static void showcreatedirectorydialog(final Context activity, final adapteritemclick mitemclick){
 
