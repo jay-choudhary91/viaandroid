@@ -206,6 +206,7 @@
 
                         <View
                             android:layout_width="4dp"
+                            android:id="@+id/view_speedverticalline"
                             android:layout_height="70dp"
                             android:background="@color/white"
                             android:layout_marginLeft="12dp"
@@ -216,6 +217,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
+                        android:id="@+id/view_speedhorizontalline"
                         android:background="@color/white"
                         android:layout_marginLeft="14dp"
                         android:layout_marginRight="@dimen/margin_8dp"
@@ -276,6 +278,7 @@
 
                         <View
                             android:layout_width="4dp"
+                            android:id="@+id/vertical_travelledline"
                             android:layout_height="70dp"
                             android:background="@color/white"
                             android:layout_marginLeft="12dp"
@@ -286,6 +289,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
+                        android:id="@+id/horizontal_travelledline"
                         android:background="@color/white"
                         android:layout_marginLeft="14dp"
                         android:layout_marginRight="@dimen/margin_8dp"
@@ -345,6 +349,7 @@
 
                         <View
                             android:layout_width="4dp"
+                            android:id="@+id/vertical_altitudeline"
                             android:layout_height="70dp"
                             android:background="@color/white"
                             android:layout_marginLeft="12dp"
@@ -355,6 +360,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="3dp"
+                        android:id="@+id/horizontal_altitudeline"
                         android:background="@color/white"
                         android:layout_marginLeft="14dp"
                         android:layout_marginRight="@dimen/margin_8dp"

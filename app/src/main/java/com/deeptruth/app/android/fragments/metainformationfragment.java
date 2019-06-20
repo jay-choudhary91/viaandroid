@@ -325,6 +325,32 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     @BindView(R.id.layout_towerinfo)
     LinearLayout layout_towerinfo;
 
+    //view id's
+    @BindView(R.id.view_speedverticalline)
+    View view_speedverticalline;
+    @BindView(R.id.view_speedhorizontalline)
+    View view_speedhorizontalline;
+    @BindView(R.id.horizontal_travelledline)
+    View horizontal_travelledline;
+    @BindView(R.id.vertical_travelledline)
+    View vertical_travelledline;
+    @BindView(R.id.horizontal_altitudeline)
+    View horizontal_altitudeline;
+    @BindView(R.id.vertical_altitudeline)
+    View vertical_altitudeline;
+    @BindView(R.id.vertical_gpsline)
+    View vertical_gpsline;
+    @BindView(R.id.horizontal_gpsline)
+    View horizontal_gpsline;
+    @BindView(R.id.vertical_connectionline)
+    View vertical_connectionline;
+    @BindView(R.id.horizontal_connectionline)
+    View horizontal_connectionline;
+    @BindView(R.id.horizontal_datatimedelayline)
+    View horizontal_datatimedelayline;
+    @BindView(R.id.vertical_datatimedelayline)
+    View vertical_datatimedelayline;
+
 
     GoogleMap mgooglemap;
     private SensorManager msensormanager;
@@ -381,6 +407,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             world_time_clock_white.setVisibility(View.GONE);
 
             settextviewcolor();
+            setgraphviewlinecolor();
             layout_soundiformation.setVisibility(View.GONE);
 
             seekbar_mediavideoaudio.setEnabled(false);
@@ -2213,6 +2240,22 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         layout_connection.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         layout_mediasummary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         layout_timeinformation.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+    }
+
+    public void setgraphviewlinecolor(){
+        view_speedverticalline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        view_speedhorizontalline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        horizontal_travelledline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        vertical_travelledline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        horizontal_altitudeline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        vertical_altitudeline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        horizontal_gpsline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        vertical_gpsline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        horizontal_gpsline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        horizontal_connectionline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        vertical_connectionline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        horizontal_datatimedelayline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
+        vertical_datatimedelayline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.gray_x));
     }
 
     public void rotatecompass(int degree)
