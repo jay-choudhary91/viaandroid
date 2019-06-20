@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.deeptruth.app.android.adapter.inapppageradapter;
 import com.deeptruth.app.android.adapter.managementcontrolleradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
+import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.synclogmodel;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.views.customfonttextview;
@@ -117,6 +119,9 @@ public class synclogfragment extends basefragment implements View.OnClickListene
                 }
             }
 
+            txt_synced.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.synced_media)+" ("+synclist.size()+")");
+            txt_asynced.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.asynced_media)+" ("+asynclist.size()+")");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,14 +156,13 @@ public class synclogfragment extends basefragment implements View.OnClickListene
         ButterKnife.bind(this, rootView);
 
         txt_title_actionbar.setText("Logs");
-
         img_arrow_back.setOnClickListener(this);
         txt_synced.setOnClickListener(this);
         txt_asynced.setOnClickListener(this);
         resetButtonViews(txt_synced, txt_asynced);
 
         {
-            adapterSync = new adaptersynclogs(getActivity(),synclist,null);
+            adapterSync = new adaptersynclogs(getActivity(),synclist,mitemclick);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             rv_sync_list.setLayoutManager(mLayoutManager);
             rv_sync_list.addItemDecoration(new divideritemdecoration(applicationviavideocomposer.getactivity()));
@@ -167,7 +171,7 @@ public class synclogfragment extends basefragment implements View.OnClickListene
         }
 
         {
-            adapterAsync = new adaptersynclogs(getActivity(),asynclist,null);
+            adapterAsync = new adaptersynclogs(getActivity(),asynclist,mitemclick);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             rv_async_list.setLayoutManager(mLayoutManager);
             rv_async_list.addItemDecoration(new divideritemdecoration(applicationviavideocomposer.getactivity()));
@@ -187,13 +191,28 @@ public class synclogfragment extends basefragment implements View.OnClickListene
         return rootView;
     }
 
+    adapteritemclick mitemclick=new adapteritemclick() {
+        @Override
+        public void onItemClicked(Object object) {
+            synclogmodel model=(synclogmodel)object;
+            synclogdetailsfragment fragment=new synclogdetailsfragment();
+            fragment.setdata(model);
+            gethelper().addFragment(fragment, false, true);
+        }
+
+        @Override
+        public void onItemClicked(Object object, int type) {
+
+        }
+    };
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_syncloglist;
     }
 
     public void setlayoutmargin(){
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
         params.setMargins(0,0,0,navigationbarheight);
         layout_rootview.setLayoutParams(params);
         layout_rootview.requestLayout();

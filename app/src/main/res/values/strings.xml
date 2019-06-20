@@ -18,7 +18,8 @@
     <string name="txt_checkemail">Check your email and enter your code</string>
     <string name="complete">Complete</string>
     <string name="cancel">Cancel</string>
-    <string name="sound_information">SOUND INFORMATION</string>
+    <string name="synced_media">Synced Media</string>
+    <string name="asynced_media">Asynced Media</string>
 
     <string name="send_to">Send To</string>
     <string name="capture">CAPTURE</string>

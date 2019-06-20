@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="18dp"
+        android:background="@color/dark_blue_solid_a"
+        android:orientation="horizontal">
+
+        <include layout="@layout/actionbar_settings"></include>
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/sync_adapter_textview"
+                android:layout_weight="0.4"
+                android:text="Local Key"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Light"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_localkey"
+                style="@style/sync_adapter_textview"
+                android:layout_weight="0.6"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/sync_adapter_textview"
+                android:layout_weight="0.4"
+                android:text="Total frames"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Light"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_totalframes"
+                style="@style/sync_adapter_textview"
+                android:layout_weight="0.6"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/sync_adapter_textview"
+                android:layout_weight="0.4"
+                android:text="Synced frames"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Light"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_syncedframes"
+                style="@style/sync_adapter_textview"
+                android:layout_weight="0.6"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/sync_adapter_textview"
+                android:layout_weight="0.4"
+                android:text="Async frames"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Light"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_asyncedframes"
+                style="@style/sync_adapter_textview"
+                android:layout_weight="0.6"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
