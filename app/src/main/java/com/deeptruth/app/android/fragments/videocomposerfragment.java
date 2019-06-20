@@ -71,6 +71,7 @@ import com.deeptruth.app.android.models.wavevisualizer;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.services.insertmediadataservice;
 import com.deeptruth.app.android.utils.CenteredImageSpan;
+import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.camerautil;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -1208,10 +1209,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void showvideorecordlengthalert() {
         try
         {
-            new AlertDialog.Builder(getActivity(), R.style.customdialogtheme)
+            appdialog.showinapppurchasepopup(applicationviavideocomposer.getactivity(),"Recording is limited to "+ xdata.getinstance().getSetting(xdata.unpaid_video_record_length)+" seconds" +
+                    " in the basic version. Upgrade",null);
+
+            /*new AlertDialog.Builder(getActivity(), R.style.customdialogtheme)
                     .setTitle("Alert")
                     .setMessage("Recording is limited to "+ xdata.getinstance().getSetting(xdata.unpaid_video_record_length)+" seconds" +
-                            " in the basic version.")
+                            " in the basic version. Upgrade")
                     .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -1219,7 +1223,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 dialog.dismiss();
                         }
                     })
-                    .show();
+                    .show();*/
         }catch (Exception e)
         {
             e.printStackTrace();

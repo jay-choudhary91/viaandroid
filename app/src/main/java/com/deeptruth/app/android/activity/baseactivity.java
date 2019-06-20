@@ -47,6 +47,7 @@ import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
 import com.deeptruth.app.android.netutils.xapipostjson;
 import com.deeptruth.app.android.netutils.xapipostfile;
+import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.homewatcher;
@@ -560,7 +561,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 if(common.getapppaidlevel() <= 0)
                 {
-                    showtrimfeaturealert();
+                    //showtrimfeaturealert();
+                    appdialog.showinapppurchasepopup(applicationviavideocomposer.
+                            getactivity(),"Sharing a trimmed version is an advanced feature. Upgrade",null);
                     return;
                 }
 
