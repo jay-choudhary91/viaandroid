@@ -141,8 +141,8 @@ public class visualizerview extends FrameLayout {
     private void drawBar(int volume) {
         for (int i = 0; i < mNumColumns; i++) {
             float height = getRandomHeight(volume);
-            float left = i * mColumnWidth + mSpace;
-            float right = (i + 1) * mColumnWidth - mSpace;
+            float left = i * mColumnWidth + 0;
+            float right = (i + 1) * mColumnWidth - 0;
 
             RectF rect = createRectF(left, right, height);
             mPaint.setShader(new LinearGradient(height, 0, 0, 0, colors, null, Shader.TileMode.MIRROR));

@@ -204,6 +204,7 @@ public class config {
     public static final String color_code_white_transparent ="#50a9a9a9";
     public static final String color_code_transparent ="#00000000";
     public static final String color_code_white="#ffffff";
+    public static final String color_code_blue="#0000FF";
 
     public static final String color_code_drawer_location="00a0dc";
     public static final String color_code_drawer_time="00aaa0";

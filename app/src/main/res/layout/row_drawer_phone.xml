@@ -148,7 +148,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
                         android:layout_marginTop="5dp"
-                        android:layout_marginBottom="@dimen/margin_15dp"
+                        android:layout_marginBottom="-5dp"
                         android:gravity="center_horizontal"
                         android:textColor="@color/white"
                         android:text="Memory Usage"/>
@@ -187,7 +187,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
                         android:layout_marginTop="5dp"
-                        android:layout_marginBottom="@dimen/margin_15dp"
+                        android:layout_marginBottom="-5dp"
                         android:textColor="@color/white"
                         android:gravity="center_horizontal"
                         android:text="CPU Usage"/>
@@ -225,7 +225,7 @@
                         android:textSize="12sp"
                         android:layout_alignParentTop="true"
                         android:layout_marginTop="5dp"
-                        android:layout_marginBottom="@dimen/margin_15dp"
+                        android:layout_marginBottom="-5dp"
                         android:textColor="@color/white"
                         android:gravity="center_horizontal"
                         android:text="Battery"/>

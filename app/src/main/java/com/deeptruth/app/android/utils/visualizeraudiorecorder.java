@@ -32,7 +32,7 @@ public class visualizeraudiorecorder extends View {
     private List<Float> amplitudes; // amplitudes for line lengths
     private int width; // width of this View
     private int height; // height of this View
-    private Paint linePaint; // specifies line drawing characteristics
+    private Paint linePainttop,linePaintbottom; // specifies line drawing characteristics
     private Context context;
     private boolean iscolorchange=false;
 
@@ -40,13 +40,22 @@ public class visualizeraudiorecorder extends View {
     public visualizeraudiorecorder(Context context, AttributeSet attrs) {
         super(context, attrs); // call superclass constructor
         this.context=context;
-        linePaint = new Paint(); // create Paint for lines
-        linePaint.setColor(getResources().getColor(R.color.wave_color)); // set color to green
+        linePainttop = new Paint(); // create Paint for lines
+        linePaintbottom = new Paint(); // create Paint for lines
         LINE_SCALE=common.convertDpToPixel(8,context);
-        linePaint.setAlpha(255);
-        linePaint.setStrokeWidth(LINE_WIDTH); // set stroke width
+
+
+        linePainttop.setColor(getResources().getColor(R.color.wave_color)); // set color to green
+        linePainttop.setAlpha(255);
+        linePainttop.setStrokeWidth(LINE_WIDTH); // set stroke width
         //linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        linePaint.setPathEffect(new DashPathEffect(new float[]{LINE_WIDTH,2},2));
+        linePainttop.setPathEffect(new DashPathEffect(new float[]{LINE_WIDTH,2},2));
+
+        linePaintbottom.setColor(getResources().getColor(R.color.wave_color)); // set color to green
+        linePaintbottom.setAlpha(255);
+        linePaintbottom.setStrokeWidth(LINE_WIDTH); // set stroke width
+        //linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        linePaintbottom.setPathEffect(new DashPathEffect(new float[]{LINE_WIDTH,2},2));
         // If we don't render in software mode, the dotted line becomes a solid line.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -60,11 +69,7 @@ public class visualizeraudiorecorder extends View {
         height = h; // new height of this View
 
         LINE_SCALE=common.convertDpToPixel(4,context);
-        Log.e("LINE_SCALEheight",""+LINE_SCALE);
         amplitudes = new ArrayList<Float>(width / LINE_WIDTH);
-
-        Log.e("Amplitudevalue=",""+(width / LINE_WIDTH));
-        Log.e("Amplitudevalue=",""+width);
 
     }
 
@@ -92,40 +97,32 @@ public class visualizeraudiorecorder extends View {
     @Override
     public void onDraw(Canvas canvas) {
         int middle = height / 2; // get the middle of the View
+
         float curX = 0; // start curX at zero
         // for each item in the amplitudes ArrayList
         for (float power : amplitudes) {
             float scaledHeight = power / LINE_SCALE; // scale the power
             curX += LINE_WIDTH+2; // increase X by LINE_WIDTH
 
-            if(iscolorchange)
-            {
-                Shader shader = new LinearGradient(curX, middle + scaledHeight / 1, curX, middle
-                        - scaledHeight / 1, new int[]{
-                        ContextCompat.getColor(context, R.color.visualizer_primary),
-                        ContextCompat.getColor(context, R.color.visualizer_primary),
-                        ContextCompat.getColor(context, R.color.visualizer_primary),
-                        ContextCompat.getColor(context, R.color.visualizer_primary),
-                        ContextCompat.getColor(context, R.color.visualizer_primary)},new float[]{0.2f,0.4f,0.5f,0.6f,0.8f}, Shader.TileMode.MIRROR /*or REPEAT*/);
-                linePaint.setShader(shader);
-                iscolorchange=false;
-            }
-            else
-            {
-                Shader shader = new LinearGradient(curX, middle + scaledHeight / 1, curX, middle
-                        - scaledHeight / 1, new int[]{
-                        ContextCompat.getColor(context, R.color.visualizer_secondary),
-                        ContextCompat.getColor(context, R.color.visualizer_secondary),
-                        ContextCompat.getColor(context, R.color.visualizer_secondary),
-                        ContextCompat.getColor(context, R.color.visualizer_secondary),
-                        ContextCompat.getColor(context, R.color.visualizer_secondary)},new float[]{0.2f,0.4f,0.5f,0.6f,0.8f}, Shader.TileMode.MIRROR /*or REPEAT*/);
-                linePaint.setShader(shader);
-                iscolorchange=true;
-            }
+                Shader shader = new LinearGradient(curX, (middle+10) + scaledHeight / 6, curX, (middle+10), new int[]{
+                        ContextCompat.getColor(context, R.color.visualizer_forthcolor),
+                        ContextCompat.getColor(context, R.color.visualizer_thiredcolor),
+                        ContextCompat.getColor(context, R.color.visualizer_secondcolor),
+                        ContextCompat.getColor(context, R.color.visualizer_firstcolor)
+                       },new float[]{0.2f,0.3f,0.5f,0.7f}, Shader.TileMode.MIRROR /*or REPEAT*/);
+            linePaintbottom.setShader(shader);
+
+                Shader shader1 = new LinearGradient(curX, middle-10 , curX, (middle-10)- scaledHeight / 6, new int[]{
+                        ContextCompat.getColor(context, R.color.visualizer_firstcolor),
+                        ContextCompat.getColor(context, R.color.visualizer_secondcolor),
+                        ContextCompat.getColor(context, R.color.visualizer_thiredcolor),
+                        ContextCompat.getColor(context, R.color.visualizer_forthcolor)},new float[]{0.2f,0.3f,0.5f,0.7f}, Shader.TileMode.MIRROR /*or REPEAT*/);
+            linePainttop.setShader(shader1);
 
             //linePaint.setPathEffect(new DashPathEffect(new float[] {5,5}, 5));
             // draw a line representing this item in the amplitudes ArrayList
-            canvas.drawLine(curX, middle + scaledHeight / 6, curX, middle- scaledHeight / 6, linePaint);
+            canvas.drawLine(curX, middle-10, curX, (middle-10)- scaledHeight / 6, linePaintbottom);
+            canvas.drawLine(curX, (middle+10) + scaledHeight / 6, curX, middle+10, linePainttop);
 
         }
     }

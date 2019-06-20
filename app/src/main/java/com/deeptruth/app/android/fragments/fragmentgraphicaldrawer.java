@@ -1510,7 +1510,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
 
             if(linecolor.trim().length() == 0)
-                linecolor="BLUE";
+                linecolor="blue";
 
             LatLng point = new LatLng(latitude,longitude);
             mappathoptions.add(point).color(Color.parseColor(common.getcolorbystring(linecolor)));

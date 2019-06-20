@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
@@ -24,6 +25,7 @@ import com.deeptruth.app.android.adapter.managementcontrolleradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.models.synclogmodel;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.deeptruth.app.android.views.divideritemdecoration;
 import com.github.mikephil.charting.utils.Utils;
@@ -47,10 +49,13 @@ public class synclogfragment extends basefragment implements View.OnClickListene
     customfonttextview txt_title_actionbar;
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
+    @BindView(R.id.layout_rootview)
+    LinearLayout layout_rootview;
 
     adaptersynclogs adapterSync,adapterAsync;
     ArrayList<synclogmodel> synclist=new ArrayList<>();
     ArrayList<synclogmodel> asynclist=new ArrayList<>();
+    int navigationbarheight = 0;
 
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
@@ -171,6 +176,8 @@ public class synclogfragment extends basefragment implements View.OnClickListene
         }
 
         getdata();
+        navigationbarheight =  common.getnavigationbarheight();
+        setlayoutmargin();
 
         adapterSync.notifyDataSetChanged();
         adapterAsync.notifyDataSetChanged();
@@ -185,5 +192,11 @@ public class synclogfragment extends basefragment implements View.OnClickListene
         return R.layout.fragment_syncloglist;
     }
 
+    public void setlayoutmargin(){
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,0,0,navigationbarheight);
+        layout_rootview.setLayoutParams(params);
+        layout_rootview.requestLayout();
+    }
 
 }
