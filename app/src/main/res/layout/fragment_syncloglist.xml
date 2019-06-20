@@ -29,11 +29,13 @@
             android:id="@+id/txt_synced"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Synced Media"
+            android:text="@string/synced_media"
             app:fontType="Comfortaa-Bold"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="5dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:background="@drawable/leftround_btn"
             android:layout_height="match_parent" />
 
@@ -41,11 +43,13 @@
             android:id="@+id/txt_asynced"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="Asynced Media"
+            android:text="@string/asynced_media"
             app:fontType="Comfortaa-Bold"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="5dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:background="@drawable/leftround_btn"
             android:layout_height="match_parent" />
 
@@ -55,12 +59,14 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_sync_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_async_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
 
 
 </LinearLayout>

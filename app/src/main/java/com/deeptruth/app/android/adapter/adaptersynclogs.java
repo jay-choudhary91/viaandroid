@@ -25,7 +25,7 @@ public class adaptersynclogs extends RecyclerView.Adapter<adaptersynclogs.myView
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView txt_token,txt_mediakey,txt_localkey,txt_mediatranid,txt_syncdate;
-
+        public LinearLayout layout_rootview;
         public myViewHolder(View view) {
             super(view);
             txt_token = (TextView) view.findViewById(R.id.txt_token);
@@ -33,6 +33,7 @@ public class adaptersynclogs extends RecyclerView.Adapter<adaptersynclogs.myView
             txt_localkey = (TextView) view.findViewById(R.id.txt_localkey);
             txt_mediatranid = (TextView) view.findViewById(R.id.txt_mediatranid);
             txt_syncdate = (TextView) view.findViewById(R.id.txt_syncdate);
+            layout_rootview = (LinearLayout) view.findViewById(R.id.layout_rootview);
         }
     }
 
@@ -65,6 +66,14 @@ public class adaptersynclogs extends RecyclerView.Adapter<adaptersynclogs.myView
         holder.txt_localkey.setText(""+mitemlist.get(position).getLocalkey());
         holder.txt_mediatranid.setText(""+mitemlist.get(position).getMediastarttransactionid());
         holder.txt_syncdate.setText(""+mitemlist.get(position).getSync_date());
+
+        holder.layout_rootview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mitemclick != null)
+                    mitemclick.onItemClicked(mitemlist.get(position));
+            }
+        });
     }
 
     @Override

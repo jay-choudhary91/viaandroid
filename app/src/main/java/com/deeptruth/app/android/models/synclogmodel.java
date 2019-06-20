@@ -11,6 +11,9 @@ public class synclogmodel
     public String localkey="";
     public String mediastarttransactionid="";
     public String sync_date="";
+    public int totalsequence=0;
+    public int syncedsequence=0;
+    public int asyncedsequence=0;
 
     public synclogmodel()
     {
@@ -28,9 +31,32 @@ public class synclogmodel
         setSync_date(sync_date);
     }
 
+    public int getTotalsequence() {
+        return totalsequence;
+    }
+
+    public void setTotalsequence(int totalsequence) {
+        this.totalsequence = totalsequence;
+    }
+
+    public int getSyncedsequence() {
+        return syncedsequence;
+    }
+
+    public void setSyncedsequence(int syncedsequence) {
+        this.syncedsequence = syncedsequence;
+    }
+
+    public int getAsyncedsequence() {
+        return asyncedsequence;
+    }
+
+    public void setAsyncedsequence(int asyncedsequence) {
+        this.asyncedsequence = asyncedsequence;
+    }
 
     public String getToken() {
-        return token;
+        return (token.trim().isEmpty())?"-":token;
     }
 
     public void setToken(String token) {
@@ -38,7 +64,7 @@ public class synclogmodel
     }
 
     public String getMediakey() {
-        return mediakey;
+        return (mediakey.trim().isEmpty())?"-":mediakey;
     }
 
     public void setMediakey(String mediakey) {
@@ -54,7 +80,7 @@ public class synclogmodel
     }
 
     public String getMediastarttransactionid() {
-        return mediastarttransactionid;
+        return (mediastarttransactionid.trim().isEmpty())?"-":mediastarttransactionid;
     }
 
     public void setMediastarttransactionid(String videostarttransactionid) {

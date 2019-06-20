@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="5dp"
+    android:id="@+id/layout_rootview"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -15,13 +16,13 @@
             style="@style/sync_adapter_textview"
             android:layout_weight="0.4"
             android:text="Token"
-            app:fontType="OpenSans_Regular"/>
+            app:fontType="Comfortaa-Light"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_token"
             style="@style/sync_adapter_textview"
             android:layout_weight="0.6"
-            app:fontType="OpenSans_Semibold"/>
+            app:fontType="Comfortaa-Regular"/>
 
     </LinearLayout>
 
@@ -34,13 +35,13 @@
             style="@style/sync_adapter_textview"
             android:layout_weight="0.4"
             android:text="Media Key"
-            app:fontType="OpenSans_Regular"/>
+            app:fontType="Comfortaa-Light"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_mediakey"
             style="@style/sync_adapter_textview"
             android:layout_weight="0.6"
-            app:fontType="OpenSans_Semibold"/>
+            app:fontType="Comfortaa-Regular"/>
 
     </LinearLayout>
 
@@ -53,13 +54,13 @@
             style="@style/sync_adapter_textview"
             android:layout_weight="0.4"
             android:text="Local Key"
-            app:fontType="OpenSans_Regular"/>
+            app:fontType="Comfortaa-Light"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_localkey"
             style="@style/sync_adapter_textview"
             android:layout_weight="0.6"
-            app:fontType="OpenSans_Semibold"/>
+            app:fontType="Comfortaa-Regular"/>
 
     </LinearLayout>
 
@@ -72,13 +73,13 @@
             style="@style/sync_adapter_textview"
             android:layout_weight="0.4"
             android:text="Transaction Id"
-            app:fontType="OpenSans_Regular"/>
+            app:fontType="Comfortaa-Light"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_mediatranid"
             style="@style/sync_adapter_textview"
             android:layout_weight="0.6"
-            app:fontType="OpenSans_Semibold"/>
+            app:fontType="Comfortaa-Regular"/>
 
     </LinearLayout>
 
@@ -92,13 +93,13 @@
             style="@style/sync_adapter_textview"
             android:layout_weight="0.4"
             android:text="Sync Date"
-            app:fontType="OpenSans_Regular"/>
+            app:fontType="Comfortaa-Light"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_syncdate"
             style="@style/sync_adapter_textview"
             android:layout_weight="0.6"
-            app:fontType="OpenSans_Semibold"/>
+            app:fontType="Comfortaa-Regular"/>
 
     </LinearLayout>
 

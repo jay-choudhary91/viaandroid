@@ -521,13 +521,13 @@ public class databasemanager {
         return  mCur;
     }
 
-    public Cursor getlocalkeycount(String localkey)
+    public Cursor getallmetadatabylocalkey(String localkey)
     {
         Cursor mCur=null;
         try {
             lock.lock();
 
-            String sql = "SELECT * FROM tblmetadata where localkey = '"+localkey;
+            String sql = "SELECT * FROM tblmetadata where localkey = '"+localkey+"'";
             //String sql = "SELECT * FROM tblmetadata";
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
