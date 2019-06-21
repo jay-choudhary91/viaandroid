@@ -343,8 +343,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     ArrayList<dbitemcontainer> dbstartitemcontainer =new ArrayList<>();
     ArrayList<dbitemcontainer> dbmiddleitemcontainer =new ArrayList<>();
     String hashvalue = "",metrichashvalue = "";
-    RelativeLayout layoutbottom,layout_seekbarzoom;
+    RelativeLayout layoutbottom,layout_seekbarzoom,layout_recorder;
     boolean isexpandview =false;
+
+
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
      */
@@ -1520,6 +1522,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
                 ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
                 getselectedmetrics(mlocalarraylist);
+                if(layout_recorder != null)
+                    layout_recorder.setClickable(true);
 
                 myhandler.postDelayed(this, 1000);
             }
@@ -1765,11 +1769,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public void setData(adapteritemclick madapterclick, RelativeLayout layoutbottom, RelativeLayout layout_seekbarzoom, FrameLayout framecontainer) {
+    public void setData(adapteritemclick madapterclick, RelativeLayout layoutbottom, RelativeLayout layout_seekbarzoom, FrameLayout framecontainer,RelativeLayout layout_recorder) {
         this.madapterclick = madapterclick;
         this.layoutbottom = layoutbottom;
         this.layout_seekbarzoom = layout_seekbarzoom;
         this.framecontainer = framecontainer;
+        this.layout_recorder = layout_recorder;
     }
 
     @Override
