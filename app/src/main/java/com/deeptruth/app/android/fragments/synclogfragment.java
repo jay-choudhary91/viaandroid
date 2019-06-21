@@ -131,8 +131,12 @@ public class synclogfragment extends basefragment implements View.OnClickListene
                                 String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
                                 String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
                                 String sync_date = "" + cursor.getString(cursor.getColumnIndex("sync_date"));
+                                String type = "" + cursor.getString(cursor.getColumnIndex("type"));
+                                String videostartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
+                                String videocompleteddevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
 
-                                synclogmodel model=new synclogmodel(token,mediakey,localkey,videostarttransactionid,sync_date);
+                                synclogmodel model=new synclogmodel(token,mediakey,localkey,videostarttransactionid,sync_date,type,
+                                        videocompleteddevicedate,videostartdevicedate);
                                 if(sync_date.trim().length() == 0 || sync_date.equalsIgnoreCase("0"))
                                     asynclist.add(model);
                                 else
