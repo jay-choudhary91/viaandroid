@@ -1514,10 +1514,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             LatLng point = new LatLng(latitude,longitude);
             mappathoptions.add(point).color(Color.parseColor(common.getcolorbystring(linecolor)));
+
+            if(mgooglemap != null)
+                mgooglemap.addPolyline(mappathoptions);
         }
 
-        if(mgooglemap != null)
-            mgooglemap.addPolyline(mappathoptions);
+
 
         // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
 
