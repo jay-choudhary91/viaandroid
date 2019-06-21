@@ -87,9 +87,8 @@ dependencies {
     implementation 'com.github.Akashkamble:RevealSwitch:1.0.1'
     implementation 'ru.egslava:MaskedEditText:1.0.5'
     implementation 'com.facebook.network.connectionclass:connectionclass:1.0.1'
-    implementation 'com.github.GoodieBag:Pinview:v1.3'
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
-    implementation 'com.android.billingclient:billing:1.0'
+    implementation 'com.android.billingclient:billing:2.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
 

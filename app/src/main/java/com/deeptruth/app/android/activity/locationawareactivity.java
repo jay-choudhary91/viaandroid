@@ -318,8 +318,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             mOrientation = new Orientation(this);
             registerallbroadcast();
             getconnectionspeed();
-        } else {
-            startmetrices();
         }
     }
 
@@ -1058,7 +1056,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     (xdata.getinstance().getSetting(config.item_satellitesdate).trim().isEmpty())) {
                                 servermetricsgetupdatecounter = 0;
                                 currentsatellitecounter++;
-                                getsistermetric();
+                                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                                    getsistermetric();
                             }
 
                             currenttowercounter++;
@@ -1730,6 +1729,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         super.onResume();
         if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
             getallpermissions();
+        else if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            startmetrices();
     }
 
     @Override
@@ -1801,7 +1802,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         {
                             // xAxis is between 0-90
                             xAngle=Math.abs(xAngle);
-                            Log.e("Case ","Case1");
                         }
                         else if(xAngle >= -90 && xAngle <= 0 && yAngle >= -90 && yAngle <= -1)
                         {
@@ -1809,14 +1809,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             xAngle=Math.abs(xAngle);
                             xAngle=(90-xAngle);
                             xAngle=90+xAngle;
-                            Log.e("Case ","Case2");
                         }
                         else if(xAngle >= 0 && xAngle <= 90 && yAngle >= -90 && yAngle <= 0)
                         {
                             // xAxis is between 180-270
                             xAngle=Math.abs(xAngle);
                             xAngle=xAngle+180;
-                            Log.e("Case ","Case3");
                         }
                         else if(xAngle > 0 && xAngle <= 90 && yAngle > 0 && yAngle <= 90)
                         {
@@ -1824,7 +1822,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             xAngle=Math.abs(xAngle);
                             //xAngle=(90-xAngle);
                             //xAngle=270+xAngle;
-                            Log.e("Case ","Case4");
                         }
 
                         xAngle=Math.abs(xAngle);

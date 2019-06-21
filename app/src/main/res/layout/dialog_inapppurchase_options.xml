@@ -98,15 +98,15 @@
             android:background="@drawable/roundcorner_payment_option_btn"/>
 
 
-        <com.goodiebag.pinview.Pinview
+        <com.deeptruth.app.android.utils.pinviewtext
             android:id="@+id/pinview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cursorVisible="false"
             app:forceKeyboard="false"
-            app:hint="0"
+            app:hint=""
             android:layout_marginTop="10dp"
-            app:inputType="number"
+            app:inputType="text"
             app:password="false"
             app:splitWidth="10dp"
             app:pinBackground="@drawable/roundcorner_payment_option_btn"

@@ -51,6 +51,7 @@ import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.utils.noise;
@@ -282,6 +283,7 @@ public abstract class basefragment extends Fragment {
         public void showsharepopupsub(String path,String type,String videotoken);
         public void xapi_uploadfile(Context mContext,String serverurl,String filepath,apiresponselistener mListener);
         public void setsoundwaveinformation(int ampletudevalue ,int decibelvalue);
+        public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick);
 
     }
 

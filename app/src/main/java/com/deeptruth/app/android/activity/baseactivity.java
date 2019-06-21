@@ -59,13 +59,13 @@ import com.deeptruth.app.android.netutils.xapipostfile;
 import com.deeptruth.app.android.inapputils.IabBroadcastReceiver;
 import com.deeptruth.app.android.inapputils.IabHelper;
 import com.deeptruth.app.android.inapputils.IabResult;
+import com.deeptruth.app.android.utils.pinviewtext;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.homewatcher;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
-import com.goodiebag.pinview.Pinview;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -158,37 +158,41 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
         mHomeWatcher.startWatch();
 
+        try
+        {
+            mHelper = new IabHelper(baseactivity.this, Base64Key.trim());
 
-        mHelper = new IabHelper(baseactivity.this, Base64Key.trim());
-
-        mHelper.startSetup(new
-                                   IabHelper.OnIabSetupFinishedListener() {
-                                       public void onIabSetupFinished(IabResult result)
-                                       {
-                                           if (!result.isSuccess()) {
-                                               Log.d(TAG, "In-app Billing setup failed: " +
-                                                       result);
-                                           } else {
-                                               Log.d(TAG, "In-app Billing is set up OK");
+            mHelper.startSetup(new
+                                       IabHelper.OnIabSetupFinishedListener() {
+                                           public void onIabSetupFinished(IabResult result)
+                                           {
+                                               if (!result.isSuccess()) {
+                                                   Log.d(TAG, "In-app Billing setup failed: " +
+                                                           result);
+                                               } else {
+                                                   Log.d(TAG, "In-app Billing is set up OK");
+                                               }
                                            }
-                                       }
-                                   });
+                                       });
 
-        mServiceConn = new ServiceConnection() {
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mService = null;
-            }
+            mServiceConn = new ServiceConnection() {
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    mService = null;
+                }
 
-            @Override
-            public void onServiceConnected(ComponentName name,IBinder service) {
-                mService = IInAppBillingService.Stub.asInterface(service);
-            }
-        };
-        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
-
+                @Override
+                public void onServiceConnected(ComponentName name,IBinder service) {
+                    mService = IInAppBillingService.Stub.asInterface(service);
+                }
+            };
+            Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+            serviceIntent.setPackage("com.android.vending");
+            bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
@@ -245,7 +249,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     };
 
 
-    public void inappPurchase(final String productId)
+    public void inapppurchase(final String productId)
     {
         SelectedSku=productId;
         if (mHelper != null)
@@ -255,8 +259,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void run() {
                 try {
-                    mHelper.launchPurchaseFlow(baseactivity.this, productId, 10001,
-                            mPurchaseFinishedListener, "mypurchasetoken");
+                    /*mHelper.launchPurchaseFlow(baseactivity.this, productId, 10001,
+                            mPurchaseFinishedListener, "mypurchasetoken");*/
+                    mHelper.launchPurchaseFlow(baseactivity.this, "android.test.purchased", 10001,
+                            mPurchaseFinishedListener, "purchasetoken");
+
                 } catch (IabHelper.IabAsyncInProgressException e) {
                     e.printStackTrace();
                 }
@@ -316,6 +323,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         super.onDestroy();
         if (mHomeWatcher != null)
             mHomeWatcher.stopWatch();
+
+        try {
+            if(mServiceConn != null)
+                unbindService(mServiceConn);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void initviews(Bundle savedInstanceState) {
@@ -700,7 +715,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             getString(R.string.sharing_a_trimmed_video), new adapteritemclick() {
                         @Override
                         public void onItemClicked(Object object) {
-                            //inappPurchase(object.toString());
+                            inapppurchase(object.toString());
                         }
 
                         @Override
@@ -760,7 +775,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView TxtPositiveButton = (TextView) dialog.findViewById(R.id.tv_positive);
         TextView txt_message = (TextView) dialog.findViewById(R.id.txt_message);
         ImageView img_cancelicon = (ImageView) dialog.findViewById(R.id.img_cancelicon);
-        final Pinview pinview = (Pinview) dialog.findViewById(R.id.pinview);
+        final pinviewtext pinview = (pinviewtext) dialog.findViewById(R.id.pinview);
 
         txt_message.setText(message);
         TxtPositiveButton.setOnClickListener(new View.OnClickListener() {
