@@ -33,7 +33,7 @@ public class applicationviavideocomposer extends Application {
         //common.setting_check(xdata.xapi_url, "http://prod.api.deeptruth.com/xapi.php?");  // Make changes on 2019-06-03 (videolock production)
         common.setting_check(xdata.app_paid_level, "0");
         common.setting_check(xdata.developer_mode, "0");// 0 - false, 1 - true
-        common.setting_check(xdata.unpaid_video_record_length, "300");
+        common.setting_check(xdata.unpaid_video_record_length, "1800");
 
         common.setting_check(config.enabledevelopment, "1");
         common.setting_check(config.enableproduction, "0");
