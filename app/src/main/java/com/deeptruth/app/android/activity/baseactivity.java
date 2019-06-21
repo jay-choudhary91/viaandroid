@@ -59,13 +59,13 @@ import com.deeptruth.app.android.netutils.xapipostfile;
 import com.deeptruth.app.android.inapputils.IabBroadcastReceiver;
 import com.deeptruth.app.android.inapputils.IabHelper;
 import com.deeptruth.app.android.inapputils.IabResult;
+import com.deeptruth.app.android.utils.pinviewtext;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.homewatcher;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
-import com.goodiebag.pinview.Pinview;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -255,8 +255,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void run() {
                 try {
-                    mHelper.launchPurchaseFlow(baseactivity.this, productId, 10001,
-                            mPurchaseFinishedListener, "mypurchasetoken");
+                    /*mHelper.launchPurchaseFlow(baseactivity.this, productId, 10001,
+                            mPurchaseFinishedListener, "mypurchasetoken");*/
+                    mHelper.launchPurchaseFlow(baseactivity.this, "android.test.purchased", 10001,
+                            mPurchaseFinishedListener, "purchasetoken");
+
                 } catch (IabHelper.IabAsyncInProgressException e) {
                     e.printStackTrace();
                 }
@@ -760,7 +763,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView TxtPositiveButton = (TextView) dialog.findViewById(R.id.tv_positive);
         TextView txt_message = (TextView) dialog.findViewById(R.id.txt_message);
         ImageView img_cancelicon = (ImageView) dialog.findViewById(R.id.img_cancelicon);
-        final Pinview pinview = (Pinview) dialog.findViewById(R.id.pinview);
+        final pinviewtext pinview = (pinviewtext) dialog.findViewById(R.id.pinview);
 
         txt_message.setText(message);
         TxtPositiveButton.setOnClickListener(new View.OnClickListener() {

@@ -18,7 +18,6 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
-import com.goodiebag.pinview.Pinview;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

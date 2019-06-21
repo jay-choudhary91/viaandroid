@@ -14,11 +14,11 @@ import android.widget.Toast;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.pinviewnumeric;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfonttextview;
-import com.goodiebag.pinview.Pinview;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 public class fragmentverifyuser extends registrationbasefragment implements View.OnClickListener {
 
     @BindView(R.id.pinview)
-    Pinview pinview;
+    pinviewnumeric pinview;
     @BindView(R.id.tv_complete)
     customfonttextview tvcomplete;
     @BindView(R.id.tv_cancel)
@@ -73,9 +73,9 @@ public class fragmentverifyuser extends registrationbasefragment implements View
 
             tvcomplete.setOnClickListener(this);
             tvcancel.setOnClickListener(this);
-            pinview.setPinViewEventListener(new Pinview.PinViewEventListener() {
+            pinview.setPinViewEventListener(new pinviewnumeric.PinViewEventListener() {
                 @Override
-                public void onDataEntered(Pinview pinview, boolean fromUser) {
+                public void onDataEntered(pinviewnumeric pinview, boolean fromUser) {
                    getHelper().hidekeyboard();
                 }
             });
