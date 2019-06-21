@@ -162,17 +162,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         mHelper = new IabHelper(baseactivity.this, Base64Key.trim());
 
         mHelper.startSetup(new
-                                   IabHelper.OnIabSetupFinishedListener() {
-                                       public void onIabSetupFinished(IabResult result)
-                                       {
-                                           if (!result.isSuccess()) {
-                                               Log.d(TAG, "In-app Billing setup failed: " +
-                                                       result);
-                                           } else {
-                                               Log.d(TAG, "In-app Billing is set up OK");
-                                           }
-                                       }
-                                   });
+           IabHelper.OnIabSetupFinishedListener() {
+               public void onIabSetupFinished(IabResult result)
+               {
+                   if (!result.isSuccess()) {
+                       Log.d(TAG, "In-app Billing setup failed: " +
+                               result);
+                   } else {
+                       Log.d(TAG, "In-app Billing is set up OK");
+                   }
+               }
+           });
 
         mServiceConn = new ServiceConnection() {
             @Override
@@ -245,7 +245,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     };
 
 
-    public void inappPurchase(final String productId)
+    public void inapppurchase(final String productId)
     {
         SelectedSku=productId;
         if (mHelper != null)
@@ -700,7 +700,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             getString(R.string.sharing_a_trimmed_video), new adapteritemclick() {
                         @Override
                         public void onItemClicked(Object object) {
-                            //inappPurchase(object.toString());
+                            inapppurchase(object.toString());
                         }
 
                         @Override
