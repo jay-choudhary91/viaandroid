@@ -35,12 +35,25 @@ public class synclogdetailsfragment extends basefragment implements View.OnClick
 
     @BindView(R.id.txt_localkey)
     TextView txt_localkey;
+    @BindView(R.id.txt_type)
+    TextView txt_type;
+    @BindView(R.id.txt_mediakey)
+    TextView txt_mediakey;
     @BindView(R.id.txt_totalframes)
     TextView txt_totalframes;
     @BindView(R.id.txt_syncedframes)
     TextView txt_syncedframes;
     @BindView(R.id.txt_asyncedframes)
     TextView txt_asyncedframes;
+    @BindView(R.id.txt_mediastartdate)
+    TextView txt_mediastartdate;
+    @BindView(R.id.txt_mediacompleteddate)
+    TextView txt_mediacompleteddate;
+    @BindView(R.id.txt_transactionid)
+    TextView txt_transactionid;
+    @BindView(R.id.txt_token)
+    TextView txt_token;
+
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
     @BindView(R.id.txt_title_actionbarcomposer)
@@ -130,6 +143,12 @@ public class synclogdetailsfragment extends basefragment implements View.OnClick
         if(syncmodel != null)
         {
             txt_localkey.setText(syncmodel.getLocalkey());
+            txt_type.setText(syncmodel.getType().toUpperCase());
+            txt_mediakey.setText(syncmodel.getMediakey());
+            txt_mediastartdate.setText(syncmodel.getMediastartdevicedate());
+            txt_mediacompleteddate.setText(syncmodel.getMediacompleteddevicedate());
+            txt_transactionid.setText(syncmodel.getMediastarttransactionid());
+            txt_token.setText(syncmodel.getToken());
             getdata();
         }
 

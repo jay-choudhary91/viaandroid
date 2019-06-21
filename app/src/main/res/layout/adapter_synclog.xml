@@ -15,6 +15,25 @@
         <com.deeptruth.app.android.views.customfonttextview
             style="@style/sync_adapter_textview"
             android:layout_weight="0.4"
+            android:text="Type"
+            app:fontType="Comfortaa-Light"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_type"
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.6"
+            app:fontType="Comfortaa-Bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/sync_adapter_textview"
+            android:layout_weight="0.4"
             android:text="Token"
             app:fontType="Comfortaa-Light"/>
 

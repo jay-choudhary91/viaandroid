@@ -21,17 +21,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
+        android:padding="5dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <com.deeptruth.app.android.views.customfonttextview
-                style="@style/sync_adapter_textview"
+                style="@style/sync_details_textview"
                 android:layout_weight="0.4"
                 android:text="Local Key"
                 android:textSize="16sp"
@@ -39,7 +40,7 @@
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_localkey"
-                style="@style/sync_adapter_textview"
+                style="@style/sync_details_textview"
                 android:layout_weight="0.6"
                 android:textSize="16sp"
                 app:fontType="Comfortaa-Regular"/>
@@ -53,7 +54,51 @@
             android:orientation="horizontal">
 
             <com.deeptruth.app.android.views.customfonttextview
-                style="@style/sync_adapter_textview"
+                style="@style/sync_details_textview"
+                android:layout_weight="0.4"
+                android:text="Type"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Light"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_type"
+                style="@style/sync_details_textview"
+                android:layout_weight="0.6"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/sync_details_textview"
+                android:layout_weight="0.4"
+                android:text="Media Key"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Light"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_mediakey"
+                style="@style/sync_details_textview"
+                android:layout_weight="0.6"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/sync_details_textview"
                 android:layout_weight="0.4"
                 android:text="Total frames"
                 android:textSize="16sp"
@@ -61,7 +106,7 @@
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_totalframes"
-                style="@style/sync_adapter_textview"
+                style="@style/sync_details_textview"
                 android:layout_weight="0.6"
                 android:textSize="16sp"
                 app:fontType="Comfortaa-Regular"/>
@@ -75,7 +120,7 @@
             android:orientation="horizontal">
 
             <com.deeptruth.app.android.views.customfonttextview
-                style="@style/sync_adapter_textview"
+                style="@style/sync_details_textview"
                 android:layout_weight="0.4"
                 android:text="Synced frames"
                 android:textSize="16sp"
@@ -83,7 +128,7 @@
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_syncedframes"
-                style="@style/sync_adapter_textview"
+                style="@style/sync_details_textview"
                 android:layout_weight="0.6"
                 android:textSize="16sp"
                 app:fontType="Comfortaa-Regular"/>
@@ -97,7 +142,7 @@
             android:orientation="horizontal">
 
             <com.deeptruth.app.android.views.customfonttextview
-                style="@style/sync_adapter_textview"
+                style="@style/sync_details_textview"
                 android:layout_weight="0.4"
                 android:text="Async frames"
                 android:textSize="16sp"
@@ -105,7 +150,99 @@
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_asyncedframes"
-                style="@style/sync_adapter_textview"
+                style="@style/sync_details_textview"
+                android:layout_weight="0.6"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/sync_details_textview"
+                android:layout_weight="0.4"
+                android:text="Media start date"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Light"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_mediastartdate"
+                style="@style/sync_details_textview"
+                android:layout_weight="0.6"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/sync_details_textview"
+                android:layout_weight="0.4"
+                android:text="Media completed date"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Light"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_mediacompleteddate"
+                style="@style/sync_details_textview"
+                android:layout_weight="0.6"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/sync_details_textview"
+                android:layout_weight="0.4"
+                android:text="Transaction ID"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Light"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_transactionid"
+                style="@style/sync_details_textview"
+                android:layout_weight="0.6"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/sync_details_textview"
+                android:layout_weight="0.4"
+                android:text="Token"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Light"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_token"
+                style="@style/sync_details_textview"
                 android:layout_weight="0.6"
                 android:textSize="16sp"
                 app:fontType="Comfortaa-Regular"/>

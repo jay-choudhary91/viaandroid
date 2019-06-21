@@ -36,7 +36,7 @@
             android:padding="5dp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:background="@drawable/leftround_btn"
+            android:background="@drawable/round_syncasync_btn"
             android:layout_height="match_parent" />
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -50,7 +50,7 @@
             android:padding="5dp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:background="@drawable/leftround_btn"
+            android:background="@drawable/round_syncasync_btn"
             android:layout_height="match_parent" />
 
     </LinearLayout>
