@@ -47,8 +47,8 @@
 
             <com.suke.widget.SwitchButton
                 android:id="@+id/togglebutton"
-                android:layout_width="65dp"
-                android:layout_height="35dp"
+                android:layout_width="60dp"
+                android:layout_height="36dp"
                 app:sb_button_color="@color/white"
                 app:sb_shadow_color="@color/gray_x"
                 app:sb_background="@color/gray_x"
@@ -92,8 +92,8 @@
 
             <com.suke.widget.SwitchButton
                 android:id="@+id/production_toogle"
-                android:layout_width="65dp"
-                android:layout_height="35dp"
+                android:layout_width="62dp"
+                android:layout_height="36dp"
                 app:sb_button_color="@color/white"
                 app:sb_shadow_color="@color/gray_x"
                 app:sb_background="@color/gray_x"
@@ -137,8 +137,8 @@
 
             <com.suke.widget.SwitchButton
                 android:id="@+id/dev_toogle"
-                android:layout_width="65dp"
-                android:layout_height="35dp"
+                android:layout_width="62dp"
+                android:layout_height="36dp"
                 app:sb_button_color="@color/white"
                 app:sb_shadow_color="@color/gray_x"
                 app:sb_background="@color/gray_x"
@@ -184,6 +184,7 @@
                 android:textColor="@color/dark_blue_solid_a"
                 app:fontType="Comfortaa-Regular"
                 android:id="@+id/txt_logout"
+                android:visibility="gone"
                 android:layout_alignParentRight="true"
                 />
         </RelativeLayout>

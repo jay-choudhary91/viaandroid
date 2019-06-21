@@ -108,7 +108,7 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="0.15"
+                            android:layout_weight="0.13"
                             android:orientation="vertical"
                             android:layout_height="match_parent">
 
@@ -145,7 +145,7 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="0.15"
+                            android:layout_weight="0.17"
                             android:orientation="vertical"
                             android:layout_height="match_parent">
 
@@ -154,6 +154,7 @@
                                 style="@style/txt_pieview"
                                 android:text="0 Frames"
                                 android:gravity="bottom"
+                                android:singleLine="true"
                                 android:layout_gravity="left"
                                 android:layout_marginBottom="8dp"
                                 app:fontType="OpenSans_Regular"
@@ -166,6 +167,7 @@
                                 android:gravity="center"
                                 app:fontType="OpenSans_Regular"
                                 android:text="0 Frames"
+                                android:singleLine="true"
                                 android:layout_gravity="left"
                                 />
 
@@ -317,7 +319,7 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="0.15"
+                            android:layout_weight="0.13"
                             android:orientation="vertical"
                             android:layout_height="match_parent">
 
@@ -355,7 +357,7 @@
 
                         <LinearLayout
                             android:layout_width="0dp"
-                            android:layout_weight="0.15"
+                            android:layout_weight="0.17"
                             android:orientation="vertical"
                             android:layout_height="match_parent">
 

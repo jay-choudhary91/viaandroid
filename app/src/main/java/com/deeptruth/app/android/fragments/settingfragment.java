@@ -90,8 +90,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
             }
 
             title.setText(common.getapplicationname(applicationviavideocomposer.getactivity()) + "\n" +
-                    applicationviavideocomposer.getactivity().getResources().getString(R.string.appversion) +
-                    common.getapplicationversion(applicationviavideocomposer.getactivity()));
+                    applicationviavideocomposer.getactivity().getResources().getString(R.string.appversion) + common.getapplicationversion(applicationviavideocomposer.getactivity()));
 
             if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() ||
                     xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("1"))
