@@ -405,9 +405,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             {
                 img_uploadmedia.setVisibility(View.GONE);
                 img_camera.setVisibility(View.VISIBLE);
-                if(common.isdevelopermodeenable())
-                    img_settings.setVisibility(View.VISIBLE);
             }
+
+            if(common.isdevelopermodeenable())
+                img_settings.setVisibility(View.VISIBLE);
 
             loadffmpeglibrary();
             if (common.getstoragedeniedpermissions().isEmpty())
@@ -456,34 +457,31 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 break;
 
             case MotionEvent.ACTION_UP:
-                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                {
-                    handler.removeCallbacksAndMessages(null);
-                    if ((System.currentTimeMillis() - touchDownMs) > ViewConfiguration.getTapTimeout()) {
-                        //it was not a tap
-                        numberOfTaps = 0;
-                        lastTapTimeMs = 0;
-                        break;
-                    }
+                handler.removeCallbacksAndMessages(null);
+                if ((System.currentTimeMillis() - touchDownMs) > ViewConfiguration.getTapTimeout()) {
+                    //it was not a tap
+                    numberOfTaps = 0;
+                    lastTapTimeMs = 0;
+                    break;
+                }
 
-                    if (numberOfTaps > 0
-                            && (System.currentTimeMillis() - lastTapTimeMs) < ViewConfiguration.getDoubleTapTimeout()) {
-                        numberOfTaps += 1;
-                    } else {
-                        numberOfTaps = 1;
-                    }
+                if (numberOfTaps > 0
+                        && (System.currentTimeMillis() - lastTapTimeMs) < ViewConfiguration.getDoubleTapTimeout()) {
+                    numberOfTaps += 1;
+                } else {
+                    numberOfTaps = 1;
+                }
 
-                    lastTapTimeMs = System.currentTimeMillis();
+                lastTapTimeMs = System.currentTimeMillis();
 
-                    if (numberOfTaps == 10) {
-                        // Toast.makeText(applicationviavideocomposer.getactivity(), "ten taps", Toast.LENGTH_SHORT).show();
-                        //handle triple tap
+                if (numberOfTaps == 10) {
+                    // Toast.makeText(applicationviavideocomposer.getactivity(), "ten taps", Toast.LENGTH_SHORT).show();
+                    //handle triple tap
                         /*if(! appdialog.isdialogshowing())
                             appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());*/
 
-                        if(! appdialog.isdialogshowing() && (! common.isdevelopermodeenable()))
-                            appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
-                    }
+                    if(! appdialog.isdialogshowing() && (! common.isdevelopermodeenable()))
+                        appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
                 }
                 break;
         }
@@ -1892,7 +1890,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             String syncdate[] = common.getcurrentdatewithtimezone();
             mdbhelper.insertstartvideoinfo(new mediainfotablefields("",mediatype,common.getfilename(selectedmediafile),"",
-                    "","","",syncdate[0]  , "",
+                    "","","","0"  , "",
                     "","","","","",
                     "","",config.sync_pending,"",""
                     ,"","","","",xdata.getinstance().getSetting(config.selected_folder),selectedmediafile,selectedmediafile,"",""

@@ -318,8 +318,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             mOrientation = new Orientation(this);
             registerallbroadcast();
             getconnectionspeed();
-        } else {
-            startmetrices();
         }
     }
 
@@ -1058,7 +1056,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     (xdata.getinstance().getSetting(config.item_satellitesdate).trim().isEmpty())) {
                                 servermetricsgetupdatecounter = 0;
                                 currentsatellitecounter++;
-                                getsistermetric();
+                                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                                    getsistermetric();
                             }
 
                             currenttowercounter++;
@@ -1730,6 +1729,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         super.onResume();
         if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
             getallpermissions();
+        else if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            startmetrices();
     }
 
     @Override

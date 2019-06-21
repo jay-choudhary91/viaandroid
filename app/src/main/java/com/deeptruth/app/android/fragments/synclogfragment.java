@@ -1,13 +1,11 @@
 package com.deeptruth.app.android.fragments;
 
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.adapter.adaptersynclogs;
-import com.deeptruth.app.android.adapter.inapppageradapter;
-import com.deeptruth.app.android.adapter.managementcontrolleradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -55,9 +50,12 @@ public class synclogfragment extends basefragment implements View.OnClickListene
     LinearLayout layout_rootview;
 
     adaptersynclogs adapterSync,adapterAsync;
-    ArrayList<synclogmodel> synclist=new ArrayList<>();
-    ArrayList<synclogmodel> asynclist=new ArrayList<>();
+    ArrayList<synclogmodel> mainsynclist =new ArrayList<>();
+    ArrayList<synclogmodel> mainasynclist =new ArrayList<>();
     int navigationbarheight = 0;
+
+    private Handler myHandler;
+    private Runnable myRunnable;
 
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
@@ -85,54 +83,107 @@ public class synclogfragment extends basefragment implements View.OnClickListene
         }
     }
 
+    public void starttimer() {
+        if (myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        myHandler = new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run()
+            {
+                getdata();
+                myHandler.postDelayed(this, 5000);
+            }
+        };
+        myHandler.post(myRunnable);
+    }
+
     public void getdata()
     {
-        databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-        mdbhelper.createDatabase();
 
-        try {
-            mdbhelper.open();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        try
-        {
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                final ArrayList<synclogmodel> synclist=new ArrayList<>();
+                final ArrayList<synclogmodel> asynclist=new ArrayList<>();
 
-            Cursor cursor = mdbhelper.fetchallmediastartinfo();
-            if (cursor != null && cursor.getCount() > 0) {
-                if (cursor.moveToFirst()) {
-                    do
-                    {
-                        String token = "" + cursor.getString(cursor.getColumnIndex("token"));
-                        String mediakey = "" + cursor.getString(cursor.getColumnIndex("videokey"));
-                        String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
-                        String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
-                        String sync_date = "" + cursor.getString(cursor.getColumnIndex("sync_date"));
+                databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                mdbhelper.createDatabase();
 
-                        synclogmodel model=new synclogmodel(token,mediakey,localkey,videostarttransactionid,sync_date);
-                        if(sync_date.trim().length() == 0 || sync_date.equalsIgnoreCase("0"))
-                            asynclist.add(model);
-                        else
-                            synclist.add(model);
-                    } while (cursor.moveToNext());
+                try {
+                    mdbhelper.open();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+                try
+                {
+                    Cursor cursor = mdbhelper.fetchallmediastartinfo();
+                    if (cursor != null && cursor.getCount() > 0) {
+                        if (cursor.moveToFirst()) {
+                            do
+                            {
+                                String token = "" + cursor.getString(cursor.getColumnIndex("token"));
+                                String mediakey = "" + cursor.getString(cursor.getColumnIndex("videokey"));
+                                String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
+                                String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
+                                String sync_date = "" + cursor.getString(cursor.getColumnIndex("sync_date"));
+
+                                synclogmodel model=new synclogmodel(token,mediakey,localkey,videostarttransactionid,sync_date);
+                                if(sync_date.trim().length() == 0 || sync_date.equalsIgnoreCase("0"))
+                                    asynclist.add(model);
+                                else
+                                    synclist.add(model);
+                            } while (cursor.moveToNext());
+                        }
+                    }
+
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    mdbhelper.close();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if(synclist.size() != mainsynclist.size() || asynclist.size() != mainasynclist.size())
+                        {
+                            mainsynclist.clear();
+                            adapterSync.notifyDataSetChanged();
+                            mainasynclist.clear();
+                            adapterAsync.notifyDataSetChanged();
+
+                            mainsynclist.addAll(synclist);
+                            mainasynclist.addAll(asynclist);
+
+                            adapterSync.notifyDataSetChanged();
+                            adapterAsync.notifyDataSetChanged();
+
+                        }
+
+                        txt_synced.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.synced_media)+" ("+
+                                mainsynclist.size()+")");
+                        txt_asynced.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.asynced_media)+" ("+
+                                mainasynclist.size()+")");
+
+                    }
+                });
+
             }
+        }).start();
 
-            txt_synced.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.synced_media)+" ("+synclist.size()+")");
-            txt_asynced.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.asynced_media)+" ("+asynclist.size()+")");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        try {
-            mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     public void resetButtonViews(TextView view1, TextView view2)
@@ -162,7 +213,7 @@ public class synclogfragment extends basefragment implements View.OnClickListene
         resetButtonViews(txt_synced, txt_asynced);
 
         {
-            adapterSync = new adaptersynclogs(getActivity(),synclist,mitemclick);
+            adapterSync = new adaptersynclogs(getActivity(), mainsynclist,mitemclick);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             rv_sync_list.setLayoutManager(mLayoutManager);
             rv_sync_list.addItemDecoration(new divideritemdecoration(applicationviavideocomposer.getactivity()));
@@ -171,7 +222,7 @@ public class synclogfragment extends basefragment implements View.OnClickListene
         }
 
         {
-            adapterAsync = new adaptersynclogs(getActivity(),asynclist,mitemclick);
+            adapterAsync = new adaptersynclogs(getActivity(), mainasynclist,mitemclick);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             rv_async_list.setLayoutManager(mLayoutManager);
             rv_async_list.addItemDecoration(new divideritemdecoration(applicationviavideocomposer.getactivity()));
@@ -179,12 +230,9 @@ public class synclogfragment extends basefragment implements View.OnClickListene
             rv_async_list.setAdapter(adapterAsync);
         }
 
-        getdata();
+        starttimer();
         navigationbarheight =  common.getnavigationbarheight();
         setlayoutmargin();
-
-        adapterSync.notifyDataSetChanged();
-        adapterAsync.notifyDataSetChanged();
 
         rv_sync_list.setVisibility(View.VISIBLE);
         rv_async_list.setVisibility(View.GONE);
@@ -205,6 +253,13 @@ public class synclogfragment extends basefragment implements View.OnClickListene
 
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+    }
 
     @Override
     public int getlayoutid() {

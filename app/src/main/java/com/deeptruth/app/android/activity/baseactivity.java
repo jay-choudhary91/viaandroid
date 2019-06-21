@@ -158,37 +158,41 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
         mHomeWatcher.startWatch();
 
+        try
+        {
+            mHelper = new IabHelper(baseactivity.this, Base64Key.trim());
 
-        mHelper = new IabHelper(baseactivity.this, Base64Key.trim());
+            mHelper.startSetup(new
+                                       IabHelper.OnIabSetupFinishedListener() {
+                                           public void onIabSetupFinished(IabResult result)
+                                           {
+                                               if (!result.isSuccess()) {
+                                                   Log.d(TAG, "In-app Billing setup failed: " +
+                                                           result);
+                                               } else {
+                                                   Log.d(TAG, "In-app Billing is set up OK");
+                                               }
+                                           }
+                                       });
 
-        mHelper.startSetup(new
-           IabHelper.OnIabSetupFinishedListener() {
-               public void onIabSetupFinished(IabResult result)
-               {
-                   if (!result.isSuccess()) {
-                       Log.d(TAG, "In-app Billing setup failed: " +
-                               result);
-                   } else {
-                       Log.d(TAG, "In-app Billing is set up OK");
-                   }
-               }
-           });
+            mServiceConn = new ServiceConnection() {
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    mService = null;
+                }
 
-        mServiceConn = new ServiceConnection() {
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                mService = null;
-            }
-
-            @Override
-            public void onServiceConnected(ComponentName name,IBinder service) {
-                mService = IInAppBillingService.Stub.asInterface(service);
-            }
-        };
-        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
-        serviceIntent.setPackage("com.android.vending");
-        bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
-
+                @Override
+                public void onServiceConnected(ComponentName name,IBinder service) {
+                    mService = IInAppBillingService.Stub.asInterface(service);
+                }
+            };
+            Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+            serviceIntent.setPackage("com.android.vending");
+            bindService(serviceIntent, mServiceConn, Context.BIND_AUTO_CREATE);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
@@ -319,6 +323,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         super.onDestroy();
         if (mHomeWatcher != null)
             mHomeWatcher.stopWatch();
+
+        try {
+            if(mServiceConn != null)
+                unbindService(mServiceConn);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void initviews(Bundle savedInstanceState) {
