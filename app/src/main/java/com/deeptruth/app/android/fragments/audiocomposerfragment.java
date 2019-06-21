@@ -171,6 +171,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private List<visualizerview> mVisualizerviews = new ArrayList<>();
     visualizerview barvisualizer;
     FrameLayout framecontainer;
+    RelativeLayout layout_recorder;
 
     @Override
     public int getlayoutid() {
@@ -1332,6 +1333,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     getselectedmetrics(mlocalarraylist);
                 }
 
+                if(layout_recorder != null)
+                    layout_recorder.setClickable(true);
+
                 common.setgraphicalblockchainvalue(config.blockchainid,"",true);
                 common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
                 common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
@@ -1484,11 +1488,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
 
-    public void setData(adapteritemclick madapterclick,RelativeLayout layoutbottom, int layoutbottomheight ,FrameLayout framecontainer) {
+    public void setData(adapteritemclick madapterclick,RelativeLayout layoutbottom, int layoutbottomheight ,FrameLayout framecontainer,RelativeLayout layout_recorder) {
         this.madapterclick = madapterclick;
         this.layoutbottom = layoutbottom;
         this.layoutmediatypeheight = layoutbottomheight;
         this.framecontainer = framecontainer;
+        this.layout_recorder = layout_recorder;
     }
 
     @Override

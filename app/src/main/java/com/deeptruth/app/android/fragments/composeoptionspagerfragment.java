@@ -204,6 +204,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 public void onPageSelected(int position) {
 
                     currentselectedcomposer=position;
+                    layout_recorder.setClickable(false);
                     int currentpagerpos=position;
                     isfragmentload = false;
                     if(currentpagerpos == 0){
@@ -708,7 +709,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
 
-                fragimgcapture.setData(mitemclick,layoutbottom,layout_seekbarzoom,framecontainer);
+                fragimgcapture.setData(mitemclick,layoutbottom,layout_seekbarzoom,framecontainer,layout_recorder);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
                 isfragmentload = true;
 
@@ -721,7 +722,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
 
-                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_mediatype,layout_seekbarzoom,framecontainer);
+                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_mediatype,layout_seekbarzoom,framecontainer,layout_recorder);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
                 isfragmentload = true;
             break;
@@ -733,7 +734,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
 
-                fragaudiocomposer.setData(mitemclick,layoutbottom,(layoutbottomheight-layoutmediatypeheight),framecontainer);
+                fragaudiocomposer.setData(mitemclick,layoutbottom,(layoutbottomheight-layoutmediatypeheight),framecontainer,layout_recorder);
                 gethelper().replacetabfragment(fragaudiocomposer,false,true);
                 isfragmentload = true;
             break;
