@@ -1026,8 +1026,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                 }
             }, backgroundhandler);
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1093,47 +1091,52 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             return;
         }
 
-        mediarecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediarecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        mediarecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mediarecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
+        try
+        {
+            if(mediarecorder == null)
+                mediarecorder=new MediaRecorder();
 
-        CamcorderProfile profile=null;
-        if(selectedvideoquality.equalsIgnoreCase(config.mediaquality480))
-        {
-            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
-        }
-        else if(selectedvideoquality.equalsIgnoreCase(config.mediaquality720))
-        {
-            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
-        }
-        else if(selectedvideoquality.equalsIgnoreCase(config.mediaquality1080))
-        {
-            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_1080P);
-        }
-        else
-        {
-            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
-        }
+            mediarecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediarecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+            mediarecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mediarecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
 
-        // In sample code
-        mediarecorder.setVideoFrameRate(profile.videoFrameRate);
-        //mediarecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
-        mediarecorder.setVideoSize(videosize.getWidth(), videosize.getHeight());
-        mediarecorder.setVideoEncodingBitRate(profile.videoBitRate);
-        mediarecorder.setAudioEncodingBitRate(profile.audioBitRate);
-        mediarecorder.setAudioSamplingRate(profile.audioSampleRate);
-        mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        if(common.getapppaidlevel() <= 0)
-        {
-            int length=common.getunpaidvideorecordlength();
-            int maxduartion=length * 1000;
-            mediarecorder.setMaxDuration(maxduartion);
-            mediarecorder.setOnInfoListener(mediainfolistener);
-        }
+            CamcorderProfile profile=null;
+            if(selectedvideoquality.equalsIgnoreCase(config.mediaquality480))
+            {
+                profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
+            }
+            else if(selectedvideoquality.equalsIgnoreCase(config.mediaquality720))
+            {
+                profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
+            }
+            else if(selectedvideoquality.equalsIgnoreCase(config.mediaquality1080))
+            {
+                profile = CamcorderProfile.get(CamcorderProfile.QUALITY_1080P);
+            }
+            else
+            {
+                profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
+            }
 
-        // edited
+            // In sample code
+            mediarecorder.setVideoFrameRate(profile.videoFrameRate);
+            //mediarecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
+            mediarecorder.setVideoSize(videosize.getWidth(), videosize.getHeight());
+            mediarecorder.setVideoEncodingBitRate(profile.videoBitRate);
+            mediarecorder.setAudioEncodingBitRate(profile.audioBitRate);
+            mediarecorder.setAudioSamplingRate(profile.audioSampleRate);
+            mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+            mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            if(common.getapppaidlevel() <= 0)
+            {
+                int length=common.getunpaidvideorecordlength();
+                int maxduartion=length * 1000;
+                mediarecorder.setMaxDuration(maxduartion);
+                mediarecorder.setOnInfoListener(mediainfolistener);
+            }
+
+            // edited
         /*
         mMediaRecorder.setVideoFrameRate(profile.videoFrameRate);
         mMediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
@@ -1141,7 +1144,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mMediaRecorder.setAudioEncodingBitRate(profile.audioBitRate);
         mMediaRecorder.setAudioSamplingRate(profile.audioSampleRate);*/
 
-        // my code
+            // my code
         /*mediarecorder.setVideoEncodingBitRate(profile.videoBitRate);
         mediarecorder.setVideoFrameRate(framepersecond);
         mediarecorder.setVideoSize(videosize.getWidth(), videosize.getHeight());
@@ -1149,45 +1152,57 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);*/
 
 
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-       // int orientation = ORIENTATIONS.get(rotation);
-        int orientation =  camerautil.getOrientation(rotation, upsideDown);
-        int sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
-        //Log.e("cameraangle ",""+orientation);
-        //Toast.makeText(getActivity(),""+orientation+" "+sensorOrientation,Toast.LENGTH_SHORT).show();
+            int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+            // int orientation = ORIENTATIONS.get(rotation);
+            int orientation =  camerautil.getOrientation(rotation, upsideDown);
+            int sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+            //Log.e("cameraangle ",""+orientation);
+            //Toast.makeText(getActivity(),""+orientation+" "+sensorOrientation,Toast.LENGTH_SHORT).show();
 
-        if(rotationangle == 90)  // Landscape left side
-        {
-            mediarecorder.setOrientationHint(0);
-        }
-        else if(rotationangle == 0)   // Portrait 90
-        {
-            if (cameraId.equals(CAMERA_FRONT))
+            if(rotationangle == 90)  // Landscape left side
             {
-                mediarecorder.setOrientationHint(270);
+                mediarecorder.setOrientationHint(0);
             }
-            else
+            else if(rotationangle == 0)   // Portrait 90
             {
-                mediarecorder.setOrientationHint(90);
+                if (cameraId.equals(CAMERA_FRONT))
+                {
+                    mediarecorder.setOrientationHint(270);
+                }
+                else
+                {
+                    mediarecorder.setOrientationHint(90);
+                }
             }
-        }
-        else if(rotationangle == -90)     // Landscape right side
+            else if(rotationangle == -90)     // Landscape right side
+            {
+                mediarecorder.setOrientationHint(180);
+            }
+            else if(rotationangle == 180)     // Portrait 180
+            {
+                if (cameraId.equals(CAMERA_FRONT))
+                {
+                    mediarecorder.setOrientationHint(90);
+                }
+                else
+                {
+                    mediarecorder.setOrientationHint(270);
+                }
+            }
+
+
+        }catch (Exception e)
         {
-            mediarecorder.setOrientationHint(180);
-        }
-        else if(rotationangle == 180)     // Portrait 180
-        {
-            if (cameraId.equals(CAMERA_FRONT))
-            {
-                mediarecorder.setOrientationHint(90);
-            }
-            else
-            {
-                mediarecorder.setOrientationHint(270);
-            }
+            e.printStackTrace();
         }
 
-        mediarecorder.prepare();
+        try {
+            mediarecorder.prepare();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
 
