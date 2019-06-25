@@ -1296,6 +1296,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void drawmappath()
     {
+        if(mediacreatedpointmarker != null)
+        {
+            mediacreatedpointmarker.remove();
+            mediacreatedpointmarker=null;
+        }
+
         linechart_connectionspeed.clear();
         linechart_datatimedelay.clear();
         linechart_gpsaccuracy.clear();
