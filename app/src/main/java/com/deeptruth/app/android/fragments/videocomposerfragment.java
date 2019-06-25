@@ -1137,19 +1137,19 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
 
             // edited
-        /*
-        mMediaRecorder.setVideoFrameRate(profile.videoFrameRate);
-        mMediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
-        mMediaRecorder.setVideoEncodingBitRate(profile.videoBitRate);
-        mMediaRecorder.setAudioEncodingBitRate(profile.audioBitRate);
-        mMediaRecorder.setAudioSamplingRate(profile.audioSampleRate);*/
+            /*
+            mMediaRecorder.setVideoFrameRate(profile.videoFrameRate);
+            mMediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
+            mMediaRecorder.setVideoEncodingBitRate(profile.videoBitRate);
+            mMediaRecorder.setAudioEncodingBitRate(profile.audioBitRate);
+            mMediaRecorder.setAudioSamplingRate(profile.audioSampleRate);*/
 
-            // my code
-        /*mediarecorder.setVideoEncodingBitRate(profile.videoBitRate);
-        mediarecorder.setVideoFrameRate(framepersecond);
-        mediarecorder.setVideoSize(videosize.getWidth(), videosize.getHeight());
-        mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);*/
+                // my code
+            /*mediarecorder.setVideoEncodingBitRate(profile.videoBitRate);
+            mediarecorder.setVideoFrameRate(framepersecond);
+            mediarecorder.setVideoSize(videosize.getWidth(), videosize.getHeight());
+            mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+            mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);*/
 
 
             int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
@@ -1213,12 +1213,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 Log.v("VIDEOCAPTURE","Maximum Duration Reached");
                 try {
 
-                    resetpreviewsession();
+                    /*resetpreviewsession();
                     startmetaservices();
                     stopblinkanimation();
 
                     mediarecorder.stop();
-                    mediarecorder.release();
+                    mediarecorder.release();*/
+
+                    startstopvideo();
+
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -1238,7 +1241,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             String time=precision.format(recordtime)+" minutes";
 
             gethelper().showinapppurchasepopup(applicationviavideocomposer.getactivity(),"Recording is limited to "+ time +
-                    " in the basic version. Upgrade",null);
+                    " in the basic version. Upgrade",new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+                    gethelper().inapppurchase(object.toString());
+                }
+
+                @Override
+                public void onItemClicked(Object object, int type) {
+
+                }
+            });
 
             /*new AlertDialog.Builder(getActivity(), R.style.customdialogtheme)
                     .setTitle("Alert")
