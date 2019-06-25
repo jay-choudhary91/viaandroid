@@ -4,6 +4,8 @@ import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -12,6 +14,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -43,6 +46,7 @@ import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.itemupdatelistener;
 import com.deeptruth.app.android.models.arraycontainer;
 import com.deeptruth.app.android.models.celltowermodel;
+import com.deeptruth.app.android.models.coloredpoint;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.satellites;
@@ -78,15 +82,17 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
-import com.google.android.gms.common.internal.service.Common;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.warkiz.widget.IndicatorSeekBar;
@@ -100,6 +106,7 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -387,20 +394,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     int navigationbarheight = 0;
     arraycontainer arraycontainerformetric =null;
     String screenwidth,screenheight,satellitedate="",satellitedata="";
-    private Marker locationindicatemarker=null;
 
     ValueAnimator lastPulseAnimator=null;
     Circle mappulsatecircle =null;
     Circle userlocationcircle =null;
     LatLng usercurrentlocation=null;
-    private PolylineOptions mappathoptions=null;
     private Polyline mappathpolyline=null;
     private ArrayList<LatLng> mappathcoordinates=new ArrayList<>();
     toweritemadapter toweradapter;
     satellitesdataadapter satelliteadapter;
     ArrayList<celltowermodel> celltowers = new ArrayList<>();
     ArrayList<satellites> satelliteslist = new ArrayList<>();
-
+    Marker mediacreatedpointmarker;
     @Override
     public int getlayoutid() {
         return R.layout.frag_graphicaldrawer;
@@ -1176,11 +1181,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void setdatacomposing(boolean isdatacomposing,String mediafilepath)
     {
         this.isdatacomposing=isdatacomposing;
-        if(locationindicatemarker != null)
-        {
-            locationindicatemarker.remove();
-            locationindicatemarker=null;
-        }
 
         metricmainarraylist.clear();
         cleargooglemap();
@@ -1310,8 +1310,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         linechart_altitude.clear();
         layout_soundiformation.setVisibility(View.GONE);
 
-        mappathoptions = new PolylineOptions().width(7).color(Color.BLUE).geodesic(true);
         String linecolor="";
+        List<coloredpoint> linepoints = new ArrayList<>();
         for (int i = 0; i < metricmainarraylist.size(); i++)
         {
             arraycontainer container=metricmainarraylist.get(i);
@@ -1494,7 +1494,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             if(altitudegraphitems.size() > 0)
                             {
                                 //if(altitudegraphitems.get(altitudegraphitems.size()-1).getY() != value)
-                                    altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
+                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
                             }
                             else
                             {
@@ -1512,14 +1512,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             if(linecolor.trim().length() == 0)
                 linecolor="blue";
 
-            LatLng point = new LatLng(latitude,longitude);
-            mappathoptions.add(point).color(Color.parseColor(common.getcolorbystring(linecolor)));
-
-            if(mgooglemap != null)
-                mgooglemap.addPolyline(mappathoptions);
+            linepoints.add(new coloredpoint(new LatLng(latitude,longitude), linecolor));
         }
 
-
+        showtraveledpath(linepoints);
 
         // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
 
@@ -1545,6 +1541,72 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(altitudegraphitems.size() > 0)
             setspeedtraveledaltitudechart(linechart_altitude,-1f,altitudegraphitems);
     }
+
+    public void addmediacreatedpointmarker(LatLng latLng) {
+        if(mediacreatedpointmarker != null)
+        {
+            mediacreatedpointmarker.setPosition(latLng);
+            return;
+        }
+
+        Drawable circleDrawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.ic_blue_circle);
+        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable, 30, 30);
+
+        mediacreatedpointmarker=mgooglemap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .anchor(0.5f, 0.5f)
+                .icon(markerIcon)
+        );
+    }
+
+    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable, int width, int height) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, width, height);
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    private void showtraveledpath(List<coloredpoint> points)
+    {
+
+        if (points.size() < 2)
+            return;
+
+        int position = 0;
+        coloredpoint currentPoint  = points.get(position);
+        String currentColor = currentPoint.color;
+        List<LatLng> currentSegment = new ArrayList<>();
+        currentSegment.add(currentPoint.coords);
+        position++;
+
+        while (position < points.size()) {
+            currentPoint = points.get(position);
+
+            if (currentPoint.color.equalsIgnoreCase(currentColor)) {
+                currentSegment.add(currentPoint.coords);
+            } else {
+                currentSegment.add(currentPoint.coords);
+                mgooglemap.addPolyline(new PolylineOptions()
+                        .addAll(currentSegment)
+                        .color(Color.parseColor(common.getcolorbystring(currentColor)))
+                        .width(7));
+                currentColor = currentPoint.color;
+                currentSegment.clear();
+                currentSegment.add(currentPoint.coords);
+            }
+
+            position++;
+        }
+
+        mgooglemap.addPolyline(new PolylineOptions()
+                .addAll(currentSegment)
+                .color(Color.parseColor(common.getcolorbystring(currentColor)))
+                .width(7));
+
+    }
+
 
     public void drawmediainformation()
     {
@@ -2156,6 +2218,24 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         try {
             if(lastPulseAnimator != null)
                 lastPulseAnimator.cancel();
+
+            if(usercurrentlocation == null)
+                return;
+
+
+            if(! isdatacomposing)
+            {
+                addmediacreatedpointmarker(usercurrentlocation);
+                return;
+            }
+            else
+            {
+                if(mediacreatedpointmarker != null)
+                {
+                    mediacreatedpointmarker.remove();
+                    mediacreatedpointmarker=null;
+                }
+            }
 
             lastPulseAnimator = valueAnimate(getDisplayPulseRadius(), 3500,
                     new ValueAnimator.AnimatorUpdateListener() {

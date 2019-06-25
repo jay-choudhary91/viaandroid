@@ -228,7 +228,38 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         if (location != null) {
                             try {
                                 googleutils.saveUserCurrentLocation(location);
-                                if (location.hasSpeed()) {
+
+                                float mps = location.getSpeed();
+                                //float mps = 0.2f;
+                                xdata.getinstance().saveSetting("gpsspeed", "" + mps);
+
+                                DecimalFormat precision = new DecimalFormat("0.0");
+                                if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
+                                {
+                                    if(! xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
+                                    {
+                                        try
+                                        {
+                                            double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
+                                            double miles=mps+value;
+                                            //double miles=common.convertmetertomiles(mps+value);
+                                            xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
+                                        }catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                                /*if (location.hasSpeed()) {
+
+                                }
+                                else
+                                {
+                                    xdata.getinstance().saveSetting("gpsspeed", "0");
+                                }*/
+
+/*                                if (location.hasSpeed()) {
                                     float mps = location.getSpeed();
                                     xdata.getinstance().saveSetting("gpsspeed", "" + mps);
 
@@ -253,7 +284,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 else
                                 {
                                     xdata.getinstance().saveSetting("gpsspeed", "0");
-                                }
+                                }*/
 
                                 if (location.hasAltitude()) {
                                     int altitudefeet = (int) (location.getAltitude() / 0.3048);
