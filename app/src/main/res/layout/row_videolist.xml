@@ -248,7 +248,7 @@
                                     android:layout_below="@+id/tv_videoduration"
                                     android:textColor="@color/black"
                                     android:maxLines="1"
-                                    android:text=""
+                                    android:text="LocalKey"
                                     />
 
                                 <com.deeptruth.app.android.views.customfonttextview
@@ -271,8 +271,19 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:orientation="vertical"
-                                    android:gravity="bottom"
-                                    android:layout_marginTop="3dp">
+                                    android:layout_marginTop="1dp">
+
+                                    <com.deeptruth.app.android.views.customfonttextview
+                                        app:fontType="OpenSans_Regular"
+                                        android:id="@+id/tv_framecounts"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="left"
+                                        android:textSize="11sp"
+                                        android:textColor="@color/black"
+                                        android:maxLines="1"
+                                        android:text=""
+                                        />
 
 
                                     <LinearLayout

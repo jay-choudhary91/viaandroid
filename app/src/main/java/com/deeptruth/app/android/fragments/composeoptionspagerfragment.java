@@ -6,6 +6,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,8 +18,10 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
@@ -64,6 +68,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kotlin.text.Regex;
 
+import static android.content.ContentValues.TAG;
 import static android.widget.RelativeLayout.TRUE;
 
 /**
@@ -132,7 +137,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private volatile boolean iscircle = true;
     private Animator currentAnimator;
     private int shortAnimationDuration;
-
+    private static final int  RC_OVERLAY=21;
 
     @Override
     public int getlayoutid() {
@@ -433,9 +438,37 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         e.printStackTrace();
                     }
                 }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(applicationviavideocomposer.getactivity()))
+                {
+                    common.showalert(applicationviavideocomposer.getactivity(), getResources().getString(R.string.allow_apps_to),
+                            new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+                            openOverlaySettings();
+                        }
+
+                        @Override
+                        public void onItemClicked(Object object, int type) {
+
+                        }
+                    });
+                }
             }
         },10);
     }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void openOverlaySettings() {
+        final Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + applicationviavideocomposer.getactivity().getPackageName()));
+        try {
+            startActivityForResult(intent, RC_OVERLAY);
+        } catch (ActivityNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

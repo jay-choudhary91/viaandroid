@@ -1,16 +1,25 @@
 package com.deeptruth.app.android.activity;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -22,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -47,6 +57,8 @@ import com.deeptruth.app.android.fragments.synclogdetailsfragment;
 import com.deeptruth.app.android.fragments.synclogfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
+import com.deeptruth.app.android.interfaces.adapteritemclick;
+import com.deeptruth.app.android.services.appbackgroundactionservice;
 import com.deeptruth.app.android.services.callservice;
 import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
@@ -87,8 +99,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     boolean isviewtouched=false;
     callservice phonecallservice;
     private fragmentmedialist fragmedialist;
-    boolean isdraweropen=false ,isdrawerrunning = false;
+    boolean isdraweropen=false ,isdrawerrunning = false,isactivitybecomefinish=false;
     int rootviewheight,navigationbarheight, finalheight ,imageheight;
+
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -300,6 +313,17 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imglefthandle.setVisibility(View.GONE);
         }
 
+        //showAlertDialog();
+
+        if(! isactivitybecomefinish && (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)))
+        {
+            if (isMyServiceRunning(appbackgroundactionservice.class))
+                stopService(new Intent(getBaseContext(), appbackgroundactionservice.class));
+
+            startService(new Intent(getBaseContext(), appbackgroundactionservice.class));
+        }
+
+
         if(phonecallservice != null)
         {
             Intent intent = new Intent(homeactivity.this, callservice.class);
@@ -307,6 +331,48 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 stopService(intent);
         }
     }
+
+    public void showAlertDialog() {
+        /** define onClickListener for dialog */
+        DialogInterface.OnClickListener listener
+                = new   DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // do some stuff eg: context.onCreate(super)
+            }
+        };
+
+        /** create builder for dialog */
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(homeactivity.this,
+                R.style.myDialog))
+                .setCancelable(false)
+                .setMessage("Message...")
+                .setTitle("Title")
+                .setPositiveButton("OK", listener);
+        /** create dialog & set builder on it */
+        Dialog dialog = builder.create();
+        /** this required special permission but u can use aplication context */
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
+        /** show dialog */
+        dialog.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RC_OVERLAY:
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                    final boolean overlayEnabled = Settings.canDrawOverlays(this);
+                }
+                // Do something...
+                break;
+        }
+    }*/
 
     @Override
     public int getlayoutid() {
@@ -539,8 +605,14 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          }
         else
         {
-            finish();
+            finishactivity();
         }
+    }
+
+    @Override
+    public void finishactivity() {
+        isactivitybecomefinish=true;
+        finish();
     }
 
     @Override

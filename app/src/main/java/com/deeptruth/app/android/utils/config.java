@@ -52,6 +52,8 @@ public class config {
     public static final String broadcast_medialistnewitem = "broadcast_medialistnewitem";
     public static final String broadcast_callshareapi = "broadcast_callshareapi";
 
+    public static final String sidecar_syncstatus = "sidecar_syncstatus";
+
     public static final String drawer_transparency = "drawer_transparency";
 
     public static final String mediaquality480 = "480P";

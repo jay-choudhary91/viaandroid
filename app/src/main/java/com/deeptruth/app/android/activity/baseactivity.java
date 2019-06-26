@@ -149,7 +149,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onHomePressed() {
                 // do something here...
-                //finish();
+                //finishactivity();
             }
 
             @Override
@@ -456,7 +456,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         int size = mfragments.size();
         if (getSupportFragmentManager().getBackStackEntryCount() <= getMinNumberOfFragments()) {
-            finish();
+            finishactivity();
             return;
         }
 
@@ -469,7 +469,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             backtolastfragment();
 
         } else if (getcurrentfragment() instanceof fragmentmedialist) {
-            finish();
+            finishactivity();
         } else if (getcurrentfragment() instanceof composeoptionspagerfragment) {
             if (mfragments.size() == 1) {
                 clearfragmentstack();
@@ -552,7 +552,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if (keycode == KeyEvent.KEYCODE_BACK) {
 
             if (getSupportFragmentManager().getBackStackEntryCount() <= getMinNumberOfFragments()) {
-                finish();
+                finishactivity();
                 return true;
             } else {
                 onBack();

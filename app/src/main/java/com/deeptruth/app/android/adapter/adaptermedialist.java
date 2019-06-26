@@ -50,7 +50,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes,tv_mediaduration,
-                tv_valid,tv_caution,tv_unsent,tv_invalid,txt_pipesign_caution,txt_pipesign_unsent,txt_pipesign_invalid;
+                tv_valid,tv_caution,tv_unsent,tv_invalid,txt_pipesign_caution,txt_pipesign_unsent,txt_pipesign_invalid,tv_framecounts;
         EditText edtvideoname;
         RelativeLayout relative_child ;
         public ImageView img_imageshare,img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
@@ -86,6 +86,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             txt_pipesign_caution = (TextView) view.findViewById(R.id.txt_pipesign_caution);
             txt_pipesign_unsent = (TextView) view.findViewById(R.id.txt_pipesign_unsent);
             txt_pipesign_invalid = (TextView) view.findViewById(R.id.txt_pipesign_invalid);
+            tv_framecounts = (TextView) view.findViewById(R.id.tv_framecounts);
             layout_colorbar = (LinearLayout) view.findViewById(R.id.layout_colorbar);
             progressmediasync = (ProgressBar) view.findViewById(R.id.progressmediasync);
         }
@@ -144,6 +145,15 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             int cautioncount=mediaobject.getCautioncount();
             int unsentcount=mediaobject.getUnsentcount();
             int invalidcount=mediaobject.getInvalidcount();
+            if(common.isdevelopermodeenable())
+            {
+                holder.tv_framecounts.setVisibility(View.VISIBLE);
+                holder.tv_framecounts.setText(mediaobject.getFrameuploadstatus());
+            }
+            else
+            {
+                holder.tv_framecounts.setVisibility(View.INVISIBLE);
+            }
 
             ArrayList<String> arrayList = mediaobject.getMediabarcolor();
             if (mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
@@ -154,7 +164,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.tv_invalid.setText(config.item_invalid+" 100%");
             }
 
-            Log.e("Status ",""+validcount+" "+cautioncount+" "+unsentcount+" "+invalidcount);
             holder.tv_valid.setVisibility(View.VISIBLE);
             holder.tv_caution.setVisibility(View.VISIBLE);
             holder.tv_unsent.setVisibility(View.VISIBLE);
@@ -217,6 +226,8 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
                 holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
+
+
 
             if(arrayList != null && arrayList.size() > 0)
             {
