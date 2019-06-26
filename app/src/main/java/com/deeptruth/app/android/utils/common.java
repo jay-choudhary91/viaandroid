@@ -832,6 +832,12 @@ public class common {
             metricItemName = config.phoneclocktime;
         } else if (key.equalsIgnoreCase(config.connectiondatadelay)) {
             metricItemName = config.connectiondatadelay;
+        } else if (key.equalsIgnoreCase(config.satellitedate)) {
+            metricItemName = config.satellitedate;
+        } else if (key.equalsIgnoreCase(config.satellitesdata)) {
+            metricItemName = config.satellitesdata;
+        } else if (key.equalsIgnoreCase(config.remoteip)) {
+            metricItemName = config.remoteip;
         }
         return metricItemName;
     }
