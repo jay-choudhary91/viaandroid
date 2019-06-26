@@ -57,6 +57,7 @@ import com.deeptruth.app.android.fragments.synclogdetailsfragment;
 import com.deeptruth.app.android.fragments.synclogfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
+import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.services.appbackgroundactionservice;
 import com.deeptruth.app.android.services.callservice;
 import com.deeptruth.app.android.utils.circularImageview;
@@ -100,7 +101,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     private fragmentmedialist fragmedialist;
     boolean isdraweropen=false ,isdrawerrunning = false,isactivitybecomefinish=false;
     int rootviewheight,navigationbarheight, finalheight ,imageheight;
-    private static final int  RC_OVERLAY=21;
+
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -314,7 +315,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
         //showAlertDialog();
 
-        if(! isactivitybecomefinish)
+        if(! isactivitybecomefinish && (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)))
         {
             if (isMyServiceRunning(appbackgroundactionservice.class))
                 stopService(new Intent(getBaseContext(), appbackgroundactionservice.class));
@@ -359,13 +360,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-            Toast.makeText(homeactivity.this,"Allow app to display on top of other apps.",Toast.LENGTH_SHORT).show();
-            openOverlaySettings();
-        }
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case RC_OVERLAY:
@@ -375,19 +372,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 // Do something...
                 break;
         }
-    }
-
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private void openOverlaySettings() {
-        final Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:" + getPackageName()));
-        try {
-            startActivityForResult(intent, RC_OVERLAY);
-        } catch (ActivityNotFoundException e) {
-            Log.e(TAG, e.getMessage());
-        }
-    }
+    }*/
 
     @Override
     public int getlayoutid() {

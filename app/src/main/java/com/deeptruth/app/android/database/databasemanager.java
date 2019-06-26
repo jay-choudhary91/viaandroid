@@ -1108,10 +1108,11 @@ public class databasemanager {
 
     public void deletefrommetadatabylocation(String location) {
         try {
+            location=common.getfilename(location);
             lock.lock();
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("delete from tblmetadata where location='"+location+"'");
+            mDb.execSQL("delete from tblstartmediainfo where location='"+location+"'");
         } catch (Exception e) {
             e.printStackTrace();
         }

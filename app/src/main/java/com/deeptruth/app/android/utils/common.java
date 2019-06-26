@@ -1392,6 +1392,27 @@ public class common {
                 .show();
     }
 
+    public static void showalert(Activity activity, String meg, final adapteritemclick mitemclick) {
+
+        if(alertdialog != null && alertdialog.isShowing())
+            alertdialog.dismiss();
+
+        alertdialog = new AlertDialog.Builder(activity)
+                .setTitle("Alert")
+                .setMessage(meg)
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertdialog.dismiss();
+
+                        if(mitemclick != null)
+                            mitemclick.onItemClicked(null);
+                    }
+                })
+                .show();
+    }
+
     public static String converttimeformate(long milliSeconds) {
         // Create a DateFormatter object for displaying date in specified format.
         Date date = new Date(milliSeconds);
