@@ -145,7 +145,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             int cautioncount=mediaobject.getCautioncount();
             int unsentcount=mediaobject.getUnsentcount();
             int invalidcount=mediaobject.getInvalidcount();
-            if(mediaobject.getFrameuploadstatus().trim().length() > 0)
+            if(common.isdevelopermodeenable())
             {
                 holder.tv_framecounts.setVisibility(View.VISIBLE);
                 holder.tv_framecounts.setText(mediaobject.getFrameuploadstatus());

@@ -315,7 +315,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         //showAlertDialog();
 
         if(! isactivitybecomefinish)
+        {
+            if (isMyServiceRunning(appbackgroundactionservice.class))
+                stopService(new Intent(getBaseContext(), appbackgroundactionservice.class));
+
             startService(new Intent(getBaseContext(), appbackgroundactionservice.class));
+        }
+
 
         if(phonecallservice != null)
         {

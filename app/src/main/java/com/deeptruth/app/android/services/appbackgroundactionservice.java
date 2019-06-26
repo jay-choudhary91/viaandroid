@@ -51,7 +51,7 @@ public class appbackgroundactionservice extends Service
                         .setPositiveButton("OK", listener);
                 final String[] items= {"Keep running sync & notify me when completed","Keep running sync & close after completed",
                         "Do not allow sync to run in background"};
-                builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                builder.setSingleChoiceItems(items, 1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         /*Toast.makeText(getApplicationContext(),items[item],Toast.LENGTH_SHORT).show();
                         dialog.dismiss();*/

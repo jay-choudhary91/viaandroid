@@ -1017,7 +1017,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 }
 
                                 videoobject.setFrameuploadstatus("");
-                                if(totalframes > 0 && common.isdevelopermodeenable())
+                                if(totalframes > 0)
                                     videoobject.setFrameuploadstatus("Frames : "+syncedframes+"/"+totalframes);
 
                                 videoobject.setColorsectionsarray(colorsectioncount);
@@ -1298,7 +1298,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             } while (cursor2.moveToNext());
 
                             arraymediaitemlist.get(i).setFrameuploadstatus("");
-                            if(totalframes > 0 && common.isdevelopermodeenable())
+                            if(totalframes > 0)
                                 arraymediaitemlist.get(i).setFrameuploadstatus("Frames : "+syncedframes+"/"+totalframes);
 
                             if(validcount != arraymediaitemlist.get(i).getValidcount() || cautioncount != arraymediaitemlist.get(i).getCautioncount()
