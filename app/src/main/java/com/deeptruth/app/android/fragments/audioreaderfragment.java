@@ -2069,6 +2069,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mediaseekbarheight);
         parms.setMargins(20,0,20,0);
         linearseekbarcolorview.setLayoutParams(parms);
+        progressmediasync.setLayoutParams(parms);
     }
 
     public void hidefocus(EditText edittext){
