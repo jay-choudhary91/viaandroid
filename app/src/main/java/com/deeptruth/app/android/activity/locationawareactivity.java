@@ -2316,11 +2316,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     public void syncmediadatabase() {
-        Log.e("Method ", "syncmediadatabase");
-        if (!common.isnetworkconnected(locationawareactivity.this)) {
-            isdatasyncing = false;
-            return;
-        }
         if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
             if (getcurrentfragment() instanceof videocomposerfragment) {
                 boolean isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
@@ -2348,6 +2343,16 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 e.printStackTrace();
             }
 
+            if (unsyncedmediaitems.size() > 0)
+                xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");
+            else
+                xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");
+
+            if (!common.isnetworkconnected(locationawareactivity.this)) {
+                isdatasyncing = false;
+                return;
+            }
+
             syncupdationcounter = 0;
             if (unsyncedmediaitems.size() > 0) {
                 isdatasyncing = true;
@@ -2355,7 +2360,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             } else {
                 isdatasyncing = false;
             }
-        } else if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
+
+        } else if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
             if (common.isnetworkconnected(getApplicationContext())) {
                 Date currentdate = new Date();
                 String initialdatereaderapi = xdata.getinstance().getSetting("initialdatereaderapi");

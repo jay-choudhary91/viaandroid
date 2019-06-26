@@ -1224,7 +1224,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT color FROM tblmetadata where localkey = '"+localkey+"'";
+            String sql = "SELECT color,sequenceno FROM tblmetadata where localkey = '"+localkey+"'";
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
 

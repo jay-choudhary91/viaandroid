@@ -31,6 +31,7 @@ public class video
     public String mediatitle = "";
     public String medianotes = "";
     public String mediacolor = "";
+    public String frameuploadstatus = "";
     public boolean ischeck = false;
     public boolean doenable = false;
     public int griditemheight = 0;
@@ -59,6 +60,14 @@ public class video
     public  video()
     {
 
+    }
+
+    public String getFrameuploadstatus() {
+        return frameuploadstatus;
+    }
+
+    public void setFrameuploadstatus(String frameuploadstatus) {
+        this.frameuploadstatus = frameuploadstatus;
     }
 
     public View getColorbarview() {

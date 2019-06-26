@@ -970,8 +970,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                                 }while (cursor2.moveToNext());
 
-                                int sectioncount=0;
+                                int sectioncount=0,lastsequenceno=0,syncedframes=0,totalframes=0;
                                 String lastcolor="";
+                                String strsequenceno="";
                                 ArrayList<String> colorsectioncount=new ArrayList<>();
 
                                 if(validcount != videoobject.getValidcount() || cautioncount != videoobject.getCautioncount()
@@ -980,6 +981,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     cursor2.moveToFirst();
                                     do{
                                         String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
+                                        strsequenceno=cursor2.getString(cursor2.getColumnIndex("sequenceno"));
 
                                         sectioncount++;
                                         if(framecolor.trim().isEmpty())
@@ -996,8 +998,28 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                             colorsectioncount.set(colorsectioncount.size()-1,framecolor+","+sectioncount);
                                         }
                                         lastcolor=framecolor;
+
+                                        if(! strsequenceno.trim().isEmpty())
+                                        {
+                                            if(! framecolor.equalsIgnoreCase(config.color_transparent))
+                                            {
+                                                int sequenceno=Integer.parseInt(strsequenceno);
+                                                int sequencecount=sequenceno-lastsequenceno;
+
+                                                syncedframes=syncedframes+sequencecount;
+                                                lastsequenceno=sequenceno;
+                                            }
+                                            totalframes=Integer.parseInt(strsequenceno);
+                                        }
+
+
                                     }while (cursor2.moveToNext());
                                 }
+
+                                videoobject.setFrameuploadstatus("");
+                                if(totalframes > 0 && common.isdevelopermodeenable())
+                                    videoobject.setFrameuploadstatus("Frames : "+syncedframes+"/"+totalframes);
+
                                 videoobject.setColorsectionsarray(colorsectioncount);
                                 //videoobject.setColorbarview(layout);
                                 videoobject.setMediabarcolor(arrayList);
@@ -1220,8 +1242,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             e.printStackTrace();
                         }
 
-                        int sectioncount=0,validcount=0,cautioncount=0,invalidcount=0,unsentcount=0;
-                        String lastcolor="";
+                        int sectioncount=0,validcount=0,cautioncount=0,invalidcount=0,unsentcount=0,lastsequenceno=0,
+                                syncedframes=0,totalframes=0;
+                        String lastcolor="",strsequenceno="";
                         ArrayList<String> colorsectioncount=new ArrayList<>();
                         ArrayList<String> arrayList=new ArrayList<>();
                         Cursor cursor2 = mdbhelper.getmediacolor(localkey);
@@ -1229,6 +1252,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                             do {
                                 String framecolor = cursor2.getString(cursor2.getColumnIndex("color"));
+                                strsequenceno=cursor2.getString(cursor2.getColumnIndex("sequenceno"));
+
                                 arrayList.add(framecolor);
                                 if (framecolor.equalsIgnoreCase(config.color_green))
                                     validcount++;
@@ -1257,7 +1282,24 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 }
                                 lastcolor = framecolor;
 
+                                if(! strsequenceno.trim().isEmpty())
+                                {
+                                    if(! framecolor.equalsIgnoreCase(config.color_transparent))
+                                    {
+                                        int sequenceno=Integer.parseInt(strsequenceno);
+                                        int sequencecount=sequenceno-lastsequenceno;
+
+                                        syncedframes=syncedframes+sequencecount;
+                                        lastsequenceno=sequenceno;
+                                    }
+                                    totalframes=Integer.parseInt(strsequenceno);
+                                }
+
                             } while (cursor2.moveToNext());
+
+                            arraymediaitemlist.get(i).setFrameuploadstatus("");
+                            if(totalframes > 0 && common.isdevelopermodeenable())
+                                arraymediaitemlist.get(i).setFrameuploadstatus("Frames : "+syncedframes+"/"+totalframes);
 
                             if(validcount != arraymediaitemlist.get(i).getValidcount() || cautioncount != arraymediaitemlist.get(i).getCautioncount()
                                     || unsentcount != arraymediaitemlist.get(i).getUnsentcount()) {

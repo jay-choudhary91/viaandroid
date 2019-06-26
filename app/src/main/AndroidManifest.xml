@@ -31,6 +31,8 @@
     <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <uses-permission
         android:name="android.permission.GET_ACCOUNTS"
         android:maxSdkVersion="22" />
@@ -65,6 +67,9 @@
             android:name=".services.locationservice"
             android:enabled="true"
             android:exported="false" />
+
+        <service
+            android:name=".services.appbackgroundactionservice" />
         <service
             android:name=".services.callservice"
             android:enabled="true" />
