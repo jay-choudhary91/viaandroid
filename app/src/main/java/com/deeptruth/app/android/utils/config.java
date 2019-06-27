@@ -53,6 +53,14 @@ public class config {
     public static final String broadcast_callshareapi = "broadcast_callshareapi";
 
     public static final String sidecar_syncstatus = "sidecar_syncstatus";
+    public static final String launchtype = "launchtype";
+    public static final String launchtyperecorder = "launchtyperecorder";
+    public static final String launchtypemedialist = "launchtypemedialist";
+    public static final String selectedsyncsetting = "selectedsyncsetting";
+
+    public static final String selectedsyncsetting_0 = "Keep running sync & notify me when completed";
+    public static final String selectedsyncsetting_1 = "Keep running sync & close after completed";
+    public static final String selectedsyncsetting_2 = "Do not allow sync to run in background";
 
     public static final String drawer_transparency = "drawer_transparency";
 

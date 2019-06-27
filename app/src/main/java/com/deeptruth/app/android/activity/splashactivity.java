@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -12,6 +13,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.gifdrawableimagetarget;
 import com.deeptruth.app.android.utils.xdata;
@@ -21,7 +24,6 @@ import pl.droidsonroids.gif.GifDrawable;
 public class splashactivity extends Activity {
 
     ImageView img_imagedeep;
-    GifDrawable gifDrawable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,24 @@ public class splashactivity extends Activity {
         img_imagedeep= (ImageView) findViewById(R.id.img_imagedeep);
 
         try {
+
+            common.clearnotification(splashactivity.this);
+            Bundle bundle=getIntent().getExtras();
+            xdata.getinstance().saveSetting(config.launchtype,"");
+            if(bundle != null)
+            {
+                for (String key : bundle.keySet()) {
+                    String value = bundle.get(key).toString();
+                    if(value != null)
+                    {
+                        if(key.equals(config.launchtype))
+                        {
+                            xdata.getinstance().saveSetting(config.launchtype,value);
+                            break;
+                        }
+                    }
+                }
+            }
 
             RequestOptions requestOptions = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.NONE) // because file name is always same

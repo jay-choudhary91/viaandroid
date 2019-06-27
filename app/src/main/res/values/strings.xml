@@ -101,6 +101,7 @@
     <string name="delete_confirm_video">Are you sure you want to delete this video?</string>
     <string name="dlt_cnfm_audio">Are you sure you want to delete this audio?</string>
     <string name="dlt_cnfm_photo">Are you sure you want to delete this photo?</string>
+    <string name="bg_sync_complete">background synchronization complete.</string>
 
     <string name="share">Share</string>
     <string name="new_video">New Video</string>
@@ -266,6 +267,8 @@
     <string name="enter_url">Enter URL</string>
     <string name="enter_complete_url">Enter Complete URL</string>
 
+
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
     <string name="config_action">Config :</string>
     <string name="parameter">Parameter :</string>
