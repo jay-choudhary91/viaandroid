@@ -215,6 +215,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         startnoise();
         txt_title_actionbarcomposer.setText(config.mediarecorderformat);
         actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
+        layoutbottom.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
 
         try {
              bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,

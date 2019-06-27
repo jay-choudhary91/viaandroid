@@ -554,9 +554,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             halfpaichartdate(chart_cpuusage);
             halfpaichartdate(chart_battery);
 
-            setchartdata(linechart_speed,80);
-            setchartdata(linechart_altitude,2000);
-            setchartdata(linechart_traveled,100);
+            setchartdata(linechart_speed);
+            setchartdata(linechart_altitude);
+            setchartdata(linechart_traveled);
             vertical_slider_speed.setMax(80);
             vertical_slider_altitude.setMax(2000);
             vertical_slider_traveled.setMax(100);
@@ -2448,7 +2448,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void onNothingSelected() {
 
     }
-    public void setchartdata(LineChart linechart,int maximumrangeY)
+    public void setchartdata(LineChart linechart)
     {
         linechart.setNoDataText("");
         LimitLine llXAxis = new LimitLine(10f, "");
@@ -2473,7 +2473,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
-        leftAxis.setAxisMaximum(maximumrangeY);
         leftAxis.setAxisMinimum(0);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
