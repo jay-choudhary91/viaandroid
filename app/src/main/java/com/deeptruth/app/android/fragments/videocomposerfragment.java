@@ -480,7 +480,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         img_dotmenu.setVisibility(View.VISIBLE);
         textureview.setOnTouchListener(this);
-        actionbar.setBackgroundColor(getResources().getColor(R.color.yellowtransparent));
+        actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+        layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
         imgflashon.setOnClickListener(this);
         img_dotmenu.setOnClickListener(this);
         txt_media_quality.setOnClickListener(this);
@@ -2506,9 +2507,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         connectionvalue = Double.valueOf(arrayitemconnection[0]);
 
                     if ((gpsvalue >= 50 || gpsvalue == 0) || connectionvalue == 0.0) {
+                        layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
                         actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
                     } else {
+                        layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.greentransparent));
                         actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.greentransparent));
                     }
                 }
