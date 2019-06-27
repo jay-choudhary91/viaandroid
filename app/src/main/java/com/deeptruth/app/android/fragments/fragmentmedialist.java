@@ -1141,20 +1141,21 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                if(dataupdator >= 10)
                {
                    if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
-                   {
                        getallmedialistfromdb();
-                       /*if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                           adaptermedialist.notifyitems(arraymediaitemlist);
-
-                       if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
-                           adaptermediagrid.notifyDataSetChanged();*/
-                   }
 
                    dataupdator=0;
                }
 
-               if(common.isdevelopermodeenable())
+               if(common.isdevelopermodeenable() && (img_settings.getVisibility() == View.GONE || img_settings.getVisibility() == View.INVISIBLE))
+               {
+                   if(adaptermedialist != null)
+                       adaptermedialist.notifyDataSetChanged();
+
+                   if(adaptermediagrid != null)
+                       adaptermediagrid.notifyDataSetChanged();
+
                    img_settings.setVisibility(View.VISIBLE);
+               }
 
                 myhandler.postDelayed(this, 1000);
             }

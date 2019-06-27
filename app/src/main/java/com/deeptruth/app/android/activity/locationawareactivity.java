@@ -175,7 +175,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private int POOR_BANDWIDTH = 150;
 
     List<CellInfo> towerinfolist = new ArrayList<>();
-    private boolean isservicebound = false;
+    private boolean isservicebound = false,isappinbackground=false;
     private databasemanager mdbhelper;
     boolean updatesync = true;
     ArrayList<towerinfo> cellinfofromassets = new ArrayList<>();
@@ -1043,7 +1043,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                         if (timercounterhandler == -1 || timercounterhandler >= 3) {
                             timercounterhandler = 0;
-                            if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
+                            if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer) && (! isappinbackground)) {
                                 try {
                                     xdata.getinstance().saveSetting("gpsenabled", "1");
                                     if (!locationawareactivity.checkLocationEnable(locationawareactivity.this)){
@@ -1073,36 +1073,45 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                         return;
                                 }
                             }
-                            dbtoxapiupdatecounter++;
-                            if (dbtoxapiupdatecounter > 1) {
-                                dbtoxapiupdatecounter = 0;
 
-                                if (!isdatasyncing)
-                                    syncmediadatabase();
-                            }
-
-                            servermetricsgetupdatecounter++;
-
-                            if ((servermetricsgetupdatecounter >= 10 && common.isnetworkconnected(locationawareactivity.this)) ||
-                                    (xdata.getinstance().getSetting(config.item_satellitesdate).trim().isEmpty())) {
-                                servermetricsgetupdatecounter = 0;
-                                currentsatellitecounter++;
-                                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                                    getsistermetric();
-                            }
-
-                            currenttowercounter++;
-                            if(currenttowercounter >= 10)
+                            if(! isappinbackground)
                             {
-                                currenttowercounter=0;
-                                loadcellinfo();
+                                servermetricsgetupdatecounter++;
+
+                                if ((servermetricsgetupdatecounter >= 10 && common.isnetworkconnected(locationawareactivity.this)) ||
+                                        (xdata.getinstance().getSetting(config.item_satellitesdate).trim().isEmpty())) {
+                                    servermetricsgetupdatecounter = 0;
+                                    currentsatellitecounter++;
+                                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                                        getsistermetric();
+                                }
+
+                                currenttowercounter++;
+                                if(currenttowercounter >= 10)
+                                {
+                                    currenttowercounter=0;
+                                    loadcellinfo();
+                                }
+
+                                if ((currentsatellitecounter == -1 || (common.isnetworkconnected(locationawareactivity.this) &&
+                                        currentsatellitecounter >= 5)))
+                                {
+                                    currentsatellitecounter = 0;
+                                    getcurrentsatellitesget();
+                                }
                             }
 
-                            if ((currentsatellitecounter == -1 || (common.isnetworkconnected(locationawareactivity.this) &&
-                                    currentsatellitecounter >= 5)))
+                            if(! xdata.getinstance().getSetting(config.selectedsyncsetting).equalsIgnoreCase(config.selectedsyncsetting_2)
+                                    || (! isappinbackground))
                             {
-                                currentsatellitecounter = 0;
-                                getcurrentsatellitesget();
+                                // Process for sync database with server for composer as well as reader app.
+                                dbtoxapiupdatecounter++;
+                                if (dbtoxapiupdatecounter > 1) {
+                                    dbtoxapiupdatecounter = 0;
+
+                                    if (!isdatasyncing)
+                                        syncmediadatabase();
+                                }
                             }
                         }
                         timercounterhandler++;
@@ -1758,6 +1767,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onResume() {
         super.onResume();
+        isappinbackground=false;
         if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
             getallpermissions();
         else if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
@@ -2300,6 +2310,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onStop() {
         super.onStop();
+
+        isappinbackground=true;
         if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
             try{
                 applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
@@ -2307,9 +2319,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 e.printStackTrace();
             }
         }
-
-        if (myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
 
         if (mOrientation != null)
             mOrientation.stopListening();
@@ -3014,6 +3023,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    if(xdata.getinstance().getSetting(config.selectedsyncsetting).equalsIgnoreCase(config.selectedsyncsetting_0))
+                        common.shownotification(applicationviavideocomposer.getactivity());
                 }
                 triggersyncstatus();
             }

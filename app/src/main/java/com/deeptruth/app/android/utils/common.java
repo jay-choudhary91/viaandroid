@@ -8,6 +8,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -38,6 +41,7 @@ import android.media.ExifInterface;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -50,6 +54,7 @@ import android.os.SystemClock;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -73,6 +78,7 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.splashactivity;
 import com.deeptruth.app.android.adapter.xapidetailadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -1417,6 +1423,48 @@ public class common {
                     }
                 })
                 .show();
+    }
+
+    public static void shownotification(Context context){
+
+        Intent notificationIntent = new Intent(context, splashactivity.class);
+        notificationIntent.putExtra(config.launchtype,config.launchtypemedialist);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        String channelId = context.getResources().getString(R.string.default_notification_channel_id);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent,
+                PendingIntent.FLAG_ONE_SHOT);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, channelId)
+                .setContentTitle(context.getResources().getString(R.string.app_name))
+                .setContentText(context.getResources().getString(R.string.app_name)+" "+
+                        context.getResources().getString(R.string.bg_sync_complete))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setStyle(new NotificationCompat.BigTextStyle())
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setSmallIcon(R.mipmap.app_icon_round)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            NotificationChannel channel = new NotificationChannel(channelId,   context.getResources().getString(R.string.app_name)
+                    , NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(context.getResources().getString(R.string.app_name)+" "+
+                    context.getResources().getString(R.string.bg_sync_complete));
+            notificationManager.createNotificationChannel(channel);
+        }
+
+
+        notificationManager.notify(0, notificationBuilder.build());
+    }
+
+    public static void clearnotification(Context context) {
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager nMgr = (NotificationManager) context.getSystemService(ns);
+        nMgr.cancel(0);
     }
 
     public static String converttimeformate(long milliSeconds) {

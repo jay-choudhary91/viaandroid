@@ -1,19 +1,14 @@
 package com.deeptruth.app.android.activity;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -57,7 +51,6 @@ import com.deeptruth.app.android.fragments.synclogdetailsfragment;
 import com.deeptruth.app.android.fragments.synclogfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
-import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.services.appbackgroundactionservice;
 import com.deeptruth.app.android.services.callservice;
 import com.deeptruth.app.android.utils.circularImageview;
@@ -243,7 +236,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                             fragmedialist.shouldlaunchcomposer(true);
                             replaceFragment(fragmedialist, false, true);
                         }
-                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                        else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
                         {
                             fragment_container.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
                             launchcomposerfragment();
@@ -791,8 +784,16 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     public void launchcomposerfragment()
     {
-        composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
-        replaceFragment(fragbottombar, false, true);
+        if(xdata.getinstance().getSetting(config.launchtype).equalsIgnoreCase(config.launchtypemedialist))
+        {
+            fragmentmedialist fragment=new fragmentmedialist();
+            replaceFragment(fragment, false, true);
+        }
+        else
+        {
+            composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
+            replaceFragment(fragbottombar, false, true);
+        }
     }
 
     @Override
