@@ -512,6 +512,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         linearLayout=rootview.findViewById(R.id.content);
         actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
+        layoutbottom.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
         timerhandler = new Handler() ;
         textureview.setOnTouchListener(this);
         imgflashon.setOnClickListener(this);
