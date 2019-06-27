@@ -1153,8 +1153,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                    dataupdator=0;
                }
 
-               if(common.isdevelopermodeenable())
+               if(common.isdevelopermodeenable() && (img_settings.getVisibility() == View.GONE || img_settings.getVisibility() == View.INVISIBLE))
+               {
+                   if(adaptermedialist != null)
+                       adaptermedialist.notifyDataSetChanged();
+
+                   if(adaptermediagrid != null)
+                       adaptermediagrid.notifyDataSetChanged();
+
                    img_settings.setVisibility(View.VISIBLE);
+               }
 
                 myhandler.postDelayed(this, 1000);
             }

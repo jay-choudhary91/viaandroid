@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.Service;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
@@ -60,7 +61,13 @@ public class appbackgroundactionservice extends Service
                 /** create dialog & set builder on it */
                 Dialog dialog = builder.create();
                 /** this required special permission but u can use aplication context */
-                dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+                else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+                else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+
                 /** show dialog */
                 dialog.show();
             }
