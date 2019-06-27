@@ -96,7 +96,7 @@
                 android:layout_width="match_parent"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:padding="5dp"
-                android:layout_height="@dimen/listviewheight">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -115,9 +115,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
-                            android:scaleType="centerCrop"
                             android:background="@color/dark_blue_solid"
-                            />
+                            android:scaleType="centerCrop" />
 
                         <ImageView
                             android:id="@+id/img_loader"
@@ -156,7 +155,7 @@
 
                     <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.65"
                         android:layout_marginLeft="5dp"
                         android:orientation="vertical">
@@ -176,7 +175,7 @@
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_toLeftOf="@id/img_imageshare"
                                 android:orientation="vertical">
 
@@ -269,7 +268,7 @@
                                 <LinearLayout
                                     android:id="@+id/layout_colorbar"
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:orientation="vertical"
                                     android:layout_marginTop="1dp">
 

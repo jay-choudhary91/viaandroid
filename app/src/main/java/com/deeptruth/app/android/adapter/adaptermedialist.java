@@ -152,7 +152,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             }
             else
             {
-                holder.tv_framecounts.setVisibility(View.INVISIBLE);
+                holder.tv_framecounts.setVisibility(View.GONE);
             }
 
             ArrayList<String> arrayList = mediaobject.getMediabarcolor();
