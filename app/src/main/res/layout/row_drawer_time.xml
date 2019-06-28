@@ -19,7 +19,7 @@
                 android:id="@+id/txt_timeinformation"
                 style="@style/txt_drawer_graphical_title_big"
                 android:text="TIME"
-                app:fontType="OpenSans_Semibold"
+                app:fontType="bahnschrift-semilight"
                 />
 
             <ImageView
@@ -81,6 +81,16 @@
                     android:textSize="13sp"
                     android:text=""/>
 
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_phone_date"
+                    app:fontType="OpenSans_Semibold"
+                    style="@style/txt_normalview"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:layout_marginTop="0dp"
+                    android:textSize="13sp"
+                    android:text=""/>
+
             </LinearLayout>
 
 
@@ -118,6 +128,16 @@
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_world_time"
+                    app:fontType="OpenSans_Semibold"
+                    style="@style/txt_normalview"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:textSize="13sp"
+                    android:layout_marginTop="0dp"
+                    android:text=""/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_world_date"
                     app:fontType="OpenSans_Semibold"
                     style="@style/txt_normalview"
                     android:textColor="@color/white"

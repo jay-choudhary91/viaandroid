@@ -18,7 +18,7 @@
                 android:id="@+id/txt_connectioninformation"
                 style="@style/txt_drawer_graphical_title_big"
                 android:text="CONNECTION"
-                app:fontType="OpenSans_Semibold"
+                app:fontType="bahnschrift-semilight"
                 />
 
             <ImageView

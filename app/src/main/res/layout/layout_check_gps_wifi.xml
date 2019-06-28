@@ -35,9 +35,8 @@
                 android:id="@+id/txt_section_gps"
                 style="@style/txt_check_gps_wifi"
                 android:gravity="center_vertical"
-                android:text="GPS:"
                 android:layout_marginLeft="5dp"
-                android:paddingRight="10dp"/>
+                />
 
         </LinearLayout>
 
@@ -62,8 +61,7 @@
                 style="@style/txt_check_gps_wifi"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="5dp"
-                android:layout_centerVertical="true"
-                android:paddingRight="10dp"/>
+                android:layout_centerVertical="true" />
 
         </LinearLayout>
 
@@ -76,11 +74,11 @@
             android:layout_gravity="center">
 
             <ImageView
-                android:layout_toLeftOf="@id/txt_section_network"
                 android:id="@+id/img_network"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:background="@drawable/rightcheck"/>
+                android:layout_toLeftOf="@id/txt_section_network"
+                android:background="@drawable/rightcheck" />
 
             <com.deeptruth.app.android.views.customfonttextview
                 app:fontType="OpenSans_Semibold"
@@ -88,9 +86,8 @@
                 style="@style/txt_check_gps_wifi"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="5dp"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:paddingRight="10dp"/>
+                />
 
         </LinearLayout>
 

@@ -20,7 +20,7 @@
                 android:id="@+id/txt_locationtracking"
                 style="@style/txt_drawer_graphical_title_big"
                 android:text="LOCATION"
-                app:fontType="OpenSans_Semibold"
+                app:fontType="bahnschrift-semilight"
                 />
 
             <ImageView

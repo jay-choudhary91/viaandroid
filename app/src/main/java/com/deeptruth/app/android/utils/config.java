@@ -180,7 +180,9 @@ public class config {
     public static final String Battery="Battery";
     public static final String Address="Address";
     public static final String phoneclocktime="phoneclocktime";
+    public static final String phoneclockdate="phoneclockdate";
     public static final String worldclocktime="worldclocktime";
+    public static final String worldclockdate="worldclockdate";
     public static final String connectiondatadelay="connectiondatadelay";
     public static final String availablewifinetwork="availablewifinetwork";
     public static final String availablewifis="availablewifis";
