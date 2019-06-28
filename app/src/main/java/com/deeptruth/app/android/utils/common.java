@@ -1439,7 +1439,8 @@ public class common {
 
         Intent notificationIntent = new Intent(context, splashactivity.class);
         notificationIntent.putExtra(config.launchtype,config.launchtypemedialist);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         String channelId = context.getResources().getString(R.string.default_notification_channel_id);
         final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent,

@@ -807,6 +807,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(type == stoprecorder) // for video record stop,audio record stop and image captured button click
         {
+            xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");
             if(! iscircle)
                 makecircle();
 
