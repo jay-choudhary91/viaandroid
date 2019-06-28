@@ -182,7 +182,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     ArrayList<celltowermodel> celltowers = new ArrayList<>();
     ArrayList<startmediainfo> unsyncedmediaitems = new ArrayList<>();
     int syncupdationcounter = 0;
-    boolean isdatasyncing = false;
     int downloadmetadataattempt = 2, systemdialogshowrequestcode = 110;
     ArrayList<video> readerarraymedialist = new ArrayList<video>();
     private BroadcastReceiver coredatabroadcastreceiver;
@@ -1066,12 +1065,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                             metricitemarraylist.get(i).setMetricTrackValue(value);
                                     }
                                 }
-                                if (getcurrentfragment() instanceof videocomposerfragment) {
-                                    isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
-                                    String datainsertion = xdata.getinstance().getSetting(config.ismediadataservicerunning);
-                                    if (isrecording || (datainsertion.equalsIgnoreCase("1")))
-                                        return;
-                                }
                             }
 
                             if(! isappinbackground)
@@ -1109,8 +1102,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 if (dbtoxapiupdatecounter > 1) {
                                     dbtoxapiupdatecounter = 0;
 
-                                    if (!isdatasyncing)
-                                        syncmediadatabase();
+                                    syncmediadatabase();
+
                                 }
                             }
                         }
@@ -1166,8 +1159,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 ActivityCompat.requestPermissions(locationawareactivity.this,
                         new String[]{Manifest.permission.RECORD_AUDIO},
                         PERMISSION_RECORD_AUDIO);
-            } else {
-                //start();
             }
             return "NA";
         } else if (key.equalsIgnoreCase("connectedphonenetworkquality")) {
@@ -2326,13 +2317,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     public void syncmediadatabase() {
         if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
-            if (getcurrentfragment() instanceof videocomposerfragment) {
-                boolean isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
-                if (isrecording) {
-                    isdatasyncing = false;
-                    return;
-                }
-            }
 
             if (mdbhelper == null) {
                 mdbhelper = new databasemanager(locationawareactivity.this);
@@ -2345,6 +2329,20 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 e.printStackTrace();
             }
             // Fetch data which are unsynced or sync = 0
+
+            try
+            {
+                Cursor cursor=mdbhelper.fetchcurrentlyprocessmedias();
+                if(cursor != null && cursor.getCount() > 0)
+                    xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");
+                else
+                    xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");
+
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
             unsyncedmediaitems = mdbhelper.fetchunsynceddata();
             try {
                 mdbhelper.close();
@@ -2358,17 +2356,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");
 
             if (!common.isnetworkconnected(locationawareactivity.this)) {
-                isdatasyncing = false;
                 return;
             }
 
-            syncupdationcounter = 0;
-            if (unsyncedmediaitems.size() > 0) {
-                isdatasyncing = true;
+            if (unsyncedmediaitems.size() > 0)
                 updateunsyncedcomposeritems();
-            } else {
-                isdatasyncing = false;
-            }
 
         } else if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
@@ -2626,7 +2618,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             e.printStackTrace();
                         }
                     }
-                    triggersyncstatus();
                 }
             });
         } else {
@@ -2725,16 +2716,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             yCoord += chunkHeight;
         }
         return arrayList;
-    }
-
-
-    public void triggersyncstatus() {
-        syncupdationcounter++;
-        if (syncupdationcounter < unsyncedmediaitems.size() && unsyncedmediaitems.size() > 0) {
-            updateunsyncedcomposeritems();
-        } else {
-            isdatasyncing = false;
-        }
     }
 
     public void runmediaupdate(String finalheader, final String finallocalkey, String finalvideokey, String finaltoken, String finalsync,
@@ -2920,7 +2901,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 e.printStackTrace();
                             }
                         }
-                        triggersyncstatus();
                     }
                 });
             }
@@ -3024,10 +3004,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         e.printStackTrace();
                     }
 
-                    if(xdata.getinstance().getSetting(config.selectedsyncsetting).equalsIgnoreCase(config.selectedsyncsetting_0))
+                    if(isappinbackground  && xdata.getinstance().getSetting(config.selectedsyncsetting).
+                            equalsIgnoreCase(config.selectedsyncsetting_0))
                         common.shownotification(applicationviavideocomposer.getactivity());
                 }
-                triggersyncstatus();
             }
         });
     }

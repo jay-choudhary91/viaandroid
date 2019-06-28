@@ -109,6 +109,10 @@ public class databasemanager {
             if(index >=0)
                 medianame = location.substring(0, location.lastIndexOf('.'));
 
+            String framegrabcompleted="0";
+            if(type.equalsIgnoreCase("image"))
+                framegrabcompleted="1";
+
             String query="update tblstartmediainfo set header='"+ header +"',type = '"+type +"',localkey='"+ localkey +"',token = '"+token +"'" +
                     ",videokey='"+ videokey +"',sync = '"+sync +"',sync_date='"+ date +"',action_type = '"+action_type +"'," +
                     "apirequestdevicedate='"+ apirequestdevicedate +"',videostartdevicedate = '"+videostartdevicedate +"',devicetimeoffset='"+
@@ -116,6 +120,7 @@ public class databasemanager {
                     "videostarttransactionid='"+ videostarttransactionid +"',firsthash = '"+firsthash +"',videoid='"+ videoid +"'," +
                     "status = '"+status +"'," +
                     "color = '"+color +"'," +
+                    "framegrabcompleted = '"+framegrabcompleted +"'," +
                     "media_notes = '"+medianotes +"'," +
                     "thumbnailurl = '"+thumbnailpath +"'," +
                     "media_folder = '"+mediafolder +"'," +
@@ -191,6 +196,10 @@ public class databasemanager {
         try {
             lock.lock();
 
+            String framegrabcompleted="0";
+            if(type.equalsIgnoreCase("image"))
+                framegrabcompleted="1";
+
             int index =  medianame.lastIndexOf('.');
             if(index >=0)
                 medianame = medianame.substring(0, medianame.lastIndexOf('.'));
@@ -228,6 +237,7 @@ public class databasemanager {
             values.put("media_folder",  mediafolder);
             values.put("thumbnailurl",  mediafilapth);
             values.put("mediaduration",  mediaduration);
+            values.put("framegrabcompleted",  framegrabcompleted);
 
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
@@ -291,7 +301,7 @@ public class databasemanager {
             lock.lock();
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("update tblstartmediainfo set header='"+ header +"' where localkey='"+localkey+"'");;
+            mDb.execSQL("update tblstartmediainfo set header='"+ header +"',framegrabcompleted = 1 where localkey='"+localkey+"'");;
 
             if (mCur != null)
                 mCur.moveToNext();
@@ -570,13 +580,37 @@ public class databasemanager {
         return  mCur;
     }
 
-    public Cursor fatchstartvideoinfo() {
+    public Cursor fetchunsyncedmediainfo() {
 
         Cursor mCur=null;
         try {
             lock.lock();
 
-            String sql = "SELECT * FROM tblstartmediainfo where sync_date = 0 ";
+            String sql = "SELECT * FROM tblstartmediainfo where sync_date = 0 AND framegrabcompleted = 1 LIMIT 1";
+            //String sql = "SELECT * FROM tblmetadata";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur != null) {
+                mCur.moveToNext();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+
+        return  mCur;
+    }
+
+    public Cursor fetchcurrentlyprocessmedias() {
+
+        Cursor mCur=null;
+        try {
+            lock.lock();
+
+            String sql = "SELECT * FROM tblstartmediainfo where sync_date = 0 AND framegrabcompleted = 0 LIMIT 1";
             //String sql = "SELECT * FROM tblmetadata";
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
@@ -600,7 +634,7 @@ public class databasemanager {
         ArrayList<startmediainfo> marray=new ArrayList<>();
 
         try {
-            Cursor cur = fatchstartvideoinfo();
+            Cursor cur = fetchunsyncedmediainfo();
             if (cur != null && cur.moveToFirst())
             {
                 do{
@@ -631,30 +665,6 @@ public class databasemanager {
         }
 
         return marray;
-    }
-
-    public Cursor fatchstartvideokey(String id) {
-
-        Cursor mCur=null;
-        try {
-            lock.lock();
-
-            String sql = "SELECT * FROM tblstartmediainfo where sync_date = 0 ";
-            //String sql = "SELECT * FROM tblmetadata";
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            mCur = mDb.rawQuery(sql, null);
-            if (mCur != null) {
-                mCur.moveToNext();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-
-        return  mCur;
     }
 
     public Cursor updatevideokeytoken(String videoid,String videokey,String token , String transactionid) {
