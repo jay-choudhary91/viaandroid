@@ -2611,7 +2611,7 @@ public class common {
 
 
     public static String speedformatter(String value) {
-        if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
+        /*if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
         {
             String[] array=value.split(" ");
             if(array.length >0)
@@ -2626,18 +2626,20 @@ public class common {
                 return ""+precision.format(convertmpstokmph(speedinmps))+" km/h";
             }
         }
-        return "0 km/h";
+        return "0 km/h";*/
+        return value;
     }
 
     public static String travelleddistanceformatter(String value) {
-        if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
+        /*if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA") && (! value.equalsIgnoreCase("null"))))
         {
             String[] array=value.split(" ");
             if(array.length >0)
                 value=array[0];
 
             DecimalFormat precision = new DecimalFormat("0.0");
-            double distanceInMeters=common.convertmilestometer(Float.parseFloat(value));
+            //double distanceInMeters=common.convertmilestometer(Float.parseFloat(value));
+            double distanceInMeters=Float.parseFloat(value);
             Locale locale = Locale.getDefault();
             if (useMiles(locale)) {
                 return ""+precision.format(convertmetertomiles(distanceInMeters))+" miles";
@@ -2645,7 +2647,8 @@ public class common {
                 return ""+precision.format(convertmetertokm(distanceInMeters))+" km";
             }
         }
-        return "0 km";
+        return "0 km";*/
+        return value;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
