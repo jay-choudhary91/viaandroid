@@ -16,9 +16,7 @@
             <enum name="Comfortaa-Bold" value="10" />
             <enum name="Comfortaa-Light" value="11" />
             <enum name="Comfortaa-Regular" value="12" />
-            <enum name="bahnschrift-Regular" value="13" />
-            <enum name="bahnschrift-semilight" value="14" />
-
+            <enum name="bahnschrift_regular" value="13" />
 
         </attr>
     </declare-styleable>

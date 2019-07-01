@@ -2330,6 +2330,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     public void syncmediadatabase() {
+
         if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
 
             if (mdbhelper == null) {

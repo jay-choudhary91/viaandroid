@@ -18,16 +18,13 @@
                 android:id="@+id/txt_connectioninformation"
                 style="@style/txt_drawer_graphical_title_big"
                 android:text="CONNECTION"
-                app:fontType="bahnschrift-semilight"
+                app:fontType="bahnschrift_regular"
                 />
 
             <ImageView
                 android:id="@+id/img_drawer_connection"
-                android:layout_width="50dp"
-                android:layout_height="40dp"
                 android:src="@drawable/ic_drawer_connection"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"/>
+                style="@style/img_drawer_graphical_icon"/>
 
         </RelativeLayout>
 
