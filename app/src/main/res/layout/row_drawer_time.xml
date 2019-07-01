@@ -19,16 +19,13 @@
                 android:id="@+id/txt_timeinformation"
                 style="@style/txt_drawer_graphical_title_big"
                 android:text="TIME"
-                app:fontType="OpenSans_Semibold"
+                app:fontType="bahnschrift_regular"
                 />
 
             <ImageView
                 android:id="@+id/img_drawer_time"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
                 android:src="@drawable/ic_drawer_time"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"/>
+                style="@style/img_drawer_graphical_icon"/>
 
         </RelativeLayout>
 
