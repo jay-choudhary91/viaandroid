@@ -2407,11 +2407,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         || xdata.getinstance().getSetting(config.airplanemode).equals("ON"))
                 {
 
-                    txt_section_network.setText(config.TEXT_NETWORK +"NA");
+                    txt_section_network.setText("NA");
                     img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
 
                 }else{
-                    txt_section_network.setText(config.TEXT_NETWORK + "" + common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
+                    txt_section_network.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
                     img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
                 }
 

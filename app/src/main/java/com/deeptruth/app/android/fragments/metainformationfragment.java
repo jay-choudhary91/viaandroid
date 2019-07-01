@@ -174,6 +174,10 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     customfonttextview txtdegree;
     @BindView(R.id.txt_availablewifinetwork)
     customfonttextview txt_availablewifinetwork;
+    @BindView(R.id.txt_world_date)
+    TextView txt_world_date;
+    @BindView(R.id.txt_phone_date)
+    TextView txt_phone_date;
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
@@ -697,6 +701,12 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.matrichash)){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.mediahash),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvmetahash);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
+                            txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.worldclockdate)){
+                            txt_world_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
                         }
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.Battery))
                         {
@@ -2225,6 +2235,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         txt_satellite_altitudes_at.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_satellite_altitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         tvblockchainid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_phone_date.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        txt_world_date.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         tvblockchainid.setVisibility(View.GONE);
         tvblockid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         tvblockid.setVisibility(View.GONE);

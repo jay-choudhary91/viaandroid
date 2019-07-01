@@ -102,7 +102,9 @@ import com.warkiz.widget.SeekParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -373,6 +375,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ImageView img_drawer_connection;
     @BindView(R.id.img_drawer_summary)
     ImageView img_drawer_summary;
+    @BindView(R.id.txt_world_date)
+    TextView txt_world_date;
+    @BindView(R.id.txt_phone_date)
+    TextView txt_phone_date;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -554,9 +560,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             halfpaichartdate(chart_cpuusage);
             halfpaichartdate(chart_battery);
 
-            setchartdata(linechart_speed);
-            setchartdata(linechart_altitude);
-            setchartdata(linechart_traveled);
+            setchartdata(linechart_speed,80);
+            setchartdata(linechart_altitude,2000);
+            setchartdata(linechart_traveled,100);
             vertical_slider_speed.setMax(80);
             vertical_slider_altitude.setMax(2000);
             vertical_slider_traveled.setMax(100);
@@ -729,8 +735,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
-
-
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),
                             "\n"+ common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)))
                             , tvspeed);
@@ -761,6 +765,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                     if(world_time_clock != null)
                         world_time_clock.setpostrecorddata(true,"");
+
+                if(! xdata.getinstance().getSetting(config.phoneclockdate).isEmpty() && (! xdata.getinstance().getSetting(config.phoneclockdate).equalsIgnoreCase("NA")))
+                            txt_phone_date.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.phoneclockdate)));
+
+                if(! xdata.getinstance().getSetting(config.worldclockdate).isEmpty() && (! xdata.getinstance().getSetting(config.worldclockdate).equalsIgnoreCase("NA")))
+                           txt_world_date.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.worldclockdate)));
 
                     common.setdrawabledata("",common.getdate(), tvdate);
                     common.setdrawabledata("",common.gettime(), tvtime);
@@ -1193,6 +1203,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 layout_mediasummary.setVisibility(View.VISIBLE);
                 layout_mediametadata.setVisibility(View.VISIBLE);
                 txt_mediainformation.setVisibility(View.VISIBLE);
+                txt_phone_date.setText("");
+                txt_world_date.setText("");
                 showhideverticalbar(false);
                 drawmappath();
                 drawmediainformation();
@@ -1828,6 +1840,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.matrichash)){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.mediahash),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvmetahash);
                         }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
+                            txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.worldclockdate)){
+                            txt_world_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
+                        }
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.Battery))
                         {
                             if(chart_battery!= null)
@@ -2448,7 +2466,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void onNothingSelected() {
 
     }
-    public void setchartdata(LineChart linechart)
+    public void setchartdata(LineChart linechart,int maxvalue)
     {
         linechart.setNoDataText("");
         LimitLine llXAxis = new LimitLine(10f, "");
@@ -2474,6 +2492,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
         leftAxis.setAxisMinimum(0);
+        leftAxis.setAxisMaximum(maxvalue);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
         linechart.getLegend().setEnabled(false);
