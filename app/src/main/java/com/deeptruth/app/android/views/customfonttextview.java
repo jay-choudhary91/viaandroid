@@ -23,7 +23,8 @@ public class customfonttextview extends android.support.v7.widget.AppCompatTextV
     public static final String SANS_BOLD_COMFORTAA = "fonts/Comfortaa-Bold.ttf";
     public static final String SANS_LIGHT_COMFORTAA = "fonts/Comfortaa-Light.ttf";
     public static final String SANS_REGULAR_COMFORTAA = "fonts/Comfortaa-Regular.ttf";
-    public static final String bahnschrift_regular = "fonts/bahnschrift_regular.ttf";
+    public static final String bahnschrift_regular = "fonts/Bahnschrift_Regular.TTF";
+    public static final String bahnschrift_light = "fonts/BAHNSCHRIFT-11.TTF";
 
 
     public customfonttextview(Context context, AttributeSet attrs) {
@@ -85,6 +86,10 @@ public class customfonttextview extends android.support.v7.widget.AppCompatTextV
                 break;
             case 13:
                 this.setTypeface(Typeface.createFromAsset(context.getAssets(),bahnschrift_regular));
+
+                break;
+            case 14:
+                this.setTypeface(Typeface.createFromAsset(context.getAssets(),bahnschrift_light));
 
                 break;
 
