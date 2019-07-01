@@ -112,6 +112,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1228,10 +1229,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     + ":" + common.appendzero(calendar.get(Calendar.SECOND));
             metricItemValue = time + " GMT";
         }else if (key.equalsIgnoreCase(config.worldclockdate)) {
-            Calendar calander = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(config.date_format);
-            String date = simpleDateFormat.format(calander.getTime());
-            metricItemValue =date;
+            DateFormat gmtFormat = new SimpleDateFormat(config.date_format);
+            TimeZone gmtTime = TimeZone.getTimeZone("GMT");
+            gmtFormat.setTimeZone(gmtTime);
+            System.out.println("Current DateTime in GMT : " + gmtFormat.format(new Date()));
+            metricItemValue = gmtFormat.format(new Date());
         }
         else if (key.equalsIgnoreCase(config.phoneclockdate)) {
             Calendar calander = Calendar.getInstance();
