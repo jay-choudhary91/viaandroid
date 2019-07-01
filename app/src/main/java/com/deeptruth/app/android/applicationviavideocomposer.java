@@ -1,24 +1,34 @@
 package com.deeptruth.app.android;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Application;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
+import android.arch.lifecycle.ProcessLifecycleOwner;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
+import com.deeptruth.app.android.services.appbackgroundactionservice;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 
-public class applicationviavideocomposer extends Application {
+public class applicationviavideocomposer extends Application implements LifecycleObserver {
     public static Context mcontext;
     public static Activity mactvitiy;
 
     public static Typeface regularfonttype = null;
     public static Typeface semiboldfonttype = null;
     public static Typeface boldfonttype = null;
+    public static boolean isactivitybecomefinish = false;
 
     @Override
     public void onCreate() {
@@ -41,6 +51,7 @@ public class applicationviavideocomposer extends Application {
         regularfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Regular.ttf");
         semiboldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Semibold.ttf");
         boldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Bold.ttf");
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
     }
 
     @Override
@@ -61,4 +72,41 @@ public class applicationviavideocomposer extends Application {
     {
         mactvitiy =activity;
     }
+
+    public static void setisactivitybecomefinish(boolean isbecomefinish)
+    {
+        isactivitybecomefinish =isbecomefinish;
+    }
+
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private void onAppBackgrounded() {
+        Log.d("MyApp", "App in background");
+        if(! isactivitybecomefinish && (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)))
+        {
+            if (isMyServiceRunning(appbackgroundactionservice.class))
+                stopService(new Intent(getBaseContext(), appbackgroundactionservice.class));
+
+            startService(new Intent(getBaseContext(), appbackgroundactionservice.class));
+        }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private void onAppForegrounded() {
+        Log.d("MyApp", "App in foreground");
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass)
+    {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("isMyServiceRunning?", true+"");
+                return true;
+            }
+        }
+        Log.i ("isMyServiceRunning?", false+"");
+        return false;
+    }
+
 }

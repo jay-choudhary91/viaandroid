@@ -90,6 +90,7 @@ dependencies {
     implementation 'com.facebook.network.connectionclass:connectionclass:1.0.1'
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     implementation 'com.android.billingclient:billing:2.0.1'
+    implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation 'com.tyorikan:voice-recording-visualizer:1.0.3@aar'
 
 

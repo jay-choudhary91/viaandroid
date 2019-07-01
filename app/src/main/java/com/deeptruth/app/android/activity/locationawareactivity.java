@@ -239,16 +239,30 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     {
                                         try
                                         {
+                                            if (oldlocation == null)
+                                                oldlocation = location;
+
                                             double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
-                                            double miles=mps+value;
+                                            value=value+oldlocation.distanceTo(location);
+                                            //double miles=mps+value;
                                             //double miles=common.convertmetertomiles(mps+value);
-                                            xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
+                                            xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(value));
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
                                         }
                                     }
+                                    else
+                                    {
+                                        xdata.getinstance().saveSetting("travelleddistance", "0.0");
+                                    }
                                 }
+                                else
+                                {
+                                    xdata.getinstance().saveSetting("travelleddistance", "0.0");
+                                }
+
+                                oldlocation = location;
 
                                 /*if (location.hasSpeed()) {
 
@@ -258,7 +272,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     xdata.getinstance().saveSetting("gpsspeed", "0");
                                 }*/
 
-/*                                if (location.hasSpeed()) {
+                                /* if (location.hasSpeed()) {
                                     float mps = location.getSpeed();
                                     xdata.getinstance().saveSetting("gpsspeed", "" + mps);
 
@@ -298,32 +312,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     updatelocationsparams(location);
                                 }
 
-                                if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
-                                {
-                                    if (oldlocation == null)
-                                        oldlocation = location;
-
-                                    /*long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(), oldlocation.getLatitude(),
-                                            oldlocation.getLongitude());
-                                    double feets = common.convertmetertofeets(meter);
-                                    if(! xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
-                                    {
-                                        try
-                                        {
-                                            double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
-                                            feets=feets+value;
-                                        }catch (Exception e)
-                                        {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    DecimalFormat precision = new DecimalFormat("0.0");
-                                    xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(feets));*/
-                                } else
-                                {
-                                    xdata.getinstance().saveSetting("travelleddistance", "0.0");
-                                    oldlocation = null;
-                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

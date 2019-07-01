@@ -92,7 +92,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     boolean isviewtouched=false;
     callservice phonecallservice;
     private fragmentmedialist fragmedialist;
-    boolean isdraweropen=false ,isdrawerrunning = false,isactivitybecomefinish=false,needtoshowpopup=false;
+    boolean isdraweropen=false ,isdrawerrunning = false;
     int rootviewheight,navigationbarheight, finalheight ,imageheight;
 
 
@@ -308,7 +308,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
         //showAlertDialog();
 
-        if(! isactivitybecomefinish && (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)))
+        /*if(! isactivitybecomefinish && (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)))
         {
             if (isMyServiceRunning(appbackgroundactionservice.class))
                 stopService(new Intent(getBaseContext(), appbackgroundactionservice.class));
@@ -318,7 +318,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 needtoshowpopup=false;
                 startService(new Intent(getBaseContext(), appbackgroundactionservice.class));
             }
-        }
+        }*/
 
         if(phonecallservice != null)
         {
@@ -355,7 +355,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @Override
     protected void onResume() {
-        needtoshowpopup=true;
         super.onResume();
     }
 
@@ -608,7 +607,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @Override
     public void finishactivity() {
-        isactivitybecomefinish=true;
+        applicationviavideocomposer.setisactivitybecomefinish(true);
         finish();
     }
 
