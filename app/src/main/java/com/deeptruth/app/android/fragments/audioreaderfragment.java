@@ -1387,6 +1387,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+        gethelper().setcurrentmediaposition((int) (metricmainarraylist.size() * 100) / 100);
         ismediacompleted =true;
         isplaypauswebtnshow =false;
         maxincreasevideoduration= audioduration;
@@ -2184,4 +2185,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         gethelper().drawerenabledisable(false);
         gethelper().updateactionbar(1);
     }
+
+
+
 }
