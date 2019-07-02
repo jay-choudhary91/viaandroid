@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.mediainfotablefields;
@@ -69,6 +70,7 @@ public class readmediadataservice extends Service {
         ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
             @Override
             public void onFailure() {
+                Log.d("ffmpeg", " onFailure");
                 // showUnsupportedExceptionDialog();
             }
 
@@ -641,6 +643,12 @@ public class readmediadataservice extends Service {
                             {
                                 updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_complete);
                                 sendbroadcastreader();
+
+                                if(xdata.getinstance().getSetting(config.selectedsyncsetting).
+                                        equalsIgnoreCase(config.selectedsyncsetting_0))
+                                    common.shownotification(applicationviavideocomposer.getactivity());
+
+
                             }
                         }
                     }catch (Exception e)

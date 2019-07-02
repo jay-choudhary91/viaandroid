@@ -2487,7 +2487,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void setactionbarbackgroundcolor() {
 
-            if (!common.isnetworkconnected(getActivity()) ||
+            if (!common.isnetworkconnected(applicationviavideocomposer.getactivity()) ||
                     xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0") ||
                     xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA") ||
                     xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA") ||

@@ -82,7 +82,7 @@ public class applicationviavideocomposer extends Application implements Lifecycl
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void onAppBackgrounded() {
         Log.d("MyApp", "App in background");
-        if(! isactivitybecomefinish && (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)))
+        if(! isactivitybecomefinish)
         {
             if (isMyServiceRunning(appbackgroundactionservice.class))
                 stopService(new Intent(getBaseContext(), appbackgroundactionservice.class));

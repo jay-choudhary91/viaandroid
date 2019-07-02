@@ -62,6 +62,7 @@ public class insertmediadataservice extends Service {
                 @Override
                 public void onFailure() {
                     // showUnsupportedExceptionDialog();
+                    Log.d("ffmpeg", " onFailure");
                 }
 
                 @Override
@@ -339,8 +340,9 @@ public class insertmediadataservice extends Service {
         });
     } catch (FFmpegNotSupportedException e) {
         //showUnsupportedExceptionDialog();
+            Log.d("ffmpeg", "FFmpegNotSupportedException : " + e);
     } catch (Exception e) {
-        Log.d("tagg", "EXception no controlada : " + e);
+        Log.d("ffmpeg", "EXception no controlada : " + e);
     }
 
          xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
