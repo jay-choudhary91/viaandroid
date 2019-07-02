@@ -80,6 +80,13 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             holder.rl_row_media.setVisibility(View.VISIBLE);
             holder.tv_mediaduration.setText(mediaobject.getDuration());
 
+            try {
+
+                holder.linearseekbarcolorview.removeAllViews();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             ArrayList<String> arrayList = mediaobject.getMediabarcolor();
             if (mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
             {
@@ -102,12 +109,6 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 if(arrayList != null && arrayList.size() > 0) {
                     holder.linearseekbarcolorview.setVisibility(View.VISIBLE);
                     holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
-                    try {
-
-                        holder.linearseekbarcolorview.removeAllViews();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     if(mediaobject.getColorsectionsarray() != null && mediaobject.getColorsectionsarray().size() > 0)
                     {
                         for(int i=0;i<mediaobject.getColorsectionsarray().size();i++)

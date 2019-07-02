@@ -154,6 +154,13 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             {
                 holder.tv_framecounts.setVisibility(View.GONE);
             }
+            try {
+
+                holder.linearseekbarcolorview.removeAllViews();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             ArrayList<String> arrayList = mediaobject.getMediabarcolor();
             if (mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
@@ -232,13 +239,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             if(arrayList != null && arrayList.size() > 0)
             {
                 holder.layout_colorbar.setVisibility(View.VISIBLE);
-                try {
-
-                    holder.linearseekbarcolorview.removeAllViews();
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
                 holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
                 if(mediaobject.getColorsectionsarray() != null && mediaobject.getColorsectionsarray().size() > 0)
                 {
