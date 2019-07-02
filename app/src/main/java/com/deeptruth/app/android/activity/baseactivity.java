@@ -14,6 +14,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -620,7 +622,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             Object argvalue = mPairList.get(key);
             api.add(key, argvalue);
         }
-        api.execute();
+        if(Build.VERSION.SDK_INT >= 11/*HONEYCOMB*/) {
+            api.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            api.execute();
+        }
     }
 
 

@@ -239,8 +239,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     {
                                         try
                                         {
+                                            if (oldlocation == null)
+                                                oldlocation = location;
+
                                             double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
-                                            double miles=mps+value;
+                                            double miles=value+oldlocation.distanceTo(location);
+                                            //double miles=mps+value;
                                             //double miles=common.convertmetertomiles(mps+value);
                                             xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
                                         }catch (Exception e)
@@ -248,7 +252,17 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                             e.printStackTrace();
                                         }
                                     }
+                                    else
+                                    {
+                                        xdata.getinstance().saveSetting("travelleddistance", "0.0");
+                                    }
                                 }
+                                else
+                                {
+                                    xdata.getinstance().saveSetting("travelleddistance", "0.0");
+                                }
+
+                                oldlocation = location;
 
                                 /*if (location.hasSpeed()) {
 
@@ -2463,7 +2477,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             e.printStackTrace();
         }
 
-        if (readerarraymedialist != null && readerarraymedialist.size() > 0) {
+        if (readerarraymedialist != null && readerarraymedialist.size() > 0)
+        {
             for (int i = 0; i < readerarraymedialist.size(); i++) {
                 String status = readerarraymedialist.get(i).getMediastatus();
                 if (!readerarraymedialist.get(i).isIscheck()) {
@@ -2479,6 +2494,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     }
                 }
             }
+            xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");
+        }
+        else
+        {
+            xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");
         }
     }
 

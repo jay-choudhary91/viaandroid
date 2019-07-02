@@ -2620,13 +2620,15 @@ public class common {
             DecimalFormat precision = new DecimalFormat("0.0");
             double speedinmps=Double.parseDouble(value);
             Locale locale = Locale.getDefault();
-            if (useMiles(locale)) {
+            /*if (useMiles(locale)) {
                 return ""+precision.format(convertmpstomph(speedinmps))+" mp/h";
             } else {
                 return ""+precision.format(convertmpstokmph(speedinmps))+" km/h";
-            }
+            }*/
+            return ""+precision.format(convertmpstokmph(speedinmps))+" km/h";
         }
         return "0 km/h";
+        //return value;
     }
 
     public static String travelleddistanceformatter(String value) {
@@ -2637,15 +2639,16 @@ public class common {
                 value=array[0];
 
             DecimalFormat precision = new DecimalFormat("0.0");
-            double distanceInMeters=common.convertmilestometer(Float.parseFloat(value));
             Locale locale = Locale.getDefault();
-            if (useMiles(locale)) {
+            /*if (useMiles(locale)) {
                 return ""+precision.format(convertmetertomiles(distanceInMeters))+" miles";
             } else {
                 return ""+precision.format(convertmetertokm(distanceInMeters))+" km";
-            }
+            }*/
+            return ""+precision.format(convertmetertokm(Float.parseFloat(value)))+" km";
         }
         return "0 km";
+        //return value;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

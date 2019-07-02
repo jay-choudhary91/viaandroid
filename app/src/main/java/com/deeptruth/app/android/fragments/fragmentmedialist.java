@@ -1,7 +1,9 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -85,6 +88,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by ${matraex} on 6/8/18.
@@ -157,7 +161,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     long lastTapTimeMs = 0;
     long touchDownMs = 0;
     boolean iskeyboardopen = false,shouldnavigatelist=true;
-
+    private static final int  RC_OVERLAY=21;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_medialist;
@@ -400,6 +404,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             {
                 img_uploadmedia.setVisibility(View.VISIBLE);
                 img_camera.setVisibility(View.GONE);
+                checkoverlaysetting();
             }
             else
             {
@@ -1687,6 +1692,36 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
                 copymediafromgallery(mediafilepath);
             }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void openOverlaySettings() {
+        final Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + applicationviavideocomposer.getactivity().getPackageName()));
+        try {
+            startActivityForResult(intent, RC_OVERLAY);
+        } catch (ActivityNotFoundException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public void checkoverlaysetting()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(applicationviavideocomposer.getactivity()))
+        {
+            common.showalert(applicationviavideocomposer.getactivity(), getResources().getString(R.string.allow_apps_to),
+                new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
+                        openOverlaySettings();
+                    }
+
+                    @Override
+                    public void onItemClicked(Object object, int type) {
+
+                    }
+                });
         }
     }
 
