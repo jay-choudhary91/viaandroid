@@ -412,6 +412,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ArrayList<celltowermodel> celltowers = new ArrayList<>();
     ArrayList<satellites> satelliteslist = new ArrayList<>();
     Marker mediacreatedpointmarker;
+    int count = 0;
+    float vlauetraveled = 100,valuespeed = 80,valuealtitude = 2000,valuegpsaccuracy = 25,valuedatatimedelay = 10,valueconnectionspeed=100;
+    float traveledarray[] = {13,42,9,34,9,23,84,93,28,49,32,84,9,28,34,92,35,80,93,101,48,84,9,84,9,80,94,82,34,82,9,38,40,92,38,40,92,38,42,03,84,23,47,62,38,42,34,98,120,79,23,74,
+            92,36,130,55,28,34,98,23,84,9,23,84,02,36,78,42,37,84,23,42,37,47,280,23,42,34,23,84,9,23,84,8,23,04,82,30,8,34,23,42,343,24,23,432,43,243,243,242,341,411,31,23,21,21,43,21,23,44,34,83,95,84,30,98,43,90};
+
     @Override
     public int getlayoutid() {
         return R.layout.frag_graphicaldrawer;
@@ -560,16 +565,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             halfpaichartdate(chart_cpuusage);
             halfpaichartdate(chart_battery);
 
-            setchartdata(linechart_speed,80);
-            setchartdata(linechart_altitude,2000);
-            setchartdata(linechart_traveled,100);
+            setchartdata(linechart_speed,300);
+            setchartdata(linechart_altitude,3000);
+            setchartdata(linechart_traveled,500);
             vertical_slider_speed.setMax(80);
             vertical_slider_altitude.setMax(2000);
             vertical_slider_traveled.setMax(100);
 
-            initlinechart(linechart_connectionspeed,25f);
-            initlinechart(linechart_datatimedelay,10f);
-            initlinechart(linechart_gpsaccuracy,100f);
+            initlinechart(linechart_connectionspeed,100f);
+            initlinechart(linechart_datatimedelay,50f);
+            initlinechart(linechart_gpsaccuracy,500f);
             vertical_slider_connectionspeed.setMax(25);
             vertical_slider_connectiondatatimedely.setMax(10);
             vertical_slider_gpsaccuracy.setMax(100);
@@ -819,7 +824,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 if(array.length >0)
                                     connectionspeed=Float.parseFloat(array[0]);
                             }
-                            setlinechartdata(linechart_connectionspeed,connectionspeed,connectionspeedvalues);
+                            setlinechartdata(linechart_connectionspeed,connectionspeed,connectionspeedvalues,"linechart_connectionspeed");
                         }
 
                         {
@@ -831,7 +836,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 if(array.length >0)
                                     connectiondelay=Float.parseFloat(array[0]);
                             }
-                            setlinechartdata(linechart_datatimedelay,connectiondelay,connectiondatadelayvalues);
+                            setlinechartdata(linechart_datatimedelay,connectiondelay,connectiondatadelayvalues,"linechart_datatimedelay");
                         }
 
                         {
@@ -844,7 +849,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 if(array.length >0)
                                     gpsaccuracydata=Float.parseFloat(array[0]);
                             }
-                            setlinechartdata(linechart_gpsaccuracy,gpsaccuracydata,gpsaccuracyvalues);
+                            setlinechartdata(linechart_gpsaccuracy,gpsaccuracydata,gpsaccuracyvalues,"linechart_gpsaccuracy");
                         }
 
                         {
@@ -855,6 +860,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 String[] array=speed.split(" ");
                                 if(array.length >0)
                                     data=Float.parseFloat(array[0]);
+
+
                             }
                             setspeedtraveledaltitudechart(linechart_speed,data,speedgraphitems,"linechart_speed");
                         }
@@ -867,6 +874,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 String[] array=traveled.split(" ");
                                 if(array.length >0)
                                     data=Float.parseFloat(array[0]);
+
+                                //data = traveledarray[count];
                             }
                             setspeedtraveledaltitudechart(linechart_traveled,data,travelledgraphitems,"linechart_traveled");
                         }
@@ -1157,6 +1166,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void setrecordrunning(boolean isrecodrunning)
     {
         this.isrecodrunning=isrecodrunning;
+        vlauetraveled = 100;valuespeed = 80;valuealtitude = 20000;valuegpsaccuracy = 25;valuedatatimedelay = 10;valueconnectionspeed=100;
     }
 
     public void setdraweropen(boolean isdraweropen)
@@ -1542,13 +1552,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         linechart_altitude.setVisibility(View.VISIBLE);
 
         if(connectionspeedvalues.size() > 0)
-            setlinechartdata(linechart_connectionspeed,-1f,connectionspeedvalues);
+            setlinechartdata(linechart_connectionspeed,-1f,connectionspeedvalues,"linechart_connectionspeed");
 
         if(connectiondatadelayvalues.size() > 0)
-            setlinechartdata(linechart_datatimedelay,-1f,connectiondatadelayvalues);
+            setlinechartdata(linechart_datatimedelay,-1f,connectiondatadelayvalues,"linechart_datatimedelay");
 
         if(gpsaccuracyvalues.size() > 0)
-            setlinechartdata(linechart_gpsaccuracy,-1f,gpsaccuracyvalues);
+            setlinechartdata(linechart_gpsaccuracy,-1f,gpsaccuracyvalues,"linechart_gpsaccuracy");
 
         if(speedgraphitems.size() > 0)
             setspeedtraveledaltitudechart(linechart_speed,-1f,speedgraphitems,"linechart_speed");
@@ -2566,9 +2576,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.setMarker(marker);*/
     }
 
-    public void setlinechartdata(final LineChart chart, Float value, ArrayList<Entry> valuesarray)
+    public void setlinechartdata(final LineChart chart, Float value, ArrayList<Entry> valuesarray,String chartname)
     {
         chart.setVisibility(View.VISIBLE);
+       // if(valuegpsaccuracy == 0 || valuedatatimedelay == 0 || valueconnectionspeed==0)
+                 //setyaxisranegpschart(chart,chartname);
+
        /* if(valuesarray.size() > 0)
         {
             if(valuesarray.get(valuesarray.size()-1).getY() == value)
@@ -2605,10 +2618,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
             }
 
+            /*LineData data = new LineData(set1);
+            chart.setData(data);
+            setyaxismaxrangegps(chart,chartname,value);
+            chart.setVisibleXRangeMaximum(80);
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+            chart.refreshDrawableState();*/
+
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
             chart.refreshDrawableState();
+            setyaxismaxrangegps(chart,chartname,value);
             chart.setVisibleXRangeMaximum(80);
             chart.moveViewToX(set1.getEntryCount());
             //chart.invalidate();
@@ -2741,9 +2763,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
-    private void setspeedtraveledaltitudechart(final LineChart linechart, Float value, ArrayList<Entry> arrayitems,String ischart) {
+    private void setspeedtraveledaltitudechart(final LineChart linechart, Float value, ArrayList<Entry> arrayitems,String chartname) {
 
         linechart.setVisibility(View.VISIBLE);
+
+       /* if( vlauetraveled == 0 || valuespeed == 0 || valuealtitude == 0)
+            setyxisrangefirsttime(linechart,chartname);*/
 
         Log.e("speed value",""+value);
 
@@ -2754,13 +2779,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }*/
 
         if(value == 0)
-            value=1.0f;
+            value=0.0f;
 
         if(value != -1)
         {
            /* if(arrayitems.size() == 0)
                 arrayitems.add(new Entry(0, 1, 0));*/
-
             arrayitems.add(new Entry(arrayitems.size(), value, 0));
         }
         LineDataSet set1;
@@ -2787,10 +2811,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
             LineData data = new LineData(set1);
             linechart.setData(data);
+            setyaxismaxrange(linechart,chartname,value);
             linechart.setVisibleXRangeMaximum(80);
             linechart.getData().notifyDataChanged();
             linechart.notifyDataSetChanged();
             linechart.refreshDrawableState();
+
+            /*if(ischart.equalsIgnoreCase("linechart_traveled"))
+                count = count+1;*/
         } else {
             // create a dataset and give it a type
 
@@ -3083,20 +3111,74 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         });
     }*/
 
-    public void inislizedtschart(LineChart chart,String ischart){
+    public void setyaxismaxrange(LineChart chart,String ischart,float value){
 
-        if(ischart.equalsIgnoreCase("linechart_speed")){
-            setchartdata(chart,80);
-        }else if(ischart.equalsIgnoreCase("linechart_altitude")){
-            setchartdata(chart,2000);
-        }else if(ischart.equalsIgnoreCase("linechart_traveled")){
-            setchartdata(chart,100);
+        if(value> vlauetraveled && ischart.equalsIgnoreCase("linechart_traveled")){
+            chart.invalidate();
+            vlauetraveled = value;
+            chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
+        }else if(value > valuespeed && ischart.equalsIgnoreCase("linechart_speed")){
+            chart.invalidate();
+            valuespeed = value;
+            chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
+
+        }else if(value>valuealtitude && ischart.equalsIgnoreCase("linechart_altitude")){
+            chart.invalidate();
+            valuealtitude = value;
+            chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
         }
     }
 
-    public void newobjectcreatechart(){
+    public void setyaxismaxrangegps(LineChart chart,String ischart,float value){
 
+        if(value >= valuegpsaccuracy && ischart.equalsIgnoreCase("linechart_gpsaccuracy")){
+            chart.invalidate();
+            valuegpsaccuracy = value;
+            chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
+        }else if(value>=valuedatatimedelay && ischart.equalsIgnoreCase("linechart_datatimedelay")){
+            chart.invalidate();
+            valuedatatimedelay = value;
+            chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
 
+        }else if(value >= valueconnectionspeed && ischart.equalsIgnoreCase("linechart_connectionspeed")){
+            chart.invalidate();
+            valueconnectionspeed = value;
+            chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
+        }
     }
 
+    public void setyxisrangefirsttime(LineChart chart,String chartname){
+
+        if(chartname.equalsIgnoreCase("linechart_traveled")){
+            chart.invalidate();
+            vlauetraveled = 100;
+            chart.setVisibleYRange(0,vlauetraveled, YAxis.AxisDependency.LEFT);
+        }else if(chartname.equalsIgnoreCase("linechart_speed")){
+            chart.invalidate();
+            valuespeed = 80;
+            chart.setVisibleYRange(0,valuespeed, YAxis.AxisDependency.LEFT);
+        }else if(chartname.equalsIgnoreCase("linechart_altitude")){
+            chart.invalidate();
+            valuealtitude = 2000;
+            chart.setVisibleYRange(0,valuealtitude, YAxis.AxisDependency.LEFT);
+        }
+    }
+
+    public void setyaxisranegpschart(LineChart chart,String chartname){
+
+        if(chartname.equalsIgnoreCase("linechart_gpsaccuracy")){
+            chart.invalidate();
+            valuegpsaccuracy = 100;
+            chart.setVisibleYRange(0,valuegpsaccuracy, YAxis.AxisDependency.LEFT);
+        }else if(chartname.equalsIgnoreCase("linechart_datatimedelay")){
+            chart.invalidate();
+            valuedatatimedelay = 5;
+            chart.setVisibleYRange(0,valuedatatimedelay, YAxis.AxisDependency.LEFT);
+
+        }else if(chartname.equalsIgnoreCase("linechart_connectionspeed")){
+            chart.invalidate();
+            valueconnectionspeed = 25;
+            chart.setVisibleYRange(0,valueconnectionspeed, YAxis.AxisDependency.LEFT);
+        }
+    }
 }
