@@ -39,30 +39,30 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layout_connection"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:gravity="center|center_vertical"
-            android:orientation="horizontal">
+            <RelativeLayout
+                android:id="@+id/layout_connection"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                >
 
-            <ImageView
-                android:id="@+id/img_data"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:background="@drawable/rightcheck" />
+                <ImageView
+                    android:id="@+id/img_data"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/txt_section_data"
+                    android:background="@drawable/rightcheck" />
 
-            <com.deeptruth.app.android.views.customfonttextview
-                app:fontType="arial_narrow_bold"
-                android:id="@+id/txt_section_data"
-                android:layout_toRightOf="@+id/img_data"
-                style="@style/txt_check_gps_wifi"
-                android:gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:layout_centerVertical="true" />
+                <com.deeptruth.app.android.views.customfonttextview
+                    app:fontType="arial_narrow_bold"
+                    android:id="@+id/txt_section_data"
+                    style="@style/txt_check_gps_wifi"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_centerVertical="true" />
 
-        </LinearLayout>
+            </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dp"
