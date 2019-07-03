@@ -488,8 +488,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
-                        txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
-                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneobject.toString());
+                        txt_phone_time.setText(common.getphonetime() +" "+ common.gettimezoneshortname());
                     }
                 }
 
@@ -504,8 +503,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
-                        txt_world_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
-                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" GMT");
+                        if(!common.getworldclocktime().isEmpty() && common.getworldclocktime() != null)
+                               txt_world_time.setText(common.getworldclocktimewithsec());
                     }
                 }
 

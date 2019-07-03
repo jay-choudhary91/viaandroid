@@ -2445,16 +2445,6 @@ public class common {
 
     public static String gettime() {
 
-        /*Calendar calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-        SimpleDateFormat formatted = new SimpleDateFormat("hh:mm:ss.SS",Locale.ENGLISH);
-        String formattedDate = formatted.format(date);
-        return formattedDate;*/
-
-        /*DateFormat timeformat = android.text.format.DateFormat.getTimeFormat(applicationviavideocomposer.getactivity());
-        Date date=new Date();
-        return timeformat.format(date);*/
-
         boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
         Calendar currenttime;
         currenttime = Calendar.getInstance();
@@ -2464,6 +2454,23 @@ public class common {
             devicedate = devicetimeformat.format(currenttime.getTime());
         } else {
             SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss.SS aa", Locale.ENGLISH);
+            devicedate = devicetimeformat.format(currenttime.getTime());
+        }
+        return devicedate;
+
+    }
+
+    public static String getphonetime() {
+
+        boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
+        Calendar currenttime;
+        currenttime = Calendar.getInstance();
+        String devicedate;
+        if (is24HourFormat == true) {
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("HH:mm:ss");
+            devicedate = devicetimeformat.format(currenttime.getTime());
+        } else {
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss", Locale.ENGLISH);
             devicedate = devicetimeformat.format(currenttime.getTime());
         }
         return devicedate;
@@ -2775,12 +2782,37 @@ public class common {
         String worldclocktime = "";
         SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
         SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
-        DateFormat gmtFormat = new SimpleDateFormat(config.worldclocktime_format);
+        DateFormat gmtFormat = new SimpleDateFormat(config.time_format);
         TimeZone gmtTime = TimeZone.getTimeZone("GMT");
         gmtFormat.setTimeZone(gmtTime);
         String dateformat= gmtFormat.format(new Date());
         try {
             worldclocktime = date24Format.format(date12Format.parse(dateformat));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return worldclocktime +" GMT";
+    }
+
+    public static String getworldclocktimewithsec(){
+        String worldclocktime = "";
+        boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
+        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm:ss a");
+        SimpleDateFormat time12Format = new SimpleDateFormat("hh:mm:ss");
+        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
+        DateFormat gmtFormat = new SimpleDateFormat(config.worldclocktime_format);
+        DateFormat gmtFormat12hours = new SimpleDateFormat(config.phonetime_format);
+        TimeZone gmtTime = TimeZone.getTimeZone("GMT");
+        gmtFormat.setTimeZone(gmtTime);
+        gmtFormat12hours.setTimeZone(gmtTime);
+        String dateformat= gmtFormat.format(new Date());
+        Log.e("dateformat",""+dateformat);
+        try {
+            if (is24HourFormat == true) {
+                worldclocktime = date24Format.format(date12Format.parse(dateformat));
+            } else {
+                worldclocktime = time12Format.format(date24Format.parse(gmtFormat12hours.format(new Date())));
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
