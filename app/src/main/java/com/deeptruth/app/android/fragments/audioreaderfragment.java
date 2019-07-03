@@ -1570,6 +1570,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                 startdate = format.parse(finalMediacompleteddate);
                             }
 
+                            if(txt_createdtime.getText().toString().trim().length() == 0)
+                            {
+                                edt_medianame.setText(medianame);
+                                edt_medianotes.setText(medianotes);
+                            }
+
                             Calendar calendar = Calendar.getInstance();
                             calendar.setTime(startdate);
                             int increaseseconds=player.getDuration()/1000;
@@ -1675,12 +1681,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             @Override
             public void run() {
                 setseekbarlayoutcolor();
-
-                if(tvdate.getText().toString().trim().length() == 0)
-                {
-                    edt_medianame.setText(medianame);
-                    edt_medianotes.setText(medianotes);
-                }
 
                 if(! thumbnailurl.trim().isEmpty() && new File(thumbnailurl).exists())
                 {
