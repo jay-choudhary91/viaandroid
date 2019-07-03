@@ -236,18 +236,18 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 DecimalFormat precision = new DecimalFormat("0.0");
                                 if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
                                 {
-                                    if(! xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
+                                    if(! xdata.getinstance().getSetting(config.travelleddistance).trim().isEmpty())
                                     {
                                         try
                                         {
                                             if (oldlocation == null)
                                                 oldlocation = location;
 
-                                            double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
+                                            double value=Double.parseDouble(xdata.getinstance().getSetting(config.travelleddistance).trim());
                                             double miles=value+oldlocation.distanceTo(location);
                                             //double miles=mps+value;
                                             //double miles=common.convertmetertomiles(mps+value);
-                                            xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
+                                            xdata.getinstance().saveSetting(config.travelleddistance, "" + precision.format(miles));
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
@@ -255,50 +255,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     }
                                     else
                                     {
-                                        xdata.getinstance().saveSetting("travelleddistance", "0.0");
+                                        xdata.getinstance().saveSetting(config.travelleddistance, "0.0");
                                     }
                                 }
                                 else
                                 {
-                                    xdata.getinstance().saveSetting("travelleddistance", "0.0");
+                                    xdata.getinstance().saveSetting(config.travelleddistance, "0.0");
                                 }
 
                                 oldlocation = location;
-
-                                /*if (location.hasSpeed()) {
-
-                                }
-                                else
-                                {
-                                    xdata.getinstance().saveSetting("gpsspeed", "0");
-                                }*/
-
-/*                                if (location.hasSpeed()) {
-                                    float mps = location.getSpeed();
-                                    xdata.getinstance().saveSetting("gpsspeed", "" + mps);
-
-                                    DecimalFormat precision = new DecimalFormat("0.0");
-                                    if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
-                                    {
-                                        if(! xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
-                                        {
-                                            try
-                                            {
-                                                double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
-                                                double miles=mps+value;
-                                                //double miles=common.convertmetertomiles(mps+value);
-                                                xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(miles));
-                                            }catch (Exception e)
-                                            {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    xdata.getinstance().saveSetting("gpsspeed", "0");
-                                }*/
 
                                 if (location.hasAltitude()) {
                                     int altitudefeet = (int) (location.getAltitude() / 0.3048);
@@ -311,33 +276,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 if (getcurrentfragment() != null) {
                                     getcurrentfragment().oncurrentlocationchanged(location);
                                     updatelocationsparams(location);
-                                }
-
-                                if (xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
-                                {
-                                    if (oldlocation == null)
-                                        oldlocation = location;
-
-                                    /*long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(), oldlocation.getLatitude(),
-                                            oldlocation.getLongitude());
-                                    double feets = common.convertmetertofeets(meter);
-                                    if(! xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
-                                    {
-                                        try
-                                        {
-                                            double value=Double.parseDouble(xdata.getinstance().getSetting("travelleddistance").trim());
-                                            feets=feets+value;
-                                        }catch (Exception e)
-                                        {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    DecimalFormat precision = new DecimalFormat("0.0");
-                                    xdata.getinstance().saveSetting("travelleddistance", "" + precision.format(feets));*/
-                                } else
-                                {
-                                    xdata.getinstance().saveSetting("travelleddistance", "0.0");
-                                    oldlocation = null;
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1109,23 +1047,23 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 }
                             }
 
-                            if(! xdata.getinstance().getSetting(config.selectedsyncsetting).equalsIgnoreCase(config.selectedsyncsetting_2)
+                            if((xdata.getinstance().getSetting(config.selectedsyncsetting).trim().isEmpty()) ||
+                                    (! xdata.getinstance().getSetting(config.selectedsyncsetting).
+                                            equalsIgnoreCase(config.selectedsyncsetting_2))
                                     || (! isappinbackground))
                             {
                                 // Process for sync database with server for composer as well as reader app.
                                 dbtoxapiupdatecounter++;
-                                if (dbtoxapiupdatecounter > 1) {
+                                if (dbtoxapiupdatecounter > 3)
+                                {
                                     dbtoxapiupdatecounter = 0;
-
                                     syncmediadatabase();
-
                                 }
                             }
                         }
                         timercounterhandler++;
                     }
                 }).start();
-
                 myHandler.postDelayed(this, 1000);
             }
         };
@@ -2243,8 +2181,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricitemarraylist.get(i).setMetricTrackValue("" + degree);
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
-                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("travelleddistance"));
-                if (xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting(config.travelleddistance));
+                if (xdata.getinstance().getSetting(config.travelleddistance).trim().isEmpty())
                     metricitemarraylist.get(i).setMetricTrackValue("0");
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy)) {
@@ -2358,20 +2296,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            // Fetch data which are unsynced or sync = 0
-
-            try
-            {
-                Cursor cursor=mdbhelper.fetchcurrentlyprocessmedias();
-                if(cursor != null && cursor.getCount() > 0)
-                    xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");
-                else
-                    xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");
-
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
 
             unsyncedmediaitems = mdbhelper.fetchunsynceddata();
             try {
@@ -2380,16 +2304,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 e.printStackTrace();
             }
 
-            if (unsyncedmediaitems.size() > 0)
-                xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");
-            else
-                xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");
-
-            if (!common.isnetworkconnected(locationawareactivity.this)) {
+            if (!common.isnetworkconnected(locationawareactivity.this))
                 return;
-            }
 
-            if (unsyncedmediaitems.size() > 0)
+            if(unsyncedmediaitems.size() > 0)
                 updateunsyncedcomposeritems();
 
         } else if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
@@ -2497,11 +2415,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     }
                 }
             }
-            xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");
+            xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");   // 1 = syncing, 0 = not syncing
         }
         else
         {
-            xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");
+            xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");   // 1 = syncing, 0 = not syncing
         }
     }
 
@@ -2559,6 +2477,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             devicetimeoffset = unsyncedmediaitems.get(syncupdationcounter).getDevicetimeoffset().toString();
             videocompletedevicedate = unsyncedmediaitems.get(syncupdationcounter).getVideocompletedevicedate().toString();
             mediafilepath = unsyncedmediaitems.get(syncupdationcounter).getMediafilepath().toString();
+            mediatitle = unsyncedmediaitems.get(syncupdationcounter).getMedianame().toString();
         }
 
         if (sync.equalsIgnoreCase("0")) {
@@ -2587,7 +2506,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 JSONObject obj = new JSONObject(header);
                 hashmethod = obj.getString("hashmethod");
                 hashvalue = obj.getString("firsthash");
-                mediatitle = obj.getString("name");
+                //mediatitle = obj.getString("name");
             } catch (JSONException e) {
                 e.printStackTrace();
             }

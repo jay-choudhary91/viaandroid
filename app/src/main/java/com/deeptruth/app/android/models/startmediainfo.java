@@ -21,11 +21,12 @@ public class startmediainfo
     String devicetimeoffset="";
     String videocompletedevicedate="";
     String mediafilepath="";
+    String medianame="";
 
 
     public startmediainfo(String id, String header, String type , String location , String localkey , String token, String videokey , String sync,
                           String action_type, String sync_date, String apirequestdevicedate, String videostartdevicedate,
-                          String devicetimeoffset, String videocompletedevicedate,String mediafilepath )
+                          String devicetimeoffset, String videocompletedevicedate,String mediafilepath,String medianame )
     {
 
         setId(id);
@@ -43,6 +44,15 @@ public class startmediainfo
         setDevicetimeoffset(devicetimeoffset);
         setVideocompletedevicedate(videocompletedevicedate);
         setMediafilepath(mediafilepath);
+        setMedianame(medianame);
+    }
+
+    public String getMedianame() {
+        return medianame;
+    }
+
+    public void setMedianame(String medianame) {
+        this.medianame = medianame;
     }
 
     public String getMediafilepath() {

@@ -281,7 +281,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
 
     public boolean islastdragarrow = false;
-    String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",mediatoken="",sync_date="";
+    String medianame = "",medianotes = "",mediaduration="",mediafolder = "",localkey = "",mediatoken="",sync_date="";
     int targetheight=0,previousheight=0,targetwidth=0,previouswidth=0, previouswidthpercentage=0,scrubberviewwidth=0;
     private Handler hdlr = new Handler();
     StringBuilder mFormatBuilder;
@@ -867,8 +867,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     // if (arraymediaitemlist.size() > 0) {
                     String medianotes = edt_medianotes.getText().toString();
 
-                    if(!mediatransectionid.isEmpty())
-                        updatemediainfo(mediatransectionid,edt_medianame.getText().toString(),medianotes);
+                    if(!localkey.isEmpty())
+                        updatemediainfo(localkey,edt_medianame.getText().toString(),medianotes);
                 }
             }
         });
@@ -902,8 +902,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     String renamevalue = edt_medianame.getText().toString();
-                    if(!mediatransectionid.isEmpty())
-                        updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString());
+                    if(!localkey.isEmpty())
+                        updatemediainfo(localkey,renamevalue,edt_medianotes.getText().toString());
                 }
             }
         });
@@ -1638,7 +1638,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
                             mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
                             mediaduration =  "" + cur.getString(cur.getColumnIndex("mediaduration"));
-                            mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+                            localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
                             sync_date = "" + cur.getString(cur.getColumnIndex("sync_date"));
 
                         }while(cur.moveToNext());
@@ -1756,8 +1756,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    edt_medianotes.setText(medianotes);
-                    edt_medianame.setText(medianame);
+
+                    if(tvdate.getText().toString().trim().length() == 0)
+                    {
+                        edt_medianame.setText(medianame);
+                        edt_medianotes.setText(medianotes);
+                    }
                 }
             });
             try
@@ -2168,7 +2172,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
 
-    public void updatemediainfo(String transactionid,String medianame,String medianotes)
+    public void updatemediainfo(String localkey,String medianame,String medianotes)
     {
         databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
         mdbhelper.createDatabase();
@@ -2179,7 +2183,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             e.printStackTrace();
         }
-        mdbhelper.updatemediainfofromstarttransactionid(transactionid,medianame,medianotes);
+        mdbhelper.updatemediainfofromstarttransactionid(localkey,medianame,medianotes);
         try
         {
             mdbhelper.close();

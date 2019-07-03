@@ -212,7 +212,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.img_colapseicon)
     ImageView img_colapseicon;
 
-    private String mediafilepath = "",medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",
+    private String mediafilepath = "",medianame = "",medianotes = "",mediaduration="",mediafolder = "",localkey = "",
             thumbnailurl="",mediatoken="",sync_date="",keytype = config.prefs_md5;
     private int rootviewheight , audioviewheight,audiodetailviewheight ,mediatypeheight,starttime =0, endtime =0,
             flingactionmindspdvac = 10,flingactionmindstvac=0,currentprocessframe=0,footerheight=0,navigationbarheight = 0,updatemetaattempt=0;
@@ -581,8 +581,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     // if (arraymediaitemlist.size() > 0) {
                     String medianotes = edt_medianotes.getText().toString();
 
-                    if(!mediatransectionid.isEmpty())
-                        updatemediainfo(mediatransectionid,edt_medianame.getText().toString(),medianotes);
+                    if(!localkey.isEmpty())
+                        updatemediainfo(localkey,edt_medianame.getText().toString(),medianotes);
                 }
             }
         });
@@ -598,8 +598,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     // if (arraymediaitemlist.size() > 0) {
                     String renamevalue = edt_medianame.getText().toString();
-                    if(!mediatransectionid.isEmpty())
-                        updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString());
+                    if(!localkey.isEmpty())
+                        updatemediainfo(localkey,renamevalue,edt_medianotes.getText().toString());
 
                     editabletext();
                 }
@@ -1542,7 +1542,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     mediatoken = "" + cur.getString(cur.getColumnIndex("token"));
                     mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
                     mediaduration =  "" + cur.getString(cur.getColumnIndex("mediaduration"));
-                    mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
                     thumbnailurl = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
                     sync_date = "" + cur.getString(cur.getColumnIndex("sync_date"));
 
@@ -1676,8 +1676,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             public void run() {
                 setseekbarlayoutcolor();
 
-                edt_medianotes.setText(medianotes);
-                edt_medianame.setText(medianame);
+                if(tvdate.getText().toString().trim().length() == 0)
+                {
+                    edt_medianame.setText(medianame);
+                    edt_medianotes.setText(medianotes);
+                }
 
                 if(! thumbnailurl.trim().isEmpty() && new File(thumbnailurl).exists())
                 {
@@ -1813,7 +1816,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
 
-    public void updatemediainfo(String transactionid,String medianame,String medianotes)
+    public void updatemediainfo(String localkey,String medianame,String medianotes)
     {
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
@@ -1827,7 +1830,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
-        mdbhelper.updatemediainfofromstarttransactionid(transactionid,medianame,medianotes);
+        mdbhelper.updatemediainfofromstarttransactionid(localkey,medianame,medianotes);
         try
         {
             mdbhelper.close();

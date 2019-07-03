@@ -54,7 +54,7 @@ public class config {
     public static final String broadcast_medialistnewitem = "broadcast_medialistnewitem";
     public static final String broadcast_callshareapi = "broadcast_callshareapi";
 
-    public static final String sidecar_syncstatus = "sidecar_syncstatus";
+    public static final String sidecar_syncstatus = "sidecar_syncstatus";   // 1 = syncing, 0 = not syncing
     public static final String launchtype = "launchtype";
     public static final String launchtyperecorder = "launchtyperecorder";
     public static final String launchtypemedialist = "launchtypemedialist";
@@ -245,6 +245,7 @@ public class config {
     public static final String encrypting="ENCRYPTING";
     public static final String no_title="No Title";
     public static final String istravelleddistanceneeded="istravelleddistanceneeded";
+    public static final String travelleddistance="travelleddistance";
     public static final String enableintroscreen="enableintroscreen";
     public static final String enableproduction="enableproduction";
     public static final String enabledevelopment ="enabledevelopment";
