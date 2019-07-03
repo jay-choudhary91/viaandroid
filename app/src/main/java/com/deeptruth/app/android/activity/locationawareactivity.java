@@ -1179,7 +1179,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
            /* Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
             String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
                     + ":" + common.appendzero(calendar.get(Calendar.SECOND));*/
-            if(!common.getworldclocktime().isEmpty() && common.getworldclocktime() != null)
                 metricItemValue =  common.getworldclocktimewithsec();
         }else if (key.equalsIgnoreCase(config.worldclockdate)) {
             DateFormat gmtFormat = new SimpleDateFormat(config.date_format);

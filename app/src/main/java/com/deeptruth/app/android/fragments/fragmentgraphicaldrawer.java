@@ -503,8 +503,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
-                        if(!common.getworldclocktime().isEmpty() && common.getworldclocktime() != null)
-                               txt_world_time.setText(common.getworldclocktimewithsec());
+                         txt_world_time.setText(common.getworldclocktimewithsec());
                     }
                 }
 
