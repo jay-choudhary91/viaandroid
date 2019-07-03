@@ -313,7 +313,6 @@ public class databasemanager {
             lock.lock();
 
             String sql = "SELECT * FROM tblmetadata where localkey = '"+finallocalkey+"'   AND rsequenceno = 0 LIMIT 50" ;
-
             //String sql = "SELECT * FROM tblmetadata";
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();

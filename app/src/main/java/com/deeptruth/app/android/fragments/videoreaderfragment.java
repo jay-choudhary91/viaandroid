@@ -1667,6 +1667,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                     calendar.setTime(startdate);
                                     if(player != null)
                                     {
+
+                                        if(txt_createdtime.getText().toString().trim().length() == 0)
+                                        {
+                                            edt_medianame.setText(medianame);
+                                            edt_medianotes.setText(medianotes);
+                                        }
+
                                         int increaseseconds=player.getDuration()/1000;
                                         calendar.add(Calendar.SECOND, increaseseconds);
                                         Date enddate = calendar.getTime();
@@ -1678,6 +1685,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                         txt_endtime.setText(common.parsedateformat(enddate) + " "+ common.parsetimeformat(enddate) +" " +
                                                 localTime);
                                         txt_createdtime.setText(common.parsetimeformat(startdate));
+
                                     }
                                     if(mediafolder.trim().length() > 0 && folderspinneradapter == null)
                                         setfolderspinner();
@@ -1753,17 +1761,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             }
 
-            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                    if(tvdate.getText().toString().trim().length() == 0)
-                    {
-                        edt_medianame.setText(medianame);
-                        edt_medianotes.setText(medianotes);
-                    }
-                }
-            });
             try
             {
                 mdbhelper.close();
