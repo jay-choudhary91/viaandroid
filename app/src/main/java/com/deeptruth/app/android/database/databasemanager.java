@@ -64,13 +64,6 @@ public class databasemanager {
         mDbHelper.close();
     }
 
-    /*String header,String type,String location,String localkey,
-    String token,String videokey,String sync,String date , String action_type,
-    String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
-    String videocompletedevicedate,String videostarttransactionid,String firsthash,String videoid,
-    String status,String remainingframes,String lastframe,String framecount,String sync_status,String medianame,
-    String medianotes,String mediafolder*/
-
     public void updatestartmediainfo(mediainfotablefields mediainfo)
     {
         try {
@@ -200,13 +193,12 @@ public class databasemanager {
             if(type.equalsIgnoreCase("image"))
                 framegrabcompleted="1";
 
-            int index =  medianame.lastIndexOf('.');
-            if(index >=0)
-                medianame = medianame.substring(0, medianame.lastIndexOf('.'));
-
             String mediafilapth=location;
             location= common.getfilename(location);
 
+            int index =  location.lastIndexOf('.');
+            if(index >=0)
+                medianame = location.substring(0, location.lastIndexOf('.'));
 
             ContentValues values = new ContentValues();
             values.put("header", "" + header);
@@ -339,31 +331,6 @@ public class databasemanager {
         return  mCur;
     }
 
-    public Cursor fetchmetauncompletedata() {
-
-        Cursor mCur=null;
-        try {
-            lock.lock();
-
-            String sql = "SELECT * FROM tblmetadata where rsequenceno = 0" ;
-
-            //String sql = "SELECT * FROM tblmetadata";
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            mCur = mDb.rawQuery(sql, null);
-            if (mCur != null) {
-                mCur.moveToNext();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-
-        return  mCur;
-    }
-
     public Cursor fetchmetacompletedata(int value,String finallocalkey) {
 
         Cursor mCur=null;
@@ -390,57 +357,6 @@ public class databasemanager {
         }
         return  mCur;
     }
-
-
-    public Cursor fetchcompletedata(String finallocalkey) {
-
-        Cursor mCur=null;
-        String sql="";
-        try {
-            lock.lock();
-                 sql = "SELECT * FROM tblmetadata where localkey = '"+finallocalkey+"'" ; ;
-                 //sql = "SELECT * FROM  tblmetadata WHERE   localkey = (SELECT  MAX('"+finallocalkey+"') FROM tblmetadata)"; ;
-
-            //String sql = "SELECT * FROM tblmetadata";
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            mCur = mDb.rawQuery(sql, null);
-            if (mCur != null) {
-                mCur.moveToNext();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  mCur;
-    }
-
-    /*public ArrayList<metadatahash> getlocalkeyfrommedia(String frame) {
-        ArrayList<metadatahash> mitemlist=new ArrayList<>();
-        Cursor cur=null;
-        try {
-            lock.lock();
-            String sql = "SELECT * FROM tblgetvideoinfo where frames = '"+frame;
-            cur = mDb.rawQuery(sql, null);
-            if (cur != null) {
-                String id = "" + cur.getString(cur.getColumnIndex("id"));
-                String video_info = "" + cur.getString(cur.getColumnIndex("video_info"));
-                String frames = "" + cur.getString(cur.getColumnIndex("frames"));
-
-                mitemlist.add(new metadatahash(video_info,frames));
-                cur.moveToNext();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  mitemlist;
-    }*/
-
 
     public ArrayList<mediametadatainfo> setmediametadatainfo(String finallocalkey)
     {
@@ -469,25 +385,6 @@ public class databasemanager {
         return mediametadatainfosarray;
     }
 
-    public Cursor updatevideokey(String videoid,String videokey) {
-        Cursor mCur=null;
-        try {
-            lock.lock();
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("update tblmetadata set videokey='"+videokey+"' where videoid='"+videoid+"'");
-            if (mCur != null)
-                mCur.moveToNext();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  mCur;
-    }
-
-
     public Cursor updatecompletehashvalue(String localkey,String completehashvalue) {
         Cursor mCur=null;
         try {
@@ -503,31 +400,6 @@ public class databasemanager {
         finally {
             lock.unlock();
         }
-        return  mCur;
-    }
-
-    public Cursor deletemetadata(String id) {
-
-        Cursor mCur=null;
-        try {
-            lock.lock();
-
-            // String sql = "SELECT * FROM tblmetadata;";
-            //  mCur = mDb.rawQuery(sql, null);
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("delete from tblmetadata where id='"+id+"'");
-
-            if (mCur != null) {
-                mCur.moveToNext();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-
         return  mCur;
     }
 
@@ -646,6 +518,7 @@ public class databasemanager {
                     String  token = "" + cur.getString(cur.getColumnIndex("token"));
                     String  videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
                     String  sync = "" + cur.getString(cur.getColumnIndex("sync"));
+                    String  media_name = "" + cur.getString(cur.getColumnIndex("media_name"));
                     String  action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
                     String  sync_date = ""+ cur.getString(cur.getColumnIndex("sync_date"));
                     String  apirequestdevicedate = ""+ cur.getString(cur.getColumnIndex("apirequestdevicedate"));
@@ -656,7 +529,7 @@ public class databasemanager {
 
                     marray.add(new startmediainfo(selectedid, header, type, location,localkey,token, videokey,
                             sync, action_type,sync_date,apirequestdevicedate,videostartdevicedate,
-                            devicetimeoffset,videocompletedevicedate,mediafilepath));
+                            devicetimeoffset,videocompletedevicedate,mediafilepath,media_name));
                 }while(cur.moveToNext());
             }
         }catch (Exception e)
@@ -833,47 +706,6 @@ public class databasemanager {
         return  mitemlist;
     }
 
-    public String getlocalkeybylocation(String location) {
-        String localkey ="";
-        Cursor cur=null;
-        try {
-            lock.lock();
-            String sql = "SELECT  * FROM tblstartmediainfo where location = '"+location+"'";
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            cur = mDb.rawQuery(sql, null);
-            if (cur.moveToFirst())
-            {
-                do{
-                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
-                }while(cur.moveToNext());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  localkey;
-    }
-
-    public Cursor getsinglemediastartdata(String filename) {
-        Cursor cur=null;
-        try {
-            lock.lock();
-            String sql = "SELECT * FROM tblstartmediainfo where location = '"+filename+"'";
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            cur = mDb.rawQuery(sql, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return cur;
-    }
-
     public Cursor getallmediabyfolder(String selectedfolder) {
         Cursor cur=null;
         try {
@@ -947,58 +779,6 @@ public class databasemanager {
     }
 
 
-
-
-    public String[] getreaderlocalkeybylocation(String filename) {
-        String[] localkey ={"","",""};
-        Cursor cur=null;
-        try {
-            lock.lock();
-            String sql = "SELECT  * FROM tblstartmediainfo where location = '"+filename+"'";
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            cur = mDb.rawQuery(sql, null);
-            if (cur.moveToFirst())
-            {
-                do{
-                    localkey[0] = "" + cur.getString(cur.getColumnIndex("status"));
-                    localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
-                    localkey[2] = "" + cur.getString(cur.getColumnIndex("localkey"));
-                }while(cur.moveToNext());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  localkey;
-    }
-
-    public String getlocalkeybyfirsthash(String firsthash) {
-        String localkey="";
-        Cursor cur=null;
-        try {
-            lock.lock();
-            String sql = "SELECT localkey FROM tblstartmediainfo where firsthash = '"+firsthash+"'";
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            cur = mDb.rawQuery(sql, null);
-            if (cur.moveToFirst())
-            {
-                do{
-                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
-                }while(cur.moveToNext());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  localkey;
-    }
-
     public String getlocalkeybyfilename(String location) {
         String localkey="";
         Cursor cur=null;
@@ -1021,31 +801,6 @@ public class databasemanager {
             lock.unlock();
         }
         return  localkey;
-    }
-
-    public String getcompletedate(String firsthash){
-
-        String completedevicedate = "";
-        Cursor cur=null;
-        try {
-            lock.lock();
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            String sql = "SELECT videocompletedevicedate FROM tblstartmediainfo where firsthash = '"+firsthash+"'";
-            cur = mDb.rawQuery(sql, null);
-            if (cur.moveToFirst())
-            {
-                do{
-                    completedevicedate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
-                }while(cur.moveToNext());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  completedevicedate;
     }
 
     public Cursor getstartmediainfo(String filename){
@@ -1159,40 +914,6 @@ public class databasemanager {
         }
     }
 
-    public void deletefromstartvideoinfobyfilename(String filename) {
-        try {
-            lock.lock();
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("delete from tblstartmediainfo where location='"+filename+"'");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-    }
-
-    //* call from reader. Checking sync status of requested media.
-
-    public Cursor getmediainfobyfirsthash(String firsthash) {
-        String videotoken="";
-        Cursor cur=null;
-        try {
-            lock.lock();
-            String sql = "SELECT * FROM tblstartmediainfo where firsthash = '"+firsthash+"'";
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            cur = mDb.rawQuery(sql, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  cur;
-    }
-
     public Cursor getmediainfobyfilename(String filename) {
         String videotoken="";
         Cursor cur=null;
@@ -1248,26 +969,6 @@ public class databasemanager {
         }
         return  cur;
     }
-
-
-    public Cursor readallmetabyvideoid(String objectparentid) {
-        String videotoken="";
-        Cursor cur=null;
-        try {
-            lock.lock();
-            String sql = "SELECT * FROM tblmetadata where localkey = '"+objectparentid+"'";
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            cur = mDb.rawQuery(sql, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  cur;
-    }
-
 
     //* call from reader. Update staus from sync_pending to sync_complete.
     public void updatefindmediainfosyncstatus(String videotoken,String lastframe,String remainingframes,String syncstatus) {

@@ -786,7 +786,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         public void onItemClicked(Object object, int type) {
 
                 if(type == stoprecorder) // for video record stop,audio record stop and image captured button click
-                    xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");
+                    xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");   // 1 = syncing, 0 = not syncing
 
                 composecallback(object,type);
         }
