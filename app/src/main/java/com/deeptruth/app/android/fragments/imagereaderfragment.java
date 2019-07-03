@@ -186,7 +186,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private int flingactionmindstvac,footerheight,navigationbarheight = 0,targetheight=0,previousheight=0,bottompadding,
             rootviewheight, devidedheight,actionbarheight,updatemetaattempt=0;
-    private String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",
+    private String medianame = "",medianotes = "",mediafolder = "",localkey = "",latitude = "", longitude = "",
             screenheight = "",screenwidth = "",mediastartdevicedate="",mediatoken="";
     private float currentDegree = 0f;
     private adapteritemclick mcontrollernavigator;
@@ -402,8 +402,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     // if (arraymediaitemlist.size() > 0) {
                     String medianotes = edt_medianotes.getText().toString();
 
-                    if(!mediatransectionid.isEmpty())
-                        updatemediainfo(mediatransectionid,edt_medianame.getText().toString(),medianotes);
+                    if(!localkey.isEmpty())
+                        updatemediainfo(localkey,edt_medianame.getText().toString(),medianotes);
                 }
             }
         });
@@ -419,8 +419,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     // if (arraymediaitemlist.size() > 0) {
                     String renamevalue = edt_medianame.getText().toString();
-                    if(!mediatransectionid.isEmpty())
-                        updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString());
+                    if(!localkey.isEmpty())
+                        updatemediainfo(localkey,renamevalue,edt_medianotes.getText().toString());
 
                     editabletext();
                 }
@@ -818,7 +818,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             medianotes = "" + cur.getString(cur.getColumnIndex("media_notes"));
                             mediatoken = "" + cur.getString(cur.getColumnIndex("token"));
                             mediafolder = "" + cur.getString(cur.getColumnIndex("media_folder"));
-                            mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+                            localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
                             sync_date = "" + cur.getString(cur.getColumnIndex("sync_date"));
                         } while (cur.moveToNext());
                     }
@@ -895,10 +895,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 try {
 
-                    edt_medianotes.setText(medianotes);
-                    edt_medianame.setText(medianame);
+                    if(tvdate.getText().toString().trim().length() == 0)
+                    {
+                        edt_medianame.setText(medianame);
+                        edt_medianotes.setText(medianotes);
+                    }
 
-                    if(metricmainarraylist.size()>0 && metricmainarraylist.get(0) != null)
+                    if(metricmainarraylist.size() >0 && metricmainarraylist.get(0) != null)
                     {
                         arraycontainerformetric = metricmainarraylist.get(0);
                         String color = "white";
@@ -1144,7 +1147,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     }
 
 
-    public void updatemediainfo(String transactionid,String medianame,String medianotes)
+    public void updatemediainfo(String localkey,String medianame,String medianotes)
     {
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
@@ -1158,7 +1161,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         {
             e.printStackTrace();
         }
-        mdbhelper.updatemediainfofromstarttransactionid(transactionid,medianame,medianotes);
+        mdbhelper.updatemediainfofromstarttransactionid(localkey,medianame,medianotes);
         try
         {
             mdbhelper.close();

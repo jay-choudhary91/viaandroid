@@ -331,6 +331,29 @@ public class databasemanager {
         return  mCur;
     }
 
+    public Cursor fetchunsyncedmetaframe() {
+
+        Cursor mCur=null;
+        try {
+            lock.lock();
+
+            String sql = "SELECT sequenceid FROM tblmetadata WHERE sequenceid IS NULL OR sequenceid = '' LIMIT 1" ;
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur != null) {
+                mCur.moveToNext();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+
+        return  mCur;
+    }
+
     public Cursor fetchmetacompletedata(int value,String finallocalkey) {
 
         Cursor mCur=null;
@@ -856,12 +879,12 @@ public class databasemanager {
     }
 
 
-    public void updatemediainfofromstarttransactionid(String starttransactionid,String location,String medianotes) {
+    public void updatemediainfofromstarttransactionid(String localkey,String location,String medianotes) {
         try {
             lock.lock();
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("update tblstartmediainfo set media_name ='"+location+"', media_notes ='"+medianotes+"' where videostarttransactionid='"+starttransactionid+"'");
+            mDb.execSQL("update tblstartmediainfo set media_name ='"+location+"', media_notes ='"+medianotes+"' where localkey='"+localkey+"'");
 
         } catch (Exception e) {
             e.printStackTrace();

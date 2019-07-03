@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -53,15 +54,15 @@ public class appbackgroundactionservice extends Service
 
                 try
                 {
-                    Cursor cursor=mdbhelper.fetchcurrentlyprocessmedias();
-                    if(cursor != null && cursor.getCount() > 0)
+                    Cursor cursor1=mdbhelper.fetchcurrentlyprocessmedias();
+                    if(cursor1 != null && cursor1.getCount() > 0)
                         xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");   // 1 = syncing, 0 = not syncing
                     else
                         xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");   // 1 = syncing, 0 = not syncing
 
-                    ArrayList<startmediainfo> unsyncedmediaitems = mdbhelper.fetchunsynceddata();
+                    Cursor cursor2 = mdbhelper.fetchunsyncedmetaframe();
 
-                    if (unsyncedmediaitems.size() > 0)
+                    if(cursor2 != null && cursor2.getCount() > 0)
                         xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");   // 1 = syncing, 0 = not syncing
                     else
                         xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");   // 1 = syncing, 0 = not syncing
