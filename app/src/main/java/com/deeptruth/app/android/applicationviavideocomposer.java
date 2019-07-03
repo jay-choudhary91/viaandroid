@@ -19,6 +19,11 @@ import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 import com.crashlytics.android.Crashlytics;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
+
 import io.fabric.sdk.android.Fabric;
 
 public class applicationviavideocomposer extends Application implements LifecycleObserver {
@@ -30,6 +35,7 @@ public class applicationviavideocomposer extends Application implements Lifecycl
     public static Typeface boldfonttype = null;
     public static boolean isactivitybecomefinish = false;
 
+    public static FFmpeg ffmpeg;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -52,6 +58,31 @@ public class applicationviavideocomposer extends Application implements Lifecycl
         semiboldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Semibold.ttf");
         boldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Bold.ttf");
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+
+        try {
+            if (ffmpeg == null) {
+                Log.d("ffmpeg", "ffmpeg : is loading..");
+
+                ffmpeg = FFmpeg.getInstance(getApplicationContext());
+            }
+            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
+                @Override
+                public void onFailure() {
+                    // showUnsupportedExceptionDialog();
+                    Log.d("ffmpeg", " onFailure");
+                }
+
+                @Override
+                public void onSuccess() {
+                 Log.e("onsucess","onSuccess");
+                }
+            });
+        }catch (FFmpegNotSupportedException e) {
+            //showUnsupportedExceptionDialog();
+            Log.d("ffmpeg", "FFmpegNotSupportedException : " + e);
+        } catch (Exception e) {
+            Log.d("ffmpeg", "EXception no controlada : " + e);
+        }
     }
 
     @Override
