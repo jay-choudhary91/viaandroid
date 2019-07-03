@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -48,6 +49,7 @@ import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.models.wavevisualizer;
 import com.deeptruth.app.android.services.insertmediadataservice;
+import com.deeptruth.app.android.utils.CenteredImageSpan;
 import com.deeptruth.app.android.utils.visualizerview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -117,6 +119,20 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     RelativeLayout actionbar;
     @BindView(R.id.rl_visulizerview)
     RelativeLayout rlvisulizerview;
+    @BindView(R.id.img_gps)
+    ImageView img_gps;
+    @BindView(R.id.img_data)
+    ImageView img_data;
+    @BindView(R.id.img_network)
+    ImageView img_network;
+    @BindView(R.id.txt_section_gps)
+    TextView txt_section_gps;
+    @BindView(R.id.txt_section_data)
+    TextView txt_section_data;
+    @BindView(R.id.txt_section_gmttime)
+    TextView txt_section_gmttime;
+    @BindView(R.id.layout_wifi_gps_data)
+    LinearLayout layout_wifi_gps_data;
 
     private TranslateAnimation validationbaranimation;
     LinearLayout layout_drawer;
@@ -214,8 +230,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         loadffmpeglibrary();
         startnoise();
         txt_title_actionbarcomposer.setText(config.mediarecorderformat);
-        actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
-        layoutbottom.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
+       /* actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
+        layoutbottom.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));*/
 
         try {
              bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
@@ -1342,70 +1358,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
                 common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
 
-                try {
-                    if(gethelper().isdraweropened())
-                    {
-                        layout_no_gps_wifi.setVisibility(View.GONE);
-                        myHandler.postDelayed(this, 10);
-                        return;
-                    }
-//xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0")
-                    if(! common.isnetworkconnected(getActivity()) ||
-                            xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
-                    {
-                        try {
+                actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
-                            GradientDrawable gradient=common.getyelloradargradient();
-                            if(gradient != null)
-                                img_scanover.setBackground(gradient);
-                                visibleconnection();
-                            if(img_close.getVisibility() != View.VISIBLE)
-                            {
-                                img_gpswifiwarning.setVisibility(View.VISIBLE);
-                                txt_encrypting.setVisibility(View.VISIBLE);
-                            }
-
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                        visiblewarningcontrollers();
-                    }
-                    else
-                    {
-                        GradientDrawable gradient=common.getblueradargradient();
-                        if(gradient != null)
-                            img_scanover.setBackground(gradient);
-
-                        img_gpswifiwarning.setVisibility(View.GONE);
-                        txt_encrypting.setVisibility(View.GONE);
-                        img_close.setVisibility(View.GONE);
-                        txt_no_gps_wifi.setVisibility(View.GONE);
-                        validatingcontrollers();
-                        checkgpsaccuracy();
-                    }
-
-                    if(isaudiorecording)
-                    {
-                        if(img_close.getVisibility() == View.VISIBLE)
-                        {
-                            txt_encrypting.setVisibility(View.VISIBLE);
-                        }
-                        else
-                        {
-                            txt_encrypting.setVisibility(View.GONE);
-                        }
-                    }
-                    else
-                    {
-                        img_gpswifiwarning.setVisibility(View.GONE);
-                        txt_encrypting.setVisibility(View.GONE);
-                        img_close.setVisibility(View.GONE);
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                visibleconnection();
+                setactionbarbackgroundcolor();
 
                 myHandler.postDelayed(this, 10);
             }
@@ -1532,66 +1488,117 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             framecontainer.setVisibility(View.VISIBLE);
         }
     }
-
     public void visibleconnection(){
-        if(isaudiorecording) {
-            String value = "";
-            if(! common.isnetworkconnected(getActivity()))
-            {
-                value=getResources().getString(R.string.no_internet);
-                if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
-                        || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA")
-                        ||xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null")
-                        || xdata.getinstance().getSetting(config.airplanemode).equals("ON"))
-                {
-                    value=getResources().getString(R.string.no_network);
-                }
-            }
+        String value = "";
 
-            if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
-            {
+        if(xdata.getinstance().getSetting(config.worldclocktime).isEmpty() && xdata.getinstance().getSetting(config.worldclocktime) == null)
+        {
+            txt_section_gmttime.setText("NA");
+            img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
 
-                if(value.isEmpty())
-                {
-                    value=getResources().getString(R.string.no_gps);
-                }
-                else
-                {
-                    value=value.concat(" & ") +getResources().getString(R.string.no_gps);
-                }
-                txt_weakgps.setText("");
-            }
-            else
-            {
-                checkgpsaccuracy();
-            }
-            txt_no_gps_wifi.setVisibility(View.VISIBLE);
-            txt_no_gps_wifi.setText(value);
+        }else{
+            txt_section_gmttime.setText(config.TEXT_TIME +""+common.getworldclocktime());
+            img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
         }
-    }
-    public void checkgpsaccuracy(){
-        if(isaudiorecording) {
-            if(xdata.getinstance().getSetting(config.GPSAccuracy)!= null && (! xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty())
-                    && (! xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA")))
-            {
-                String[] arrayitem=xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
-                if(arrayitem.length > 0)
-                {
-                    Double  gpsvalue = Double.valueOf(xdata.getinstance().getSetting(config.GPSAccuracy));
-                    if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")){
-                        txt_weakgps.setVisibility(View.GONE);
-                    }else {
-                        if ((gpsvalue <= 50 && gpsvalue != 0)) {
-                            txt_weakgps.setVisibility(View.VISIBLE);
-                            txt_weakgps.setText(getResources().getString(R.string.weak_gps));
-                        } else {
-                            txt_weakgps.setVisibility(View.GONE);
-                        }
+
+        if(xdata.getinstance().getSetting(config.Connectionspeed)!=null && !xdata.getinstance().getSetting(config.Connectionspeed).isEmpty()){
+            if(xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA")){
+                txt_section_data.setText(config.TEXT_DATA+""+xdata.getinstance().getSetting(config.Connectionspeed));
+                img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
+            }else {
+
+                String[] arrayitem=xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
+                if(arrayitem.length > 0){
+                    double connectionvalue = Double.valueOf(arrayitem[0]);
+                    if(connectionvalue!=0.0){
+                        txt_section_data.setText(config.TEXT_DATA+""+connectionvalue+"Mb/s");
+                        img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
+
+                    }else{
+                        txt_section_data.setText(config.TEXT_DATA+""+connectionvalue+"Mb/s");
+                        img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
                     }
                 }
             }
+        }else{
+            txt_section_data.setText(config.TEXT_DATA+""+"NA");
+            img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
         }
 
+        if(xdata.getinstance().getSetting(config.GPSAccuracy)!= null && (! xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty()))
+        {
+            if(xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA")||
+                    xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
+            {
+                txt_section_gps.setText(config.TEXT_GPS+""+"NA");
+                img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
+            }else{
+                String[] arrayitem=xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
+                if(arrayitem.length > 0)
+                {
+                    double gpsvalue = Double.valueOf(arrayitem[0]);
+                    if ((gpsvalue <= 50 && gpsvalue != 0)) {
+
+                        SpannableStringBuilder builder = new SpannableStringBuilder();
+                        builder.append(config.TEXT_GPS)
+                                .append(" ", new CenteredImageSpan(getActivity(),R.drawable.ic_plusminus),0)
+                                .append(gpsvalue+"ft");
+
+                        txt_section_gps.setText(builder);
+                        img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
+
+                    } else {
+
+                        SpannableStringBuilder builder = new SpannableStringBuilder();
+                        builder.append(config.TEXT_GPS)
+                                .append(" ", new CenteredImageSpan(getActivity(),R.drawable.ic_plusminus),0)
+                                .append(gpsvalue+"ft");
+
+                        txt_section_gps.setText(builder);
+
+                        //  txt_section_gps.setText(config.TEXT_GPS+""+gpsvalue+"ft");
+                        img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.warning_icon));
+                    }
+                }
+            }
+        }else{
+            txt_section_gps.setText(config.TEXT_GPS+""+"NA");
+            img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
+        }
+    }
+
+    public void setactionbarbackgroundcolor() {
+
+        if (!common.isnetworkconnected(applicationviavideocomposer.getactivity()) ||
+                xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0") ||
+                xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA") ||
+                xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA") ||
+                xdata.getinstance().getSetting(config.Connectionspeed) == null ||
+                xdata.getinstance().getSetting(config.GPSAccuracy) == null) {
+
+            actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+
+        } else {
+            String[] arrayitemgps = xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
+            String[] arrayitemconnection = xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
+            if (arrayitemgps.length > 0 && arrayitemconnection.length > 0) {
+                double gpsvalue = 0, connectionvalue = 0;
+                if (!arrayitemgps[0].trim().isEmpty())
+                    gpsvalue = Double.valueOf(arrayitemgps[0]);
+
+                if (!arrayitemconnection[0].trim().isEmpty())
+                    connectionvalue = Double.valueOf(arrayitemconnection[0]);
+
+                if ((gpsvalue >= 50 || gpsvalue == 0) || connectionvalue == 0.0) {
+                    layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+                    actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+
+                } else {
+                    layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.greentransparent));
+                    actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.greentransparent));
+                }
+            }
+        }
     }
 
     public void setlayoutmargin(int linearheaderheight){

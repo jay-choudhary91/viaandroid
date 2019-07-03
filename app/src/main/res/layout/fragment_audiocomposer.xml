@@ -84,7 +84,7 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-        <include layout="@layout/action_bar_composer"></include>
+        <include layout="@layout/action_bar_video_composer"></include>
     </LinearLayout>
 
 </RelativeLayout>

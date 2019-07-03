@@ -2770,5 +2770,21 @@ public class common {
 
         return applicationName;
     }
+
+    public static String getworldclocktime(){
+        String worldclocktime = "";
+        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
+        DateFormat gmtFormat = new SimpleDateFormat(config.worldclocktime_format);
+        TimeZone gmtTime = TimeZone.getTimeZone("GMT");
+        gmtFormat.setTimeZone(gmtTime);
+        String dateformat= gmtFormat.format(new Date());
+        try {
+            worldclocktime = date24Format.format(date12Format.parse(dateformat));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return worldclocktime +" GMT";
+    }
 }
 
