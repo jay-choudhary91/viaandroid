@@ -109,6 +109,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -413,6 +414,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ArrayList<satellites> satelliteslist = new ArrayList<>();
     Marker mediacreatedpointmarker;
     int count = 0;
+    Random random = new Random();
     float vlauetraveled = 100,valuespeed = 80,valuealtitude = 2000,valuegpsaccuracy = 25,valuedatatimedelay = 10,valueconnectionspeed=100;
     float traveledarray[] = {13,42,9,34,9,23,84,93,28,49,32,84,9,28,34,92,35,80,93,101,48,84,9,84,9,80,94,82,34,82,9,38,40,92,38,40,92,38,42,03,84,23,47,62,38,42,34,98,120,79,23,74,
             92,36,130,55,28,34,98,23,84,9,23,84,02,36,78,42,37,84,23,42,37,47,280,23,42,34,23,84,9,23,84,8,23,04,82,30,8,34,23,42,343,24,23,432,43,243,243,242,341,411,31,23,21,21,43,21,23,44,34,83,95,84,30,98,43,90};
@@ -565,16 +567,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             halfpaichartdate(chart_cpuusage);
             halfpaichartdate(chart_battery);
 
-            setchartdata(linechart_speed,300);
+            setchartdata(linechart_speed,200);
             setchartdata(linechart_altitude,3000);
-            setchartdata(linechart_traveled,500);
+            setchartdata(linechart_traveled,300);
             vertical_slider_speed.setMax(80);
             vertical_slider_altitude.setMax(2000);
             vertical_slider_traveled.setMax(100);
 
             initlinechart(linechart_connectionspeed,100f);
             initlinechart(linechart_datatimedelay,50f);
-            initlinechart(linechart_gpsaccuracy,500f);
+            initlinechart(linechart_gpsaccuracy,300f);
             vertical_slider_connectionspeed.setMax(25);
             vertical_slider_connectiondatatimedely.setMax(10);
             vertical_slider_gpsaccuracy.setMax(100);
@@ -823,6 +825,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 String[] array=strconnectionspeed.split(" ");
                                 if(array.length >0)
                                     connectionspeed=Float.parseFloat(array[0]);
+
                             }
                             setlinechartdata(linechart_connectionspeed,connectionspeed,connectionspeedvalues,"linechart_connectionspeed");
                         }
@@ -835,6 +838,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 String[] array=connectiontimedelaystr.split(" ");
                                 if(array.length >0)
                                     connectiondelay=Float.parseFloat(array[0]);
+
                             }
                             setlinechartdata(linechart_datatimedelay,connectiondelay,connectiondatadelayvalues,"linechart_datatimedelay");
                         }
@@ -848,6 +852,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 String[] array=gps.split(" ");
                                 if(array.length >0)
                                     gpsaccuracydata=Float.parseFloat(array[0]);
+
                             }
                             setlinechartdata(linechart_gpsaccuracy,gpsaccuracydata,gpsaccuracyvalues,"linechart_gpsaccuracy");
                         }
@@ -860,7 +865,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 String[] array=speed.split(" ");
                                 if(array.length >0)
                                     data=Float.parseFloat(array[0]);
-
 
                             }
                             setspeedtraveledaltitudechart(linechart_speed,data,speedgraphitems,"linechart_speed");
@@ -875,7 +879,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 if(array.length >0)
                                     data=Float.parseFloat(array[0]);
 
-                                //data = traveledarray[count];
                             }
                             setspeedtraveledaltitudechart(linechart_traveled,data,travelledgraphitems,"linechart_traveled");
                         }
@@ -2618,14 +2621,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
             }
 
-            /*LineData data = new LineData(set1);
-            chart.setData(data);
-            setyaxismaxrangegps(chart,chartname,value);
-            chart.setVisibleXRangeMaximum(80);
-            chart.getData().notifyDataChanged();
-            chart.notifyDataSetChanged();
-            chart.refreshDrawableState();*/
-
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
@@ -2676,11 +2671,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }else{
                 chart.invalidate();
                 chart.setVisibleXRange(0, valuesarray.size());
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_4dp),14);
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,0,14);
 
             }
 
-            chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
+            //chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
         }
 
         chart.animateX(0);
@@ -2860,13 +2855,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             if(value == -1 && arrayitems.size()>80){
                 linechart.invalidate();
                 linechart.setVisibleXRange(0, 80);
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
+
             }else{
                 linechart.invalidate();
                 linechart.setVisibleXRange(0, arrayitems.size());
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_6dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
+
             }
 
 
-            linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
         }
 
         linechart.animateX(0);
