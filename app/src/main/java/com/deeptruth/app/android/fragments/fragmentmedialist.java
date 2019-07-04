@@ -154,7 +154,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private static final int request_read_external_storage = 1;
     private BroadcastReceiver medialistitemaddreceiver;
     private int REQUESTCODE_PICK=201;
-    private FFmpeg ffmpeg;
     int navigationbarheight = 0;
     Handler handler = new Handler();
     int numberOfTaps = 0, devicewidth = 0;
@@ -415,7 +414,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if(common.isdevelopermodeenable())
                 img_settings.setVisibility(View.VISIBLE);
 
-            loadffmpeglibrary();
             if (common.getstoragedeniedpermissions().isEmpty())
                 fetchmedialistfromdirectory();
 
@@ -1770,30 +1768,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
     }
 
-    public void loadffmpeglibrary()
-    {
-        if (ffmpeg == null) {
-            Log.d("ffmpeg", "ffmpeg : is loading..");
-
-            ffmpeg = FFmpeg.getInstance(applicationviavideocomposer.getactivity());
-        }
-        try {
-            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
-                @Override
-                public void onFailure() {
-
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d("ffmpeg", "ffmpeg : loaded..");
-                }
-            });
-        } catch (FFmpegNotSupportedException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void copymediafromgallery(final String selectedmediafile){
 
         if(selectedmediafile == null)
@@ -1864,7 +1838,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             String[] command = { "-ss", starttime,"-i", destinationFile.getAbsolutePath(), "-to",endtime, "-filter_complex",
                                     "compand=gain=-10,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
 
-                            ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                                applicationviavideocomposer.ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                                 @Override
                                 public void onFailure(String s) {
                                     Log.e("Failure with output : ","IN onFailure");

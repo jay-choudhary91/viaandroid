@@ -173,7 +173,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
     int layoutmediatypeheight = 0;
-    FFmpeg ffmpeg;
     RelativeLayout layoutbottom;
     @BindView(R.id.img_roundblink)
     ImageView img_roundblink;
@@ -227,7 +226,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         keytype=common.checkkey();
         frameduration=common.checkframeduration();
 
-        loadffmpeglibrary();
         startnoise();
         txt_title_actionbarcomposer.setText(config.mediarecorderformat);
        /* actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
@@ -855,30 +853,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         return file;
     }
 
-    public void loadffmpeglibrary()
-    {
-        if (ffmpeg == null) {
-            Log.d("ffmpeg", "ffmpeg : is loading..");
-
-            ffmpeg = FFmpeg.getInstance(applicationviavideocomposer.getactivity());
-        }
-        try {
-            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
-                @Override
-                public void onFailure() {
-
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d("ffmpeg", "ffmpeg : loaded..");
-                }
-            });
-        } catch (FFmpegNotSupportedException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void stoprecording() {
 
         try{
@@ -947,7 +921,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 final String[] command = { "-ss", starttime,"-i", recordedmediafile, "-to",endtime, "-filter_complex",
                         "compand=gain=-10,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
 
-                ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                applicationviavideocomposer.ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                     @Override
                     public void onFailure(String s) {
                         Log.e("Failure with output : ","IN onFailure");
