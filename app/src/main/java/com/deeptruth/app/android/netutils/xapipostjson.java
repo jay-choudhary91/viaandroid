@@ -145,6 +145,7 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
                 }
                 result.success(true);
                 result.setData(object);
+                result.setcompletedata(jsonObject);
             }
 
         } catch (Exception e) {

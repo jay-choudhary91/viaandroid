@@ -2941,7 +2941,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     try {
 
                         JSONObject object = (JSONObject) response.getData();
-                        String valuehash = "", color = "";
+                        String valuehash = "", color = "",mediaid="";
 
                         if (object.has("hashvalue"))
                             valuehash = object.getString("hashvalue");
@@ -2949,8 +2949,39 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         if (object.has("color"))
                             color = object.getString("color");
 
+                        if(response.getData() != null)
+                        {
+                            JSONObject completedataobject = (JSONObject) response.getcompletedata();
+                            if(completedataobject.has("params"))
+                            {
+                                JSONObject paramsobject=completedataobject.getJSONObject("params");
+                                if(paramsobject.has("image"))
+                                {
+                                    JSONObject imageobject=paramsobject.getJSONObject("image");
+                                    if (imageobject.has("imageid"))
+                                        mediaid = imageobject.getString("imageid");
+                                }
+
+                                if(paramsobject.has("audio"))
+                                {
+                                    JSONObject audioobject=paramsobject.getJSONObject("audio");
+                                    if (audioobject.has("audioid"))
+                                        mediaid = audioobject.getString("audioid");
+                                }
+
+                                if(paramsobject.has("video"))
+                                {
+                                    JSONObject videoobject=paramsobject.getJSONObject("video");
+                                    if (videoobject.has("videoid"))
+                                        mediaid = videoobject.getString("videoid");
+                                }
+                            }
+
+                        }
+
+
                         updatecompletehashvalue(localkey, valuehash);
-                        updatedatasyncdate(localkey, common.getCurrentDate(), config.sync_complete, color);
+                        updatedatasyncdate(localkey, common.getCurrentDate(), config.sync_complete, color,mediaid);
 
                         sendbroadcastreader();
 
@@ -3008,7 +3039,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
     }
 
-    public void updatedatasyncdate(String localkey, String syncdate, String syncstatus, String color) {
+    public void updatedatasyncdate(String localkey, String syncdate, String syncstatus, String color,String mediaid) {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
             mdbhelper.createDatabase();
@@ -3019,7 +3050,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatevideosyncdate(localkey, syncdate, syncstatus, color);
+            mdbhelper.updatevideosyncdate(localkey, syncdate, syncstatus, color,mediaid);
             mdbhelper.close();
         } catch (Exception e) {
             e.printStackTrace();

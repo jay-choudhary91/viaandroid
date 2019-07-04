@@ -236,6 +236,10 @@ public class config {
     public static final String type_private="private";
     public static final String type_linkinvite="linkinvite";
 
+    public static final String type_audio="audio";
+    public static final String type_video="video";
+    public static final String type_image="image";
+
     public static final String caution="CAUTION";
     public static final String verified="VERIFIED";
     public static final String validating="VALIDATING";

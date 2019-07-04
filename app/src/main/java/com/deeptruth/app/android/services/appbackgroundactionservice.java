@@ -60,12 +60,14 @@ public class appbackgroundactionservice extends Service
                     else
                         xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");   // 1 = syncing, 0 = not syncing
 
-                    Cursor cursor2 = mdbhelper.fetchunsyncedmetaframe();
-
-                    if(cursor2 != null && cursor2.getCount() > 0)
-                        xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");   // 1 = syncing, 0 = not syncing
-                    else
-                        xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");   // 1 = syncing, 0 = not syncing
+                    if(xdata.getinstance().getSetting(config.sidecar_syncstatus).trim().equalsIgnoreCase("0"))
+                    {
+                        Cursor cursor2 = mdbhelper.fetchunsyncedmetaframe();
+                        if(cursor2 != null && cursor2.getCount() > 0)
+                            xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");   // 1 = syncing, 0 = not syncing
+                        else
+                            xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");   // 1 = syncing, 0 = not syncing
+                    }
 
                 }catch (Exception e)
                 {
