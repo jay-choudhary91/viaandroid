@@ -1171,15 +1171,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             //metricItemValue = timezone.getID();
             metricItemValue = common.gettimezoneshortname();
         } else if (key.equalsIgnoreCase(config.phoneclocktime)) {
-            Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+          /*  Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
             String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
-                    + ":" + common.appendzero(calendar.get(Calendar.SECOND));
-            metricItemValue = time+" "+common.gettimezoneshortname();;
+                    + ":" + common.appendzero(calendar.get(Calendar.SECOND));*/
+            metricItemValue = common.getphonetime() +" "+common.gettimezoneshortname();;
         } else if (key.equalsIgnoreCase(config.worldclocktime)) {
-            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+           /* Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
             String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
-                    + ":" + common.appendzero(calendar.get(Calendar.SECOND));
-            metricItemValue = time + " GMT";
+                    + ":" + common.appendzero(calendar.get(Calendar.SECOND));*/
+                metricItemValue =  common.getworldclocktimewithsec();
         }else if (key.equalsIgnoreCase(config.worldclockdate)) {
             DateFormat gmtFormat = new SimpleDateFormat(config.date_format);
             TimeZone gmtTime = TimeZone.getTimeZone("GMT");

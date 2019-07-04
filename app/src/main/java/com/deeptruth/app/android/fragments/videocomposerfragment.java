@@ -393,8 +393,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     TextView txt_section_gps;
     @BindView(R.id.txt_section_data)
     TextView txt_section_data;
-    @BindView(R.id.txt_section_network)
-    TextView txt_section_network;
+    @BindView(R.id.txt_section_gmttime)
+    TextView txt_section_gmttime;
     @BindView(R.id.layout_wifi_gps_data)
     LinearLayout layout_wifi_gps_data;
     @BindView(R.id.ll_actionbarcomposer)
@@ -2405,17 +2405,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void visibleconnection(){
             String value = "";
 
-                if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
-                        || xdata.getinstance().getSetting(config.CellProvider).trim().equalsIgnoreCase("NA")
-                        || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null")
-                        || xdata.getinstance().getSetting(config.airplanemode).equals("ON"))
+                if(xdata.getinstance().getSetting(config.worldclocktime).isEmpty() && xdata.getinstance().getSetting(config.worldclocktime) == null)
                 {
-
-                    txt_section_network.setText("NA");
+                    txt_section_gmttime.setText("NA");
                     img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
 
                 }else{
-                    txt_section_network.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
+                    txt_section_gmttime.setText(config.TEXT_TIME +""+common.getworldclocktime());
                     img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
                 }
 
@@ -2489,11 +2485,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             if (!common.isnetworkconnected(applicationviavideocomposer.getactivity()) ||
                     xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0") ||
-                    xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA") ||
                     xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA") ||
                     xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA") ||
-                    xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null") ||
-                    xdata.getinstance().getSetting(config.airplanemode).equals("ON")||
                     xdata.getinstance().getSetting(config.Connectionspeed) == null ||
                     xdata.getinstance().getSetting(config.GPSAccuracy) == null) {
 

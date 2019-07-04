@@ -31,6 +31,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -57,6 +58,7 @@ import com.deeptruth.app.android.models.dbitemcontainer;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.services.insertmediadataservice;
+import com.deeptruth.app.android.utils.CenteredImageSpan;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
@@ -113,6 +115,22 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     LinearLayout linearheader;
     @BindView(R.id.actionbar)
     RelativeLayout actionbar;
+    @BindView(R.id.img_gps)
+    ImageView img_gps;
+    @BindView(R.id.img_data)
+    ImageView img_data;
+    @BindView(R.id.img_network)
+    ImageView img_network;
+    @BindView(R.id.txt_section_gps)
+    TextView txt_section_gps;
+    @BindView(R.id.txt_section_data)
+    TextView txt_section_data;
+    @BindView(R.id.txt_section_gmttime)
+    TextView txt_section_gmttime;
+    @BindView(R.id.layout_wifi_gps_data)
+    LinearLayout layout_wifi_gps_data;
+    @BindView(R.id.ll_actionbarcomposer)
+    LinearLayout ll_actionbarcomposer;
 
     /**
      * ID of the current {@link CameraDevice}.
@@ -511,8 +529,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         linearLayout=rootview.findViewById(R.id.content);
-        actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
-        layoutbottom.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
+       /* actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
+        layoutbottom.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));*/
         timerhandler = new Handler() ;
         textureview.setOnTouchListener(this);
         imgflashon.setOnClickListener(this);
@@ -1526,6 +1544,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 if(layout_recorder != null)
                     layout_recorder.setClickable(true);
 
+                actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+
+                visibleconnection();
+                setactionbarbackgroundcolor();
+
                 myhandler.postDelayed(this, 1000);
             }
         };
@@ -1792,6 +1815,119 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             linearheader.setVisibility(View.VISIBLE);
             layout_seekbarzoom.setVisibility(View.VISIBLE);
             framecontainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void visibleconnection(){
+        String value = "";
+
+        if(xdata.getinstance().getSetting(config.worldclocktime).isEmpty() && xdata.getinstance().getSetting(config.worldclocktime) == null)
+        {
+            txt_section_gmttime.setText("NA");
+            img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
+
+        }else{
+            txt_section_gmttime.setText(config.TEXT_TIME +""+common.getworldclocktime());
+            img_network.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
+        }
+
+        if(xdata.getinstance().getSetting(config.Connectionspeed)!=null && !xdata.getinstance().getSetting(config.Connectionspeed).isEmpty()){
+            if(xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA")){
+                txt_section_data.setText(config.TEXT_DATA+""+xdata.getinstance().getSetting(config.Connectionspeed));
+                img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
+            }else {
+
+                String[] arrayitem=xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
+                if(arrayitem.length > 0){
+                    double connectionvalue = Double.valueOf(arrayitem[0]);
+                    if(connectionvalue!=0.0){
+                        txt_section_data.setText(config.TEXT_DATA+""+connectionvalue+"Mb/s");
+                        img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
+
+                    }else{
+                        txt_section_data.setText(config.TEXT_DATA+""+connectionvalue+"Mb/s");
+                        img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
+                    }
+                }
+            }
+        }else{
+            txt_section_data.setText(config.TEXT_DATA+""+"NA");
+            img_data.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
+        }
+
+        if(xdata.getinstance().getSetting(config.GPSAccuracy)!= null && (! xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty()))
+        {
+            if(xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA")||
+                    xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
+            {
+                txt_section_gps.setText(config.TEXT_GPS+""+"NA");
+                img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
+            }else{
+                String[] arrayitem=xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
+                if(arrayitem.length > 0)
+                {
+                    double gpsvalue = Double.valueOf(arrayitem[0]);
+                    if ((gpsvalue <= 50 && gpsvalue != 0)) {
+
+                        SpannableStringBuilder builder = new SpannableStringBuilder();
+                        builder.append(config.TEXT_GPS)
+                                .append(" ", new CenteredImageSpan(getActivity(),R.drawable.ic_plusminus),0)
+                                .append(gpsvalue+"ft");
+
+                        txt_section_gps.setText(builder);
+                        img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightcheck));
+
+                    } else {
+
+                        SpannableStringBuilder builder = new SpannableStringBuilder();
+                        builder.append(config.TEXT_GPS)
+                                .append(" ", new CenteredImageSpan(getActivity(),R.drawable.ic_plusminus),0)
+                                .append(gpsvalue+"ft");
+
+                        txt_section_gps.setText(builder);
+
+                        //  txt_section_gps.setText(config.TEXT_GPS+""+gpsvalue+"ft");
+                        img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.warning_icon));
+                    }
+                }
+            }
+        }else{
+            txt_section_gps.setText(config.TEXT_GPS+""+"NA");
+            img_gps.setBackground(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.crossicon));
+        }
+    }
+
+    public void setactionbarbackgroundcolor() {
+
+        if (!common.isnetworkconnected(applicationviavideocomposer.getactivity()) ||
+                xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0") ||
+                xdata.getinstance().getSetting(config.Connectionspeed).equalsIgnoreCase("NA") ||
+                xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA") ||
+                xdata.getinstance().getSetting(config.Connectionspeed) == null ||
+                xdata.getinstance().getSetting(config.GPSAccuracy) == null) {
+
+            actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+
+        } else {
+            String[] arrayitemgps = xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
+            String[] arrayitemconnection = xdata.getinstance().getSetting(config.Connectionspeed).split(" ");
+            if (arrayitemgps.length > 0 && arrayitemconnection.length > 0) {
+                double gpsvalue = 0, connectionvalue = 0;
+                if (!arrayitemgps[0].trim().isEmpty())
+                    gpsvalue = Double.valueOf(arrayitemgps[0]);
+
+                if (!arrayitemconnection[0].trim().isEmpty())
+                    connectionvalue = Double.valueOf(arrayitemconnection[0]);
+
+                if ((gpsvalue >= 50 || gpsvalue == 0) || connectionvalue == 0.0) {
+                    layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+                    actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+
+                } else {
+                    layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.greentransparent));
+                    actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.greentransparent));
+                }
+            }
         }
     }
 }
