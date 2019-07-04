@@ -7,6 +7,7 @@ package com.deeptruth.app.android.utils;
 public class taskresult {
     public String message;
     public Object data;
+    public Object completedata;
 
     public static final String NO_INTERNET = "No internet";
     public static final int CODE_FAILURE = 1;
@@ -23,6 +24,14 @@ public class taskresult {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public void setcompletedata(Object data) {
+        this.completedata = data;
+    }
+
+    public Object getcompletedata() {
+        return completedata;
     }
 
     public void success(boolean b) {

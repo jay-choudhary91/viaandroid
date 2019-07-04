@@ -42,6 +42,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -50,6 +51,7 @@ import com.deeptruth.app.android.adapter.folderdirectoryspinneradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
+import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.arraycontainer;
 import com.deeptruth.app.android.models.customedittext;
 import com.deeptruth.app.android.models.folder;
@@ -60,6 +62,7 @@ import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.simpledivideritemdecoration;
+import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 import com.github.mikephil.charting.utils.Utils;
 
@@ -72,6 +75,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -186,7 +190,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private int flingactionmindstvac,footerheight,navigationbarheight = 0,targetheight=0,previousheight=0,bottompadding,
             rootviewheight, devidedheight,actionbarheight,updatemetaattempt=0;
-    private String medianame = "",medianotes = "",mediafolder = "",localkey = "",latitude = "", longitude = "",
+    private String medianame = "",medianotes = "",mediafolder = "",mediaid="0",localkey = "",latitude = "", longitude = "",
             screenheight = "",screenwidth = "",mediastartdevicedate="",mediatoken="";
     private float currentDegree = 0f;
     private adapteritemclick mcontrollernavigator;
@@ -399,11 +403,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     //gethelper().setwindowfitxy(true);
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                    // if (arraymediaitemlist.size() > 0) {
-                    String medianotes = edt_medianotes.getText().toString();
 
-                    if(!localkey.isEmpty())
-                        updatemediainfo(localkey,edt_medianame.getText().toString(),medianotes);
+                    callupdatemetaapi(mediaid,edt_medianame.getText().toString().trim(),edt_medianotes.getText().toString().trim());
                 }
             }
         });
@@ -417,10 +418,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     //gethelper().setwindowfitxy(true);
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                    // if (arraymediaitemlist.size() > 0) {
-                    String renamevalue = edt_medianame.getText().toString();
-                    if(!localkey.isEmpty())
-                        updatemediainfo(localkey,renamevalue,edt_medianotes.getText().toString());
+
+                    callupdatemetaapi(mediaid,edt_medianame.getText().toString().trim(),edt_medianotes.getText().toString().trim());
 
                     editabletext();
                 }
@@ -820,6 +819,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             mediafolder = "" + cur.getString(cur.getColumnIndex("media_folder"));
                             localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
                             sync_date = "" + cur.getString(cur.getColumnIndex("sync_date"));
+                            mediaid = "" + cur.getString(cur.getColumnIndex("videoid"));
+
                         } while (cur.moveToNext());
                     }
 
@@ -1144,6 +1145,77 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             edt_medianame.setClickable(false);
             edt_medianame.setKeyListener(null);
         }
+    }
+
+    public void resetmedianamenotes()
+    {
+        edt_medianame.setText(medianame);
+        edt_medianotes.setText(medianotes);
+    }
+
+    public void callupdatemetaapi(String mediaid,String title,String description)
+    {
+        if(!gethelper().isuserlogin()){
+            Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                    .getResources().getString(R.string.login_here),Toast.LENGTH_SHORT).show();
+            resetmedianamenotes();
+            gethelper().redirecttologin();
+            return;
+        }
+
+        //mediaid="460123";
+
+        if(mediaid.trim().isEmpty() || mediaid.equalsIgnoreCase("0")){
+            Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                    .getResources().getString(R.string.invalid_empty_mediaid),Toast.LENGTH_SHORT).show();
+            resetmedianamenotes();
+            return;
+        }
+
+        HashMap<String,String> requestparams=new HashMap<>();
+        requestparams.put("type",config.type_image);
+        requestparams.put("action","updatemeta");
+        requestparams.put("id",mediaid);
+        requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
+        requestparams.put("title",title);
+        requestparams.put("description",description);
+        progressdialog.showwaitingdialog(getActivity());
+        gethelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response) {
+                progressdialog.dismisswaitdialog();
+                if(response.isSuccess())
+                {
+                    try {
+                        JSONObject object=new JSONObject(response.getData().toString());
+                        if(object.has("success"))
+                        {
+                            if(object.getString("success").equalsIgnoreCase("true") || object.getString("success").equalsIgnoreCase("1"))
+                            {
+                                medianame=edt_medianame.getText().toString().trim();
+                                medianotes=edt_medianotes.getText().toString().trim();
+                                if(! localkey.isEmpty())
+                                    updatemediainfo(localkey,edt_medianame.getText().toString().trim(),
+                                            edt_medianotes.getText().toString().trim().trim());
+                            }
+                        }
+                        if(object.has("error"))
+                        {
+                            Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                            resetmedianamenotes();
+                        }
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), applicationviavideocomposer.getactivity().getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 

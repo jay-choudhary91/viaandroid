@@ -581,7 +581,7 @@ public class databasemanager {
     }
 
 
-    public Cursor updatevideosyncdate(String localkey,String syncdate,String syncstatus,String color) {
+    public Cursor updatevideosyncdate(String localkey,String syncdate,String syncstatus,String color,String mediaid) {
         Cursor mCur=null;
         try {
             lock.lock();
@@ -590,6 +590,7 @@ public class databasemanager {
             mDb.execSQL("update tblstartmediainfo set sync_date = '"+syncdate+
                     "',sync_status ='"+syncstatus+
                     "',color ='"+color+
+                    "',videoid ='"+mediaid+
                     "' where localkey='"+localkey+"'");
             if (mCur != null)
                 mCur.moveToNext();
