@@ -286,6 +286,7 @@ public abstract class basefragment extends Fragment {
         public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick);
         public void inapppurchase(String productid);
         public void finishactivity();
+        public basefragment getcurrentfragment();
 
     }
 

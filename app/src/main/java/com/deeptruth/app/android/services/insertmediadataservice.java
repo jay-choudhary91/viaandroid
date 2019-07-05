@@ -51,30 +51,16 @@ public class insertmediadataservice extends Service {
         @Override
         public void run() {
 
- /*       try {
-            if (ffmpeg == null) {
-                Log.d("ffmpeg", "ffmpeg : is loading..");
-
-                ffmpeg = FFmpeg.getInstance(getApplicationContext());
-            }
-            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
-                @Override
-                public void onFailure() {
-                    // showUnsupportedExceptionDialog();
-                    Log.d("ffmpeg", " onFailure");
-                }
-
-                @Override
-                public void onSuccess() {
-
-                    Log.d("ffmpeg", "ffmpeg : is now Loaded");*/
             try {
 
-                final String mediapath = xdata.getinstance().getSetting("mediapath");
-                final String keytype = xdata.getinstance().getSetting("keytype");
+                if(xdata.getinstance().getSetting(config.servicedata_liststart).trim().isEmpty())
+                    return;
+
+                final String mediapath = xdata.getinstance().getSetting(config.servicedata_mediapath);
+                final String keytype = xdata.getinstance().getSetting(config.servicedata_keytype);
                 final Gson gsonobject = new Gson();
-                final String list1 = xdata.getinstance().getSetting("liststart");
-                final String list2 = xdata.getinstance().getSetting("listmiddle");
+                final String list1 = xdata.getinstance().getSetting(config.servicedata_liststart);
+                final String list2 = xdata.getinstance().getSetting(config.servicedata_listmiddle);
 
                 Type type = new TypeToken<ArrayList<dbitemcontainer>>() {
                 }.getType();
@@ -277,6 +263,11 @@ public class insertmediadataservice extends Service {
                                         e.printStackTrace();
                                     }
                                 }
+
+                                xdata.getinstance().saveSetting(config.servicedata_liststart,"");
+                                xdata.getinstance().saveSetting(config.servicedata_listmiddle,"");
+                                xdata.getinstance().saveSetting(config.servicedata_mediapath,"");
+                                xdata.getinstance().saveSetting(config.servicedata_keytype,"");
                             }
 
                             @Override

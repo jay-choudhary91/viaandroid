@@ -1401,10 +1401,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     Gson gson = new Gson();
                     String list1 = gson.toJson(dbstartitemcontainer);
                     String list2 = gson.toJson(dbmiddleitemcontainer);
-                    xdata.getinstance().saveSetting("liststart",list1);
-                    xdata.getinstance().saveSetting("listmiddle",list2);
-                    xdata.getinstance().saveSetting("mediapath",lastrecordedvideo.getAbsolutePath());
-                    xdata.getinstance().saveSetting("keytype",keytype);
+                    xdata.getinstance().saveSetting(config.servicedata_liststart,list1);
+                    xdata.getinstance().saveSetting(config.servicedata_listmiddle,list2);
+                    xdata.getinstance().saveSetting(config.servicedata_mediapath,lastrecordedvideo.getAbsolutePath());
+                    xdata.getinstance().saveSetting(config.servicedata_keytype,keytype);
 
                     Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
                     applicationviavideocomposer.getactivity().startService(intent);
