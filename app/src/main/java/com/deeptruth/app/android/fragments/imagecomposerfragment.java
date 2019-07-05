@@ -529,8 +529,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         linearLayout=rootview.findViewById(R.id.content);
-       /* actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
-        layoutbottom.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));*/
+        actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+        layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
         timerhandler = new Handler() ;
         textureview.setOnTouchListener(this);
         imgflashon.setOnClickListener(this);
@@ -1545,7 +1545,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     layout_recorder.setClickable(true);
 
                 actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
-
+                layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
                 visibleconnection();
                 setactionbarbackgroundcolor();
 

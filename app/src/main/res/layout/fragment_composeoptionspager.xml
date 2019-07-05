@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:visibility="visible"
-        android:background="@color/translucent_dark_blue_solid"
+        android:background="@color/yellowtransparent"
         >
         <RelativeLayout
             android:id="@+id/layout_mediatype"

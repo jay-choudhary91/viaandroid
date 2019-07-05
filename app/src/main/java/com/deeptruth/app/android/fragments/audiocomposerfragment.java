@@ -228,8 +228,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         startnoise();
         txt_title_actionbarcomposer.setText(config.mediarecorderformat);
-       /* actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
-        layoutbottom.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));*/
+        actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+        layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
         try {
              bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
@@ -1333,6 +1333,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
 
                 actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+                layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
                 visibleconnection();
                 setactionbarbackgroundcolor();

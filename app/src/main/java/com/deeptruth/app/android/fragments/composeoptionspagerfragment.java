@@ -1120,8 +1120,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void setactionbartransparency(int progress)
     {
-        String colorString="#"+transparentarray[progress]+"004860";
-        layoutbottom.setBackgroundColor(Color.parseColor(colorString));
+        /*String colorString="#"+transparentarray[progress]+"004860";
+        layoutbottom.setBackgroundColor(Color.parseColor(colorString));*/
+        layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+
     }
 
     private void makecircle()
