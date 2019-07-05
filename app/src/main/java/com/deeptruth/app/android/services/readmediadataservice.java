@@ -330,7 +330,7 @@ public class readmediadataservice extends Service {
                     String framecount="",mediatypeshortname = "",mediatitle = "",mediakey = "",mediatoken = "",mediaid = "",
                             remainingframes="50",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "",savedsequencecount="",
                     mediacompleteddevicedatetime="",mediatarttransactionid = "",medianame = "",mediacompleteddate="",color="",
-                            mediaduration="";
+                            mediaduration="",mediadescrption="";
 
                     try {
                         JSONObject object = (JSONObject) response.getData();
@@ -351,6 +351,7 @@ public class readmediadataservice extends Service {
                             String videocreateddate = (object.has("videocreateddate")?object.getString("videocreateddate"):"");
                             String videorank = (object.has("videorank")?object.getString("videorank"):"");
                             medianame = (object.has("videoname")?object.getString("videoname"):"");
+                            mediadescrption = (object.has("videodescription")?object.getString("videodescription"):"");
                             mediatypeshortname = (object.has("videotypeshortname")?object.getString("videotypeshortname"):"");
                             mediatoken = (object.has("videotoken")?object.getString("videotoken"):"");
                             mediatitle = (object.has("videotitle")?object.getString("videotitle"):"");
@@ -379,6 +380,7 @@ public class readmediadataservice extends Service {
                             String audioupdateddate = (object.has("audioupdateddate")?object.getString("audioupdateddate"):"");
                             String audiorank = (object.has("audiorank")?object.getString("audiorank"):"");
                             medianame = (object.has("audioname")?object.getString("audioname"):"");
+                            mediadescrption = (object.has("audiodescription")?object.getString("audiodescription"):"");
                             mediatypeshortname = (object.has("audiotypeshortname")?object.getString("audiotypeshortname"):"");
                             savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("audiotoken")?object.getString("audiotoken"):"");
@@ -408,6 +410,7 @@ public class readmediadataservice extends Service {
                             String imageupdateddate = (object.has("imageupdateddate")?object.getString("imageupdateddate"):"");
                             String imagerank = (object.has("imagerank")?object.getString("imagerank"):"");
                             medianame = (object.has("imagename")?object.getString("imagename"):"");
+                            mediadescrption = (object.has("imagedescription")?object.getString("imagedescription"):"");
                             mediatypeshortname = (object.has("imagetypeshortname")?object.getString("imagetypeshortname"):"");
                             savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("imagetoken")?object.getString("imagetoken"):"");
@@ -437,7 +440,7 @@ public class readmediadataservice extends Service {
                                     mediatoken,mediakey,"",syncdate[0]  , actiontype,
                                     "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
                                     firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe
-                                    ,framecount,"",medianame,"",xdata.getinstance().getSetting(config.selected_folder),
+                                    ,framecount,"",medianame,mediadescrption,xdata.getinstance().getSetting(config.selected_folder),
                                     "","",mediaduration,mediacompleteddate,color,""));
 
                             int framestart=1;int maxframes=50;
@@ -450,7 +453,7 @@ public class readmediadataservice extends Service {
                                     mediatoken,mediakey,"",syncdate[0]  , actiontype,
                                     "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
                                     firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe
-                                    ,framecount,"",medianame,"",xdata.getinstance().getSetting(config.selected_folder),
+                                    ,framecount,"",medianame,mediadescrption,xdata.getinstance().getSetting(config.selected_folder),
                                     "","",mediaduration,mediacompleteddate,color,""));
 
                             sendbroadcastreader();

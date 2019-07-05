@@ -244,10 +244,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                                 oldlocation = location;
 
                                             double value=Double.parseDouble(xdata.getinstance().getSetting(config.travelleddistance).trim());
-                                            double miles=value+oldlocation.distanceTo(location);
-                                            //double miles=mps+value;
-                                            //double miles=common.convertmetertomiles(mps+value);
-                                            xdata.getinstance().saveSetting(config.travelleddistance, "" + precision.format(miles));
+                                            double meter=value+oldlocation.distanceTo(location);
+                                            xdata.getinstance().saveSetting(config.travelleddistance, "" + precision.format(meter));
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
