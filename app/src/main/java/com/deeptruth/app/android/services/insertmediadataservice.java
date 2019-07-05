@@ -290,6 +290,11 @@ public class insertmediadataservice extends Service {
                         updatestartframes(mdbstartitemcontainer);
                         updatemiddleframes(mdbmiddleitemcontainer.get(0));
 
+                        xdata.getinstance().saveSetting(config.servicedata_liststart,"");
+                        xdata.getinstance().saveSetting(config.servicedata_listmiddle,"");
+                        xdata.getinstance().saveSetting(config.servicedata_mediapath,"");
+                        xdata.getinstance().saveSetting(config.servicedata_keytype,"");
+
                     }
 
                 }
