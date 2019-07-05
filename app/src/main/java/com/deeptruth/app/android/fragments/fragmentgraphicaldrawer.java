@@ -673,12 +673,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void setmetricesdata()
     {
-
-            String latitudedegree  = xdata.getinstance().getSetting(config.Latitude);
-            String longitudedegree = xdata.getinstance().getSetting(config.Longitude);
-
             if(isdatacomposing)
             {
+                if(gethelper().getcurrentfragment() instanceof videocomposerfragment ||
+                        gethelper().getcurrentfragment() instanceof imagecomposerfragment ||
+                        gethelper().getcurrentfragment() instanceof audiocomposerfragment)
+                {
+                    String latitudedegree  = xdata.getinstance().getSetting(config.Latitude);
+                    String longitudedegree = xdata.getinstance().getSetting(config.Longitude);
+
                     if(! latitudedegree.isEmpty() && (! latitudedegree.equalsIgnoreCase("NA")))
                     {
                         String latitude = common.convertlatitude(Double.parseDouble(latitudedegree));
@@ -771,11 +774,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(world_time_clock != null)
                         world_time_clock.setpostrecorddata(true,"");
 
-                if(! xdata.getinstance().getSetting(config.phoneclockdate).isEmpty() && (! xdata.getinstance().getSetting(config.phoneclockdate).equalsIgnoreCase("NA")))
-                            txt_phone_date.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.phoneclockdate)));
+                    if(! xdata.getinstance().getSetting(config.phoneclockdate).isEmpty() && (! xdata.getinstance().getSetting(config.phoneclockdate).equalsIgnoreCase("NA")))
+                        txt_phone_date.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.phoneclockdate)));
 
-                if(! xdata.getinstance().getSetting(config.worldclockdate).isEmpty() && (! xdata.getinstance().getSetting(config.worldclockdate).equalsIgnoreCase("NA")))
-                           txt_world_date.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.worldclockdate)));
+                    if(! xdata.getinstance().getSetting(config.worldclockdate).isEmpty() && (! xdata.getinstance().getSetting(config.worldclockdate).equalsIgnoreCase("NA")))
+                        txt_world_date.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.worldclockdate)));
 
                     common.setdrawabledata("",common.getdate(), tvdate);
                     common.setdrawabledata("",common.gettime(), tvtime);
@@ -940,89 +943,63 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     }
 
 
-                showsatellitesinfo(xdata.getinstance().getSetting(config.item_satellitesdate),
-                        xdata.getinstance().getSetting(config.item_satellitesdata));
+                    showsatellitesinfo(xdata.getinstance().getSetting(config.item_satellitesdate),
+                            xdata.getinstance().getSetting(config.item_satellitesdata));
 
-                String towerinfo = xdata.getinstance().getSetting(config.json_towerlist);
-                if(towerinfo.trim().length() == 0)
-                {
-                    celltowers.clear();
-                    if(toweradapter != null)
-                        toweradapter.notifyDataSetChanged();
-                    if(layout_towerinfo != null)
-                        layout_towerinfo.setVisibility(View.GONE);
-                }
-                else if(towerinfo.trim().length() > 0)
-                {
-                    try
+                    String towerinfo = xdata.getinstance().getSetting(config.json_towerlist);
+                    if(towerinfo.trim().length() == 0)
                     {
-                        JSONArray jsonArray=new JSONArray(towerinfo);
-                        if(jsonArray.length() > 0 && (celltowers.size() != jsonArray.length()))
-                        {
-                            celltowers.clear();
+                        celltowers.clear();
+                        if(toweradapter != null)
                             toweradapter.notifyDataSetChanged();
-
-                            for(int i=0;i<jsonArray.length();i++)
-                            {
-                                celltowermodel model=new celltowermodel();
-                                JSONObject object=jsonArray.getJSONObject(i);
-                                if(object.has("mnc"))
-                                    model.setMnc(Integer.parseInt(object.getString("mnc")));
-                                if(object.has("mcc"))
-                                    model.setMcc(Integer.parseInt(object.getString("mcc")));
-                                if(object.has("network"))
-                                    model.setNetwork(object.getString("network"));
-                                if(object.has("country"))
-                                    model.setCountry(object.getString("country"));
-                                if(object.has("iso"))
-                                    model.setIso(object.getString("iso"));
-                                if(object.has("dbm"))
-                                    model.setDbm(Integer.parseInt(object.getString("dbm")));
-                                if(object.has("country_code"))
-                                    model.setCountrycode(object.getString("country_code"));
-                                if(object.has("cid"))
-                                    model.setCid(Integer.parseInt(object.getString("cid")));
-                                celltowers.add(model);
-                            }
-                        }
-                        toweradapter.notifyDataSetChanged();
-                        if(celltowers.size() > 0)
-                            layout_towerinfo.setVisibility(View.VISIBLE);
-                        else
+                        if(layout_towerinfo != null)
                             layout_towerinfo.setVisibility(View.GONE);
-                    }catch (Exception e)
+                    }
+                    else if(towerinfo.trim().length() > 0)
                     {
-                        e.printStackTrace();
+                        try
+                        {
+                            JSONArray jsonArray=new JSONArray(towerinfo);
+                            if(jsonArray.length() > 0 && (celltowers.size() != jsonArray.length()))
+                            {
+                                celltowers.clear();
+                                toweradapter.notifyDataSetChanged();
+
+                                for(int i=0;i<jsonArray.length();i++)
+                                {
+                                    celltowermodel model=new celltowermodel();
+                                    JSONObject object=jsonArray.getJSONObject(i);
+                                    if(object.has("mnc"))
+                                        model.setMnc(Integer.parseInt(object.getString("mnc")));
+                                    if(object.has("mcc"))
+                                        model.setMcc(Integer.parseInt(object.getString("mcc")));
+                                    if(object.has("network"))
+                                        model.setNetwork(object.getString("network"));
+                                    if(object.has("country"))
+                                        model.setCountry(object.getString("country"));
+                                    if(object.has("iso"))
+                                        model.setIso(object.getString("iso"));
+                                    if(object.has("dbm"))
+                                        model.setDbm(Integer.parseInt(object.getString("dbm")));
+                                    if(object.has("country_code"))
+                                        model.setCountrycode(object.getString("country_code"));
+                                    if(object.has("cid"))
+                                        model.setCid(Integer.parseInt(object.getString("cid")));
+                                    celltowers.add(model);
+                                }
+                            }
+                            toweradapter.notifyDataSetChanged();
+                            if(celltowers.size() > 0)
+                                layout_towerinfo.setVisibility(View.VISIBLE);
+                            else
+                                layout_towerinfo.setVisibility(View.GONE);
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
-            }
-            else if(! isdatacomposing)
-            {
-               /* setvisibility(true);
-                if(xdata.getinstance().getSetting(config.Heading).trim().length() > 0)
-                {
-                    String strdegree=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
-
-                    if((! strdegree.trim().isEmpty()) && (! strdegree.equalsIgnoreCase("NA")) &&
-                            (! strdegree.equalsIgnoreCase("null")))
-                    {
-                        int degree = Math.abs((int)Double.parseDouble(strdegree));
-                        rotatecompass(degree);
-                        String direction= common.getcompassdirection(degree);
-
-                        common.setdrawabledata("",strdegree +"° " + direction , txtdegree);
-
-                        double heading=Double.parseDouble(strdegree);
-                        int headingg=(int)heading;
-                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+headingg + "°" , tvheading);
-                    }
-                    else
-                    {
-                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"NA", tvheading);
-                    }
-
-                }*/
             }
 
             if(xdata.getinstance().getSetting(config.orientation).trim().length() > 0)

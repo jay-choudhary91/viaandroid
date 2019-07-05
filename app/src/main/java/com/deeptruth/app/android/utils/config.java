@@ -242,6 +242,11 @@ public class config {
     public static final String type_video="video";
     public static final String type_image="image";
 
+    public static final String servicedata_liststart="servicedata_liststart";
+    public static final String servicedata_listmiddle="servicedata_listmiddle";
+    public static final String servicedata_mediapath="servicedata_mediapath";
+    public static final String servicedata_keytype="servicedata_keytype";
+
     public static final String caution="CAUTION";
     public static final String verified="VERIFIED";
     public static final String validating="VALIDATING";

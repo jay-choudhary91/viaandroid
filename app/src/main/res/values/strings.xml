@@ -23,6 +23,7 @@
     <string name="please_enter_title">Please enter title or description</string>
     <string name="invalid_empty_mediaid">Invalid or empty media id!</string>
     <string name="login_here">Please login here to update title and description!</string>
+    <string name="metadata_updated">Metadata updated successfully!</string>
 
     <string name="sharing_a_trimmed_video">Sharing a trimmed version is an advanced feature. Upgrade</string>
 

@@ -15,6 +15,7 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.deeptruth.app.android.services.appbackgroundactionservice;
+import com.deeptruth.app.android.services.insertmediadataservice;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
@@ -75,6 +76,16 @@ public class applicationviavideocomposer extends Application implements Lifecycl
                 @Override
                 public void onSuccess() {
                  Log.e("onsucess","onSuccess");
+
+                    if(! xdata.getinstance().getSetting(config.servicedata_liststart).trim().isEmpty())
+                    {
+                        // Start service for grab frames and insert frame data into database.
+                        if (! isMyServiceRunning(insertmediadataservice.class))
+                        {
+                            Intent intent = new Intent(getApplicationContext(), insertmediadataservice.class);
+                            startService(intent);
+                        }
+                    }
                 }
             });
         }catch (FFmpegNotSupportedException e) {

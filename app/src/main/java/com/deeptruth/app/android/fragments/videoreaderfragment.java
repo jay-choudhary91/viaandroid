@@ -2214,6 +2214,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         {
                             if(object.getString("success").equalsIgnoreCase("true") || object.getString("success").equalsIgnoreCase("1"))
                             {
+                                Toast.makeText(getActivity(), applicationviavideocomposer.getactivity()
+                                        .getResources().getString(R.string.metadata_updated), Toast.LENGTH_SHORT).show();
                                 medianame=edt_medianame.getText().toString().trim();
                                 medianotes=edt_medianotes.getText().toString().trim();
                                 if(! localkey.isEmpty())
