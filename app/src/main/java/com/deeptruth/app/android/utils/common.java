@@ -2794,6 +2794,12 @@ public class common {
         return worldclocktime +" GMT";
     }
 
+    public static boolean is24hourstimeformat()
+    {
+        return android.text.format.DateFormat.
+                is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
+    }
+
     public static String getworldclocktimewithsec(){
         String worldclocktime = "";
         boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());

@@ -1172,12 +1172,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = common.gettimezoneshortname();
         } else if (key.equalsIgnoreCase(config.phoneclocktime)) {
             Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
-            String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
+            String time = common.appendzero(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
                     + ":" + common.appendzero(calendar.get(Calendar.SECOND));
             metricItemValue = time+" "+common.gettimezoneshortname();;
         } else if (key.equalsIgnoreCase(config.worldclocktime)) {
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-            String time = common.appendzero(calendar.get(Calendar.HOUR)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
+            String time = common.appendzero(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + common.appendzero(calendar.get(Calendar.MINUTE))
                     + ":" + common.appendzero(calendar.get(Calendar.SECOND));
                 metricItemValue = time +"GMT";
         }else if (key.equalsIgnoreCase(config.worldclockdate)) {

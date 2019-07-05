@@ -488,8 +488,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
-                        txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
-                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneobject.toString());
+                        if(common.is24hourstimeformat())
+                        {
+                            txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR_OF_DAY))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                                    +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneobject.toString());
+                        }
+                        else
+                        {
+                            txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                                    +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneobject.toString());
+                        }
+
                     }
                 }
 
@@ -504,8 +513,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
-                        txt_world_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
-                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" GMT");
+                        if(common.is24hourstimeformat())
+                        {
+                            txt_world_time.setText(common.appendzero(calendar.get(Calendar.HOUR_OF_DAY))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                                    +":"+common.appendzero(calendar.get(Calendar.SECOND))+" GMT");
+                        }
+                        else
+                        {
+                            txt_world_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                                    +":"+common.appendzero(calendar.get(Calendar.SECOND))+" GMT");
+                        }
+
                     }
                 }
 

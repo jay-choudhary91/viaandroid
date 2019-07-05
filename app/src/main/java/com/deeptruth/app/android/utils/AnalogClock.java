@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.deeptruth.app.android.R;
@@ -194,6 +195,7 @@ public class AnalogClock extends View {
                 canvas.rotate(secondAngle - minuteAngle, 0f, 0f);
                 mSecondHand.draw(canvas);
             }
+
             if(itemupdator != null)
                 itemupdator.onitemupdate(mTime,common.gettimezoneshortname());
         }
@@ -208,12 +210,16 @@ public class AnalogClock extends View {
                     try {
 
                         //1. Create a Date from String
-                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
                         Date date = sdf.parse(dateitem);
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(date);
 
-                        final float hourAngle = calendar.get(Calendar.HOUR) * 30f;
+                        int hourofday=calendar.get(Calendar.HOUR_OF_DAY);
+                        if(hourofday > 12)
+                            hourofday=hourofday-12;
+
+                        final float hourAngle = hourofday * 30f;
                         canvas.rotate(hourAngle, 0f, 0f);
                         mHourHand.draw(canvas);
 
@@ -229,15 +235,10 @@ public class AnalogClock extends View {
                         if(itemupdator != null)
                         {
                             if(arrayitem.length > 1)
-                            {
                                 itemupdator.onitemupdate(calendar,arrayitem[1]);
-                            }
                             else
-                            {
                                 itemupdator.onitemupdate(calendar,"");
-                            }
                         }
-
 
                     }catch (Exception e)
                     {
