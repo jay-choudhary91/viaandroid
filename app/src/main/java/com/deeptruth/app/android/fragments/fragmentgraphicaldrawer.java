@@ -482,13 +482,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
           TimeZone timezone = TimeZone.getDefault();
           String timezoneid=timezone.getID();
-          phone_time_clock.settimezone(timezoneid, new itemupdatelistener() {
+            phone_time_clock.settimezone(timezoneid, new itemupdatelistener() {
                 @Override
                 public void onitemupdate(Object object,Object timezoneobject) {
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
-                        txt_phone_time.setText(common.getphonetime() +" "+ common.gettimezoneshortname());
+                        txt_phone_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" "+timezoneobject.toString());
                     }
                 }
 
@@ -497,13 +498,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 }
             });
-          world_time_clock.settimezone("GMT", new itemupdatelistener() {
+            world_time_clock.settimezone("GMT", new itemupdatelistener() {
                 @Override
                 public void onitemupdate(Object object,Object timezoneobject) {
                     if(object != null)
                     {
                         Calendar calendar=(Calendar)object;
-                         txt_world_time.setText(common.getworldclocktimewithsec());
+                        txt_world_time.setText(common.appendzero(calendar.get(Calendar.HOUR))+":"+common.appendzero(calendar.get(Calendar.MINUTE))
+                                +":"+common.appendzero(calendar.get(Calendar.SECOND))+" GMT");
                     }
                 }
 
