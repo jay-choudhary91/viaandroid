@@ -155,7 +155,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", connectionspeed = "",
             connectiondatadelay = "",availablewifinetwork="";
     MyPhoneStateListener mPhoneStatelistener;
-    int mSignalStrength = 0, dbtoxapiupdatecounter = 0, servermetricsgetupdatecounter = 0,currenttowercounter=0,currentsatellitecounter=-1;
+    int mSignalStrength = 0, dbtoxapiupdatecounter = 0,sidecarupdatorinterval = 4, servermetricsgetupdatecounter = 0,currenttowercounter=0,currentsatellitecounter=-1;
     noise mNoise;
     private static final int PERMISSION_RECORD_AUDIO = 92;
     public static final int my_permission_read_phone_state = 90;
@@ -812,6 +812,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
         if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
             try {
                 if (isservicebound)
@@ -1044,21 +1048,22 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     getcurrentsatellitesget();
                                 }
                             }
+                        }
 
-                            if((xdata.getinstance().getSetting(config.selectedsyncsetting).trim().isEmpty()) ||
-                                    (! xdata.getinstance().getSetting(config.selectedsyncsetting).
-                                            equalsIgnoreCase(config.selectedsyncsetting_2))
-                                    || (! isappinbackground))
+                        if((xdata.getinstance().getSetting(config.selectedsyncsetting).trim().isEmpty()) ||
+                                (! xdata.getinstance().getSetting(config.selectedsyncsetting).
+                                        equalsIgnoreCase(config.selectedsyncsetting_2))
+                                || (! isappinbackground))
+                        {
+                            // Process for sync database with server for composer as well as reader app.
+                            dbtoxapiupdatecounter++;
+                            if (dbtoxapiupdatecounter > sidecarupdatorinterval)
                             {
-                                // Process for sync database with server for composer as well as reader app.
-                                dbtoxapiupdatecounter++;
-                                if (dbtoxapiupdatecounter > 3)
-                                {
-                                    dbtoxapiupdatecounter = 0;
-                                    syncmediadatabase();
-                                }
+                                dbtoxapiupdatecounter = 0;
+                                syncmediadatabase();
                             }
                         }
+
                         timercounterhandler++;
                     }
                 }).start();
@@ -2530,6 +2535,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             // api calling for video_start or audio_start
             final String finalLocalkey = localkey;
             final String finalMediafilepath = mediafilepath;
+            sidecarupdatorinterval=4;
             xapipost_sendjson(locationawareactivity.this, action_type, mpairslist, new apiresponselistener() {
                 @Override
                 public void onResponse(taskresult response) {
@@ -2712,6 +2718,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                 xdata.getinstance().saveSetting(config.frame_started,""+mediametadatainfosarray.get(0).getSequenceno());
 
+                String logString="";
               for(int i=0;i<mediametadatainfosarray.size();i++)
                 {
                     selectedid = mediametadatainfosarray.get(i).getId();
@@ -2726,6 +2733,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     sequenceno = mediametadatainfosarray.get(i).getSequenceno();
                     serverdate = mediametadatainfosarray.get(i).getServerdate();
                     sequencedevicedate = mediametadatainfosarray.get(i).getSequencedevicedate();
+
+                    if(logString.isEmpty())
+                    {
+                        logString="A";
+                        Log.e("Pickedsequenceno ",""+sequenceno);
+                    }
+
+
 
                     try {
 
@@ -2762,6 +2777,20 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         e.printStackTrace();
                     }
                 }
+
+                if(mediametadatainfosarray.size() > 40)
+                    sidecarupdatorinterval=20;
+                else if(mediametadatainfosarray.size() > 30)
+                    sidecarupdatorinterval=15;
+                else if(mediametadatainfosarray.size() > 20)
+                    sidecarupdatorinterval=12;
+                else if(mediametadatainfosarray.size() > 10)
+                    sidecarupdatorinterval=10;
+                else if(mediametadatainfosarray.size() > 5)
+                    sidecarupdatorinterval=8;
+                else
+                    sidecarupdatorinterval=4;
+
 
                 // Block for calling media update api
                 final String finalselectedid = selectedid;
@@ -2803,12 +2832,19 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                         serverdictionaryhash = "", sequencekey = "",mediahashvalue="";
 
                                 Iterator itr = jsonObject.keys();
+                                String logString="";
                                 while (itr.hasNext()) {
                                     sequencekey = (String) itr.next();
                                     JSONObject jobject = jsonObject.getJSONObject(sequencekey);
 
                                     //  get id from  issue
                                     sequenceid = jobject.getString("sequenceid");
+
+                                    if(logString.isEmpty())
+                                    {
+                                        logString="A";
+                                        Log.e("Gotsequenceno ",""+sequencekey);
+                                    }
 
                                     if (jobject.has("videoframetransactionid"))
                                         mediaframetransactionid = jobject.getString("videoframetransactionid");
@@ -2932,6 +2968,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             mpairslist.put("imageduration", videoduration);
         }
 
+        sidecarupdatorinterval=4;
         xapipost_sendjson(locationawareactivity.this, actiontype, mpairslist, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {

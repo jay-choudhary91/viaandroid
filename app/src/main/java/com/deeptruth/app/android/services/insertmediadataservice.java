@@ -53,6 +53,8 @@ public class insertmediadataservice extends Service {
 
             try {
 
+                Log.e("ServiceClass","Service "+xdata.getinstance().getSetting(config.servicedata_mediapath));
+
                 if(xdata.getinstance().getSetting(config.servicedata_liststart).trim().isEmpty())
                     return;
 
@@ -264,10 +266,14 @@ public class insertmediadataservice extends Service {
                                     }
                                 }
 
-                                xdata.getinstance().saveSetting(config.servicedata_liststart,"");
-                                xdata.getinstance().saveSetting(config.servicedata_listmiddle,"");
-                                xdata.getinstance().saveSetting(config.servicedata_mediapath,"");
-                                xdata.getinstance().saveSetting(config.servicedata_keytype,"");
+                                if(mediapath.equalsIgnoreCase(xdata.getinstance().getSetting(config.servicedata_mediapath)))
+                                {
+                                    xdata.getinstance().saveSetting(config.servicedata_liststart,"");
+                                    xdata.getinstance().saveSetting(config.servicedata_listmiddle,"");
+                                    xdata.getinstance().saveSetting(config.servicedata_mediapath,"");
+                                    xdata.getinstance().saveSetting(config.servicedata_keytype,"");
+                                }
+
                             }
 
                             @Override
@@ -290,10 +296,13 @@ public class insertmediadataservice extends Service {
                         updatestartframes(mdbstartitemcontainer);
                         updatemiddleframes(mdbmiddleitemcontainer.get(0));
 
-                        xdata.getinstance().saveSetting(config.servicedata_liststart,"");
-                        xdata.getinstance().saveSetting(config.servicedata_listmiddle,"");
-                        xdata.getinstance().saveSetting(config.servicedata_mediapath,"");
-                        xdata.getinstance().saveSetting(config.servicedata_keytype,"");
+                        if(mediapath.equalsIgnoreCase(xdata.getinstance().getSetting(config.servicedata_mediapath)))
+                        {
+                            xdata.getinstance().saveSetting(config.servicedata_liststart,"");
+                            xdata.getinstance().saveSetting(config.servicedata_listmiddle,"");
+                            xdata.getinstance().saveSetting(config.servicedata_mediapath,"");
+                            xdata.getinstance().saveSetting(config.servicedata_keytype,"");
+                        }
 
                     }
 
