@@ -807,7 +807,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         if(barvisualizer != null)
             barvisualizer.setVisibility(View.INVISIBLE);
-        
+
 
         try {
 
