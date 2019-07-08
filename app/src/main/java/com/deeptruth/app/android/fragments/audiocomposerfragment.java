@@ -134,7 +134,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     @BindView(R.id.layout_wifi_gps_data)
     LinearLayout layout_wifi_gps_data;
 
-    private TranslateAnimation validationbaranimation;
     LinearLayout layout_drawer;
     ImageView handle,img_dotmenu;;
     LinearLayout linearLayout;
@@ -246,75 +245,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 setlayoutmargin(linearheaderheight);
             }
         });
-
-        final AlphaAnimation fadeout_animation = new AlphaAnimation(1.0f, 0.0f);
-        fadeout_animation.setDuration(2000); //You can manage the time of the blink with this parameter
-        //fadeout_animation.setStartOffset(3500);
-        fadeout_animation.setRepeatMode(1);
-
-        Animation.AnimationListener fadeoutlistener=new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        };
-        fadeout_animation.setAnimationListener(fadeoutlistener);
-
-
-        final AlphaAnimation fadein_animation = new AlphaAnimation(0.0f, 1.0f);
-        fadein_animation.setDuration(1000); //You can manage the time of the blink with this parameter
-        //fadein_animation.setStartOffset(1000);
-        fadein_animation.setRepeatMode(1);
-
-        Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                txt_section_validating_secondary.startAnimation(fadeout_animation);
-                //fadeoutcontrollers();
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        };
-        fadein_animation.setAnimationListener(alphalistener);
-
-        validationbaranimation = new TranslateAnimation(-common.getScreenHeight(applicationviavideocomposer.getactivity()),
-                common.getScreenHeight(applicationviavideocomposer.getactivity())+100 ,0.0f, 0.0f);
-        validationbaranimation.setDuration(6000);
-        validationbaranimation.setRepeatCount(Animation.INFINITE);
-        validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
-        img_scanover.startAnimation(validationbaranimation);
-
-        Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                fadein_animation.setStartOffset(3000);
-                txt_section_validating_secondary.startAnimation(fadein_animation);
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                fadein_animation.setStartOffset(3000);
-                txt_section_validating_secondary.startAnimation(fadein_animation);
-            }
-        };
-        validationbaranimation.setAnimationListener(translatelistener);
 
         link(barvisualizer);
 
@@ -468,11 +398,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             if(barvisualizer != null)
                 barvisualizer.setVisibility(View.INVISIBLE);
 
-            if(validationbaranimation != null)
-            {
-                validationbaranimation.cancel();
-                validationbaranimation.reset();
-            }
 
             img_dotmenu.setVisibility(View.VISIBLE);
             txt_title_actionbarcomposer.setText(config.mediarecorderformat);
@@ -496,12 +421,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 barvisualizer.setVisibility(View.INVISIBLE);
 
             stopblinkanimation();
-        }
-
-        if(validationbaranimation != null)
-        {
-            validationbaranimation.cancel();
-            validationbaranimation.reset();
         }
 
         if(myHandler != null && myHandler != null)
@@ -671,9 +590,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }catch (Exception e){
             e.printStackTrace();
         }*/
-
-        if(validationbaranimation != null)
-            img_scanover.startAnimation(validationbaranimation);
 
         mediarecorder = new MediaRecorder();
         mediarecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -891,12 +807,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         if(barvisualizer != null)
             barvisualizer.setVisibility(View.INVISIBLE);
-
-        if(validationbaranimation != null)
-        {
-            validationbaranimation.cancel();
-            validationbaranimation.reset();
-        }
+        
 
         try {
 

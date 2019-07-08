@@ -402,7 +402,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     Animation blinkanimation;
     List<String> qualityitemslist=new ArrayList<>();
-    private TranslateAnimation validationbaranimation;
     RelativeLayout layout_recorder;
 
     @Override
@@ -557,71 +556,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     Log.d("ExpandableLayout", "State: " + state);
             }
         });
-
-        final AlphaAnimation fadeout_animation = new AlphaAnimation(1.0f, 0.0f);
-        fadeout_animation.setDuration(2000); //You can manage the time of the blink with this parameter
-        //fadeout_animation.setStartOffset(3500);
-        fadeout_animation.setRepeatMode(1);
-
-        Animation.AnimationListener fadeoutlistener=new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        };
-        fadeout_animation.setAnimationListener(fadeoutlistener);
-
-
-        final AlphaAnimation fadein_animation = new AlphaAnimation(0.0f, 1.0f);
-        fadein_animation.setDuration(1000); //You can manage the time of the blink with this parameter
-        //fadein_animation.setStartOffset(1000);
-        fadein_animation.setRepeatMode(1);
-
-        Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                //fadeoutcontrollers();
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        };
-        fadein_animation.setAnimationListener(alphalistener);
-
-        validationbaranimation = new TranslateAnimation(-common.getScreenHeight(applicationviavideocomposer.getactivity()),
-                common.getScreenHeight(applicationviavideocomposer.getactivity())+100 ,0.0f, 0.0f);
-        validationbaranimation.setDuration(6000);
-        validationbaranimation.setRepeatCount(Animation.INFINITE);
-        validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
-
-        Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                fadein_animation.setStartOffset(3000);
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                fadein_animation.setStartOffset(3000);
-            }
-        };
-        validationbaranimation.setAnimationListener(translatelistener);
 
         mOrientation = new Orientation(applicationviavideocomposer.getactivity());
         return rootview;
@@ -1375,11 +1309,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     private void startmetaservices() {
         // UI
-        if(validationbaranimation != null)
-        {
-            validationbaranimation.cancel();
-            validationbaranimation.reset();
-        }
         issavedtofolder=true;
         lastrecordedvideo=new File(selectedvideofile);
 
@@ -1814,12 +1743,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             myhandler.removeCallbacks(myrunnable);
         if(myhandler != null && myrunnable != null)
             myhandler.removeCallbacks(myrunnable);
-
-        if(validationbaranimation != null)
-        {
-            validationbaranimation.cancel();
-            validationbaranimation.reset();
-        }
 
         super.onPause();
     }
