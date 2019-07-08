@@ -123,7 +123,6 @@ public class applicationviavideocomposer extends Application implements Lifecycl
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void onAppBackgrounded() {
-        Log.d("MyApp", "App in background");
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
         {
             if(! isactivitybecomefinish)
@@ -138,7 +137,7 @@ public class applicationviavideocomposer extends Application implements Lifecycl
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     private void onAppForegrounded() {
-        Log.d("MyApp", "App in foreground");
+
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass)
@@ -146,11 +145,9 @@ public class applicationviavideocomposer extends Application implements Lifecycl
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("isMyServiceRunning?", true+"");
                 return true;
             }
         }
-        Log.i ("isMyServiceRunning?", false+"");
         return false;
     }
 
