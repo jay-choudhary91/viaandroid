@@ -254,7 +254,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         public void run() {
                             showselectedfragment();
                         }
-                    },200);
+                    },100);
                 }
 
                 @Override
@@ -1132,7 +1132,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         Animator shiftAnimation = AnimatorInflater.loadAnimator(applicationviavideocomposer.getactivity(), R.animator.slide_right_down);
         shiftAnimation.setTarget(mParent);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(300);
+        animatorSet.setDuration(100);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
         iscircle = !iscircle;
@@ -1144,7 +1144,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         Animator shiftAnimation = AnimatorInflater.loadAnimator(applicationviavideocomposer.getactivity(), R.animator.slide_left_up);
         shiftAnimation.setTarget(mParent);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(300);
+        animatorSet.setDuration(100);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
         iscircle = !iscircle;
