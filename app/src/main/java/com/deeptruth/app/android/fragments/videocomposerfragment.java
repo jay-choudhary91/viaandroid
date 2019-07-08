@@ -81,6 +81,7 @@ import com.deeptruth.app.android.utils.camerautil;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
+import com.deeptruth.app.android.utils.noise;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.sha;
 import com.deeptruth.app.android.utils.taskresult;
@@ -131,6 +132,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public static final String CAMERA_FRONT = "1";
     public static final String CAMERA_BACK = "0";
     private String[] transparentarray=common.gettransparencyvalues();
+    noise noisevalue;
 
     private String cameraId = CAMERA_BACK;
 
@@ -1246,6 +1248,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             metadatametricesjson=new JSONArray();
             mediakey ="";
             startPreview(true);
+            //stop();
             if(mediarecorder != null)
             {
                 // Start recording
@@ -1254,7 +1257,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 setsoundwaveinfo();
                 //fragmentgraphic.setvisualizerwave();
                 wavevisualizerslist.clear();
-
 
                 //startnoise();
             }
@@ -1518,6 +1520,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             stopresetmediarecorder();
             startmetaservices();
             stopblinkanimation();
+           /* new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    start();
+                }
+            },1000);*/
+
         } else {
             selectedhashes="";
             selectedmetrices="";
@@ -1722,6 +1731,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private void doafterallpermissionsgranted() {
 
         setmetriceshashesdata();
+        //start();
         if(! camerastatusok)
         {
             camerastatusok=true;
@@ -2456,6 +2466,72 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             setdynamiclayout(lp,null,0,0,0,bottomlayoutheight-layoutmediatypeheight,0,
                     0,0,0,null,headercontainer,null,headercontainer.getAngle());
+        }
+    }
+
+
+        public void start() {
+
+        //Log.i("noise", "==== start ===");
+            try {
+
+                if(noisevalue != null)
+                    noisevalue.stop();
+
+                noisevalue = new noise();
+
+                if(noisevalue != null)
+                {
+                    noisevalue.start();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+             try {
+                if(noisevalue != null)
+                   {
+                            startgraphvalue();
+                   }
+                } catch (Exception e) {
+                    e.printStackTrace();
+             }
+        }
+
+
+    public void startgraphvalue(){
+
+        if(mysoundwavehandler != null && mymysoundwaverunnable != null)
+            mysoundwavehandler.removeCallbacks(mymysoundwaverunnable);
+
+        mysoundwavehandler =new Handler();
+        mymysoundwaverunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if(noisevalue != null)
+                {
+                    final int amp = noisevalue.getAmplitudevoice();
+                    double ampletude = 20 * Math.log10(amp / 32767.0);
+                    final int decibelvalue = 50 - Math.abs((int) ampletude);
+
+                    gethelper().setsoundwaveinformation(amp, decibelvalue);
+
+                    mysoundwavehandler.postDelayed(this, 50);
+                }
+            }
+        };
+        mysoundwavehandler.post(mymysoundwaverunnable);
+    }
+
+    public void stop() {
+        Log.e("noisevalue", "==== Stop noise Monitoring===");
+        try {
+            if(noisevalue != null)
+            {
+                noisevalue.stop();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
