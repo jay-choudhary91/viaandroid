@@ -523,6 +523,10 @@ public class common {
         xdata.getinstance().saveSetting(config.availablewifinetwork, "");
         xdata.getinstance().saveSetting(config.phoneclockdate, "");
         xdata.getinstance().saveSetting(config.worldclockdate, "");
+        xdata.getinstance().saveSetting(config.deviceconnection, "NA");
+        xdata.getinstance().saveSetting(config.devicecurrency, "NA");
+        xdata.getinstance().saveSetting(config.gpsonoff, "NA");
+        xdata.getinstance().saveSetting(config.deviceorientation, "NA");
     }
 
     public static void setgraphicalitems(String keyname, String value, boolean ismetricsselected) {
@@ -605,6 +609,14 @@ public class common {
             xdata.getinstance().saveSetting(config.worldclockdate, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase(config.phoneclockdate)) {
             xdata.getinstance().saveSetting(config.phoneclockdate, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.deviceconnection)){
+            xdata.getinstance().saveSetting(config.deviceconnection, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.devicecurrency)){
+            xdata.getinstance().saveSetting(config.devicecurrency, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.gpsonoff)){
+            xdata.getinstance().saveSetting(config.gpsonoff, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.deviceorientation)){
+            xdata.getinstance().saveSetting(config.deviceorientation, ((ismetricsselected) ? value : "NA"));
         }
     }
 
@@ -619,6 +631,10 @@ public class common {
             xdata.getinstance().saveSetting(config.datahash, (ismetricsselected) ? value : "NA");
         } else if (keyname.equalsIgnoreCase(config.matrichash)) {
             xdata.getinstance().saveSetting(config.matrichash, (ismetricsselected) ? value : "NA");
+        }else if(keyname.equalsIgnoreCase(config.camera)){
+            xdata.getinstance().saveSetting(config.camera, (ismetricsselected) ? value : "NA");
+        }else if(keyname.equalsIgnoreCase(config.pictureqty)){
+            xdata.getinstance().saveSetting(config.pictureqty, (ismetricsselected) ? value : "NA");
         }
     }
 
@@ -824,6 +840,8 @@ public class common {
             metricItemName = "celltowersignalstrength";
         } else if (key.equalsIgnoreCase("celltowerid")) {
             metricItemName = "celltowerid";
+        }else if (key.equalsIgnoreCase("deviceconnection")) {
+            metricItemName = "deviceconnection";
         } else if (key.equalsIgnoreCase("numberoftowers")) {
             metricItemName = "numberoftowers";
         } else if (key.equalsIgnoreCase("numberofsatellites")) {
@@ -854,6 +872,8 @@ public class common {
             metricItemName = config.satellitesdata;
         } else if (key.equalsIgnoreCase(config.remoteip)) {
             metricItemName = config.remoteip;
+        }else if (key.equalsIgnoreCase(config.jailbroken)) {
+            metricItemName = config.jailbroken;
         }
         return metricItemName;
     }
@@ -1672,8 +1692,8 @@ public class common {
                 config.cpuusageirq, config.compass, config.decibel, config.barometer, config.acceleration_x, config.acceleration_y,
                 config.acceleration_z, config.distancetravelled, config.currentcallinprogress, config.currentcalldurationseconds,
                 config.currentcallremotenumber, config.currentcalldecibel, config.airplanemode,
-                "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country",
-                "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid", "numberoftowers",
+                "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country","jailbroken",
+                "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid","deviceconnection", "numberoftowers",
                 "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,
                 "phoneclocktime", "worldclocktime", config.connectiondatadelay,config.satellitedate,config.satellitesdata,config.remoteip,config.worldclockdate,config.phoneclockdate};
 

@@ -1545,7 +1545,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = "" + connectiondatadelay;
         } else if (key.equalsIgnoreCase("address")) {
             metricItemValue = xdata.getinstance().getSetting("currentaddress");
-        } else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")) {
+        } else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")|| (key.equalsIgnoreCase("deviceconnection"))) {
 
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             int networkType = telephonyManager.getNetworkType();
@@ -1592,6 +1592,21 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                        }
+                    } else if (key.equalsIgnoreCase("deviceconnection")) {
+
+                        switch (networkType) {
+                            case TelephonyManager.NETWORK_TYPE_IDEN:
+                                metricItemValue = "2G";
+                                break;
+
+                            case TelephonyManager.NETWORK_TYPE_HSPAP:
+                                metricItemValue = "3G";
+                                break;
+
+                            case TelephonyManager.NETWORK_TYPE_LTE:
+                                metricItemValue = "4G";
+                                break;
                         }
                     }
                 }
