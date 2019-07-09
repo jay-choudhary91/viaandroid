@@ -141,7 +141,7 @@ public class readmediadataservice extends Service {
                                         try {
                                             String destinationpath=common.getexisthashfilepath(mediapath);
                                             if(destinationpath.trim().isEmpty())
-                                                destinationpath = common.gettempfileforhash().getAbsolutePath();
+                                                destinationpath = common.gettempfileforhash(keytype).getAbsolutePath();
 
                                             br = new BufferedReader(new FileReader(new File(destinationpath)));
                                             String line;
@@ -184,7 +184,7 @@ public class readmediadataservice extends Service {
                                     }
                                     else
                                     {
-                                        final String destinationpath = common.createtempfileofmedianameforhash(mediapath).getAbsolutePath();
+                                        final String destinationpath = common.createtempfileofmedianameforhash(keytype,mediapath).getAbsolutePath();
                                         String[] complexcommand = {"-i", mediapath,"-f", "framemd5" ,destinationpath};
 
                                         try {
