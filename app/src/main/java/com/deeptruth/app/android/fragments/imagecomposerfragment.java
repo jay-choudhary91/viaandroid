@@ -1541,15 +1541,14 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
                 }
 
-                common.setgraphicalblockchainvalue(config.pictureqty,selectedmediaquality,true);
-
                 if (cameraid.equals(CAMERA_FRONT)){
                     devicecamera = "Front";
                 }else{
                     devicecamera = "Back";
                 }
 
-                common.setgraphicalblockchainvalue(config.camera, devicecamera,true);
+                xdata.getinstance().saveSetting(config.camera, devicecamera);
+                xdata.getinstance().saveSetting(config.pictureqty, selectedmediaquality);
 
                 ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
                 getselectedmetrics(mlocalarraylist);

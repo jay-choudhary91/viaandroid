@@ -1657,6 +1657,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         else if (key.equalsIgnoreCase(config.remoteip)) {
             metricItemValue = xdata.getinstance().getSetting(config.item_remoteip);
         }
+        else if (key.equalsIgnoreCase(config.jailbroken)) {
+            metricItemValue = xdata.getinstance().getSetting(config.jailbroken);
+        }
+        else if (key.equalsIgnoreCase(config.camera)) {
+            metricItemValue = xdata.getinstance().getSetting(config.camera);
+        }
+        else if (key.equalsIgnoreCase(config.pictureqty)) {
+            metricItemValue = xdata.getinstance().getSetting(config.pictureqty);
+        }
         /*else if (key.equalsIgnoreCase(config.sister_metric)) {
             metricItemValue=xdata.getinstance().getSetting(config.sister_metric);
         }

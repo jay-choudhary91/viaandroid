@@ -875,6 +875,12 @@ public class common {
         }else if (key.equalsIgnoreCase(config.jailbroken)) {
             metricItemName = config.jailbroken;
         }
+        else if (key.equalsIgnoreCase(config.camera)) {
+            metricItemName = config.camera;
+        }
+        else if (key.equalsIgnoreCase(config.pictureqty)) {
+            metricItemName = config.pictureqty;
+        }
         return metricItemName;
     }
 
@@ -1692,6 +1698,7 @@ public class common {
                 config.cpuusageirq, config.compass, config.decibel, config.barometer, config.acceleration_x, config.acceleration_y,
                 config.acceleration_z, config.distancetravelled, config.currentcallinprogress, config.currentcalldurationseconds,
                 config.currentcallremotenumber, config.currentcalldecibel, config.airplanemode,
+                "camera","picturequality","jailbroken",
                 "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country","jailbroken",
                 "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid","deviceconnection", "numberoftowers",
                 "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,
