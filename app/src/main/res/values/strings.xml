@@ -239,6 +239,15 @@
     <string name="uptime">Phone UpTime</string>
     <string name="battery">Battery</string>
     <string name="data_time_delay">Data Time Delay</string>
+    <string name="data_connection">Connection</string>
+    <string name="data_orientation">Orientation</string>
+    <string name="data_camera">Camera</string>
+    <string name="data_picture_quality">Picture Quality</string>
+    <string name="data_barometer">Barometer</string>
+    <string name="data_currency">Currency</string>
+    <string name="data_airplane_mode">Airplane_Mode</string>
+    <string name="data_gps">GPS</string>
+    <string name="data_jailbroken">Data Time Delay</string>
 
     <string name="view_dummy1">Dummy1</string>
     <string name="view_dummy2">Dummy2</string>
