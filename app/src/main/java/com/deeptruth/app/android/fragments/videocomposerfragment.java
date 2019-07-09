@@ -2009,16 +2009,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 common.setgraphicalblockchainvalue(config.blockchainid,"",true);
                 common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
                 common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
-                common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
-                common.setgraphicalblockchainvalue(config.pictureqty,selectedvideoquality,true);
 
                 if (cameraId.equals(CAMERA_FRONT)){
                     devicecameravideo = "Front";
                 }else{
                     devicecameravideo = "Back";
                 }
-
-                common.setgraphicalblockchainvalue(config.camera, devicecameravideo,true);
+                xdata.getinstance().saveSetting(config.camera, devicecameravideo);
+                xdata.getinstance().saveSetting(config.pictureqty, selectedvideoquality);
 
                 try {
                     if(gethelper().isdraweropened())

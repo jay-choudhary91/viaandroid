@@ -777,7 +777,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_currency),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.devicecurrency)), tvcurrency);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)), tvwifi);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_gps),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.gpsonoff)), tvgps);
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_jailbroken),"\n"+common.getxdatavalue("No"), tvjailbroken);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_jailbroken),"\n"+common.getxdatavalue("NA"), tvjailbroken);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_connection),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.deviceconnection)), tvdeviceconnection);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.pictureqty)), tvpicture_qty);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_camera),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.camera)), tvcamera);
@@ -1890,6 +1890,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("jailbroken")){
                             Log.e("jailbroken",""+metricItemArraylist.get(j).getMetricTrackValue());
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_jailbroken),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvjailbroken);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("camera")){
+                            Log.e("camera",""+metricItemArraylist.get(j).getMetricTrackValue());
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_camera),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvcamera);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("pictureqty")){
+                            Log.e("pictureqty",""+metricItemArraylist.get(j).getMetricTrackValue());
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvpicture_qty);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
                             screenwidth = metricItemArraylist.get(j).getMetricTrackValue();
