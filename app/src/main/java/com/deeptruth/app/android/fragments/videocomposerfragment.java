@@ -133,6 +133,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public static final String CAMERA_BACK = "0";
     private String[] transparentarray=common.gettransparencyvalues();
     noise noisevalue;
+    String devicecameravideo = "";
 
     private String cameraId = CAMERA_BACK;
 
@@ -437,6 +438,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         gethelper().drawerenabledisable(true);
         gethelper().setdatacomposing(true);
 
+
+
         if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
             apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
 
@@ -511,6 +514,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         {
             expendcollpaseviewcolor(txt_media_medium,txt_media_low,txt_media_high);
         }
+
+        selectedvideoquality=txt_media_quality.getText().toString();
 
         txt_media_low.setText(config.mediaquality480);
         txt_media_medium.setText(config.mediaquality720);
@@ -2005,6 +2010,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
                 common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
                 common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
+                common.setgraphicalblockchainvalue(config.pictureqty,selectedvideoquality,true);
+
+                if (cameraId.equals(CAMERA_FRONT)){
+                    devicecameravideo = "Front";
+                }else{
+                    devicecameravideo = "Back";
+                }
+
+                common.setgraphicalblockchainvalue(config.camera, devicecameravideo,true);
 
                 try {
                     if(gethelper().isdraweropened())

@@ -202,6 +202,25 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     customfonttextview tvdataletency;
     @BindView(R.id.txt_degree)
     customfonttextview txtdegree;
+    @BindView(R.id.txt_orientations)
+    customfonttextview tvorientations;
+    @BindView(R.id.txt_camera)
+    customfonttextview tvcamera;
+    @BindView(R.id.txt_picture_qty)
+    customfonttextview tvpicture_qty;
+    @BindView(R.id.txt_airoplan_mode)
+    customfonttextview tvairoplan_mode;
+    @BindView(R.id.txt_gps)
+    customfonttextview tvgps;
+    @BindView(R.id.txt_jailbroken)
+    customfonttextview tvjailbroken;
+    @BindView(R.id.txt_currency)
+    customfonttextview tvcurrency;
+    @BindView(R.id.txt_barometer)
+    customfonttextview tvbarometer;
+    @BindView(R.id.txt_deviceconnection)
+    customfonttextview tvdeviceconnection;
+
     @BindView(R.id.txt_availablewifinetwork)
     customfonttextview txt_availablewifinetwork;
     @BindView(R.id.txt_Memory)
@@ -752,7 +771,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.phone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.PhoneType)), tvphone);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.network),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)), tvnetwork);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.version),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.OSversion)), tvversion);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_barometer),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.barometer)), tvbarometer);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_orientation),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.deviceorientation)), tvorientations);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_airplane_mode),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.airplanemode)), tvairoplan_mode);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_currency),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.devicecurrency)), tvcurrency);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)), tvwifi);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_gps),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.gpsonoff)), tvgps);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_jailbroken),"\n"+common.getxdatavalue("No"), tvjailbroken);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_connection),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.deviceconnection)), tvdeviceconnection);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.pictureqty)), tvpicture_qty);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_camera),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.camera)), tvcamera);
 
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.screen),"\n"+xdata.getinstance().getSetting(config.ScreenWidth) +"*" +xdata.getinstance().getSetting(config.ScreenHeight), tvscreen);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.country),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Country)), tvcountry);
@@ -1830,6 +1858,39 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvwifi);
                         }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicecurrency")){
+
+                            Log.e("devicecurrency",""+metricItemArraylist.get(j).getMetricTrackValue());
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_currency),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvcurrency);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("deviceconnection")){
+                            Log.e("deviceconnection",""+metricItemArraylist.get(j).getMetricTrackValue());
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_connection),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvdeviceconnection);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("deviceorientation")){
+                            Log.e("deviceorientation",""+metricItemArraylist.get(j).getMetricTrackValue());
+
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_orientation),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvorientations);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("barometer")){
+                            Log.e("barometer",""+metricItemArraylist.get(j).getMetricTrackValue());
+
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_barometer),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvbarometer);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("airplanemode")){
+                            Log.e("airplanemode",""+metricItemArraylist.get(j).getMetricTrackValue());
+
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_airplane_mode),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvairoplan_mode);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpsonoff")){
+                            Log.e("gpsonoff",""+metricItemArraylist.get(j).getMetricTrackValue());
+
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_gps),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvgps);
+                        }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("jailbroken")){
+                            Log.e("jailbroken",""+metricItemArraylist.get(j).getMetricTrackValue());
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_jailbroken),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvjailbroken);
+                        }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
                             screenwidth = metricItemArraylist.get(j).getMetricTrackValue();
                         }else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("screenheight")){
@@ -1851,9 +1912,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
                             txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.worldclockdate)){
-                            txt_world_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
+                            txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
                         }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
+                            txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
+                        }
+
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.Battery))
                         {
                             if(chart_battery!= null)
@@ -3057,6 +3122,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         settextviewcolor(txt_world_time, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_phone_time, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_towerinfo, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvorientations, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvcamera, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvpicture_qty, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvairoplan_mode, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvgps, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvjailbroken, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvcurrency, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvbarometer, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tvdeviceconnection, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
 
     }
 

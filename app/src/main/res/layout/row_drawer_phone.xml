@@ -130,6 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:visibility="visible"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -312,7 +313,7 @@
                     android:text="Network"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_connection"
+                    android:id="@+id/txt_deviceconnection"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
