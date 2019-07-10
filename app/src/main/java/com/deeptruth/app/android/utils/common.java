@@ -527,6 +527,7 @@ public class common {
         xdata.getinstance().saveSetting(config.devicecurrency, "NA");
         xdata.getinstance().saveSetting(config.gpsonoff, "NA");
         xdata.getinstance().saveSetting(config.deviceorientation, "NA");
+        xdata.getinstance().saveSetting(config.screenorientatioin, "NA");
     }
 
     public static void setgraphicalitems(String keyname, String value, boolean ismetricsselected) {
@@ -617,6 +618,8 @@ public class common {
             xdata.getinstance().saveSetting(config.gpsonoff, ((ismetricsselected) ? value : "NA"));
         }else if(keyname.equalsIgnoreCase(config.deviceorientation)){
             xdata.getinstance().saveSetting(config.deviceorientation, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.screenorientatioin)){
+            xdata.getinstance().saveSetting(config.screenorientatioin, ((ismetricsselected) ? value : "NA"));
         }
     }
 
@@ -852,6 +855,8 @@ public class common {
             metricItemName = "satelliteid";
         } else if (key.equalsIgnoreCase("strengthofsatellites")) {
             metricItemName = "strengthofsatellites";
+        }else if (key.equalsIgnoreCase("screenorientatioin")) {
+            metricItemName = "screenorientatioin";
         } else if (key.equalsIgnoreCase("attitude")) {
             metricItemName = config.phone_attitude;
         } else if (key.equalsIgnoreCase(config.availablewifinetwork)) {
@@ -1698,7 +1703,7 @@ public class common {
                 config.cpuusageirq, config.compass, config.decibel, config.barometer, config.acceleration_x, config.acceleration_y,
                 config.acceleration_z, config.distancetravelled, config.currentcallinprogress, config.currentcalldurationseconds,
                 config.currentcallremotenumber, config.currentcalldecibel, config.airplanemode,
-                "camera","picturequality","jailbroken",
+                "camera","picturequality","jailbroken","screenorientatioin",
                 "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country","jailbroken",
                 "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid","deviceconnection", "numberoftowers",
                 "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,

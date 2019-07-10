@@ -1080,8 +1080,30 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 txt_encrypting.setTextSize(9);
             }
 
+            getscreenorientation(rotateangle);
         }
     }
+
+ public void  getscreenorientation(float rotateangle){
+
+     if(fragaudiocomposer != null && currentselectedcomposer == 2){
+
+         xdata.getinstance().saveSetting(config.screenorientatioin,"NA");
+
+     }else{
+         if(rotateangle == 90){
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Landscape Left");
+         }else if(rotateangle == -90){
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Landscape Right");
+         }else if(rotateangle ==0){
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Portrait");
+         }else if(rotateangle == 180){
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Portrait Up side Down");
+         }
+     }
+ }
+
+
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {

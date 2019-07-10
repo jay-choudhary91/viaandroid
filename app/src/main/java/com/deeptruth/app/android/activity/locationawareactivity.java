@@ -1666,6 +1666,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         else if (key.equalsIgnoreCase(config.pictureqty)) {
             metricItemValue = xdata.getinstance().getSetting(config.pictureqty);
         }
+        else if (key.equalsIgnoreCase(config.screenorientatioin)) {
+            metricItemValue = xdata.getinstance().getSetting(config.screenorientatioin);
+        }
         /*else if (key.equalsIgnoreCase(config.sister_metric)) {
             metricItemValue=xdata.getinstance().getSetting(config.sister_metric);
         }
