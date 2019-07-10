@@ -115,11 +115,11 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     public void onBindViewHolder(@NonNull final myViewHolder holder, final int position) {
 
         final video mediaobject=arrayvideolist.get(position);
-        //binderHelper.bind(holder.root_view,""+position);
+        binderHelper.bind(holder.root_view,""+position);
         if(mediaobject.isDoenable())
         {
-       //     if(! holder.root_view.isOpened())
-        //        binderHelper.closeLayout(""+position);
+            if( holder.root_view.isOpened())
+                binderHelper.closeLayout(""+position);
 
           //  binderHelper.bind(holder.root_view,""+position);
 
@@ -424,8 +424,8 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         }
         else
         {
-        //    binderHelper.closeLayout(""+position);
-      //      binderHelper.bind(holder.root_view,""+position);
+         //   binderHelper.closeLayout(""+position);
+          //  binderHelper.bind(holder.root_view,""+position);
 
             holder.root_view.getLayoutParams().height = 0;
             holder.root_view.setVisibility(View.GONE);

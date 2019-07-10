@@ -73,9 +73,21 @@ public class insertmediadataservice extends Service {
                 if (mediapath != null && (!mediapath.isEmpty()) && (!list1.trim().isEmpty())) {
                     if (mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0 && (mdbstartitemcontainer.get(0).
                             getItem2().equalsIgnoreCase("video") || mdbstartitemcontainer.get(0).
-                            getItem2().equalsIgnoreCase("audio"))) {
-                        final String destinationpath = common.gettempfileforhash().getAbsolutePath();
-                        String[] complexcommand = {"-i", mediapath, "-f", "framemd5", destinationpath};
+                            getItem2().equalsIgnoreCase("audio")))
+                    {
+                        final String destinationpath = common.gettempfileforhash(keytype).getAbsolutePath();
+
+                        String frametype="framemd5";
+                        if(keytype.equalsIgnoreCase(config.prefs_md5))
+                            frametype="framemd5";
+                        else if(keytype.equalsIgnoreCase(config.prefs_md5_salt))
+                            frametype="framemd5";
+                        else if(keytype.equalsIgnoreCase(config.prefs_sha))
+                            frametype="framehash";
+                        else if(keytype.equalsIgnoreCase(config.prefs_sha_salt))
+                            frametype="framemd5";
+
+                        String[] complexcommand = {"-i", mediapath, "-f", frametype, destinationpath};
 
                         applicationviavideocomposer.ffmpeg.execute(complexcommand, new ExecuteBinaryResponseHandler() {
                             @Override

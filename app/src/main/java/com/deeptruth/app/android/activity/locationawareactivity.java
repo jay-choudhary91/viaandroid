@@ -2525,7 +2525,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             updatedatasync(json, selectedid);
         }
 
-        Log.e("video_updateid ", "" + selectedid);
+        Log.e("media_updateid ", "" + selectedid);
 
         if (!header.isEmpty()) {
             try {

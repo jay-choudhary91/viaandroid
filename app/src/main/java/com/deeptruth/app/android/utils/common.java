@@ -1830,9 +1830,18 @@ public class common {
         return file;
     }
 
-    public static File gettempfileforhash() {
+    public static File gettempfileforhash(String hashtype) {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file = new File(config.hashesdir, fileName + ".framemd5");
+        File file = null;
+
+        if(hashtype.equalsIgnoreCase(config.prefs_md5))
+            file = new File(config.hashesdir, fileName + ".framemd5");
+        else if(hashtype.equalsIgnoreCase(config.prefs_md5_salt))
+            file = new File(config.hashesdir, fileName + ".framemd5");
+        else if(hashtype.equalsIgnoreCase(config.prefs_sha))
+            file = new File(config.hashesdir, fileName + ".sha256");
+        else if(hashtype.equalsIgnoreCase(config.prefs_sha_salt))
+            file = new File(config.hashesdir, fileName + ".framemd5");
 
         File destinationDir = new File(config.hashesdir);
         try {
@@ -1868,7 +1877,7 @@ public class common {
         return "";
     }
 
-    public static File createtempfileofmedianameforhash(String filepath) {
+    public static File createtempfileofmedianameforhash(String hashtype,String filepath) {
         String filename = common.getfilename(filepath);
         String[] array = filename.split("\\.");
         if (array.length > 0) {
@@ -1884,7 +1893,7 @@ public class common {
             }
             return file;
         }
-        return gettempfileforhash();
+        return gettempfileforhash(hashtype);
     }
 
     public static void showcustompermissiondialog(Context context, final adapteritemclick mitemclick, final String permission) {
