@@ -1359,7 +1359,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                              if(madapterclick != null)
                                  madapterclick.onItemClicked(lastrecordedvideo.getAbsoluteFile(),2);
                          }
-                     },30);
+                     },20);
 
 
                         showhideactionbaricon(1);
@@ -1372,9 +1372,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 if(madapterclick != null)
                                     madapterclick.onItemClicked(null,4);
                             }
-                        },50);
-
-
+                        },30);
                     }
                 });
 
