@@ -705,7 +705,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     radius(iMeter).strokeColor(Color.RED));
             circle.setVisible(false);
             int zoom=common.getzoomlevelfromcircle(circle);
-
             mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
         }
         else
@@ -1659,12 +1658,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             position++;
         }
 
+
+        /*List<LatLng> currentSegment1 = new ArrayList<>();
+        currentSegment1.add(new LatLng(26.854387, 75.768462));
+        currentSegment1.add(new LatLng(26.858076, 75.763644));
+        currentSegment1.add(new LatLng(26.863696, 75.769036));
+        currentSegment1.add(new LatLng(26.871883, 75.785136));
+        currentSegment1.add(new LatLng(26.927544, 75.723983));*/
+
+
         mgooglemap.addPolyline(new PolylineOptions()
                 .addAll(currentSegment)
                 .color(Color.parseColor(common.getcolorbystring(currentColor)))
                 .width(7));
 
-        //common.mapzoomalongwithtraveledpath(applicationviavideocomposer.getactivity(),mgooglemap,currentSegment);
+        //common.mapzoomalongwithtraveledpath(applicationviavideocomposer.getactivity(),mgooglemap,currentSegment1);
     }
 
 
