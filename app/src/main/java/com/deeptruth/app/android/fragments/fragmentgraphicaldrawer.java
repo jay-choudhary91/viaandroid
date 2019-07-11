@@ -1664,6 +1664,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 .color(Color.parseColor(common.getcolorbystring(currentColor)))
                 .width(7));
 
+        //common.mapzoomalongwithtraveledpath(applicationviavideocomposer.getactivity(),mgooglemap,currentSegment);
     }
 
 

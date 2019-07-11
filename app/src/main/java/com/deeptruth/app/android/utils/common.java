@@ -85,9 +85,15 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.pair;
 import com.deeptruth.app.android.views.customfontedittext;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
 import org.apache.http.NameValuePair;
@@ -2906,6 +2912,37 @@ public class common {
             zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
         }
         return zoomLevel;
+    }
+
+    /**
+     * set up markers to all position
+     *
+     * @param pathlist list of markers
+     */
+    public static void mapzoomalongwithtraveledpath(Context context, GoogleMap map, List<LatLng> pathlist) {
+        int padding = 50;
+
+        if (pathlist.size() == 0) {
+            return;
+        }
+        /**create for loop for get the latLngbuilder from the marker list*/
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (LatLng ltlng : pathlist) {
+            builder.include(ltlng);
+        }
+        /**initialize the padding for map boundary*/
+
+        int width = context.getResources().getDisplayMetrics().widthPixels;
+        int height = context.getResources().getDisplayMetrics().heightPixels;
+        if(pathlist.size() <= 10){
+            padding = 200;
+        }
+        /**create the bounds from latlngBuilder to set into map camera*/
+        LatLngBounds bounds = builder.build();
+        /**create the camera with bounds and padding to set into map*/
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,width,height,padding);
+        // map.setPadding(50,headerhEIGHT+10,50,bottomHeight+10);
+        map.moveCamera(cu);
     }
 }
 
