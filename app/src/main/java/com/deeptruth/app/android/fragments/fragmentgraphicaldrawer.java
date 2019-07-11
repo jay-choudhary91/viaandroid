@@ -37,6 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.adapter.satellitesdataadapter;
@@ -412,9 +413,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ArrayList<Entry> connectiondatadelayvalues = new ArrayList<>();
     ArrayList<Entry> gpsaccuracyvalues = new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    private boolean isdatacomposing=false,isrecodrunning=false,isfromdrawer=true;
+    private boolean isdatacomposing=false,isrecodrunning=false,isfromdrawer=true,setdefaultzoomlevel=true;
     String lastsavedangle="";
-    private float currentDegree = 0f;
+    private float currentDegree = 0f,lastzoomlevel=0;
     private Orientation mOrientation;
     private String[] transparentarray=common.gettransparencyvalues();
     int navigationbarheight = 0;
@@ -700,9 +701,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         googlemap.setVisibility(View.VISIBLE);
 
         float zoomlevel = mgooglemap.getCameraPosition().zoom;
-        if(zoomlevel <= 3)
+        if(setdefaultzoomlevel)
         {
-            mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));
+            setdefaultzoomlevel=false;
+            double iMeter = 0.5 * 1609.34;      // zoomlevel according to 0.5 miles.
+            Circle circle = mgooglemap.addCircle(new CircleOptions().center(new LatLng(latitude, longitude)).
+                    radius(iMeter).strokeColor(Color.RED));
+            circle.setVisible(false);
+            int zoom=common.getzoomlevelfromcircle(circle);
+
+            mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
         }
         else
         {
@@ -1248,6 +1256,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
         else
         {
+            setdefaultzoomlevel=true;
             layout_mediasummary.setVisibility(View.GONE);
             layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
@@ -2304,17 +2313,32 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         } else {
 
             if(isdatacomposing)
-            {
                 mgooglemap.setMyLocationEnabled(false);
-            }
             else
-            {
                 mgooglemap.setMyLocationEnabled(false);
-            }
 
-            mgooglemap.getUiSettings().setZoomControlsEnabled(false);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
-            mgooglemap.getUiSettings().setZoomGesturesEnabled(false);
+            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
+            mgooglemap.getUiSettings().setZoomGesturesEnabled(true);
+
+            mgooglemap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                @Override
+                public void onCameraMove()
+                {
+                    float currentzoomlevel=mgooglemap.getCameraPosition().zoom;
+                    if(lastzoomlevel != currentzoomlevel)
+                    {
+                        if(lastPulseAnimator == null)
+                            addPulsatingEffect();
+                        else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
+                            addPulsatingEffect();
+
+                        if(userlocationcircle != null)
+                            userlocationcircle.setRadius(common.getlocationcircleradius(currentzoomlevel));
+                    }
+                    lastzoomlevel=currentzoomlevel;
+                }
+            });
         }
     }
 
@@ -2366,18 +2390,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                             if(userlocationcircle != null)
                                 userlocationcircle.setCenter(usercurrentlocation);
-
-                        /*if(! isdatacomposing)
-                        {
-                            if(lastPulseAnimator != null)
-                                lastPulseAnimator.cancel();
-
-                            if(mappulsatecircle != null && mgooglemap != null)
-                            {
-                                mappulsatecircle.remove();
-                                mappulsatecircle=null;
-                            }
-                        }*/
                         }
                     });
         }catch (Exception e)
@@ -2394,68 +2406,25 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         Log.e("zoom level ",""+currentzoomlevel);
 
         if(currentzoomlevel >= 20)
-        {
             return 30f;
-        }
         else if(currentzoomlevel >= 18)
-        {
             return 30f;
-        }
         else if(currentzoomlevel >= 16)
-        {
             return 50f;
-        }
         else if(currentzoomlevel >= 15)
-        {
             return 100f;
-        }
         else if(currentzoomlevel >= 14)
-        {
             return 300f;
-        }
         else if(currentzoomlevel >= 13)
-        {
             return 400f;
-        }
         else if(currentzoomlevel >= 12)
-        {
             return 500f;
-        }
         else if(currentzoomlevel >= 11)
-        {
             return 600f;
-        }
         else if(currentzoomlevel >= 10)
-        {
             return 700f;
-        }
+
         return 500f;
-        /*float diff = (mgooglemap.getMaxZoomLevel() - mgooglemap.getCameraPosition().zoom);
-        if (diff < 3)
-            return radius;
-        if (diff < 3.7)
-            return radius * (diff / 2);
-        if (diff < 4.5)
-            return (radius * diff);
-        if (diff < 5.5)
-            return (radius * diff) * 1.5f;
-        if (diff < 7)
-            return (radius * diff) * 2f;
-        if (diff < 7.8)
-            return (radius * diff) * 3.5f;
-        if (diff < 8.5)
-            return (float) (radius * diff) * 5;
-        if (diff < 10)
-            return (radius * diff) * 10f;
-        if (diff < 12)
-            return (radius * diff) * 18f;
-        if (diff < 13)
-            return (radius * diff) * 28f;
-        if (diff < 16)
-            return (radius * diff) * 40f;
-        if (diff < 18)
-            return (radius * diff) * 60;
-        return (radius * diff) * 80;*/
     }
 
     protected ValueAnimator valueAnimate(float accuracy,long duration, ValueAnimator.AnimatorUpdateListener updateListener){

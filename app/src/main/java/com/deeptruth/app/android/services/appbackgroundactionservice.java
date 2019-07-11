@@ -41,7 +41,7 @@ public class appbackgroundactionservice extends Service
         // Let it continue running until it is stopped.
         try
         {
-           // Toast.makeText(getApplicationContext(),"In service",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"In service",Toast.LENGTH_SHORT).show();
             if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
             {
                 databasemanager  mdbhelper = new databasemanager(getApplicationContext());
@@ -70,10 +70,10 @@ public class appbackgroundactionservice extends Service
                             xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");   // 1 = syncing, 0 = not syncing
                     }
 
-                    /*if(xdata.getinstance().getSetting(config.sidecar_syncstatus).trim().equalsIgnoreCase("1"))
+                    if(xdata.getinstance().getSetting(config.sidecar_syncstatus).trim().equalsIgnoreCase("1"))
                         Toast.makeText(getApplicationContext(),"Popup Yes",Toast.LENGTH_SHORT).show();
                     else
-                        Toast.makeText(getApplicationContext(),"Popup No",Toast.LENGTH_SHORT).show();*/
+                        Toast.makeText(getApplicationContext(),"Popup No",Toast.LENGTH_SHORT).show();
 
                 }catch (Exception e)
                 {
