@@ -91,6 +91,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
@@ -2916,24 +2917,24 @@ public class common {
     /**
      * set up markers to all position
      *
-     * @param markerList list of markers
+     * @param pathlist list of markers
      */
-    public static void mapzoomalongwithtraveledpath(Context context, GoogleMap map, List<Marker> markerList) {
+    public static void mapzoomalongwithtraveledpath(Context context, GoogleMap map, List<LatLng> pathlist) {
         int padding = 50;
 
-        if (markerList.size() == 0) {
+        if (pathlist.size() == 0) {
             return;
         }
         /**create for loop for get the latLngbuilder from the marker list*/
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (Marker m : markerList) {
-            builder.include(m.getPosition());
+        for (LatLng ltlng : pathlist) {
+            builder.include(ltlng);
         }
         /**initialize the padding for map boundary*/
 
         int width = context.getResources().getDisplayMetrics().widthPixels;
         int height = context.getResources().getDisplayMetrics().heightPixels;
-        if(markerList.size() <= 10){
+        if(pathlist.size() <= 10){
             padding = 200;
         }
         /**create the bounds from latlngBuilder to set into map camera*/
