@@ -1353,14 +1353,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         isvideorecording = false;
 
-                     new Handler().postDelayed(new Runnable() {
-                         @Override
-                         public void run() {
-                             if(madapterclick != null)
-                                 madapterclick.onItemClicked(lastrecordedvideo.getAbsoluteFile(),2);
-                         }
-                     },20);
-
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(lastrecordedvideo.getAbsoluteFile(),2);
 
                         showhideactionbaricon(1);
                         firsthashvalue = true;
