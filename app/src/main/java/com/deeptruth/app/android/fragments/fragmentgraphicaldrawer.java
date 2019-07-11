@@ -14,7 +14,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -37,7 +36,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.adapter.satellitesdataadapter;
@@ -103,9 +101,7 @@ import com.warkiz.widget.SeekParams;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.w3c.dom.Text;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -2366,7 +2362,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
             }
 
-            lastPulseAnimator = valueAnimate(getDisplayPulseRadius(), 3500,
+            lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
                     new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
@@ -2381,7 +2377,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                                 userlocationcircle= mgooglemap.addCircle(new CircleOptions()
                                         .center(usercurrentlocation)
-                                        .radius(15)
+                                        .radius(common.getlocationcircleradius(mgooglemap.getCameraPosition().zoom))
                                         .strokeWidth(0)
                                         .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.selectedimagehash)));
                             }
@@ -2398,7 +2394,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
-    protected float getDisplayPulseRadius() {
+    protected float getdisplaypulseradius() {
         if(mgooglemap == null)
             return 0.0f;
 
