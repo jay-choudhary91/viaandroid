@@ -353,7 +353,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     ArrayList<videomodel> hashesitems =new ArrayList<>();
     ArrayList<dbitemcontainer> dbstartitemcontainer =new ArrayList<>();
     ArrayList<dbitemcontainer> dbmiddleitemcontainer =new ArrayList<>();
-    ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     ArrayList<permissions> permissionslist =new ArrayList<>();
 
     private boolean isdraweropen=false,isgraphicalshown=false;
@@ -1261,8 +1260,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 startvideotimer();
                 setsoundwaveinfo();
                 //fragmentgraphic.setvisualizerwave();
-                wavevisualizerslist.clear();
-
                 //startnoise();
             }
 
@@ -1355,6 +1352,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     public void run()
                     {
                         isvideorecording = false;
+
                         if(madapterclick != null)
                             madapterclick.onItemClicked(lastrecordedvideo.getAbsoluteFile(),2);
 
@@ -1362,8 +1360,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         firsthashvalue = true;
                         medialistitemaddbroadcast();
 
-                        if(madapterclick != null)
-                            madapterclick.onItemClicked(null,4);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(madapterclick != null)
+                                    madapterclick.onItemClicked(null,4);
+                            }
+                        },30);
                     }
                 });
 
