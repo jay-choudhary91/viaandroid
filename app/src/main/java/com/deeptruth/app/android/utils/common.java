@@ -2935,7 +2935,7 @@ public class common {
         int width = context.getResources().getDisplayMetrics().widthPixels;
         int height = context.getResources().getDisplayMetrics().heightPixels;
         if(pathlist.size() <= 10){
-            padding = 200;
+            padding = 500;
         }
         /**create the bounds from latlngBuilder to set into map camera*/
         LatLngBounds bounds = builder.build();
