@@ -87,6 +87,7 @@ import com.deeptruth.app.android.models.pair;
 import com.deeptruth.app.android.views.customfontedittext;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
 import com.google.gson.Gson;
 
 import org.apache.http.NameValuePair;
@@ -2864,6 +2865,47 @@ public class common {
             e.printStackTrace();
         }
         return worldclocktime +" GMT";
+    }
+
+    public static float getlocationcircleradius(float currentzoomlevel) {
+
+        Log.e("Zoomlevel ",""+currentzoomlevel);
+        if(currentzoomlevel >= 21)
+            return 0.5f;
+        else if(currentzoomlevel >= 20)
+            return 1f;
+        else if(currentzoomlevel >= 19)
+            return 2f;
+        else if(currentzoomlevel >= 18)
+            return 3f;
+        else if(currentzoomlevel >= 17)
+            return 10f;
+        else if(currentzoomlevel >= 16)
+            return 15f;
+        else if(currentzoomlevel >= 15)
+            return 35f;
+        else if(currentzoomlevel >= 14)
+            return 60f;
+        else if(currentzoomlevel >= 13)
+            return 120f;
+        else if(currentzoomlevel >= 12)
+            return 180f;
+        else if(currentzoomlevel >= 11)
+            return 250f;
+        else if(currentzoomlevel >= 10)
+            return 350f;
+
+        return 150f;
+    }
+
+    public static int getzoomlevelfromcircle(Circle circle) {
+        int zoomLevel=0;
+        if (circle != null){
+            double radius = circle.getRadius();
+            double scale = radius / 500;
+            zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
+        }
+        return zoomLevel;
     }
 }
 
