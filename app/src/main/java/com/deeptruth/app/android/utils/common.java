@@ -7,6 +7,7 @@ import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -2919,8 +2920,9 @@ public class common {
      *
      * @param pathlist list of markers
      */
-    public static void mapzoomalongwithtraveledpath(Context context, GoogleMap map, List<LatLng> pathlist) {
-        int padding = 50;
+    public static void mapzoomalongwithtraveledpath(Context context, GoogleMap map, List<LatLng> pathlist,
+                                                    int mapwidth,int mapheight) {
+        int padding = 20;
 
         if (pathlist.size() == 0) {
             return;
@@ -2932,17 +2934,23 @@ public class common {
         }
         /**initialize the padding for map boundary*/
 
-        int width = context.getResources().getDisplayMetrics().widthPixels;
-        int height = context.getResources().getDisplayMetrics().heightPixels;
-        if(pathlist.size() <= 10){
-            padding = 500;
-        }
         /**create the bounds from latlngBuilder to set into map camera*/
         LatLngBounds bounds = builder.build();
         /**create the camera with bounds and padding to set into map*/
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,width,height,padding);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,mapwidth,mapheight,padding);
         // map.setPadding(50,headerhEIGHT+10,50,bottomHeight+10);
         map.moveCamera(cu);
+    }
+
+    public static  boolean isservicerunning(Context context,Class<?> serviceClass)
+    {
+        ActivityManager manager = (ActivityManager)context. getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

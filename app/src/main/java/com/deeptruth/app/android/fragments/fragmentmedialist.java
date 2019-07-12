@@ -1208,12 +1208,17 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         boolean isneedtonotify=false;
                         arraymediaitemlist.get(i).setVideostarttransactionid(videostarttransactionid);
                         arraymediaitemlist.get(i).setThumbnailpath(thumbnailurl);
-                        arraymediaitemlist.get(i).setMediatitle((media_name.trim().isEmpty())?config.no_title:media_name);
-                        arraymediaitemlist.get(i).setMedianotes(media_notes);
                         arraymediaitemlist.get(i).setMediacolor(color);
                         arraymediaitemlist.get(i).setLocalkey(localkey);
                         arraymediaitemlist.get(i).setMediastatus(status);
                         arraymediaitemlist.get(i).setVideotoken(token);
+
+                        String title=(media_name.trim().isEmpty())?config.no_title:media_name;
+                        if((! arraymediaitemlist.get(i).getMediatitle().equalsIgnoreCase(title)) || (! arraymediaitemlist.get(i).getMedianotes().equalsIgnoreCase(media_notes)))
+                            isneedtonotify=true;
+
+                        arraymediaitemlist.get(i).setMediatitle(title);
+                        arraymediaitemlist.get(i).setMedianotes(media_notes);
 
                         if(! mediaduration.trim().isEmpty())
                             arraymediaitemlist.get(i).setDuration(mediaduration);

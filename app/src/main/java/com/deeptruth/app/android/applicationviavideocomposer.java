@@ -80,7 +80,7 @@ public class applicationviavideocomposer extends Application implements Lifecycl
                     if(! xdata.getinstance().getSetting(config.servicedata_liststart).trim().isEmpty())
                     {
                         // Start service for grab frames and insert frame data into database.
-                        if (! isMyServiceRunning(insertmediadataservice.class))
+                        if (! common.isservicerunning(getApplicationContext(),insertmediadataservice.class))
                         {
                             Intent intent = new Intent(getApplicationContext(), insertmediadataservice.class);
                             startService(intent);
@@ -127,7 +127,7 @@ public class applicationviavideocomposer extends Application implements Lifecycl
         {
             if(! isactivitybecomefinish)
             {
-                if (isMyServiceRunning(appbackgroundactionservice.class))
+                if (common.isservicerunning(getApplicationContext(),appbackgroundactionservice.class))
                     stopService(new Intent(getBaseContext(), appbackgroundactionservice.class));
 
                 startService(new Intent(getBaseContext(), appbackgroundactionservice.class));
@@ -138,17 +138,6 @@ public class applicationviavideocomposer extends Application implements Lifecycl
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     private void onAppForegrounded() {
 
-    }
-
-    private boolean isMyServiceRunning(Class<?> serviceClass)
-    {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }
