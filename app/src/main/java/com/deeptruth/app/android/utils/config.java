@@ -73,6 +73,7 @@ public class config {
 
     public static final String imagequality = "imagequality";
     public static final String videoquality = "videoquality";
+    public static final String selectedcamera = "selectedcamera";
 
     public static final String development_url = "http://dev.api.deeptruth.com/xapi.php?";
     public static final String production_url = "http://prod.api.deeptruth.com/xapi.php?";
@@ -137,6 +138,8 @@ public class config {
     public static final String speed = "speed";
     public static final String address = "address";
     public static final String carrier = "carrier";
+    public static final String deviceconnection = "deviceconnection";
+    public static final String screenorientatioin = "screenorientatioin";
 
     public static final String blockchainid = "blockchainid";
     public static final String hashformula = "hashformula";
@@ -145,6 +148,8 @@ public class config {
     public static final String createaccount = "fragmentcreateaccount";
     public static final String forgotpassword = "fragmentforgotpassword";
     public static final String loginpage = "loginpage";
+    public static final String camera = "camera";
+    public static final String pictureqty = "pictureqty";
 
 
     //graphicaldata
@@ -188,6 +193,9 @@ public class config {
     public static final String connectiondatadelay="connectiondatadelay";
     public static final String availablewifinetwork="availablewifinetwork";
     public static final String availablewifis="availablewifis";
+    public static final String devicecurrency="devicecurrency";
+    public static final String gpsonoff="gpsonoff";
+    public static final String deviceorientation="deviceorientation";
 
     public static final String sync_offline="offline";
     public static final String sync_pending="pending";
@@ -269,6 +277,7 @@ public class config {
     public static final String sister_metric="sister metric";
     public static final String json_blob="json blob";
     public static final String json_towerlist="json_towerlist";
+    public static final String jailbroken="jailbroken";
 
     public static final String item_satellitesdate ="item_satellitesdate";
     public static final String item_remoteip="item_remoteip";

@@ -138,7 +138,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public static final String CAMERA_FRONT = "1";
     public static final String CAMERA_BACK = "0";
 
-    private String cameraid = CAMERA_BACK,selectedmediaquality="";
+    private String cameraid = CAMERA_BACK,selectedmediaquality="720P";
     private boolean isflashsupported=false,isvisibletouser=false;;
     private boolean isflashon = false,previewupdated=false;
     protected float fingerSpacing = 0;
@@ -157,7 +157,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
 
-
+    String devicecamera = "Back";
     private static final String TAG = "Camera2BasicFragment";
 
     /**
@@ -593,6 +593,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         {
             expendcollpaseviewcolor(txt_media_medium,txt_media_low,txt_media_high);
         }
+
+        selectedmediaquality = txt_media_quality.getText().toString();
 
         txt_media_low.setText(config.mediaquality480);
         txt_media_medium.setText(config.mediaquality720);
@@ -1539,6 +1541,15 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
                 }
 
+                if (cameraid.equals(CAMERA_FRONT)){
+                    devicecamera = "Front";
+                }else{
+                    devicecamera = "Back";
+                }
+
+                xdata.getinstance().saveSetting(config.camera, devicecamera);
+                xdata.getinstance().saveSetting(config.pictureqty, selectedmediaquality);
+
                 ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
                 getselectedmetrics(mlocalarraylist);
                 if(layout_recorder != null)
@@ -1762,6 +1773,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public void switchCamera(ImageView imageview) {
         if (cameraid.equals(CAMERA_FRONT)) {
+            devicecamera="Back";
             imgflashon.setImageResource(R.drawable.icon_flashoff);
             isflashon = false;
             previewupdated=false;
@@ -1771,6 +1783,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             reopenCamera();
 
         } else if (cameraid.equals(CAMERA_BACK)) {
+            devicecamera="Front";
             imgflashon.setImageResource(R.drawable.icon_flashoff);
             previewupdated=false;
             cameraid = CAMERA_FRONT;

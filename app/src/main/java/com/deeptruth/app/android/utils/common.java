@@ -85,8 +85,15 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.pair;
 import com.deeptruth.app.android.views.customfontedittext;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
 import org.apache.http.NameValuePair;
@@ -523,6 +530,11 @@ public class common {
         xdata.getinstance().saveSetting(config.availablewifinetwork, "");
         xdata.getinstance().saveSetting(config.phoneclockdate, "");
         xdata.getinstance().saveSetting(config.worldclockdate, "");
+        xdata.getinstance().saveSetting(config.deviceconnection, "NA");
+        xdata.getinstance().saveSetting(config.devicecurrency, "NA");
+        xdata.getinstance().saveSetting(config.gpsonoff, "NA");
+        xdata.getinstance().saveSetting(config.deviceorientation, "NA");
+        xdata.getinstance().saveSetting(config.screenorientatioin, "NA");
     }
 
     public static void setgraphicalitems(String keyname, String value, boolean ismetricsselected) {
@@ -605,6 +617,16 @@ public class common {
             xdata.getinstance().saveSetting(config.worldclockdate, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase(config.phoneclockdate)) {
             xdata.getinstance().saveSetting(config.phoneclockdate, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.deviceconnection)){
+            xdata.getinstance().saveSetting(config.deviceconnection, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.devicecurrency)){
+            xdata.getinstance().saveSetting(config.devicecurrency, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.gpsonoff)){
+            xdata.getinstance().saveSetting(config.gpsonoff, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.deviceorientation)){
+            xdata.getinstance().saveSetting(config.deviceorientation, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.screenorientatioin)){
+            xdata.getinstance().saveSetting(config.screenorientatioin, ((ismetricsselected) ? value : "NA"));
         }
     }
 
@@ -619,6 +641,10 @@ public class common {
             xdata.getinstance().saveSetting(config.datahash, (ismetricsselected) ? value : "NA");
         } else if (keyname.equalsIgnoreCase(config.matrichash)) {
             xdata.getinstance().saveSetting(config.matrichash, (ismetricsselected) ? value : "NA");
+        }else if(keyname.equalsIgnoreCase(config.camera)){
+            xdata.getinstance().saveSetting(config.camera, (ismetricsselected) ? value : "NA");
+        }else if(keyname.equalsIgnoreCase(config.pictureqty)){
+            xdata.getinstance().saveSetting(config.pictureqty, (ismetricsselected) ? value : "NA");
         }
     }
 
@@ -824,6 +850,8 @@ public class common {
             metricItemName = "celltowersignalstrength";
         } else if (key.equalsIgnoreCase("celltowerid")) {
             metricItemName = "celltowerid";
+        }else if (key.equalsIgnoreCase("deviceconnection")) {
+            metricItemName = "deviceconnection";
         } else if (key.equalsIgnoreCase("numberoftowers")) {
             metricItemName = "numberoftowers";
         } else if (key.equalsIgnoreCase("numberofsatellites")) {
@@ -834,6 +862,8 @@ public class common {
             metricItemName = "satelliteid";
         } else if (key.equalsIgnoreCase("strengthofsatellites")) {
             metricItemName = "strengthofsatellites";
+        }else if (key.equalsIgnoreCase("screenorientatioin")) {
+            metricItemName = "screenorientatioin";
         } else if (key.equalsIgnoreCase("attitude")) {
             metricItemName = config.phone_attitude;
         } else if (key.equalsIgnoreCase(config.availablewifinetwork)) {
@@ -854,6 +884,14 @@ public class common {
             metricItemName = config.satellitesdata;
         } else if (key.equalsIgnoreCase(config.remoteip)) {
             metricItemName = config.remoteip;
+        }else if (key.equalsIgnoreCase(config.jailbroken)) {
+            metricItemName = config.jailbroken;
+        }
+        else if (key.equalsIgnoreCase(config.camera)) {
+            metricItemName = config.camera;
+        }
+        else if (key.equalsIgnoreCase(config.pictureqty)) {
+            metricItemName = config.pictureqty;
         }
         return metricItemName;
     }
@@ -1672,8 +1710,9 @@ public class common {
                 config.cpuusageirq, config.compass, config.decibel, config.barometer, config.acceleration_x, config.acceleration_y,
                 config.acceleration_z, config.distancetravelled, config.currentcallinprogress, config.currentcalldurationseconds,
                 config.currentcallremotenumber, config.currentcalldecibel, config.airplanemode,
-                "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country",
-                "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid", "numberoftowers",
+                "camera","picturequality","jailbroken","screenorientatioin",
+                "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country","jailbroken",
+                "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid","deviceconnection", "numberoftowers",
                 "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,
                 "phoneclocktime", "worldclocktime", config.connectiondatadelay,config.satellitedate,config.satellitesdata,config.remoteip,config.worldclockdate,config.phoneclockdate};
 
@@ -2832,6 +2871,78 @@ public class common {
             e.printStackTrace();
         }
         return worldclocktime +" GMT";
+    }
+
+    public static float getlocationcircleradius(float currentzoomlevel) {
+
+        Log.e("Zoomlevel ",""+currentzoomlevel);
+        if(currentzoomlevel >= 21)
+            return 0.5f;
+        else if(currentzoomlevel >= 20)
+            return 1f;
+        else if(currentzoomlevel >= 19)
+            return 2f;
+        else if(currentzoomlevel >= 18)
+            return 3f;
+        else if(currentzoomlevel >= 17)
+            return 10f;
+        else if(currentzoomlevel >= 16)
+            return 15f;
+        else if(currentzoomlevel >= 15)
+            return 35f;
+        else if(currentzoomlevel >= 14)
+            return 60f;
+        else if(currentzoomlevel >= 13)
+            return 120f;
+        else if(currentzoomlevel >= 12)
+            return 180f;
+        else if(currentzoomlevel >= 11)
+            return 250f;
+        else if(currentzoomlevel >= 10)
+            return 350f;
+
+        return 150f;
+    }
+
+    public static int getzoomlevelfromcircle(Circle circle) {
+        int zoomLevel=0;
+        if (circle != null){
+            double radius = circle.getRadius();
+            double scale = radius / 500;
+            zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
+        }
+        return zoomLevel;
+    }
+
+    /**
+     * set up markers to all position
+     *
+     * @param pathlist list of markers
+     */
+    public static void mapzoomalongwithtraveledpath(Context context, GoogleMap map, List<LatLng> pathlist) {
+        int padding = 50;
+
+        if (pathlist.size() == 0) {
+            return;
+        }
+        /**create for loop for get the latLngbuilder from the marker list*/
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (LatLng ltlng : pathlist) {
+            builder.include(ltlng);
+        }
+        /**initialize the padding for map boundary*/
+
+        int width = context.getResources().getDisplayMetrics().widthPixels;
+        int height = context.getResources().getDisplayMetrics().heightPixels;
+        if(pathlist.size() <= 10){
+            padding = 500;
+        }
+        /**create the bounds from latlngBuilder to set into map camera*/
+        LatLngBounds bounds = builder.build();
+        /**create the camera with bounds and padding to set into map*/
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds,width,height,padding);
+        // map.setPadding(50,headerhEIGHT+10,50,bottomHeight+10);
+        map.moveCamera(cu);
     }
 }
 

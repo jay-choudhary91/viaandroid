@@ -591,14 +591,28 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     }
                 }else if(currentselectedcomposer == 1)
                 {
-                    if(fragvideocomposer != null  && isfragmentload)
-                        fragvideocomposer.startstopvideo();
+
+                   new Handler().postDelayed(new Runnable() {
+                       @Override
+                       public void run() {
+                           if(fragvideocomposer != null  && isfragmentload)
+                               fragvideocomposer.startstopvideo();
+                       }
+                   },90);
+
+
                 }
                 else if(currentselectedcomposer == 2)
                 {
                     try {
-                        if(fragaudiocomposer != null && isfragmentload)
-                             fragaudiocomposer.startstopaudiorecording();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(fragaudiocomposer != null && isfragmentload)
+                                    fragaudiocomposer.startstopaudiorecording();
+                            }
+                        },50);
                     }catch (Exception e)
                     {
                         e.printStackTrace();
@@ -973,15 +987,20 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void setthumbnailimage(String mediapath,boolean zoominoutimage)
     {
-        Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+        final Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                 BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
         if(! zoominoutimage){
           Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
                 .transition(GenericTransitionOptions.with(R.anim.fadein)).
                 into(img_mediathumbnail);
         }else{
-            zoomImageFromThumb(img_mediathumbnail,uri);
-            shortAnimationDuration = 10; //zoomed up ....animation speed
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    zoomImageFromThumb(img_mediathumbnail,uri);
+                    shortAnimationDuration = 10; //zoomed up ....animation speed
+                }
+            },50);
         }
     }
 
@@ -1080,8 +1099,30 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 txt_encrypting.setTextSize(9);
             }
 
+            getscreenorientation(rotateangle);
         }
     }
+
+ public void  getscreenorientation(float rotateangle){
+
+     if(fragaudiocomposer != null && currentselectedcomposer == 2){
+
+         xdata.getinstance().saveSetting(config.screenorientatioin,"NA");
+
+     }else{
+         if(rotateangle == 90){
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Landscape Left");
+         }else if(rotateangle == -90){
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Landscape Right");
+         }else if(rotateangle ==0){
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Portrait");
+         }else if(rotateangle == 180){
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Portrait Up side Down");
+         }
+     }
+ }
+
+
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -1132,19 +1173,18 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         Animator shiftAnimation = AnimatorInflater.loadAnimator(applicationviavideocomposer.getactivity(), R.animator.slide_right_down);
         shiftAnimation.setTarget(mParent);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(100);
+        animatorSet.setDuration(90);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
         iscircle = !iscircle;
     }
-
     private void makesquare()
     {
         ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius",100f,10.0f);
         Animator shiftAnimation = AnimatorInflater.loadAnimator(applicationviavideocomposer.getactivity(), R.animator.slide_left_up);
         shiftAnimation.setTarget(mParent);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(100);
+        animatorSet.setDuration(90);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
         iscircle = !iscircle;

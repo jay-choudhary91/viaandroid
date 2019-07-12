@@ -1545,7 +1545,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = "" + connectiondatadelay;
         } else if (key.equalsIgnoreCase("address")) {
             metricItemValue = xdata.getinstance().getSetting("currentaddress");
-        } else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")) {
+        } else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")|| (key.equalsIgnoreCase("deviceconnection"))) {
 
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             int networkType = telephonyManager.getNetworkType();
@@ -1592,6 +1592,21 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                        }
+                    } else if (key.equalsIgnoreCase("deviceconnection")) {
+
+                        switch (networkType) {
+                            case TelephonyManager.NETWORK_TYPE_IDEN:
+                                metricItemValue = "2G";
+                                break;
+
+                            case TelephonyManager.NETWORK_TYPE_HSPAP:
+                                metricItemValue = "3G";
+                                break;
+
+                            case TelephonyManager.NETWORK_TYPE_LTE:
+                                metricItemValue = "4G";
+                                break;
                         }
                     }
                 }
@@ -1641,6 +1656,18 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         else if (key.equalsIgnoreCase(config.remoteip)) {
             metricItemValue = xdata.getinstance().getSetting(config.item_remoteip);
+        }
+        else if (key.equalsIgnoreCase(config.jailbroken)) {
+            metricItemValue = xdata.getinstance().getSetting(config.jailbroken);
+        }
+        else if (key.equalsIgnoreCase(config.camera)) {
+            metricItemValue = xdata.getinstance().getSetting(config.camera);
+        }
+        else if (key.equalsIgnoreCase(config.pictureqty)) {
+            metricItemValue = xdata.getinstance().getSetting(config.pictureqty);
+        }
+        else if (key.equalsIgnoreCase(config.screenorientatioin)) {
+            metricItemValue = xdata.getinstance().getSetting(config.screenorientatioin);
         }
         /*else if (key.equalsIgnoreCase(config.sister_metric)) {
             metricItemValue=xdata.getinstance().getSetting(config.sister_metric);
