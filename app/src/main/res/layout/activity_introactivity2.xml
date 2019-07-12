@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backgroundintro"
+    android:background="@drawable/splash_background"
     tools:context=".activity.introscreenactivity">
 
 
@@ -120,6 +120,13 @@
                     android:layout_height="8dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
+                    android:background="@drawable/button_selector"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/radioBtnfive"
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
                     android:background="@drawable/button_selector"
                     android:button="@null" />
 

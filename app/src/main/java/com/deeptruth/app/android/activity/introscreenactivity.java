@@ -78,7 +78,7 @@ public class introscreenactivity extends AppCompatActivity {
         viewpagerfooter.setPageTransformer(false, new pageranimation());
         footerpageradapter = new footerpageradapter(getSupportFragmentManager());
         viewpagerfooter.setAdapter(footerpageradapter);
-        viewpagerfooter.setOffscreenPageLimit(4);
+        viewpagerfooter.setOffscreenPageLimit(5);
 
         viewpagerfooter.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -140,7 +140,7 @@ public class introscreenactivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 currentselected=position;
                 //   viewpagerheader.setCurrentItem(position, true);
-                radiogroup.check(radiogroup.getChildAt(position%4).getId());
+                radiogroup.check(radiogroup.getChildAt(position%5).getId());
             }
 
             @Override
@@ -149,15 +149,15 @@ public class introscreenactivity extends AppCompatActivity {
             }
         });
 
-    }
+     }
 
     public void setviewpager(int position)
     {
         Log.e("Positions ", position+" ") ;
         initialdate = new Date();
         viewpagerfooter.setCurrentItem(position, true);
-        radiogroup.check(radiogroup.getChildAt(position%4).getId());
-        Log.e("position",""+position%4);
+        radiogroup.check(radiogroup.getChildAt(position%5).getId());
+        Log.e("position",""+position%5);
 
     }
 
@@ -169,20 +169,27 @@ public class introscreenactivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int pos) {
-            int fragmentPos = pos % 4;
+            int fragmentPos = pos % 5;
+          /*  if(fragmentPos==3){
+                btnstartrecord.setVisibility(View.VISIBLE);
+            }else{
+                btnstartrecord.setVisibility(View.INVISIBLE);
+            }*/
             switch(fragmentPos) {
 
-                case 0: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.capture),
-                        getResources().getString(R.string.start_by_documenting),R.drawable.mobile_newgif));
-                case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.verify),
-                        getResources().getString(R.string.once_your_media_is_recorded),R.drawable.shield_newgif));
-                case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.Share),
-                        getResources().getString(R.string.share_your_media_via_text),R.drawable.globe_newgif));
-                case 3: return fourthheaderfragment.newInstance(new intro(getResources().getString(R.string.learn),
-                        getResources().getString(R.string.watch_helpful_videos),R.drawable.key_newgif));
+                case 0: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
+                        getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1));
+                case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile2),
+                        getResources().getString(R.string.intro_detail2),R.drawable.intro_icon2));
+                case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile3),
+                        getResources().getString(R.string.intro_detail3),R.drawable.intro_icon3));
+                case 3: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile4),
+                        getResources().getString(R.string.intro_detail4),R.drawable.intro_icon4));
+                case 4: return fourthheaderfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
+                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon5));
 
-                default: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.capture),
-                        getResources().getString(R.string.start_by_documenting),R.drawable.shield_newgif));
+                default: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
+                        getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1));
             }
         }
 

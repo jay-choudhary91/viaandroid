@@ -38,7 +38,9 @@
     <dimen name="textsize12sp">12sp</dimen>
     <dimen name="viewheight">110dp</dimen>
     <dimen name="listviewheight">130dp</dimen>
-    <dimen name="animationbarheight">20dp</dimen>
+    <dimen name="logoimage_height">150dp</dimen>
+    <dimen name="logimage_width">220dp</dimen>
+    <dimen name="logoimage_text_height">40dp</dimen>
 
 
     <dimen name="header_text_size_18">18sp</dimen>
