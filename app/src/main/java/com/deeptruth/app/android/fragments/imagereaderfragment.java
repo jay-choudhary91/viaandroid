@@ -18,9 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,7 +27,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -1235,7 +1232,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         {
             e.printStackTrace();
         }
-        mdbhelper.updatemediainfofromstarttransactionid(localkey,medianame,medianotes);
+        mdbhelper.updatemediainfobylocalkey(localkey,medianame,medianotes);
         try
         {
             mdbhelper.close();

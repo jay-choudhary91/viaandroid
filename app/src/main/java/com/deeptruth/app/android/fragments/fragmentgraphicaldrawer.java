@@ -691,7 +691,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void zoomgooglemap(double latitude,double longitude)
     {
-        if (mgooglemap == null)
+        if (mgooglemap == null || (! isdatacomposing))
             return;
 
         googlemap.setVisibility(View.VISIBLE);
@@ -702,7 +702,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             setdefaultzoomlevel=false;
             double iMeter = 0.5 * 1609.34;      // zoomlevel according to 0.5 miles.
             Circle circle = mgooglemap.addCircle(new CircleOptions().center(new LatLng(latitude, longitude)).
-                    radius(iMeter).strokeColor(Color.RED));
+                    radius(iMeter).strokeColor(Color.TRANSPARENT));
             circle.setVisible(false);
             int zoom=common.getzoomlevelfromcircle(circle);
             mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoom));
@@ -1402,15 +1402,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         try
                         {
                             if(connectionspeedvalues.size() > 0)
-                            {
-                                //if(connectionspeedvalues.get(connectionspeedvalues.size()-1).getY() != Float.parseFloat(speedarray[0]))
-                                    connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
-                            }
-                            else
-                            {
                                 connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
-                            }
-
+                            else
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
                         }
                         catch (Exception e)
                         {
@@ -1429,15 +1423,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         try
                         {
                             if(connectiondatadelayvalues.size() > 0)
-                            {
-                                //if(connectiondatadelayvalues.get(connectiondatadelayvalues.size()-1).getY() != Float.parseFloat(array[0]))
-                                    connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), Float.parseFloat(array[0]), 0));
-                            }
+                                connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), Float.parseFloat(array[0]), 0));
                             else
-                            {
                                 connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(array[0]), 0));
-                            }
-
                         }
                         catch (Exception e)
                         {
@@ -1457,15 +1445,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         try
                         {
                             if(gpsaccuracyvalues.size() > 0)
-                            {
-                                //if(gpsaccuracyvalues.get(gpsaccuracyvalues.size()-1).getY() != Float.parseFloat(itemarray[0]))
-                                    gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
-                            }
-                            else
-                            {
                                 gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
-                            }
-
+                            else
+                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
                         }
                         catch (Exception e)
                         {
@@ -1488,15 +1470,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(speedgraphitems.size() > 0)
-                            {
-                                //if(speedgraphitems.get(speedgraphitems.size()-1).getY() != value)
-                                    speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
-                            }
-                            else
-                            {
                                 speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
-                            }
-
+                            else
+                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
                         }
                         catch (Exception e)
                         {
@@ -1519,15 +1495,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(travelledgraphitems.size() > 0)
-                            {
-                                //if(travelledgraphitems.get(travelledgraphitems.size()-1).getY() != value)
-                                    travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
-                            }
-                            else
-                            {
                                 travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
-                            }
-
+                            else
+                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
                         }
                         catch (Exception e)
                         {
@@ -1550,14 +1520,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(altitudegraphitems.size() > 0)
-                            {
-                                //if(altitudegraphitems.get(altitudegraphitems.size()-1).getY() != value)
                                 altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
-                            }
                             else
-                            {
                                 altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
-                            }
                         }
                         catch (Exception e)
                         {
@@ -1566,6 +1531,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     }
                 }
             }
+
+            /*if(i == metricmainarraylist.size()/2)
+                mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 16));*/
 
             if(linecolor.trim().length() == 0)
                 linecolor="blue";
@@ -1626,53 +1594,50 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private void showtraveledpath(List<coloredpoint> points)
+    private void showtraveledpath(final List<coloredpoint> points)
     {
+        googlemap.post(new Runnable() {
+            @Override
+            public void run() {
 
-        if (points.size() < 2)
-            return;
+                if (points.size() < 2)
+                    return;
 
-        int position = 0;
-        coloredpoint currentPoint  = points.get(position);
-        String currentColor = currentPoint.color;
-        List<LatLng> currentSegment = new ArrayList<>();
-        currentSegment.add(currentPoint.coords);
-        position++;
-
-        while (position < points.size()) {
-            currentPoint = points.get(position);
-
-            if (currentPoint.color.equalsIgnoreCase(currentColor)) {
+                int position = 0;
+                coloredpoint currentPoint  = points.get(position);
+                String currentColor = currentPoint.color;
+                List<LatLng> currentSegment = new ArrayList<>();
                 currentSegment.add(currentPoint.coords);
-            } else {
-                currentSegment.add(currentPoint.coords);
+                position++;
+
+                while (position < points.size()) {
+                    currentPoint = points.get(position);
+
+                    if (currentPoint.color.equalsIgnoreCase(currentColor)) {
+                        currentSegment.add(currentPoint.coords);
+                    } else {
+                        currentSegment.add(currentPoint.coords);
+                        mgooglemap.addPolyline(new PolylineOptions()
+                                .addAll(currentSegment)
+                                .color(Color.parseColor(common.getcolorbystring(currentColor)))
+                                .width(7));
+                        currentColor = currentPoint.color;
+                        currentSegment.clear();
+                        currentSegment.add(currentPoint.coords);
+                    }
+
+                    position++;
+                }
+
                 mgooglemap.addPolyline(new PolylineOptions()
                         .addAll(currentSegment)
                         .color(Color.parseColor(common.getcolorbystring(currentColor)))
                         .width(7));
-                currentColor = currentPoint.color;
-                currentSegment.clear();
-                currentSegment.add(currentPoint.coords);
+
+                common.mapzoomalongwithtraveledpath(applicationviavideocomposer.getactivity(),mgooglemap,currentSegment,
+                        googlemap.getWidth(),googlemap.getHeight());
             }
-
-            position++;
-        }
-
-
-        /*List<LatLng> currentSegment1 = new ArrayList<>();
-        currentSegment1.add(new LatLng(26.854387, 75.768462));
-        currentSegment1.add(new LatLng(26.858076, 75.763644));
-        currentSegment1.add(new LatLng(26.863696, 75.769036));
-        currentSegment1.add(new LatLng(26.871883, 75.785136));
-        currentSegment1.add(new LatLng(26.927544, 75.723983));*/
-
-
-        mgooglemap.addPolyline(new PolylineOptions()
-                .addAll(currentSegment)
-                .color(Color.parseColor(common.getcolorbystring(currentColor)))
-                .width(7));
-
-        //common.mapzoomalongwithtraveledpath(applicationviavideocomposer.getactivity(),mgooglemap,currentSegment1);
+        });
     }
 
 
@@ -2091,7 +2056,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                     {
                         populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
                     }
 
                     tvblockchainid.setText(arraycontainerformetric.getVideostarttransactionid());
@@ -2301,6 +2265,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         zoomgooglemap(location.latitude,location.longitude);
 
+        mgooglemap.getUiSettings().setZoomControlsEnabled(true);
+        mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
+        mgooglemap.getUiSettings().setZoomGesturesEnabled(true);
+
         if(lastPulseAnimator == null)
             addPulsatingEffect();
         else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
@@ -2322,9 +2290,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             else
                 mgooglemap.setMyLocationEnabled(false);
 
-            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
-            mgooglemap.getUiSettings().setZoomGesturesEnabled(true);
+
 
             mgooglemap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                 @Override

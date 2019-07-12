@@ -1,10 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.animation.ValueAnimator;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -2253,7 +2250,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             e.printStackTrace();
         }
-        mdbhelper.updatemediainfofromstarttransactionid(localkey,medianame,medianotes);
+        mdbhelper.updatemediainfobylocalkey(localkey,medianame,medianotes);
         try
         {
             mdbhelper.close();

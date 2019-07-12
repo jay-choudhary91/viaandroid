@@ -1041,12 +1041,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     loadcellinfo();
                                 }
 
-                                if ((currentsatellitecounter == -1 || (common.isnetworkconnected(locationawareactivity.this) &&
+                                /*if ((currentsatellitecounter == -1 || (common.isnetworkconnected(locationawareactivity.this) &&
                                         currentsatellitecounter >= 5)))
                                 {
                                     currentsatellitecounter = 0;
                                     getcurrentsatellitesget();
-                                }
+                                }*/
                             }
                         }
 

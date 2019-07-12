@@ -2,14 +2,12 @@ package com.deeptruth.app.android.fragments;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,15 +15,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -65,7 +59,6 @@ import com.deeptruth.app.android.models.customedittext;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
-import com.deeptruth.app.android.models.wavevisualizer;
 import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
@@ -87,7 +80,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -1903,7 +1895,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
-        mdbhelper.updatemediainfofromstarttransactionid(localkey,medianame,medianotes);
+        mdbhelper.updatemediainfobylocalkey(localkey,medianame,medianotes);
         try
         {
             mdbhelper.close();
