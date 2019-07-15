@@ -5,25 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.6">
-
-
-        <ImageView
-            android:id="@+id/img_introicon"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_centerInParent="true"/>
-
-    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.4"
-        android:gravity="center_horizontal"
+        android:layout_weight="0.9"
+        android:gravity="center"
         android:orientation="vertical">
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -34,8 +21,8 @@
             android:padding="5dp"
             android:text="TextView"
             android:textColor="@color/white"
-            android:textSize="25sp"
-            app:fontType="Comfortaa-Regular" />
+            android:textSize="22sp"
+            app:fontType="OpenSans_Regular" />
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_description"
@@ -43,13 +30,14 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/img_margin_left"
             android:layout_marginRight="@dimen/img_margin_right"
-            android:gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_10dp"
+            android:gravity="left"
             android:padding="5dp"
             android:justificationMode="inter_word"
             android:text="TextView"
             android:textColor="@color/white"
             android:textSize="16sp"
-            app:fontType="Comfortaa-Light" />
+            app:fontType="OpenSans_Regular" />
 
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -71,5 +59,9 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"></View>
 
 </LinearLayout>
