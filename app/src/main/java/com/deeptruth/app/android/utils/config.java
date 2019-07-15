@@ -249,6 +249,7 @@ public class config {
     public static final String type_audio="audio";
     public static final String type_video="video";
     public static final String type_image="image";
+    public static final String type_media="media";
 
     public static final String servicedata_liststart="servicedata_liststart";
     public static final String servicedata_listmiddle="servicedata_listmiddle";

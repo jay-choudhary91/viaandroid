@@ -880,12 +880,27 @@ public class databasemanager {
     }
 
 
-    public void updatemediainfofromstarttransactionid(String localkey,String location,String medianotes) {
+    public void updatemediainfobylocalkey(String localkey, String location, String medianotes) {
         try {
             lock.lock();
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("update tblstartmediainfo set media_name ='"+location+"', media_notes ='"+medianotes+"' where localkey='"+localkey+"'");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+
+    public void updatemediainfobymediakey(String mediakey, String medianame, String medianotes) {
+        try {
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL("update tblstartmediainfo set media_name ='"+medianame+"', media_notes ='"+medianotes+"' where videokey='"+mediakey+"'");
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -26,10 +26,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.fragments.appmanagementfragment;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
@@ -51,14 +53,21 @@ import com.deeptruth.app.android.fragments.synclogdetailsfragment;
 import com.deeptruth.app.android.fragments.synclogfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
+import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.services.appbackgroundactionservice;
 import com.deeptruth.app.android.services.callservice;
 import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.Date;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -264,10 +273,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             }
         }).start();
 
-
-
         detectphonecallservice();
         setdrawerdata();
+        getupdatedmetadata();
     }
 
     public void detectphonecallservice()
@@ -809,5 +817,76 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgrighthandle.setPadding(0,0,0,0);
         }
         //  graphicaldrawerfragment.setdrawerheight(drawerheight);
+    }
+
+    public void getupdatedmetadata()
+    {
+        if((! isuserlogin() || (xdata.getinstance().getSetting(config.clientid).trim().isEmpty())))
+            return;
+
+        HashMap<String,String> requestparams=new HashMap<>();
+        requestparams.put("type",config.type_media);
+        requestparams.put("action","list");
+        requestparams.put("sharemethod","public");
+        requestparams.put("clientid",xdata.getinstance().getSetting(config.clientid));
+        xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
+            @Override
+            public void onResponse(final taskresult response)
+            {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(response.isSuccess())
+                        {
+                            try {
+                                JSONObject object=new JSONObject(response.getData().toString());
+                                if(object.has("media"))
+                                {
+                                    JSONArray array=object.getJSONArray("media");
+                                    if(array.length() > 0)
+                                    {
+                                        databasemanager mdbhelper = new databasemanager(getApplicationContext());
+                                        try
+                                        {
+                                            mdbhelper.createDatabase();
+                                            mdbhelper.open();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        try {
+                                            for(int i=0;i<array.length();i++)
+                                            {
+                                                JSONObject jobject=array.getJSONObject(i);
+                                                String mediatitle="",mediadescription="",mediakey="";
+                                                if(jobject.has("mediatitle"))
+                                                    mediatitle=jobject.getString("mediatitle");
+                                                if(jobject.has("mediadescription"))
+                                                    mediadescription=jobject.getString("mediadescription");
+                                                if(jobject.has("mediakey"))
+                                                    mediakey=jobject.getString("mediakey");
+
+                                                mdbhelper.updatemediainfobymediakey(mediakey,mediatitle,mediadescription);
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        try {
+                                            mdbhelper.close();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }).start();
+            }
+        });
     }
 }

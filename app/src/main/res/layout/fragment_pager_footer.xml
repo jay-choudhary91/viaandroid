@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <View
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.6">
 
-    </View>
+
+        <ImageView
+            android:id="@+id/img_introicon"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,28 +27,29 @@
         android:orientation="vertical">
 
         <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="Comfortaa-Regular"
             android:id="@+id/txt_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textSize="25sp"
             android:padding="5dp"
-            android:textColor="@color/black"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            app:fontType="Comfortaa-Regular" />
 
         <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="Comfortaa-Light"
             android:id="@+id/txt_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/img_margin_right"
             android:layout_marginLeft="@dimen/img_margin_left"
+            android:layout_marginRight="@dimen/img_margin_right"
             android:gravity="center_horizontal"
             android:padding="5dp"
+            android:justificationMode="inter_word"
+            android:text="TextView"
+            android:textColor="@color/white"
             android:textSize="16sp"
-            android:textColor="@color/black"
-            android:text="TextView" />
+            app:fontType="Comfortaa-Light" />
 
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -49,20 +57,19 @@
             style="@style/tv_basic"
             android:layout_width="wrap_content"
             android:layout_marginTop="20dp"
+            android:background="@drawable/round_corner_btn_allow"
             android:gravity="center"
+            android:paddingBottom="5dp"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:paddingTop="5dp"
-            android:paddingBottom="5dp"
             android:text="@string/record_now"
+            android:textColor="@color/white"
             android:textSize="17sp"
             android:visibility="invisible"
-            android:textColor="@color/white"
-            app:fontType="Comfortaa-Regular"
-            android:background="@drawable/round_corner_btn_allow"/>
+            app:fontType="Comfortaa-Regular" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>

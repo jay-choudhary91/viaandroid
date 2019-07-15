@@ -70,6 +70,7 @@
 
         <service
             android:name=".services.appbackgroundactionservice" />
+
         <service
             android:name=".services.callservice"
             android:enabled="true" />
