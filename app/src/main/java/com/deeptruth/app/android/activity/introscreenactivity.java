@@ -89,14 +89,6 @@ public class introscreenactivity extends AppCompatActivity {
         viewpagerheader.setOffscreenPageLimit(5);
         viewpagerfooter.setOffscreenPageLimit(5);
 
-       /* btnstartrecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent in=new Intent(introscreenactivity.this,homeactivity.class);
-                startActivity(in);
-                finish();
-            }
-        });*/
 
         viewpagerheader.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -182,9 +174,6 @@ public class introscreenactivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
                 Log.e("scrollChangedheader ","" + state);
                 touchstate=state;
-                /*onPageScrollStateChanged:        1             SCROLL_STATE_DRAGGING
-                onPageScrollStateChanged:        2             SCROLL_STATE_SETTLING
-                onPageScrollStateChanged:        0             SCROLL_STATE_IDLE*/
             }
         });
 
@@ -263,11 +252,6 @@ public class introscreenactivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int pos) {
             int fragmentPos = pos % 5;
-            /*if(fragmentPos==3){
-                btnstartrecord.setVisibility(View.VISIBLE);
-            }else{
-                btnstartrecord.setVisibility(View.INVISIBLE);
-            }*/
             switch(fragmentPos) {
 
                 case 0: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
