@@ -153,7 +153,7 @@ public class introscreenactivity extends AppCompatActivity {
                         }
                     }
                 }
-                myhandler.postDelayed(this, 200);
+                myhandler.postDelayed(this, 100);
             }
         };
         myhandler.post(myrunnable);
@@ -165,9 +165,15 @@ public class introscreenactivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(final int position) {
                 currentselected=position;
-                viewpagerfooter.setCurrentItem(position, true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewpagerfooter.setCurrentItem(position, true);
+                    }
+                },150);
+
             }
 
             @Override

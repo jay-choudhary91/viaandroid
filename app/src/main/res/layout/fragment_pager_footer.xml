@@ -22,7 +22,7 @@
             android:text="TextView"
             android:textColor="@color/white"
             android:textSize="22sp"
-            app:fontType="OpenSans_Regular" />
+            app:fontType="Comfortaa-Regular" />
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_description"
@@ -36,8 +36,8 @@
             android:justificationMode="inter_word"
             android:text="TextView"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            app:fontType="OpenSans_Regular" />
+            android:textSize="15sp"
+            app:fontType="Comfortaa-Regular" />
 
 
         <com.deeptruth.app.android.views.customfonttextview
