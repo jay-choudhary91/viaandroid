@@ -165,14 +165,9 @@ public class introscreenactivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPageSelected(final int position) {
+            public void onPageSelected(int position) {
                 currentselected=position;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewpagerfooter.setCurrentItem(position, true);
-                    }
-                },150);
+                viewpagerfooter.setCurrentItem(position, true);
 
             }
 
