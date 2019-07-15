@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioGroup;
 
@@ -19,7 +18,6 @@ import com.deeptruth.app.android.fragments.footerpagerfragment;
 import com.deeptruth.app.android.fragments.fourthheaderfragment;
 import com.deeptruth.app.android.fragments.headerpagerfragment;
 import com.deeptruth.app.android.models.intro;
-import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.pageranimation;
 import com.deeptruth.app.android.views.pagercustomduration;
 
@@ -73,7 +71,7 @@ public class introscreenactivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
         //  requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_introactivity2);
+        setContentView(R.layout.activity_introactivity);
 
         //   xdata.getinstance().saveSetting(xdata.developermode,"");
         //getconnectionspeed();
