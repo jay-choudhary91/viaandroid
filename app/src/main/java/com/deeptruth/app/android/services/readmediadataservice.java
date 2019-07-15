@@ -524,6 +524,17 @@ public class readmediadataservice extends Service {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                            /*JSONObject frameobject=jobject.getJSONObject("frames");
+                            Iterator<String> myIter = jobject.keys();
+                            while (myIter.hasNext()) {
+                                String key = myIter.next();
+                                String value = object.optString(key);
+                                if(! value.trim().isEmpty())
+                                    xData.getInstance().saveSetting(key, value);
+                            }*/
+
+
                             JSONArray array=new JSONArray();
                             array=jobject.getJSONArray("frames");
 

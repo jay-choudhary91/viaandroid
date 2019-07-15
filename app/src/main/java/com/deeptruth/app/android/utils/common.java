@@ -569,7 +569,7 @@ public class common {
             xdata.getinstance().saveSetting(config.StorageAvailable, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("devicelanguage")) {
             xdata.getinstance().saveSetting(config.Language, ((ismetricsselected) ? value : "NA"));
-        } else if (keyname.equalsIgnoreCase("systemuptime")) {
+        } else if (keyname.equalsIgnoreCase(config.systemuptimeseconds)) {
             xdata.getinstance().saveSetting(config.SystemUptime, ((ismetricsselected) ? value : "NA"));
         } else if (keyname.equalsIgnoreCase("battery")) {
             xdata.getinstance().saveSetting(config.Battery, ((ismetricsselected) ? value : "NA"));
@@ -737,9 +737,13 @@ public class common {
             metricItemName = "freeram";
         } else if (key.equalsIgnoreCase("devicecurrency")) {
             metricItemName = "devicecurrency";
-        } else if (key.equalsIgnoreCase("systemuptime")) {
-            metricItemName = "systemuptime";
-        } else if (key.equalsIgnoreCase("pluggedin")) {
+        } else if (key.equalsIgnoreCase(config.systemuptimeminutes)) {
+            metricItemName = config.systemuptimeminutes;
+        }
+        else if (key.equalsIgnoreCase(config.systemuptimeseconds)) {
+            metricItemName = config.systemuptimeseconds;
+        }
+        else if (key.equalsIgnoreCase("pluggedin")) {
             metricItemName = "pluggedin";
         } else if (key.equalsIgnoreCase("headphonesattached")) {
             metricItemName = "headphonesattached";
@@ -1257,7 +1261,7 @@ public class common {
         return currency.getDisplayName();
     }
 
-    public static String getSystemUptime() {
+    public static int getsystemuptimeinseconds() {
         long uptimeMillis = SystemClock.elapsedRealtime();
         String wholeUptime = String.format(
                 "%02d:%02d:%02d",
@@ -1272,10 +1276,7 @@ public class common {
         String time = wholeUptime;
         String timeSplit[] = time.split(":");
         int seconds = Integer.parseInt(timeSplit[0]) * 60 * 60 + Integer.parseInt(timeSplit[1]) * 60 + Integer.parseInt(timeSplit[2]);
-
-        String Uptime = String.valueOf(seconds);
-
-        return Uptime;
+        return seconds;
     }
 
     public static boolean isHeadsetOn(Context context) {
@@ -1583,26 +1584,25 @@ public class common {
         return value;
     }
 
-    public static String systemuptime(long uptime) {
+    public static String systemuptime(String uptime) {
 
+        if(uptime.trim().isEmpty() || uptime.equalsIgnoreCase("NA"))
+            return "";
+
+        long longuptime=Long.parseLong(uptime);
         String time = "";
         String wholeUptime = "";
 
-     /*  long hours=uptime/3600;
-       long minutes=((uptime/60)%60);
-       long seconds=(uptime%60);*/
+        int day = (int) (longuptime / (24 * 3600));
 
-        int day = (int) (uptime / (24 * 3600));
-        // Log.e("days", String.valueOf(day));
+        longuptime = longuptime % (24 * 3600);
+        int hour = (int) (longuptime / 3600);
 
-        uptime = uptime % (24 * 3600);
-        int hour = (int) (uptime / 3600);
+        longuptime %= 3600;
+        int minutes = (int) (longuptime / 60);
 
-        uptime %= 3600;
-        int minutes = (int) (uptime / 60);
-
-        uptime %= 60;
-        int seconds = (int) uptime;
+        longuptime %= 60;
+        int seconds = (int) longuptime;
 
         if (hour <= 24) {
             wholeUptime = String.format("%02d:%02d:%02d", hour, minutes, seconds);
@@ -1700,7 +1700,8 @@ public class common {
     public static String[] getmetricesarray() {
         String[] items = {"battery", "phonetype", "imeinumber", "simserialnumber", "version", "osversion", "softwareversion", "model",
                 "manufacturer", "brightness", "gpslatitude", "gpslongitude", config.gpslatitudedegree, config.gpslongitudedegree,
-                config.gpsaltitude, "gpsquality", "carrier", "screenwidth","screenheight", "systemuptime", "multitaskingenabled",
+                config.gpsaltitude, "gpsquality", "carrier", "screenwidth","screenheight", config.systemuptimeminutes,
+                config.systemuptimeseconds,"multitaskingenabled",
                 "proximitysensorenabled", "pluggedin", "devicedate", "devicetime","deviceregion", "devicelanguage", "devicecurrency",
                 "timezone", "headphonesattached", "accessoriesattached", "nameattachedaccessories", "attachedaccessoriescount",
                 "totalspace", "usedspace", "memoryusage", "freespace","orientation", "deviceorientation", "rammemory", "usedram",
