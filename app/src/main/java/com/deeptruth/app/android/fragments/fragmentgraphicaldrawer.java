@@ -793,7 +793,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.localtime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.LocalTime)), tvlocaltime);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.systemuptime(common.getxdatavalue(xdata.getinstance().
+                            getSetting(config.SystemUptime))), tvuptime);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),
                             "\n"+ common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)))
                             , tvspeed);
@@ -1819,8 +1820,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("freespace")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvstoragefree);
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("systemuptime")){
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvuptime);
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.systemuptimeseconds)){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+common.systemuptime(metricItemArraylist.get(j).
+                                    getMetricTrackValue()), tvuptime);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("brightness")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.brightness),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvbrightness);
