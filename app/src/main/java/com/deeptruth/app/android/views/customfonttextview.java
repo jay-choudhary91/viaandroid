@@ -8,7 +8,8 @@ import android.util.AttributeSet;
 import com.deeptruth.app.android.R;
 
 
-public class customfonttextview extends android.support.v7.widget.AppCompatTextView {
+public class
+customfonttextview extends android.support.v7.widget.AppCompatTextView {
 
     public static final String SANS_BOLD = "fonts/OpenSans-Bold.ttf";
     public static final String SANS_BOLD_ITALIC = "fonts/OpenSans-BoldItalic.ttf";

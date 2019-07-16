@@ -20,4 +20,14 @@
         android:state_pressed="true"
         android:drawable="@drawable/toggle_button_unselected"/>
 
+    <item
+        android:state_checked="false"
+        android:state_pressed="true"
+        android:drawable="@drawable/toggle_button_unselected"/>
+
+    <item
+        android:state_checked="false"
+        android:state_pressed="true"
+        android:drawable="@drawable/toggle_button_unselected"/>
+
 </selector>

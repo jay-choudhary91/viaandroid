@@ -1,25 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom|center_horizontal"
-        android:orientation="vertical">
+        android:id="@+id/headerlayoutone"
+        android:gravity="center"
+        android:layout_height="match_parent">
 
-        <pl.droidsonroids.gif.GifImageView
-            android:id="@+id/img_gif"
-            android:layout_width="250dp"
-            android:visibility="gone"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+        <ImageView
+            android:id="@+id/img_introicon"
+            android:layout_width="170dp"
+            android:layout_marginTop="@dimen/margin_15dp"
+            android:layout_centerInParent="true"
+            android:layout_height="170dp"
+
             />
 
-    </LinearLayout>
+    </RelativeLayout>
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:gravity="bottom"
+        android:id="@+id/headerlayouttwo">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_proofofthetruth"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/margin_15dp"
+            android:padding="@dimen/margin_5dp"
+            android:visibility="invisible"
+            android:textColor="@color/white"
+            android:textSize="@dimen/margin_25dp"
+            android:text="@string/proof_of_the_truth"
+            android:layout_below="@+id/img_logoicon"/>
+
+
+        <ImageView
+            android:id="@+id/img_logoicon"
+            android:layout_width="220dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+
+            />
+    </RelativeLayout>
+
+    <!--<View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"></View>-->
+</RelativeLayout>

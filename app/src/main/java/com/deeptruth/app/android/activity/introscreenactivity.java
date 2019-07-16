@@ -10,15 +10,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioGroup;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.fragments.footerpagerfragment;
-import com.deeptruth.app.android.fragments.fourthheaderfragment;
+import com.deeptruth.app.android.fragments.headerpagerfragment;
 import com.deeptruth.app.android.models.intro;
-import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.pageranimation;
 import com.deeptruth.app.android.views.pagercustomduration;
 
@@ -28,14 +26,16 @@ public class introscreenactivity extends AppCompatActivity {
 
     int currentselected;
     pagercustomduration viewpagerheader, viewpagerfooter;
-    int touchstate=0,currentselectedduration=3;
+    int touchstate=0,currentselectedduration=5;
     boolean touched =false;
     boolean isinbackground=false;
     boolean slidebytime=false;
     Date initialdate;
     private Handler myhandler;
     private Runnable myrunnable;
+    headerpageradapter headerpageradapter;
     footerpageradapter footerpageradapter;
+  //  TextView btnstartrecord;
     RadioGroup radiogroup;
 
     @Override
@@ -70,15 +70,43 @@ public class introscreenactivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
         //  requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_introactivity2);
+        setContentView(R.layout.activity_introactivity);
 
+        //   xdata.getinstance().saveSetting(xdata.developermode,"");
+        //getconnectionspeed();
         initialdate =new Date();
+        viewpagerheader = (pagercustomduration) findViewById(R.id.viewpager_header);
         viewpagerfooter = (pagercustomduration) findViewById(R.id.viewpager_footer);
+   //     btnstartrecord = (TextView) findViewById(R.id.btn_start_record);
         radiogroup = (RadioGroup)findViewById(R.id.radioGroup);
+        viewpagerheader.setPageTransformer(false, new pageranimation());
         viewpagerfooter.setPageTransformer(false, new pageranimation());
-        footerpageradapter = new footerpageradapter(getSupportFragmentManager());
+        headerpageradapter = new introscreenactivity.headerpageradapter(getSupportFragmentManager());
+        footerpageradapter = new introscreenactivity.footerpageradapter(getSupportFragmentManager());
+        viewpagerheader.setAdapter(headerpageradapter);
         viewpagerfooter.setAdapter(footerpageradapter);
-        viewpagerfooter.setOffscreenPageLimit(5);
+        viewpagerheader.setOffscreenPageLimit(6);
+        viewpagerfooter.setOffscreenPageLimit(6);
+
+
+        viewpagerheader.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                initialdate = new Date();
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        touched = true;
+                        Log.e("user touch","on touch" + touched);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        touched = false;
+                        Log.e("on touch end ","on touch end" + touched);
+                        break;
+                }
+                return false;
+            }
+        });
 
         viewpagerfooter.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -100,7 +128,7 @@ public class introscreenactivity extends AppCompatActivity {
         });
 
 
-        myhandler =new Handler();
+        /*myhandler =new Handler();
         myrunnable = new Runnable() {
             @Override
             public void run() {
@@ -124,10 +152,30 @@ public class introscreenactivity extends AppCompatActivity {
                         }
                     }
                 }
-                myhandler.postDelayed(this, 200);
+                myhandler.postDelayed(this, 100);
             }
         };
-        myhandler.post(myrunnable);
+        myhandler.post(myrunnable);*/
+
+
+        viewpagerheader.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentselected=position;
+                viewpagerfooter.setCurrentItem(position, true);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                Log.e("scrollChangedheader ","" + state);
+                touchstate=state;
+            }
+        });
 
         viewpagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -139,8 +187,8 @@ public class introscreenactivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 currentselected=position;
-                //   viewpagerheader.setCurrentItem(position, true);
-                radiogroup.check(radiogroup.getChildAt(position%5).getId());
+                viewpagerheader.setCurrentItem(position, true);
+                radiogroup.check(radiogroup.getChildAt(position%6).getId());
             }
 
             @Override
@@ -149,17 +197,53 @@ public class introscreenactivity extends AppCompatActivity {
             }
         });
 
-     }
+    }
 
     public void setviewpager(int position)
     {
         Log.e("Positions ", position+" ") ;
         initialdate = new Date();
+        viewpagerheader.setCurrentItem(position, true);
         viewpagerfooter.setCurrentItem(position, true);
-        radiogroup.check(radiogroup.getChildAt(position%5).getId());
-        Log.e("position",""+position%5);
+        radiogroup.check(radiogroup.getChildAt(position%6).getId());
+    }
+
+    private class headerpageradapter extends FragmentStatePagerAdapter {
+
+        public headerpageradapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int pos) {
+            int fragmentPos = pos % 6;
+            switch(fragmentPos) {
+
+                case 0: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
+                        getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1,1));
+                case 1: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile2),
+                        getResources().getString(R.string.intro_detail2),R.drawable.intro_icon2,2));
+                case 2: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile3),
+                        getResources().getString(R.string.intro_detail3),R.drawable.intro_icon3,3));
+                case 3: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile4),
+                        getResources().getString(R.string.intro_detail4),R.drawable.intro_icon4,4));
+                case 4: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
+                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon5,5));
+                case 5: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
+                        getResources().getString(R.string.intro_detail5),R.drawable.splash_logo_icon,6));
+
+                default: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
+                        getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1,1));
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return Integer.MAX_VALUE;
+        }
 
     }
+
 
     private class footerpageradapter extends FragmentStatePagerAdapter{
 
@@ -169,27 +253,24 @@ public class introscreenactivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int pos) {
-            int fragmentPos = pos % 5;
-          /*  if(fragmentPos==3){
-                btnstartrecord.setVisibility(View.VISIBLE);
-            }else{
-                btnstartrecord.setVisibility(View.INVISIBLE);
-            }*/
+            int fragmentPos = pos % 6;
             switch(fragmentPos) {
 
                 case 0: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
-                        getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1));
+                        getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1,1));
                 case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile2),
-                        getResources().getString(R.string.intro_detail2),R.drawable.intro_icon2));
+                        getResources().getString(R.string.intro_detail2),R.drawable.intro_icon2,2));
                 case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile3),
-                        getResources().getString(R.string.intro_detail3),R.drawable.intro_icon3));
+                        getResources().getString(R.string.intro_detail3),R.drawable.intro_icon3,3));
                 case 3: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile4),
-                        getResources().getString(R.string.intro_detail4),R.drawable.intro_icon4));
-                case 4: return fourthheaderfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
-                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon5));
+                        getResources().getString(R.string.intro_detail4),R.drawable.intro_icon4,4));
+                case 4: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
+                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon5,5));
+                case 5: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
+                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon5,6));
 
                 default: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
-                        getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1));
+                        getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1,1));
             }
         }
 

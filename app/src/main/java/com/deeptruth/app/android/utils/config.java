@@ -140,6 +140,8 @@ public class config {
     public static final String carrier = "carrier";
     public static final String deviceconnection = "deviceconnection";
     public static final String screenorientatioin = "screenorientatioin";
+    public static final String systemuptimeminutes = "systemuptimeminutes";
+    public static final String systemuptimeseconds = "systemuptimeseconds";
 
     public static final String blockchainid = "blockchainid";
     public static final String hashformula = "hashformula";

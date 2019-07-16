@@ -1,18 +1,20 @@
 package com.deeptruth.app.android.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.homeactivity;
 import com.deeptruth.app.android.models.intro;
+
 
 
 /**
@@ -23,6 +25,7 @@ public class footerpagerfragment extends Fragment {
     View rootview;
     boolean isgifloaded =false;
     intro introobject=null;
+    TextView btnstartrecord;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -31,13 +34,28 @@ public class footerpagerfragment extends Fragment {
             rootview = inflater.inflate(R.layout.fragment_pager_footer, container, false);
             TextView txt_title = (TextView) rootview.findViewById(R.id.txt_title);
             TextView txt_description = (TextView) rootview.findViewById(R.id.txt_description);
-            ImageView img_introicon= (ImageView) rootview.findViewById(R.id.img_introicon) ;
             introobject=(intro)getArguments().getParcelable("object");
-            Glide.with(this).load(introobject.getImage()).into(img_introicon);
+            btnstartrecord = (TextView) rootview.findViewById(R.id.btn_start_record);
+
             txt_title.setText(introobject.getTitle());
             txt_description.setText(introobject.getDescription());
 
-            Glide.with(this).load(introobject.getImage()).into(img_introicon);
+           if(introobject.getPosition() == 6){
+               txt_title.setVisibility(View.GONE);
+               txt_description.setVisibility(View.INVISIBLE);
+               btnstartrecord.setVisibility(View.VISIBLE);
+           }
+
+            btnstartrecord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent in=new Intent(getActivity(),homeactivity.class);
+                    startActivity(in);
+                    getActivity().overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
+                    getActivity().finish();
+                }
+            });
+
         }
 
         return rootview;

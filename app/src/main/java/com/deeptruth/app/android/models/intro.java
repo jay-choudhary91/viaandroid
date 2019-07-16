@@ -11,12 +11,14 @@ public class intro implements Parcelable {
     public String title="";
     public String description="";
     public int image=0;
+    public int position = 0;
 
-    public intro(String title,String description,int image)
+    public intro(String title,String description,int image,int position)
     {
         setTitle(title);
         setDescription(description);
         setImage(image);
+        setPosition(position);
     }
 
     public static final Creator<intro> CREATOR = new Creator<intro>() {
@@ -37,6 +39,14 @@ public class intro implements Parcelable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public String getDescription() {

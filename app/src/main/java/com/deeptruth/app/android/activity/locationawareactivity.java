@@ -61,7 +61,6 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
-import android.view.WindowManager;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -1088,7 +1087,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
         }
 
-
         return metricitemarraylist;
     }
 
@@ -1421,12 +1419,19 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("devicecurrency")) {
             Locale defaultLocale = Locale.getDefault();
             metricItemValue = common.displayCurrencyInfoForLocale(defaultLocale);
-        } else if (key.equalsIgnoreCase("systemuptime")) {
+        }
+        else if (key.equalsIgnoreCase("systemuptimeminutes"))
+        {
             // Get the whole uptime
-            metricItemValue = common.getSystemUptime();
-            metricItemValue = common.systemuptime(Long.parseLong(metricItemValue));
-
-        } else if (key.equalsIgnoreCase("pluggedin")) {
+            metricItemValue = String.valueOf(common.getsystemuptimeinseconds()/60);
+        }
+        else if (key.equalsIgnoreCase("systemuptimeseconds"))
+        {
+            // Get the whole uptime
+            int uptimeinseconds = common.getsystemuptimeinseconds();
+            metricItemValue = String.valueOf(uptimeinseconds);
+        }
+        else if (key.equalsIgnoreCase("pluggedin")) {
             metricItemValue = common.isChargerConnected(locationawareactivity.this) == true ? "true" : "false";
         } else if (key.equalsIgnoreCase("headphonesattached")) {
             metricItemValue = common.isHeadsetOn(locationawareactivity.this) == true ? "true" : "false";
