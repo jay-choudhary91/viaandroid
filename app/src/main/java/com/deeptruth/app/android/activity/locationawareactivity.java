@@ -3016,36 +3016,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         if (object.has("color"))
                             color = object.getString("color");
 
-                        if(response.getData() != null)
-                        {
-                            JSONObject completedataobject = (JSONObject) response.getcompletedata();
-                            if(completedataobject.has("params"))
-                            {
-                                JSONObject paramsobject=completedataobject.getJSONObject("params");
-                                if(paramsobject.has("image"))
-                                {
-                                    JSONObject imageobject=paramsobject.getJSONObject("image");
-                                    if (imageobject.has("imageid"))
-                                        mediaid = imageobject.getString("imageid");
-                                }
+                        if (object.has("imageid"))
+                            mediaid = object.getString("imageid");
 
-                                if(paramsobject.has("audio"))
-                                {
-                                    JSONObject audioobject=paramsobject.getJSONObject("audio");
-                                    if (audioobject.has("audioid"))
-                                        mediaid = audioobject.getString("audioid");
-                                }
+                        if (object.has("audioid"))
+                            mediaid = object.getString("audioid");
 
-                                if(paramsobject.has("video"))
-                                {
-                                    JSONObject videoobject=paramsobject.getJSONObject("video");
-                                    if (videoobject.has("videoid"))
-                                        mediaid = videoobject.getString("videoid");
-                                }
-                            }
-
-                        }
-
+                        if (object.has("videoid"))
+                            mediaid = object.getString("videoid");
 
                         updatecompletehashvalue(localkey, valuehash);
                         updatedatasyncdate(localkey, common.getCurrentDate(), config.sync_complete, color,mediaid);

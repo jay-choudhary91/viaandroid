@@ -24,6 +24,7 @@ import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -513,11 +514,8 @@ public class readmediadataservice extends Service {
 
                         if(jobject.has("frames"))
                         {
-                            databasemanager dbmanager=null;
-                            if (dbmanager == null) {
-                                dbmanager = new databasemanager(getApplicationContext());
-                                dbmanager.createDatabase();
-                            }
+                            databasemanager dbmanager = new databasemanager(getApplicationContext());
+                            dbmanager.createDatabase();
 
                             try {
                                 dbmanager.open();
@@ -525,118 +523,23 @@ public class readmediadataservice extends Service {
                                 e.printStackTrace();
                             }
 
-                            /*JSONObject frameobject=jobject.getJSONObject("frames");
-                            Iterator<String> myIter = jobject.keys();
-                            while (myIter.hasNext()) {
-                                String key = myIter.next();
-                                String value = object.optString(key);
-                                if(! value.trim().isEmpty())
-                                    xData.getInstance().saveSetting(key, value);
-                            }*/
-
-
-                            JSONArray array=new JSONArray();
-                            array=jobject.getJSONArray("frames");
-
-                            if(mediatype.equalsIgnoreCase("video"))
+                            Object json = jobject.get("frames");
+                            if(json instanceof JSONObject)
                             {
-                                for(int i=0;i<array.length();i++)
-                                {
-                                    JSONObject object =array.getJSONObject(i);
-                                    String videoframeid = (object.has("videoframeid")?object.getString("videoframeid"):"");
-                                    String objectid = (object.has("objectid")?object.getString("objectid"):"");
-                                    String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
-                                    String videoframenumber = (object.has("videoframenumber")?object.getString("videoframenumber"):"");
-                                    String videoframehashvalue = (object.has("videoframehashvalue")?object.getString("videoframehashvalue"):"");
-                                    String videoframehashmethod = (object.has("videoframehashmethod")?object.getString("videoframehashmethod"):"");
-                                    String videoframemeta = (object.has("videoframemeta")?object.getString("videoframemeta"):"");
-                                    String videoframemetahash = (object.has("videoframemetahash")?object.getString("videoframemetahash"):"");
-                                    String videoframemetahashmethod = (object.has("videoframemetahashmethod")?object.getString("videoframemetahashmethod"):"");
-                                    String videoframedevicedatetime = (object.has("videoframedevicedatetime")?object.getString("videoframedevicedatetime"):"");
-                                    String videoframetransactionid = (object.has("videoframetransactionid")?object.getString("videoframetransactionid"):"");
-                                    String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
-                                    String meta = (object.has("meta")?object.getString("meta"):"");
-                                    String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
-                                    String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
-                                    String metahash = (object.has("videoframedevicemetahashvalue")?object.getString("videoframedevicemetahashvalue"):"");
-                                    String metahashmethod = (object.has("videoframeservermetahashmethod")?object.getString("videoframeservermetahashmethod"):"");
-                                    String color = (object.has("color")?object.getString("color"):"");
-                                    String latency = (object.has("latency")?object.getString("latency"):"");
-
-                                    meta=common.refactordegreequotesformat(meta);
-
-                                    dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
-                                            meta,videoframedevicedatetime,hashmethod,hashvalue,
-                                            sequenceno,"",videoframedevicedatetime,"",
-                                            "","0",videoframetransactionid,metahash,color,latency);
+                                JSONObject frameobject=jobject.getJSONObject("frames");
+                                Iterator<String> myIter = frameobject.keys();
+                                while (myIter.hasNext()) {
+                                    String key = myIter.next();
+                                    JSONObject object=frameobject.getJSONObject(key);
+                                    parsemediaframemeta(object,dbmanager);
                                 }
                             }
-                            else if(mediatype.equalsIgnoreCase("audio"))
+                            else
                             {
-                                for(int i=0;i<array.length();i++)
-                                {
-                                    JSONObject object =array.getJSONObject(i);
-                                    String videoframeid = (object.has("audioframeid")?object.getString("audioframeid"):"");
-                                    String objectid = (object.has("objectid")?object.getString("objectid"):"");
-                                    String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
-                                    String videoframenumber = (object.has("audioframenumber")?object.getString("audioframenumber"):"");
-                                    String videoframehashvalue = (object.has("audioframehashvalue")?object.getString("audioframehashvalue"):"");
-                                    String videoframehashmethod = (object.has("audioframehashmethod")?object.getString("audioframehashmethod"):"");
-                                    String videoframemeta = (object.has("audioframemeta")?object.getString("audioframemeta"):"");
-                                    String videoframemetahash = (object.has("audioframemetahash")?object.getString("audioframemetahash"):"");
-                                    String videoframemetahashmethod = (object.has("audioframemetahashmethod")?object.getString("audioframemetahashmethod"):"");
-                                    String videoframedevicedatetime = (object.has("audioframedevicedatetime")?object.getString("audioframedevicedatetime"):"");
-                                    String videoframetransactionid = (object.has("audioframetransactionid")?object.getString("audioframetransactionid"):"");
-                                    String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
-                                    String meta = (object.has("meta")?object.getString("meta"):"");
-                                    String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
-                                    String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
-                                    String metahash = (object.has("audioframedevicemetahashvalue")?object.getString("audioframedevicemetahashvalue"):"");
-                                    String metahashmethod = (object.has("audioframeservermetahashmethod")?object.getString("audioframeservermetahashmethod"):"");
-                                    String color = (object.has("color")?object.getString("color"):"");
-                                    String latency = (object.has("latency")?object.getString("latency"):"");
-
-                                    meta=common.refactordegreequotesformat(meta);
-
-                                    dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
-                                            meta,videoframedevicedatetime,hashmethod,hashvalue,
-                                            sequenceno,"",videoframedevicedatetime,"",
-                                            "","0",videoframetransactionid,metahash,color,latency);
-                                }
-                            }
-                            else if(mediatype.equalsIgnoreCase("image"))
-                            {
-                                for(int i=0;i<array.length();i++) {
+                                JSONArray array=jobject.getJSONArray("frames");
+                                for (int i = 0; i < array.length(); i++) {
                                     JSONObject object = array.getJSONObject(i);
-                                    String frameid = (object.has("imageframeid")?object.getString("imageframeid"):"");
-                                    String objectid = (object.has("objectid")?object.getString("objectid"):"");
-                                    String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
-                                    String framenumber = (object.has("imageframenumber")?object.getString("imageframenumber"):"");
-                                    String framehashvalue = (object.has("imageframehashvalue")?object.getString("imageframehashvalue"):"");
-                                    String framehashmethod = (object.has("imageframehashmethod")?object.getString("imageframehashmethod"):"");
-                                    String framemeta = (object.has("imageframemeta")?object.getString("imageframemeta"):"");
-                                    String framemetahash = (object.has("imageframemetahash")?object.getString("imageframemetahash"):"");
-                                    String framemetahashmethod = (object.has("imageframemetahashmethod")?object.getString("imageframemetahashmethod"):"");
-                                    String devicedatetime = (object.has("imageframedevicedatetime")?object.getString("imageframedevicedatetime"):"");
-                                    String frametransactionid = (object.has("imageframetransactionid")?object.getString("imageframetransactionid"):"");
-                                    String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
-                                    String meta = (object.has("meta")?object.getString("meta"):"");
-                                    String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
-                                    String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
-                                    String metahash = (object.has("imageframedevicemetahashvalue")?object.getString("imageframedevicemetahashvalue"):"");
-                                    String metahashmethod = (object.has("imageframeservermetahashmethod")?object.getString("imageframeservermetahashmethod"):"");
-                                    String color = (object.has("color")?object.getString("color"):"");
-                                    String latency = (object.has("latency")?object.getString("latency"):"");
-
-                                    if(sequenceno == null || sequenceno.equalsIgnoreCase("null"))
-                                        sequenceno="1";
-
-                                    meta=common.refactordegreequotesformat(meta);
-
-                                    dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
-                                            meta,devicedatetime,hashmethod,hashvalue,
-                                            sequenceno,"",devicedatetime,"",
-                                            "","0",frametransactionid,metahash,color,latency);
+                                    parsemediaframemeta(object,dbmanager);
                                 }
                             }
 
@@ -649,21 +552,17 @@ public class readmediadataservice extends Service {
                             int lastframe=maxframes;
                             if(remainingframes > 0)
                             {
-                                int newframestart=maxframes+1;
-                                int newmaxframes=maxframes+50;
                                 updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_inprogress);
                             }
                             else
                             {
                                 updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_complete);
                                 sendbroadcastreader();
-
                                 if(xdata.getinstance().getSetting(config.selectedsyncsetting).
                                         equalsIgnoreCase(config.selectedsyncsetting_0))
                                     common.shownotification(applicationviavideocomposer.getactivity());
-
-
                             }
+
                         }
                     }catch (Exception e)
                     {
@@ -672,6 +571,111 @@ public class readmediadataservice extends Service {
                 }
             }
         });
+    }
+
+    public void parsemediaframemeta(JSONObject object,databasemanager dbmanager)
+    {
+        try {
+
+            if(object.has("videoframeid"))
+            {
+                String videoframeid = (object.has("videoframeid")?object.getString("videoframeid"):"");
+                String objectid = (object.has("objectid")?object.getString("objectid"):"");
+                String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
+                String videoframenumber = (object.has("videoframenumber")?object.getString("videoframenumber"):"");
+                String videoframehashvalue = (object.has("videoframehashvalue")?object.getString("videoframehashvalue"):"");
+                String videoframehashmethod = (object.has("videoframehashmethod")?object.getString("videoframehashmethod"):"");
+                String videoframemeta = (object.has("videoframemeta")?object.getString("videoframemeta"):"");
+                String videoframemetahash = (object.has("videoframemetahash")?object.getString("videoframemetahash"):"");
+                String videoframemetahashmethod = (object.has("videoframemetahashmethod")?object.getString("videoframemetahashmethod"):"");
+                String videoframedevicedatetime = (object.has("videoframedevicedatetime")?object.getString("videoframedevicedatetime"):"");
+                String videoframetransactionid = (object.has("videoframetransactionid")?object.getString("videoframetransactionid"):"");
+                String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
+                String meta = (object.has("meta")?object.getString("meta"):"");
+                String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
+                String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
+                String metahash = (object.has("videoframedevicemetahashvalue")?object.getString("videoframedevicemetahashvalue"):"");
+                String metahashmethod = (object.has("videoframeservermetahashmethod")?object.getString("videoframeservermetahashmethod"):"");
+                String color = (object.has("color")?object.getString("color"):"");
+                String latency = (object.has("latency")?object.getString("latency"):"");
+
+                meta=common.refactordegreequotesformat(meta);
+
+                dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
+                        meta,videoframedevicedatetime,hashmethod,hashvalue,
+                        sequenceno,"",videoframedevicedatetime,"",
+                        "","0",videoframetransactionid,metahash,color,latency);
+            }
+            else if(object.has("audioframeid"))
+            {
+                String videoframeid = (object.has("audioframeid")?object.getString("audioframeid"):"");
+                String objectid = (object.has("objectid")?object.getString("objectid"):"");
+                String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
+                String videoframenumber = (object.has("audioframenumber")?object.getString("audioframenumber"):"");
+                String videoframehashvalue = (object.has("audioframehashvalue")?object.getString("audioframehashvalue"):"");
+                String videoframehashmethod = (object.has("audioframehashmethod")?object.getString("audioframehashmethod"):"");
+                String videoframemeta = (object.has("audioframemeta")?object.getString("audioframemeta"):"");
+                String videoframemetahash = (object.has("audioframemetahash")?object.getString("audioframemetahash"):"");
+                String videoframemetahashmethod = (object.has("audioframemetahashmethod")?object.getString("audioframemetahashmethod"):"");
+                String videoframedevicedatetime = (object.has("audioframedevicedatetime")?object.getString("audioframedevicedatetime"):"");
+                String videoframetransactionid = (object.has("audioframetransactionid")?object.getString("audioframetransactionid"):"");
+                String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
+                String meta = (object.has("meta")?object.getString("meta"):"");
+                String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
+                String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
+                String metahash = (object.has("audioframedevicemetahashvalue")?object.getString("audioframedevicemetahashvalue"):"");
+                String metahashmethod = (object.has("audioframeservermetahashmethod")?object.getString("audioframeservermetahashmethod"):"");
+                String color = (object.has("color")?object.getString("color"):"");
+                String latency = (object.has("latency")?object.getString("latency"):"");
+
+                meta=common.refactordegreequotesformat(meta);
+
+                dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
+                        meta,videoframedevicedatetime,hashmethod,hashvalue,
+                        sequenceno,"",videoframedevicedatetime,"",
+                        "","0",videoframetransactionid,metahash,color,latency);
+            }
+            else if(object.has("imageframeid"))
+            {
+                String frameid = (object.has("imageframeid")?object.getString("imageframeid"):"");
+                String objectid = (object.has("objectid")?object.getString("objectid"):"");
+                String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
+                String framenumber = (object.has("imageframenumber")?object.getString("imageframenumber"):"");
+                String framehashvalue = (object.has("imageframehashvalue")?object.getString("imageframehashvalue"):"");
+                String framehashmethod = (object.has("imageframehashmethod")?object.getString("imageframehashmethod"):"");
+                String framemeta = (object.has("imageframemeta")?object.getString("imageframemeta"):"");
+                String framemetahash = (object.has("imageframemetahash")?object.getString("imageframemetahash"):"");
+                String framemetahashmethod = (object.has("imageframemetahashmethod")?object.getString("imageframemetahashmethod"):"");
+                String devicedatetime = (object.has("imageframedevicedatetime")?object.getString("imageframedevicedatetime"):"");
+                String frametransactionid = (object.has("imageframetransactionid")?object.getString("imageframetransactionid"):"");
+                String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
+                String meta = (object.has("meta")?object.getString("meta"):"");
+                String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
+                String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
+                String metahash = (object.has("imageframedevicemetahashvalue")?object.getString("imageframedevicemetahashvalue"):"");
+                String metahashmethod = (object.has("imageframeservermetahashmethod")?object.getString("imageframeservermetahashmethod"):"");
+                String color = (object.has("color")?object.getString("color"):"");
+                String latency = (object.has("latency")?object.getString("latency"):"");
+
+                if(sequenceno == null || sequenceno.equalsIgnoreCase("null"))
+                    sequenceno="1";
+
+                meta=common.refactordegreequotesformat(meta);
+
+                dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
+                        meta,devicedatetime,hashmethod,hashvalue,
+                        sequenceno,"",devicedatetime,"",
+                        "","0",frametransactionid,metahash,color,latency);
+            }
+
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+
     }
 
     public int getlastsavedsequence(String parentobjectid)
