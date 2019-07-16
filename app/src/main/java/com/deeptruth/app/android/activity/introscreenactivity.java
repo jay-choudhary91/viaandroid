@@ -226,9 +226,9 @@ public class introscreenactivity extends AppCompatActivity {
                 case 2: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile3),
                         getResources().getString(R.string.intro_detail3),R.drawable.intro_icon3,3));
                 case 3: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile4),
-                        getResources().getString(R.string.intro_detail4),R.drawable.intro_icon4,4));
+                        getResources().getString(R.string.intro_detail4),R.drawable.intro_icon5,4));
                 case 4: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
-                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon5,5));
+                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon4,5));
                 case 5: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
                         getResources().getString(R.string.intro_detail5),R.drawable.splash_logo_icon,6));
 
@@ -263,9 +263,9 @@ public class introscreenactivity extends AppCompatActivity {
                 case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile3),
                         getResources().getString(R.string.intro_detail3),R.drawable.intro_icon3,3));
                 case 3: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile4),
-                        getResources().getString(R.string.intro_detail4),R.drawable.intro_icon4,4));
+                        getResources().getString(R.string.intro_detail4),R.drawable.intro_icon5,4));
                 case 4: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
-                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon5,5));
+                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon4,5));
                 case 5: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
                         getResources().getString(R.string.intro_detail5),R.drawable.intro_icon5,6));
 

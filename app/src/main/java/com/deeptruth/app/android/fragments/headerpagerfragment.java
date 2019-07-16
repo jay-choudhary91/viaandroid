@@ -50,14 +50,12 @@ public class headerpagerfragment extends Fragment {
             Glide.with(this).load(introobject.getImage()).into(img_introicon);
 
 
-            if(introobject.getPosition()==6){
+            if(introobject.getPosition()== 6){
                 Glide.with(this).load(introobject.getImage()).into(img_logoicon);
                 img_introicon.setVisibility(View.INVISIBLE);
                 headerlayouttwo.setVisibility(View.VISIBLE);
                 txt_proofofthetruth.setVisibility(View.VISIBLE);
-                Animation animFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.fadein);
-                txt_proofofthetruth.startAnimation(animFadeIn);
-
+                loadAnimation();
             }
 
           /*  if((introobject.getTitle().contains("Simply Secure")))
@@ -72,24 +70,10 @@ public class headerpagerfragment extends Fragment {
     {
         try {
             isgifloaded =true;
-            GifDrawable gifDrawable = null;
-            try {
-                gifDrawable = new GifDrawable(getResources(), introobject.getImage());
-                gifDrawable.setLoopCount(1);
-                gifDrawable.setSpeed(2.0f);
-                int i= gifDrawable.getDuration();
-                Log.e("duration",""+i+ "........"+introobject.getTitle());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            imggif.setImageDrawable(gifDrawable);
-            imggif.setAlpha(0f);
-            imggif.setVisibility(View.VISIBLE);
-            imggif.animate()
-                    .alpha(1.0f)
-                    .setDuration(100)
-                    .setListener(null);
+            Animation animFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.fadein);
+            animFadeIn.setDuration(3000);
+            animFadeIn.setRepeatCount(1);
+            txt_proofofthetruth.startAnimation(animFadeIn);
 
         }catch (Exception e)
         {
@@ -99,8 +83,8 @@ public class headerpagerfragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        /*if(imggif != null)
-           // loadAnimation();*/
+        if(txt_proofofthetruth != null)
+            loadAnimation();
     }
 
 
