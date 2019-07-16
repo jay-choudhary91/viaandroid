@@ -7,7 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.R;
@@ -28,6 +32,8 @@ public class headerpagerfragment extends Fragment {
     View rootview;
     boolean isgifloaded =false;
     intro introobject=null;
+    TextView txt_proofofthetruth;
+    RelativeLayout headerlayouttwo;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -35,10 +41,24 @@ public class headerpagerfragment extends Fragment {
         {
             rootview = inflater.inflate(R.layout.fragment_pager_header, container, false);
             ImageView img_introicon= (ImageView) rootview.findViewById(R.id.img_introicon) ;
+            txt_proofofthetruth = (TextView) rootview.findViewById(R.id.txt_proofofthetruth) ;
+            headerlayouttwo = (RelativeLayout)  rootview.findViewById(R.id.headerlayouttwo) ;
+            ImageView img_logoicon = (ImageView) rootview.findViewById(R.id.img_logoicon) ;
 
             introobject=(intro)getArguments().getParcelable("object");
 
             Glide.with(this).load(introobject.getImage()).into(img_introicon);
+
+
+            if(introobject.getPosition()==6){
+                Glide.with(this).load(introobject.getImage()).into(img_logoicon);
+                img_introicon.setVisibility(View.INVISIBLE);
+                headerlayouttwo.setVisibility(View.VISIBLE);
+                txt_proofofthetruth.setVisibility(View.VISIBLE);
+                Animation animFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.fadein);
+                txt_proofofthetruth.startAnimation(animFadeIn);
+
+            }
 
           /*  if((introobject.getTitle().contains("Simply Secure")))
                 loadAnimation();*/

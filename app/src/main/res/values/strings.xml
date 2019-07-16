@@ -296,15 +296,15 @@
     <string name="xapi_total_frames">Total frames :</string>
 
 
-    <string name="intro_titile1">The Problem: Deepfakes</string>
-    <string name="intro_detail1">Deepfake technologies manipulate real video/audios to make it appear that people say and do things that never happened. This new type of \"fake news\" is growing.</string>
-    <string name="intro_titile2">The Result: Viral Deception</string>
-    <string name="intro_detail2">Deepfakes can be quickly spread around the world and can damage relationships, influence elections, destroy reputations, cause conflicts and manipulate markets.</string>
-    <string name="intro_titile3">The Challenge: Defense Doesn\'t Work</string>
-    <string name="intro_detail3">The existing fight of identifying deepfakes after the fact is a losing game of defense. The viral nature of fake news requires a more aggressive and effective solution.</string>
-    <string name="intro_titile4">The Solution: VideoLock</string>
-    <string name="intro_detail4">VideoLock\'s patented solution fights the deepfake problem by fingerprinting your recordings with over 50 layers of digital metadata...and it does it all in real-time.</string>
-    <string name="intro_titile5">The Result: The Truth</string>
-    <string name="intro_detail5">Your VideoLock recordings can be used to fight deepfakes. Quickly publish your verified recordings and the world will see the truth. Are you ready to fight back?</string>
+    <string name="intro_titile1">The Problem:\n Deepfakes</string>
+    <string name="intro_detail1">Deepfakes are high tech fake videos and audios that make people appear to say and do things that never happened. This a \"fake news\" is growing.</string>
+    <string name="intro_titile2">The Result:\n Deception</string>
+    <string name="intro_detail2">Deepfakes can quickly spread around the world and cause permanent damage: elections influenced, reputations ruined, and relationships destroyed.</string>
+    <string name="intro_titile3">The Challenge:\n Defense Doesn\'t Work</string>
+    <string name="intro_detail3">Solutions that try to identify and disprove every deepfake are playing a losing game of defense. The viral nature of fake news spreads too fast.</string>
+    <string name="intro_titile4">The Solution:\n VideoLock</string>
+    <string name="intro_detail4">VideoLock\'s patented solution creates a cryptographic DNA fingerprint, 30 times a second, with 50+ layers of metadata...and it does it all in real-time.</string>
+    <string name="intro_titile5">The Result:\n Privacy &amp; Protection</string>
+    <string name="intro_detail5">Recordings are 100% private and exist ONLY on your smartphone. If a deepfake is created, you can share your authentic VideoLock recording and spread the truth.</string>
 
 </resources>

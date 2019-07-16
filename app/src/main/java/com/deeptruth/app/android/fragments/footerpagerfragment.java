@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.homeactivity;
 import com.deeptruth.app.android.models.intro;
 
 
@@ -24,6 +25,7 @@ public class footerpagerfragment extends Fragment {
     View rootview;
     boolean isgifloaded =false;
     intro introobject=null;
+    TextView btnstartrecord;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -33,8 +35,26 @@ public class footerpagerfragment extends Fragment {
             TextView txt_title = (TextView) rootview.findViewById(R.id.txt_title);
             TextView txt_description = (TextView) rootview.findViewById(R.id.txt_description);
             introobject=(intro)getArguments().getParcelable("object");
+            btnstartrecord = (TextView) rootview.findViewById(R.id.btn_start_record);
+
             txt_title.setText(introobject.getTitle());
             txt_description.setText(introobject.getDescription());
+
+           if(introobject.getPosition() == 6){
+               txt_title.setVisibility(View.GONE);
+               txt_description.setVisibility(View.INVISIBLE);
+               btnstartrecord.setVisibility(View.VISIBLE);
+           }
+
+            btnstartrecord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent in=new Intent(getActivity(),homeactivity.class);
+                    startActivity(in);
+                    getActivity().overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
+                    getActivity().finish();
+                }
+            });
 
         }
 
