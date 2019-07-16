@@ -57,9 +57,6 @@ public class headerpagerfragment extends Fragment {
                 txt_proofofthetruth.setVisibility(View.VISIBLE);
                 loadAnimation();
             }
-
-          /*  if((introobject.getTitle().contains("Simply Secure")))
-                loadAnimation();*/
         }
 
         return rootview;
