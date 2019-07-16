@@ -33,7 +33,6 @@ public class fourthheaderfragment extends Fragment {
         {
             rootview = inflater.inflate(R.layout.fragment_pager_footer, container, false);
             TextView txt_title = (TextView) rootview.findViewById(R.id.txt_title);
-            ImageView img_introicon= (ImageView) rootview.findViewById(R.id.img_introicon) ;
             TextView txt_description = (TextView) rootview.findViewById(R.id.txt_description);
             btnstartrecord = (TextView) rootview.findViewById(R.id.btn_start_record);
             btnstartrecord.setVisibility(View.VISIBLE);
@@ -43,7 +42,6 @@ public class fourthheaderfragment extends Fragment {
 
             txt_title.setText(introobject.getTitle());
             txt_description.setText(introobject.getDescription());
-            Glide.with(this).load(introobject.getImage()).into(img_introicon);
 
             btnstartrecord.setOnClickListener(new View.OnClickListener() {
                 @Override

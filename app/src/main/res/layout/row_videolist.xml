@@ -179,22 +179,19 @@
                                 android:layout_toLeftOf="@id/img_imageshare"
                                 android:orientation="vertical">
 
-                                <EditText
-                                    android:id="@+id/edt_videoname"
+                                <com.deeptruth.app.android.views.customfonttextview
+                                    app:fontType="OpenSans_Regular"
+                                    android:id="@+id/txt_videoname"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="left"
-                                    android:textSize="15sp"
-                                    android:ems="1"
-                                    android:maxLines="1"
-                                    android:singleLine="true"
-                                    android:ellipsize="end"
-                                    android:inputType="none"
-                                    android:background="@drawable/edittext_shap"
-                                    android:scrollHorizontally="false"
+                                    android:textSize="13sp"
+                                    android:layout_marginTop="3dp"
                                     android:textColor="@color/black"
+                                    android:maxLines="1"
                                     android:visibility="visible"
-                                    android:imeOptions="actionDone"
+                                    android:ellipsize="end"
+                                    android:text=""
                                     />
 
                                 <LinearLayout

@@ -50,8 +50,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes,tv_mediaduration,
-                tv_valid,tv_caution,tv_unsent,tv_invalid,txt_pipesign_caution,txt_pipesign_unsent,txt_pipesign_invalid,tv_framecounts;
-        EditText edtvideoname;
+                tv_valid,tv_caution,tv_unsent,tv_invalid,txt_pipesign_caution,txt_pipesign_unsent,txt_pipesign_invalid,tv_framecounts,txt_videoname;
         RelativeLayout relative_child ;
         public ImageView img_imageshare,img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public SwipeRevealLayout root_view;
@@ -61,7 +60,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         public myViewHolder(View view) {
             super(view);
             tv_medianotes = (TextView) view.findViewById(R.id.tv_medianotes);
-            edtvideoname = (EditText) view.findViewById(R.id.edt_videoname);
+            txt_videoname = (TextView) view.findViewById(R.id.txt_videoname);
             tv_mediadate = (TextView) view.findViewById(R.id.tv_mediadate);
             img_imageshare = (ImageView) view.findViewById(R.id.img_imageshare);
             tv_localkey = (TextView) view.findViewById(R.id.tv_localkey);
@@ -275,7 +274,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             }
 
 
-            holder.edtvideoname.setText(mediaobject.getMediatitle());
+            holder.txt_videoname.setText(mediaobject.getMediatitle());
 
             if(mediaobject.getDuration().trim().isEmpty())
             {
@@ -317,9 +316,9 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.tv_sync_status.setText("Status : " + mediaobject.getMediastatus());
             }
 
-            holder.edtvideoname.setEnabled(false);
+            /*holder.edtvideoname.setEnabled(false);
             holder.edtvideoname.setClickable(false);
-            holder.edtvideoname.setFocusable(false);
+            holder.edtvideoname.setFocusable(false);*/
 
             RequestOptions requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
             requestOptions.override(200,200);
