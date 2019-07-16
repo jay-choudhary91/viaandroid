@@ -39,6 +39,7 @@
             android:visibility="invisible"
             android:textColor="@color/white"
             android:textSize="@dimen/margin_25dp"
+            app:fontType="OpenSans_Semibold"
             android:text="@string/proof_of_the_truth"
             android:layout_below="@+id/img_logoicon"/>
 
