@@ -274,7 +274,7 @@ public class appdialog
             public void onClick(View v) {
 
                 if(notifycheckbox.isChecked()){
-                        xdata.getinstance().saveSetting(config.enableexportnotification,"1");
+                        xdata.getinstance().saveSetting(config.enablenotification,"1");
 
                    /* if(title == context.getResources().getString(R.string.txt_send))
                        xdata.getinstance().saveSetting(config.enableplubishnotification,"1");
@@ -283,7 +283,7 @@ public class appdialog
                         xdata.getinstance().saveSetting(config.enablesendnotification,"1");*/
 
                 }else{
-                        xdata.getinstance().saveSetting(config.enableexportnotification,"0");
+                        xdata.getinstance().saveSetting(config.enablenotification,"0");
 
                   /*  if(title == context.getResources().getString(R.string.txt_send))
                         xdata.getinstance().saveSetting(config.enableplubishnotification,"0");

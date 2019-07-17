@@ -272,6 +272,7 @@ public class config {
     public static final String enableplubishnotification ="enableplubishnotification";
     public static final String enablesendnotification ="enablesendnotification";
     public static final String enableexportnotification ="enableexportnotification";
+    public static final String enablenotification ="enablenotification";
     public static final String authtoken="authtoken";
     public static final String clientemail="clientemail";
     public static final String usernameemailaddress="usernameemailaddress";

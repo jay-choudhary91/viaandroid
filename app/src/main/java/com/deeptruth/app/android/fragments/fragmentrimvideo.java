@@ -93,8 +93,8 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
             case R.id.lyout_publish:
                 String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
 
-                if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
-                        xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0")) {
+                if(xdata.getinstance().getSetting(config.enablenotification).isEmpty() ||
+                        xdata.getinstance().getSetting(config.enablenotification).equalsIgnoreCase("0")) {
 
                     /*if (xdata.getinstance().getSetting(config.enablenotification).isEmpty())
                         xdata.getinstance().saveSetting(config.enablenotification, "0");*/
