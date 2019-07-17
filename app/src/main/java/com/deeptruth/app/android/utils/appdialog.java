@@ -247,7 +247,7 @@ public class appdialog
         return false;
     }
 
-    public static void share_alert_dialog(Context context,String title,String content){
+    public static void share_alert_dialog(final Context context, final String title, String content){
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -274,12 +274,25 @@ public class appdialog
             public void onClick(View v) {
 
                 if(notifycheckbox.isChecked()){
-                    dialog.dismiss();
-                    xdata.getinstance().saveSetting(config.enablenotification,"1");
+                        xdata.getinstance().saveSetting(config.enableexportnotification,"1");
+
+                   /* if(title == context.getResources().getString(R.string.txt_send))
+                       xdata.getinstance().saveSetting(config.enableplubishnotification,"1");
+
+                    if(title == context.getResources().getString(R.string.txt_export))
+                        xdata.getinstance().saveSetting(config.enablesendnotification,"1");*/
+
                 }else{
-                    xdata.getinstance().saveSetting(config.enablenotification,"0");
-                    dialog.dismiss();
+                        xdata.getinstance().saveSetting(config.enableexportnotification,"0");
+
+                  /*  if(title == context.getResources().getString(R.string.txt_send))
+                        xdata.getinstance().saveSetting(config.enableplubishnotification,"0");
+
+                    if(title == context.getResources().getString(R.string.txt_export))
+                        xdata.getinstance().saveSetting(config.enablesendnotification,"0");*/
+
                 }
+                dialog.dismiss();
 
             }
         });

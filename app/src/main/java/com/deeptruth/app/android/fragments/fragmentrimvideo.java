@@ -93,8 +93,8 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
             case R.id.lyout_publish:
                 String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
 
-                if(xdata.getinstance().getSetting(config.enablenotification).isEmpty() ||
-                        xdata.getinstance().getSetting(config.enablenotification).equalsIgnoreCase("0")) {
+                if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
+                        xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0")) {
 
                     /*if (xdata.getinstance().getSetting(config.enablenotification).isEmpty())
                         xdata.getinstance().saveSetting(config.enablenotification, "0");*/
@@ -107,12 +107,13 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
             case R.id.lyout_send:
                 String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.send_details2);
                 appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_send),send);
-                break;
 
+                break;
 
             case R.id.lyout_export:
                 String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.export_details2);
                 appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_export),export);
+
                 break;
 
         }
