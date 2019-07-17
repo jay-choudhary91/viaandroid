@@ -44,7 +44,7 @@ public class pagercustomduration extends ViewPager {
         this.childid = childid;
     }
 
-    private void setMyScroller()
+    public void setMyScroller()
     {
         try
         {

@@ -312,4 +312,7 @@
     <string name="intro_titile5">The Result:\n Privacy &amp; Protection</string>
     <string name="intro_detail5">Recordings are 100% private and exist ONLY on your smartphone. If a deepfake is created, you can share your authentic VideoLock recording and spread the truth.</string>
 
+    <string name="checkboxstring">Do not notify again</string>
+    <string name="publish_details1">Publishing your recordings to DeepTruth website allows to share any validated and authenticated videos/audios.</string>
+    <string name="publish_details2">After a recording is uploaded, it can be share on websites and social media platforms.</string>
 </resources>
