@@ -782,35 +782,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             subdialogshare.show();
     }
 
-    @Override
-    public void newpopup(String path){
-        dialog = new Dialog(this, android.R.style.Theme_Dialog);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.popup);
-        dialog.setCanceledOnTouchOutside(true);
-
-        Button ok = (Button) dialog.findViewById(R.id.ok);
-
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-
-            }
-        });
-
-
-
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-    }
-
-
-    public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
+   public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
     {
         final Dialog dialog =new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
