@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.videotrimmer.hglvideotrimmer;
@@ -29,6 +30,15 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     hglvideotrimmer mvideotrimmer;
     @BindView(R.id.rootlayout)
     CardView rootlayout;
+    @BindView(R.id.lyout_publish)
+    LinearLayout lyoutpublish;
+    @BindView(R.id.lyout_send)
+    LinearLayout lyoutsend;
+    @BindView(R.id.lyout_export)
+    LinearLayout lyoutexport;
+    @BindView(R.id.lyout_help)
+    LinearLayout lyouthelp;
+
 
     private progressdialog mprogressdialog;
     View rootview = null;
@@ -54,12 +64,14 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         if(rootview == null) {
             rootview = inflater.inflate(R.layout.fragment_trimvideo, container, false);
             ButterKnife.bind(this, rootview);
-
-
-
-
             navigationbarheight =  common.getnavigationbarheight();
             setlayoutmargin();
+
+             lyoutpublish.setOnClickListener(this);
+             lyoutsend.setOnClickListener(this);
+             lyoutexport.setOnClickListener(this);
+             lyouthelp.setOnClickListener(this);
+
 
             if (mvideotrimmer != null) {
                 mvideotrimmer.setMaxDuration(videoduration);
@@ -75,6 +87,22 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+
+            case R.id.lyout_publish:
+                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
+                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+                break;
+
+           /* case R.id.lyout_send:
+                String send = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
+                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+                break;
+
+
+            case R.id.lyout_export:
+                String export = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
+                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+                break;*/
 
         }
     }
