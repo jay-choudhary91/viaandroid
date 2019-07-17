@@ -16,7 +16,9 @@ import android.widget.Toast;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
+import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.videotrimmer.hglvideotrimmer;
 import com.deeptruth.app.android.videotrimmer.interfaces.onhglvideolistener;
 import com.deeptruth.app.android.videotrimmer.interfaces.ontrimvideolistener;
@@ -90,7 +92,16 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
             case R.id.lyout_publish:
                 String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
-                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+
+                if(xdata.getinstance().getSetting(config.enablenotification).isEmpty() ||
+                        xdata.getinstance().getSetting(config.enablenotification).equalsIgnoreCase("0")) {
+
+                    /*if (xdata.getinstance().getSetting(config.enablenotification).isEmpty())
+                        xdata.getinstance().saveSetting(config.enablenotification, "0");*/
+
+                    appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+
+                }
                 break;
 
            /* case R.id.lyout_send:
