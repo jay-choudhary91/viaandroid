@@ -78,13 +78,12 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginTop="@dimen/margin_5dp"
-                    android:layout_marginRight="@dimen/margin_10dp"
-                    android:src="@drawable/share"
-                    android:paddingRight="@dimen/margin_5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="20dp"
                     android:paddingLeft="@dimen/margin_5dp"
-                    />
+                    android:paddingRight="@dimen/margin_5dp"
+                    android:src="@drawable/share" />
             </RelativeLayout>
 
 

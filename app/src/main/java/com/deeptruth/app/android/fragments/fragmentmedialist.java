@@ -1443,8 +1443,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             }else if(videoobj.getmimetype().startsWith("video")){
 
-                gethelper().showsharepopupsub(videoobj.getPath(),"video",videoobj.getVideotoken());
-               /* Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                ///gethelper().showsharepopupsub(videoobj.getPath(),"video",videoobj.getVideotoken());
+                gethelper().newpopup("path");
+                /* Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.putExtra(Intent.EXTRA_STREAM, uri);

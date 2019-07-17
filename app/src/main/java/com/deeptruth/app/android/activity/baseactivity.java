@@ -29,7 +29,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -93,6 +95,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     String mediapath = "";
     String mediatype = "";
     String mediavideotoken = "",mediamethod = "";
+    Dialog dialog;
 
     // The helper object
     IabHelper mHelper;
@@ -765,6 +768,34 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             });
             subdialogshare.show();
     }
+
+    @Override
+    public void newpopup(String path){
+        dialog = new Dialog(this, android.R.style.Theme_Dialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.popup);
+        dialog.setCanceledOnTouchOutside(true);
+
+        Button ok = (Button) dialog.findViewById(R.id.ok);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+            }
+        });
+
+
+
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
 
     public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
     {
