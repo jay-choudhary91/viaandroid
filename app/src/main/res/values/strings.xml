@@ -151,6 +151,7 @@
     <string name="introscreen">Intro Screen</string>
     <string name="production">Production</string>
     <string name="dev">Dev</string>
+    <string name="reset_notification">Reset Notification Screens</string>
     <string name="locationtracking">locationtracking</string>
     <string name="orientation">orientation</string>
     <string name="zero_frames">0 Frames</string>

@@ -1454,6 +1454,32 @@ public class common {
                 .show();
     }
 
+    public static void showalertdialog(Activity activity, String msg, final adapteritemclick mitemclick) {
+        alertdialog = new AlertDialog.Builder(activity)
+                .setTitle("Alert")
+                .setMessage(msg)
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertdialog.dismiss();
+                        if(mitemclick != null)
+                            mitemclick.onItemClicked(null,0);
+
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Perform Your Task Here--When No is pressed
+                        alertdialog.dismiss();
+
+                        if(mitemclick != null)
+                            mitemclick.onItemClicked(null,1);
+                    }
+                })
+                .show();
+    }
+
     public static void showalert(Activity activity, String meg, final adapteritemclick mitemclick) {
 
         if(alertdialog != null && alertdialog.isShowing())

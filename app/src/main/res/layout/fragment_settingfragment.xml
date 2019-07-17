@@ -29,9 +29,8 @@
         <RelativeLayout
             android:id="@+id/ll_toggle"
             android:layout_below="@+id/layout_apptitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            android:visibility="gone"
+              style="@style/layout_togglebutton">
 
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -74,9 +73,7 @@
         <RelativeLayout
             android:id="@+id/layout_toggle"
             android:layout_below="@+id/ll_toggle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            style="@style/layout_togglebutton" >
 
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -119,9 +116,7 @@
         <RelativeLayout
             android:id="@+id/layout_devtoggle"
             android:layout_below="@+id/layout_toggle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            style="@style/layout_togglebutton">
 
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -159,6 +154,51 @@
                 app:setEnabledTrackColor="@color/dark_blue_solid_a"
                 app:setDisabledTrackColor="@color/grey_x"
                 />-->
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/layout_resetnotificationtoggle"
+            android:layout_below="@+id/layout_devtoggle"
+            style="@style/layout_togglebutton">
+
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reset_notification"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:textSize="15sp"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@color/dark_blue_solid_a"
+                />
+
+            <com.suke.widget.SwitchButton
+                android:id="@+id/resetnotification_toogle"
+                android:layout_width="62dp"
+                android:layout_height="36dp"
+                app:sb_button_color="@color/white"
+                app:sb_shadow_color="@color/gray_x"
+                app:sb_background="@color/gray_x"
+                app:sb_checkline_color="@color/transparent"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                app:sb_checked_color="@color/dark_blue_solid_a"
+                app:sb_uncheckcircle_color="@color/gray_x"
+                />
+
+            <!-- <com.akash.RevealSwitch
+                 android:id="@+id/dev_toogle"
+                 android:layout_width="70dp"
+                 android:layout_height="35dp"
+                 android:visibility="gone"
+                 android:layout_centerVertical="true"
+                 android:layout_alignParentRight="true"
+                 app:setEnabledTrackColor="@color/dark_blue_solid_a"
+                 app:setDisabledTrackColor="@color/grey_x"
+                 />-->
 
         </RelativeLayout>
 
@@ -232,7 +272,7 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:id="@+id/layout_webviewdetails"
-            android:layout_below="@id/layout_devtoggle"
+            android:layout_below="@id/layout_resetnotificationtoggle"
             android:layout_above="@+id/layoutbottom"
             android:layout_marginLeft="@dimen/margin_left"
             android:layout_marginRight="@dimen/margin_right"

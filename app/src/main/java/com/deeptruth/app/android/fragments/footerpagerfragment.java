@@ -1,20 +1,27 @@
 package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.homeactivity;
+import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.intro;
-
+import com.deeptruth.app.android.utils.common;
+import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.xdata;
 
 
 /**
@@ -49,10 +56,33 @@ public class footerpagerfragment extends Fragment {
             btnstartrecord.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent in=new Intent(getActivity(),homeactivity.class);
-                    startActivity(in);
-                    getActivity().overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
-                    getActivity().finish();
+
+                  /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(applicationviavideocomposer.getactivity()))
+                    {*/
+                        common.showalertdialog(getActivity(), "Do not display intro screens again.", new adapteritemclick() {
+                            @Override
+                            public void onItemClicked(Object object) {
+
+                            }
+
+                            @Override
+                            public void onItemClicked(Object object, int type) {
+                                if(type ==0 ){
+                                    Toast.makeText(getActivity().getApplicationContext(),"yes",Toast.LENGTH_SHORT).show();
+                                    xdata.getinstance().saveSetting(config.enableintroscreen,"1");
+                                }
+                                else{
+                                    Toast.makeText(getActivity().getApplicationContext(),"no",Toast.LENGTH_SHORT).show();
+                                    xdata.getinstance().saveSetting(config.enableintroscreen,"1");
+                                }
+
+                                Intent in=new Intent(getActivity(),homeactivity.class);
+                                startActivity(in);
+                                getActivity().overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
+                                getActivity().finish();
+                            }
+                        });
+                  //  }
                 }
             });
 

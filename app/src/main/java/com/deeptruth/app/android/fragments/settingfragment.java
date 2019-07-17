@@ -44,6 +44,8 @@ public class settingfragment extends basefragment implements View.OnClickListene
     SwitchButton production_toogle;
     @BindView(R.id.dev_toogle)
     SwitchButton dev_toogle;
+    @BindView(R.id.resetnotification_toogle)
+    SwitchButton resetnotification_toogle;
     @BindView(R.id.ll_rootlayout)
     LinearLayout llrootlayout;
     int navigationbarheight = 0;
@@ -101,6 +103,15 @@ public class settingfragment extends basefragment implements View.OnClickListene
                 togglebutton.setChecked(false);
             }
 
+            if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() ||
+                    xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("1"))
+            {
+                resetnotification_toogle.setChecked(true);
+
+            }else{
+                resetnotification_toogle.setChecked(false);
+            }
+
             navigationbarheight =  common.getnavigationbarheight();
             setlayoutmargin();
 
@@ -133,6 +144,21 @@ public class settingfragment extends basefragment implements View.OnClickListene
                         xdata.getinstance().saveSetting(config.enableintroscreen,"1");
                     else
                         xdata.getinstance().saveSetting(config.enableintroscreen,"0");
+                }
+            });
+
+            resetnotification_toogle.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                    if(isChecked){
+                        xdata.getinstance().saveSetting(config.enableintroscreen,"1");
+                     //   xdata.getinstance().saveSetting(config.enablenotification,"1");
+                    }
+                    else{
+                        xdata.getinstance().saveSetting(config.enableintroscreen,"0");
+                     //   xdata.getinstance().saveSetting(config.enablenotification,"0");
+                    }
+
                 }
             });
 
@@ -195,6 +221,8 @@ public class settingfragment extends basefragment implements View.OnClickListene
                 Toast.makeText(applicationviavideocomposer.getactivity(),"Logout Successful",Toast.LENGTH_SHORT).show();
                 txt_username.setText("");
                 txt_logout.setText("");
+                txt_username.setVisibility(View.INVISIBLE);
+                txt_logout.setVisibility(View.INVISIBLE);
                 break;
         }
     }

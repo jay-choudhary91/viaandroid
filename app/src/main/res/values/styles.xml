@@ -359,4 +359,13 @@
         <item name="android:indeterminateDrawable">@drawable/indeterminate_animation_progress</item>
     </style>
 
+    <style name="layout_togglebutton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">@dimen/margin_10dp</item>
+        <item name="android:layout_marginLeft">@dimen/margin_10dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_5dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_5dp</item>
+    </style>
+
 </resources>
