@@ -55,8 +55,8 @@
 
             <ImageView
                 android:id="@+id/img_publish"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:src="@drawable/publilsh"/>
 
@@ -83,7 +83,7 @@
             <ImageView
                 android:id="@+id/img_send"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:src="@drawable/send"/>
 
@@ -107,8 +107,8 @@
             >
             <ImageView
                 android:id="@+id/img_expoet"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:src="@drawable/export"/>
 
@@ -133,8 +133,8 @@
 
             <ImageView
                 android:id="@+id/img_help"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:src="@drawable/help"/>
 
