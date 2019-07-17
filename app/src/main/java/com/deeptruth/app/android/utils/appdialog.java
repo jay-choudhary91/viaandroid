@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -254,6 +256,7 @@ public class appdialog
 
         TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
         TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
+        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
 
         txttitle.setText(title);
         txtcontent.setText(content);
@@ -263,7 +266,13 @@ public class appdialog
             @Override
             public void onClick(View v) {
 
-            dialog.dismiss();
+                if(notifycheckbox.isChecked()){
+                    dialog.dismiss();
+                    xdata.getinstance().saveSetting(config.enablenotification,"1");
+                }else{
+                    xdata.getinstance().saveSetting(config.enablenotification,"0");
+                    dialog.dismiss();
+                }
 
             }
         });
