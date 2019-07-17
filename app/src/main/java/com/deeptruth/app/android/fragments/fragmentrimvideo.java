@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -40,6 +42,8 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     LinearLayout lyoutexport;
     @BindView(R.id.lyout_help)
     LinearLayout lyouthelp;
+    @BindView(R.id.img_cancel)
+    ImageView img_cancel;
 
 
     private progressdialog mprogressdialog;
@@ -65,15 +69,16 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(rootview == null) {
             rootview = inflater.inflate(R.layout.fragment_trimvideo, container, false);
+
             ButterKnife.bind(this, rootview);
             navigationbarheight =  common.getnavigationbarheight();
             setlayoutmargin();
 
-             lyoutpublish.setOnClickListener(this);
-             lyoutsend.setOnClickListener(this);
-             lyoutexport.setOnClickListener(this);
-             lyouthelp.setOnClickListener(this);
-
+            lyoutpublish.setOnClickListener(this);
+            lyoutsend.setOnClickListener(this);
+            lyoutexport.setOnClickListener(this);
+            lyouthelp.setOnClickListener(this);
+            img_cancel.setOnClickListener(this);
 
             if (mvideotrimmer != null) {
                 mvideotrimmer.setMaxDuration(videoduration);
@@ -114,6 +119,10 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.export_details2);
                 appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_export),export);
 
+                break;
+
+            case R.id.img_cancel:
+                getDialog().dismiss();
                 break;
 
         }
@@ -216,7 +225,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     public void onResume() {
         super.onResume();
 
-        getscreenwidthheight(95,85);
+        getscreenwidthheight(87,85);
     }
 
     public void setdata(String videoPath, int duration, String videotoken)
@@ -243,6 +252,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         int percentageheight = (height / 100) * heightpercentage;
         int percentagewidth = (width / 100) * widthpercentage;
 
+        getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         getDialog().getWindow().setLayout(percentagewidth, percentageheight);
     }
 }
