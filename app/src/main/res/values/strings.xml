@@ -295,6 +295,11 @@
     <string name="xapi_token">Token :</string>
     <string name="xapi_total_frames">Total frames :</string>
 
+    <string name="txt_publish">PUBLISH</string>
+    <string name="txt_send">SEND</string>
+    <string name="txt_export">EXPORT</string>
+    <string name="txt_help">HELP</string>
+
 
     <string name="intro_titile1">The Problem:\n Deepfakes</string>
     <string name="intro_detail1">Deepfakes are high tech fake videos and audios that make people appear to say and do things that never happened. This a \"fake news\" is growing.</string>
