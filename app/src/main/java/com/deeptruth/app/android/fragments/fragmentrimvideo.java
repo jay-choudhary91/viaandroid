@@ -104,16 +104,16 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 }
                 break;
 
-           /* case R.id.lyout_send:
-                String send = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
-                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+            case R.id.lyout_send:
+                String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.send_details2);
+                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_send),send);
                 break;
 
 
             case R.id.lyout_export:
-                String export = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
-                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
-                break;*/
+                String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.export_details2);
+                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_export),export);
+                break;
 
         }
     }
