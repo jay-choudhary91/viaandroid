@@ -34,6 +34,8 @@ public class applicationviavideocomposer extends Application implements Lifecycl
     public static Typeface regularfonttype = null;
     public static Typeface semiboldfonttype = null;
     public static Typeface boldfonttype = null;
+    public static Typeface comfortaaregular = null;
+    public static Typeface bahnschriftregular = null;
     public static boolean isactivitybecomefinish = false;
 
     public static FFmpeg ffmpeg;
@@ -58,6 +60,8 @@ public class applicationviavideocomposer extends Application implements Lifecycl
         regularfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Regular.ttf");
         semiboldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Semibold.ttf");
         boldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Bold.ttf");
+        comfortaaregular = Typeface.createFromAsset(mcontext.getAssets(), "fonts/Comfortaa-Regular.ttf");
+        bahnschriftregular = Typeface.createFromAsset(mcontext.getAssets(), "fonts/BAHNSCHRIFT-11.TTF");
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         try {

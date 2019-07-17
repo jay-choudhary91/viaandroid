@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 
 import java.io.File;
@@ -254,6 +256,11 @@ public class appdialog
 
         TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
         TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
+        TextView txt_checkbox = (TextView)dialog.findViewById(R.id.txt_checkbox);
+
+        txtcontent.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        txt_checkbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
 
         txttitle.setText(title);
         txtcontent.setText(content);

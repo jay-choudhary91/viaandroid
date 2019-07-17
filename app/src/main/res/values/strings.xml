@@ -315,4 +315,12 @@
     <string name="checkboxstring">Do not notify again</string>
     <string name="publish_details1">Publishing your recordings to DeepTruth website allows you to share any validated and authenticated videos/audios.</string>
     <string name="publish_details2">After a recording is uploaded, it can be shared on websites and social media platforms.</string>
+    <string name="send_details1">Many email/text messaging systems will compress your file attachments and cause recordings to be modified. Unfortunately, compressed files will no longer be valid VideoLock videos or audios.</string>
+    <string name="send_details2">VideoLock has integrated with the most popular file sharing services to help you avoid the compression modification issue.</string>
+    <string name="export_details1">Many email/text messaging systems will compress your file attachments and cause recordings to be modified. Unfortunately, compressed files will no longer be valid VideoLock videos and audios.</string>
+    <string name="export_details2">We recommend that you use a file sharing service to send your VideoLock files.</string>
+
+
+
+
 </resources>
