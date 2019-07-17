@@ -246,6 +246,7 @@ public class appdialog
     public static void share_alert_dialog(Context context,String title,String content){
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
@@ -257,7 +258,7 @@ public class appdialog
         txttitle.setText(title);
         txtcontent.setText(content);
 
-        Button ok = (Button) dialog.findViewById(R.id.btn_ok);
+        TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
