@@ -67,14 +67,11 @@ public class footerpagerfragment extends Fragment {
 
                             @Override
                             public void onItemClicked(Object object, int type) {
-                                if(type ==0 ){
-                                    Toast.makeText(getActivity().getApplicationContext(),"yes",Toast.LENGTH_SHORT).show();
+                                if(type ==0 )
                                     xdata.getinstance().saveSetting(config.enableintroscreen,"0");
-                                }
-                                else{
-                                    Toast.makeText(getActivity().getApplicationContext(),"no",Toast.LENGTH_SHORT).show();
+                                else
                                     xdata.getinstance().saveSetting(config.enableintroscreen,"1");
-                                }
+
 
                                 Intent in=new Intent(getActivity(),homeactivity.class);
                                 startActivity(in);

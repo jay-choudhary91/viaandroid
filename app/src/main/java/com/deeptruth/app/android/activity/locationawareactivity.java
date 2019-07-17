@@ -1198,9 +1198,16 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = Locale.getDefault().getDisplayLanguage();
         } else if (key.equalsIgnoreCase("brightness")) {
             try {
-                int brightnessValue = Settings.System.getInt(locationawareactivity.this.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
+                int brightnessValue = Settings.System.getInt(locationawareactivity.this.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+                float total = 0;
+                 if(brightnessValue >= 255){
+                     Log.e("brightnessValue",""+brightnessValue);
+                      total = (brightnessValue * 100) / 4095;
+                 }else{
+                     Log.e("brightnessValue",""+brightnessValue);
+                      total = (brightnessValue * 100) / 255;
+                 }
 
-                float total = (brightnessValue * 100) / 255;
                 metricItemValue = "" + (int) total + "%";
             } catch (Exception e) {
                 // TODO Auto-generated catch block
