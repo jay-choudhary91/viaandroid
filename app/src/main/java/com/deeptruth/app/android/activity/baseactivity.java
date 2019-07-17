@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -29,7 +30,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -93,6 +96,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     String mediapath = "";
     String mediatype = "";
     String mediavideotoken = "",mediamethod = "";
+    Dialog dialog;
 
     // The helper object
     IabHelper mHelper;
@@ -712,7 +716,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
 
-                if(common.getapppaidlevel() <= 0)
+                /*if(common.getapppaidlevel() <= 0)
                 {
                     //showtrimfeaturealert();
                     showinapppurchasepopup(applicationviavideocomposer.
@@ -729,13 +733,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         }
                     });
                     return;
-                }
+                }*/
 
                 if (subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
 
-                if(getcurrentfragment() instanceof fragmentrimvideo)
-                    return;
+                /*if(getcurrentfragment() instanceof fragmentrimvideo)
+                    return;*/
 
                 if(type.equalsIgnoreCase(config.item_video))
                 {
@@ -746,9 +750,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             @Override
                             public void onPrepared(MediaPlayer mediaPlayer) {
                                 int duration = mediaPlayer.getDuration();
+                                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                                Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                                if (prev != null) {
+                                    ft.remove(prev);
+                                }
+                                ft.addToBackStack(null);
                                 fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
                                 fragtrimvideo.setdata(mediapath, duration,mediatoken);
-                                addFragment(fragtrimvideo, false, true);
+                                fragtrimvideo.show(ft, "dialog");
+
+                               /* int duration = mediaPlayer.getDuration();
+                                fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
+                                fragtrimvideo.setdata(mediapath, duration,mediatoken);
+                                addFragment(fragtrimvideo, false, true);*/
                             }
                         });
                     }
@@ -765,6 +780,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             });
             subdialogshare.show();
     }
+
+
+
 
     public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
     {

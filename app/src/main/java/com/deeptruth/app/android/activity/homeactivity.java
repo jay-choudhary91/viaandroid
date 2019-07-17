@@ -588,10 +588,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          else if(fragment instanceof myfolderfragment)
          {
 
-         }else if(fragment instanceof fragmentrimvideo)
+         }/*else if(fragment instanceof fragmentrimvideo)
          {
 
-         }else if(fragment instanceof appmanagementfragment)
+         }*/else if(fragment instanceof appmanagementfragment)
          {
 
          }else if(fragment instanceof fetchsettingvaluefragment)

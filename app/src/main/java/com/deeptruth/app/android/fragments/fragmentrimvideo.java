@@ -2,14 +2,19 @@ package com.deeptruth.app.android.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.CardView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.videotrimmer.hglvideotrimmer;
@@ -20,11 +25,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class fragmentrimvideo extends basefragment implements View.OnClickListener, ontrimvideolistener, onhglvideolistener {
+public class fragmentrimvideo extends DialogFragment implements View.OnClickListener, ontrimvideolistener, onhglvideolistener {
     @BindView(R.id.trimerview)
     hglvideotrimmer mvideotrimmer;
     @BindView(R.id.rootlayout)
-    LinearLayout rootlayout;
+    CardView rootlayout;
+    @BindView(R.id.lyout_publish)
+    LinearLayout lyoutpublish;
+    @BindView(R.id.lyout_send)
+    LinearLayout lyoutsend;
+    @BindView(R.id.lyout_export)
+    LinearLayout lyoutexport;
+    @BindView(R.id.lyout_help)
+    LinearLayout lyouthelp;
+
 
     private progressdialog mprogressdialog;
     View rootview = null;
@@ -32,7 +46,7 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
     int videoduration;
     int navigationbarheight = 0;
 
-    @Override
+    /*@Override
     public int getlayoutid() {
         return R.layout.fragment_trimvideo;
     }
@@ -43,16 +57,21 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
 
         gethelper().updateheader("");
         ButterKnife.bind(this, parent);
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(rootview == null) {
-            rootview = super.onCreateView(inflater, container, savedInstanceState);
+            rootview = inflater.inflate(R.layout.fragment_trimvideo, container, false);
             ButterKnife.bind(this, rootview);
-
             navigationbarheight =  common.getnavigationbarheight();
             setlayoutmargin();
+
+             lyoutpublish.setOnClickListener(this);
+             lyoutsend.setOnClickListener(this);
+             lyoutexport.setOnClickListener(this);
+             lyouthelp.setOnClickListener(this);
+
 
             if (mvideotrimmer != null) {
                 mvideotrimmer.setMaxDuration(videoduration);
@@ -68,6 +87,22 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+
+            case R.id.lyout_publish:
+                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
+                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+                break;
+
+           /* case R.id.lyout_send:
+                String send = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
+                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+                break;
+
+
+            case R.id.lyout_export:
+                String export = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
+                appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+                break;*/
 
         }
     }
@@ -93,7 +128,8 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
                 if(filePath != null){
                     //progressdialog.showwaitingdialog(getActivity());
                     String selectedvideopath = filePath;
-                    gethelper().showsharepopupsub(selectedvideopath,"video",videotoken);
+                    getDialog().dismiss();
+                    //gethelper().showsharepopupsub(selectedvideopath,"video",videotoken);
                     //common.sharevideo(getActivity(),selectedvideopath);
                 }
             }
@@ -125,8 +161,11 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
 
     @Override
     public void onclik() {
-        gethelper().onBack();
-        gethelper().showsharepopupsub(videopath,"video",videotoken);
+
+        getDialog().dismiss();
+
+        //gethelper().onBack();
+       // gethelper().showsharepopupsub(videopath,"video",videotoken);
     }
 
     @Override
@@ -160,7 +199,15 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
         }
     }
 */
-    public void setdata(String videoPath, int duration,String videotoken)
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getscreenwidthheight(95,85);
+    }
+
+    public void setdata(String videoPath, int duration, String videotoken)
     {
         this.videopath =videoPath;
         this.videoduration =  duration;
@@ -169,9 +216,21 @@ public class fragmentrimvideo extends basefragment implements View.OnClickListen
     }
 
     public void setlayoutmargin(){
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        CardView.LayoutParams params = new CardView.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0,0,0,navigationbarheight);
         rootlayout.setLayoutParams(params);
         rootlayout.requestLayout();
+    }
+
+    public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
+
+
+        int width = common.getScreenWidth(getActivity());
+        int height = common.getScreenHeight(getActivity());
+
+        int percentageheight = (height / 100) * heightpercentage;
+        int percentagewidth = (width / 100) * widthpercentage;
+
+        getDialog().getWindow().setLayout(percentagewidth, percentageheight);
     }
 }
