@@ -783,7 +783,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
 
 
-
             }
         });
 
