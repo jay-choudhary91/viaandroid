@@ -69,7 +69,7 @@ public class footerpagerfragment extends Fragment {
                             public void onItemClicked(Object object, int type) {
                                 if(type ==0 ){
                                     Toast.makeText(getActivity().getApplicationContext(),"yes",Toast.LENGTH_SHORT).show();
-                                    xdata.getinstance().saveSetting(config.enableintroscreen,"1");
+                                    xdata.getinstance().saveSetting(config.enableintroscreen,"0");
                                 }
                                 else{
                                     Toast.makeText(getActivity().getApplicationContext(),"no",Toast.LENGTH_SHORT).show();
