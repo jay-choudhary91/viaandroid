@@ -358,6 +358,11 @@
 
     <string name="do_not_notify_me_again">Do you want to display the intro screens again?</string>
 
+    <string name="txt_trim">The ability to trim and send portion of videos or audios is available in the full version.</string>
+    <string name="txt_upgrade">Would you like to upgrade?</string>
+    <string name="txt_upgradecode">Please enter your upgrade code:</string>
+
+
 
 
 </resources>
