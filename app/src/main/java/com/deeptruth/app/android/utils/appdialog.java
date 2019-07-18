@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 
@@ -273,24 +274,23 @@ public class appdialog
             @Override
             public void onClick(View v) {
 
-                if(notifycheckbox.isChecked()){
-                        xdata.getinstance().saveSetting(config.enablenotification,"1");
-
-                   /* if(title == context.getResources().getString(R.string.txt_send))
-                       xdata.getinstance().saveSetting(config.enableplubishnotification,"1");
-
-                    if(title == context.getResources().getString(R.string.txt_export))
-                        xdata.getinstance().saveSetting(config.enablesendnotification,"1");*/
-
-                }else{
-                        xdata.getinstance().saveSetting(config.enablenotification,"0");
-
-                  /*  if(title == context.getResources().getString(R.string.txt_send))
+                if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_publish))){
+                    if(notifycheckbox.isChecked())
+                        xdata.getinstance().saveSetting(config.enableplubishnotification,"1");
+                    else
                         xdata.getinstance().saveSetting(config.enableplubishnotification,"0");
-
-                    if(title == context.getResources().getString(R.string.txt_export))
-                        xdata.getinstance().saveSetting(config.enablesendnotification,"0");*/
-
+                }
+                if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_send))){
+                    if(notifycheckbox.isChecked())
+                        xdata.getinstance().saveSetting(config.enablesendnotification,"1");
+                    else
+                        xdata.getinstance().saveSetting(config.enablesendnotification,"0");
+                }
+                if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
+                    if(notifycheckbox.isChecked())
+                        xdata.getinstance().saveSetting(config.enableexportnotification,"1");
+                    else
+                        xdata.getinstance().saveSetting(config.enableexportnotification,"0");
                 }
                 dialog.dismiss();
 

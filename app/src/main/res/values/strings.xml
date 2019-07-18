@@ -321,6 +321,7 @@
     <string name="export_details1">Many email/text messaging systems will compress your file attachments and cause recordings to be modified. Unfortunately, compressed files will no longer be valid VideoLock videos and audios.</string>
     <string name="export_details2">We recommend that you use a file sharing service to send your VideoLock files.</string>
 
+    <string name="do_not_notify_me_again">Do you want to display the intro screens again?</string>
 
 
 

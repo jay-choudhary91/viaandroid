@@ -59,7 +59,7 @@ public class footerpagerfragment extends Fragment {
 
                   /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(applicationviavideocomposer.getactivity()))
                     {*/
-                        common.showalertdialog(getActivity(), "Do not display intro screens again.", new adapteritemclick() {
+                        common.showalertdialog(getActivity(), getActivity().getString(R.string.do_not_notify_me_again), new adapteritemclick() {
                             @Override
                             public void onItemClicked(Object object) {
 
