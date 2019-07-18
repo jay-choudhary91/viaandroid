@@ -10,6 +10,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -24,11 +27,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.adaptersenddialog;
 import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 /**
@@ -238,6 +243,7 @@ public class appdialog
 
     }
 
+
     public static boolean isdialogshowing()
     {
         if(developerdialog != null)
@@ -292,6 +298,22 @@ public class appdialog
                     else
                         xdata.getinstance().saveSetting(config.enableexportnotification,"0");
                 }
+                ArrayList<Integer> array_image = new ArrayList<Integer>();
+                array_image.add(R.drawable.dropbox);
+                array_image.add(R.drawable.dropbox);
+                array_image.add(R.drawable.googledrive);
+                array_image.add(R.drawable.onedrive);
+                array_image.add(R.drawable.videolock);
+                ArrayList<String> array_name = new ArrayList<String>();
+                array_name.add("Box");
+                array_name.add("DropBox");
+                array_name.add("Google Drive");
+                array_name.add("Microsoft OneDrive");
+                array_name.add("VideoLock Share");
+
+                senditemsdialog(context,array_image,array_name);
+
+
                 dialog.dismiss();
 
             }
@@ -302,5 +324,27 @@ public class appdialog
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+    }
+
+    public static void senditemsdialog(Context context, ArrayList<Integer> arrayImage, ArrayList<String> arrayName){
+        Dialog send_item_dialog = new Dialog(context, android.R.style.Theme_Dialog);
+        send_item_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        send_item_dialog.setContentView(R.layout.send_alert_dialog);
+        send_item_dialog.setCanceledOnTouchOutside(true);
+        send_item_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        RecyclerView recyclerView = (RecyclerView) send_item_dialog.findViewById(R.id.ryclr_send_items);
+        adaptersenddialog adaptersend = new adaptersenddialog(context, arrayImage, arrayName);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context,2);
+        ((GridLayoutManager)mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == 4) {
+                    return 2;
+                }else return 1;
+            }
+        });
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adaptersend);        send_item_dialog.show();
     }
 }
