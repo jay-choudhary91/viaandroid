@@ -24,7 +24,6 @@ import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -599,7 +598,7 @@ public class readmediadataservice extends Service {
                 String color = (object.has("color")?object.getString("color"):"");
                 String latency = (object.has("latency")?object.getString("latency"):"");
 
-                meta=common.refactordegreequotesformat(meta);
+                meta=common.refactormetadataformat(meta);
 
                 dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
                         meta,videoframedevicedatetime,hashmethod,hashvalue,
@@ -628,7 +627,7 @@ public class readmediadataservice extends Service {
                 String color = (object.has("color")?object.getString("color"):"");
                 String latency = (object.has("latency")?object.getString("latency"):"");
 
-                meta=common.refactordegreequotesformat(meta);
+                meta=common.refactormetadataformat(meta);
 
                 dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
                         meta,videoframedevicedatetime,hashmethod,hashvalue,
@@ -660,7 +659,7 @@ public class readmediadataservice extends Service {
                 if(sequenceno == null || sequenceno.equalsIgnoreCase("null"))
                     sequenceno="1";
 
-                meta=common.refactordegreequotesformat(meta);
+                meta=common.refactormetadataformat(meta);
 
                 dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
                         meta,devicedatetime,hashmethod,hashvalue,

@@ -443,11 +443,13 @@ public class common {
         }
     }
 
-    public static String refactordegreequotesformat(String meta) {
+    public static String refactormetadataformat(String meta) {
         meta = meta.replace("u00b0", "°");
         meta = meta.replace("&#39;", "\'");
         meta = meta.replace("&#36;", "\'");
         meta = meta.replace("&#34;", "");
+        meta = meta.replaceAll(config.updatinglocation,"");
+        meta = meta.replaceAll("1.90mbps","1.90 mbps");
         return meta;
     }
 
