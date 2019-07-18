@@ -961,26 +961,30 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     {
                         layout_validating.setVisibility(View.GONE);
                     }
-                    SimpleDateFormat formatted = null;
-                    Date mediadate = null;
-                    if (mediastartdevicedate.contains("T")) {
-                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                        mediadate = format.parse(mediastartdevicedate);
-                    } else {
-                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                        mediadate = format.parse(mediastartdevicedate);
+
+                    if(! mediastartdevicedate.trim().isEmpty())
+                    {
+                        SimpleDateFormat formatted = null;
+                        Date mediadate = null;
+                        if (mediastartdevicedate.contains("T")) {
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                            mediadate = format.parse(mediastartdevicedate);
+                        } else {
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                            mediadate = format.parse(mediastartdevicedate);
+                        }
+
+                        DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+                        String localTime = datee.format(mediadate);
+
+                        SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
+                        SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH);
+
+                        tvdate.setText(common.parsedateformat(mediadate));
+                        tvtime.setText(common.parsetimeformat(mediadate) + " "+localTime);
+                        // txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
+                        txt_createdtime.setText(common.parsetimeformat(mediadate));
                     }
-
-                    DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
-                    String localTime = datee.format(mediadate);
-
-                    SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
-                    SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH);
-
-                    tvdate.setText(common.parsedateformat(mediadate));
-                    tvtime.setText(common.parsetimeformat(mediadate) + " "+localTime);
-                    // txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
-                    txt_createdtime.setText(common.parsetimeformat(mediadate));
 
                     if (mediafolder.trim().length() > 0 && folderspinneradapter == null)
                         setfolderspinner();

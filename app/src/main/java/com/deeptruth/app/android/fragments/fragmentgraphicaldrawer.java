@@ -1901,12 +1901,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
                             txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
-                            txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
-                        }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
-                            txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
-                        }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.Battery))
                         {
@@ -2928,15 +2922,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         String[] parties = new String[] {""};
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        String chartdatavalue = value;
-        if(chartdatavalue.equalsIgnoreCase("NA")){
+        String chartdatavalue = value.trim();
+        if(chartdatavalue.trim().isEmpty() || chartdatavalue.equalsIgnoreCase("NA"))
             chartdatavalue = "0";
-        }else{
+        else if(chartdatavalue.contains("%"))
             chartdatavalue= chartdatavalue.substring(0, chartdatavalue.indexOf("%"));
-        }
-        int remainingvalue = 100 - Integer.parseInt(chartdatavalue);
 
-        entries.add(new PieEntry(Integer.parseInt(chartdatavalue),
+
+        double doubledata=Double.parseDouble(chartdatavalue.trim());
+
+        int remainingvalue = 100 - (int)doubledata;
+        entries.add(new PieEntry((int)doubledata,
                 parties[0 % parties.length],
                 0));
         entries.add(new PieEntry(remainingvalue,

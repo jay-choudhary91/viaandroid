@@ -3,7 +3,6 @@
     <string name="deep_link_hosturl">videolock.com</string>
     <string name="save_media">Save to gallery</string>
     <string name="no_record">No records found</string>
-
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
