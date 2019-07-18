@@ -57,9 +57,7 @@ public class footerpagerfragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                  /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(applicationviavideocomposer.getactivity()))
-                    {*/
-                        common.showalertdialog(getActivity(), getActivity().getString(R.string.do_not_notify_me_again), new adapteritemclick() {
+                    common.showalertdialog(getActivity(), getActivity().getString(R.string.do_not_notify_me_again), new adapteritemclick() {
                             @Override
                             public void onItemClicked(Object object) {
 
@@ -67,19 +65,18 @@ public class footerpagerfragment extends Fragment {
 
                             @Override
                             public void onItemClicked(Object object, int type) {
-                                if(type ==0 )
-                                    xdata.getinstance().saveSetting(config.enableintroscreen,"0");
-                                else
+                                if(type == 0 )
                                     xdata.getinstance().saveSetting(config.enableintroscreen,"1");
+                                else
+                                    xdata.getinstance().saveSetting(config.enableintroscreen,"0");
 
 
                                 Intent in=new Intent(getActivity(),homeactivity.class);
                                 startActivity(in);
                                 getActivity().overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
                                 getActivity().finish();
-                            }
-                        });
-                  //  }
+                        }
+                   });
                 }
             });
 

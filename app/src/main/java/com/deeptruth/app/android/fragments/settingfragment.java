@@ -103,8 +103,15 @@ public class settingfragment extends basefragment implements View.OnClickListene
                 togglebutton.setChecked(false);
             }
 
-            if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() ||
-                    xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("1"))
+            if((xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() ||
+                    xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("1")) ||
+                    (xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
+                       xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0") ) ||
+                    (xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
+                            xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) ||
+                    (xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
+                            xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")))
+
             {
                 resetnotification_toogle.setChecked(true);
 
@@ -152,10 +159,15 @@ public class settingfragment extends basefragment implements View.OnClickListene
                 public void onCheckedChanged(SwitchButton view, boolean isChecked) {
                     if(isChecked){
                         xdata.getinstance().saveSetting(config.enableintroscreen,"1");
-                     //   xdata.getinstance().saveSetting(config.enablenotification,"1");
+                        xdata.getinstance().saveSetting(config.enableexportnotification,"0");
+                        xdata.getinstance().saveSetting(config.enablesendnotification,"0");
+                        xdata.getinstance().saveSetting(config.enableplubishnotification,"0");
                     }
                     else{
                         xdata.getinstance().saveSetting(config.enableintroscreen,"0");
+                        xdata.getinstance().saveSetting(config.enableexportnotification,"1");
+                        xdata.getinstance().saveSetting(config.enablesendnotification,"1");
+                        xdata.getinstance().saveSetting(config.enableplubishnotification,"1");
                      //   xdata.getinstance().saveSetting(config.enablenotification,"0");
                     }
 
