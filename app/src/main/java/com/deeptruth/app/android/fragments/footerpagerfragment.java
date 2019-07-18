@@ -55,6 +55,49 @@ public class footerpagerfragment extends Fragment {
             txt_descriptionfour.setText(introobject.getScreenfourlinefour());
             txt_descriptionfive.setText(introobject.getScreenfivelinefive());
 
+
+            if(introobject.getPosition() == 1)
+            {
+                txt_descriptionone.setTextSize(17);
+                txt_descriptiontwo.setTextSize(17);
+                txt_descriptionthree.setTextSize(17);
+                txt_descriptionfour.setTextSize(17);
+                txt_descriptionfive.setTextSize(16.8f);
+            }
+            else if(introobject.getPosition() == 2)
+            {
+                txt_descriptionone.setTextSize(17);
+                txt_descriptiontwo.setTextSize(17.8f);
+                txt_descriptionthree.setTextSize(17);
+                txt_descriptionfour.setTextSize(16.5f);
+                txt_descriptionfive.setTextSize(17.8f);
+            }
+            else if(introobject.getPosition() == 3)
+            {
+                txt_descriptionone.setTextSize(17);
+                txt_descriptiontwo.setTextSize(16.5f);
+                txt_descriptionthree.setTextSize(17);
+                txt_descriptionfour.setTextSize(17);
+                txt_descriptionfive.setTextSize(17);
+            }
+            else if(introobject.getPosition() == 4)
+            {
+                txt_descriptionone.setTextSize(16);
+                txt_descriptiontwo.setTextSize(17);
+                txt_descriptionthree.setTextSize(16);
+                txt_descriptionfour.setTextSize(16.5f);
+                txt_descriptionfive.setTextSize(17);
+            }
+            else if(introobject.getPosition() == 5)
+            {
+                txt_descriptionone.setTextSize(16);
+                txt_descriptiontwo.setTextSize(16);
+                txt_descriptionthree.setTextSize(16);
+                txt_descriptionfour.setTextSize(16);
+                txt_descriptionfive.setTextSize(16);
+            }
+
+
            if(introobject.getPosition() == 6){
                txt_title.setVisibility(View.GONE);
                txt_descriptionone.setVisibility(View.GONE);

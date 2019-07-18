@@ -36,7 +36,6 @@
                 android:layout_marginTop="@dimen/margin_10dp"
                 style="@style/layout_introdiscription"
                 android:justificationMode="inter_word"
-
                 app:fontType="OpenSans_Semibold" />
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -44,7 +43,6 @@
                 style="@style/layout_introdiscription"
                 android:textColor="@color/white"
                 android:justificationMode="inter_word"
-
                 app:fontType="OpenSans_Semibold" />
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -52,14 +50,12 @@
                 style="@style/layout_introdiscription"
                 android:textColor="@color/white"
                 android:justificationMode="inter_word"
-                app:autoSizeTextType="uniform"
                 app:fontType="OpenSans_Semibold"/>
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_descriptionfour"
                 style="@style/layout_introdiscription"
                 android:textColor="@color/white"
-                app:autoSizeTextType="uniform"
                 android:justificationMode="inter_word"
                 app:fontType="OpenSans_Semibold" />
 
@@ -67,7 +63,6 @@
                 android:id="@+id/txt_descriptionfive"
                 style="@style/layout_introdiscription"
                 android:textColor="@color/white"
-                app:autoSizeTextType="uniform"
                 android:maxLines="1"
                 android:text="@string/intro_screenfivelinefive"
                 app:fontType="OpenSans_Semibold" />
