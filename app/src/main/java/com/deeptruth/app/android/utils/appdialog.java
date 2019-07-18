@@ -259,12 +259,12 @@ public class appdialog
 
         TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
         TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
-        TextView txt_checkbox = (TextView)dialog.findViewById(R.id.txt_checkbox);
-
         txtcontent.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
-        txt_checkbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+
         txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
         final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
+        notifycheckbox.setText("Do not notify again");
+        notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
 
         txttitle.setText(title);
         txtcontent.setText(content);

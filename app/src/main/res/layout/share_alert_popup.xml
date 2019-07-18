@@ -69,16 +69,6 @@
                 android:id="@+id/notifycheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"/>
-
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/checkboxstring"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/black"
-                app:fontType="Comfortaa-Regular"
                 android:textSize="15dp"/>
 
         </LinearLayout>
