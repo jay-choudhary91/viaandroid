@@ -32,7 +32,7 @@
             android:layout_marginTop="@dimen/margin_10dp"
             android:gravity="center"
             android:padding="5dp"
-            android:justificationMode="inter_word"
+            android:justificationMode="none"
             android:text="TextView"
             android:textColor="@color/white"
             android:textSize="15sp"
