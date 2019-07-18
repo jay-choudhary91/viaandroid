@@ -716,24 +716,24 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
 
-                /*if(common.getapppaidlevel() <= 0)
-                {
-                    //showtrimfeaturealert();
-                    showinapppurchasepopup(applicationviavideocomposer.
-                            getactivity(), applicationviavideocomposer.getactivity().getResources().
-                            getString(R.string.sharing_a_trimmed_video), new adapteritemclick() {
-                        @Override
-                        public void onItemClicked(Object object) {
-                            inapppurchase(object.toString());
-                        }
+                    /*if(common.getapppaidlevel() <= 0)
+                    {
+                        //showtrimfeaturealert();
+                        showinapppurchasepopup(applicationviavideocomposer.
+                                getactivity(), applicationviavideocomposer.getactivity().getResources().
+                                getString(R.string.sharing_a_trimmed_video), new adapteritemclick() {
+                            @Override
+                            public void onItemClicked(Object object) {
+                                inapppurchase(object.toString());
+                            }
 
-                        @Override
-                        public void onItemClicked(Object object, int type) {
+                            @Override
+                            public void onItemClicked(Object object, int type) {
 
-                        }
-                    });
-                    return;
-                }*/
+                            }
+                        });
+                        return;
+                    }*/
 
                 if (subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();

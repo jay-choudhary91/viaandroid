@@ -322,6 +322,11 @@
     <string name="export_details2">We recommend that you use a file sharing service to send your VideoLock files.</string>
 
 
+    <string name="txt_trim">The ability to trim and send portion of videos or audios is available in the full version.</string>
+    <string name="txt_upgrade">Would you like to upgrade?</string>
+    <string name="txt_upgradecode">Please enter your upgrade code:</string>
+
+
 
 
 </resources>
