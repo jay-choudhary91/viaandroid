@@ -220,19 +220,47 @@ public class introscreenactivity extends AppCompatActivity {
             switch(fragmentPos) {
 
                 case 0: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
-                        getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1,1));
+                        getResources().getString(R.string.intro_screenonelineone),
+                        getResources().getString(R.string.intro_screenonelinetwo),
+                        getResources().getString(R.string.intro_screenonelinethree),
+                        getResources().getString(R.string.intro_screenonelinefour),
+                        getResources().getString(R.string.intro_screenonelinefive),R.drawable.intro_icon1,1));
                 case 1: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile2),
-                        getResources().getString(R.string.intro_detail2),R.drawable.intro_icon2,2));
+                        getResources().getString(R.string.intro_screentwolineone),
+                        getResources().getString(R.string.intro_screentwolinetwo),
+                        getResources().getString(R.string.intro_screentwolinethree),
+                        getResources().getString(R.string.intro_screentwolinefour),
+                        getResources().getString(R.string.intro_screentwolinefive),R.drawable.intro_icon2,2));
                 case 2: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile3),
-                        getResources().getString(R.string.intro_detail3),R.drawable.intro_icon3,3));
+                        getResources().getString(R.string.intro_screenthreelineone),
+                        getResources().getString(R.string.intro_screenthreelinetwo),
+                        getResources().getString(R.string.intro_screenthreelinethree),
+                        getResources().getString(R.string.intro_screenthreelinefour),
+                        getResources().getString(R.string.intro_screenthreelinefive),R.drawable.intro_icon3,3));
                 case 3: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile4),
-                        getResources().getString(R.string.intro_detail4),R.drawable.intro_icon5,4));
+                        getResources().getString(R.string.intro_screenfourlineone),
+                        getResources().getString(R.string.intro_screenfourlinetwo),
+                        getResources().getString(R.string.intro_screenfourlinethree),
+                        getResources().getString(R.string.intro_screenfourlinefour),
+                        getResources().getString(R.string.intro_screenfourlinefive),R.drawable.intro_icon5,4));
                 case 4: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
-                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon4,5));
-                case 5: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
-                        getResources().getString(R.string.intro_detail5),R.drawable.splash_logo_icon,6));
+                        getResources().getString(R.string.intro_screenfivelineone),
+                        getResources().getString(R.string.intro_screenfivelinetwo),
+                        getResources().getString(R.string.intro_screenfivelinethree),
+                        getResources().getString(R.string.intro_screenfivelinefour),
+                        getResources().getString(R.string.intro_screenfivelinefive),R.drawable.intro_icon4,5));
+                case 5: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
+                        getResources().getString(R.string.intro_screenonelineone),
+                        getResources().getString(R.string.intro_screenonelinetwo),
+                        getResources().getString(R.string.intro_screenonelinethree),
+                        getResources().getString(R.string.intro_screenfivelinefive),
+                        getResources().getString(R.string.intro_detail1),R.drawable.splash_logo_icon,6));
 
                 default: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
+                        getResources().getString(R.string.intro_screenonelineone),
+                        getResources().getString(R.string.intro_screenonelinetwo),
+                        getResources().getString(R.string.intro_screenonelinethree),
+                        getResources().getString(R.string.intro_screenfivelinefive),
                         getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1,1));
             }
         }
@@ -257,19 +285,47 @@ public class introscreenactivity extends AppCompatActivity {
             switch(fragmentPos) {
 
                 case 0: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
-                        getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1,1));
+                        getResources().getString(R.string.intro_screenonelineone),
+                        getResources().getString(R.string.intro_screenonelinetwo),
+                        getResources().getString(R.string.intro_screenonelinethree),
+                        getResources().getString(R.string.intro_screenonelinefour),
+                        getResources().getString(R.string.intro_screenonelinefive),R.drawable.intro_icon1,1));
                 case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile2),
-                        getResources().getString(R.string.intro_detail2),R.drawable.intro_icon2,2));
+                        getResources().getString(R.string.intro_screentwolineone),
+                        getResources().getString(R.string.intro_screentwolinetwo),
+                        getResources().getString(R.string.intro_screentwolinethree),
+                        getResources().getString(R.string.intro_screentwolinefour),
+                        getResources().getString(R.string.intro_screentwolinefive),R.drawable.intro_icon2,2));
                 case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile3),
-                        getResources().getString(R.string.intro_detail3),R.drawable.intro_icon3,3));
+                        getResources().getString(R.string.intro_screenthreelineone),
+                        getResources().getString(R.string.intro_screenthreelinetwo),
+                        getResources().getString(R.string.intro_screenthreelinethree),
+                        getResources().getString(R.string.intro_screenthreelinefour),
+                        getResources().getString(R.string.intro_screenthreelinefive),R.drawable.intro_icon3,3));
                 case 3: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile4),
-                        getResources().getString(R.string.intro_detail4),R.drawable.intro_icon5,4));
+                        getResources().getString(R.string.intro_screenfourlineone),
+                        getResources().getString(R.string.intro_screenfourlinetwo),
+                        getResources().getString(R.string.intro_screenfourlinethree),
+                        getResources().getString(R.string.intro_screenfourlinefour),
+                        getResources().getString(R.string.intro_screenfourlinefive),R.drawable.intro_icon5,4));
                 case 4: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
-                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon4,5));
-                case 5: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile5),
-                        getResources().getString(R.string.intro_detail5),R.drawable.intro_icon5,6));
+                        getResources().getString(R.string.intro_screenfivelineone),
+                        getResources().getString(R.string.intro_screenfivelinetwo),
+                        getResources().getString(R.string.intro_screenfivelinethree),
+                        getResources().getString(R.string.intro_screenfivelinefour),
+                        getResources().getString(R.string.intro_screenfivelinefive),R.drawable.intro_icon4,5));
+                case 5: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
+                        getResources().getString(R.string.intro_screenonelineone),
+                        getResources().getString(R.string.intro_screenonelinetwo),
+                        getResources().getString(R.string.intro_screenonelinethree),
+                        getResources().getString(R.string.intro_screenfivelinefive),
+                        getResources().getString(R.string.intro_detail1),R.drawable.splash_logo_icon,6));
 
                 default: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile1),
+                        getResources().getString(R.string.intro_screenonelineone),
+                        getResources().getString(R.string.intro_screenonelinetwo),
+                        getResources().getString(R.string.intro_screenonelinethree),
+                        getResources().getString(R.string.intro_screenfivelinefive),
                         getResources().getString(R.string.intro_detail1),R.drawable.intro_icon1,1));
             }
         }

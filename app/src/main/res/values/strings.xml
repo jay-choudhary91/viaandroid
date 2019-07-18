@@ -303,6 +303,41 @@
 
 
     <string name="intro_titile1">The Problem:\n Deepfakes</string>
+    <!---->
+    <string name="intro_screenonelineone">Deepfakes are high tech fake </string>
+    <string name="intro_screenonelinetwo">videos and audios that make </string>
+    <string name="intro_screenonelinethree">people appear to say and do </string>
+    <string name="intro_screenonelinefour">things that never happened. </string>
+    <string name="intro_screenonelinefive">This a \"fake news\" is growing. </string>
+    <!--Intro screen discription two-->
+    <string name="intro_screentwolineone">Deepfakes can quickly spread </string>
+    <string name="intro_screentwolinetwo">around the world and cause </string>
+    <string name="intro_screentwolinethree">permanent damage: elections </string>
+    <string name="intro_screentwolinefour">influenced, reputations ruined, </string>
+    <string name="intro_screentwolinefive">and relationships destroyed. </string>
+    <!--Intro screen discription three-->
+
+    <string name="intro_screenthreelineone">Solutions that try to identify </string>
+    <string name="intro_screenthreelinetwo">and disprove every deepfake </string>
+    <string name="intro_screenthreelinethree">are playing a losing game of </string>
+    <string name="intro_screenthreelinefour">defense. The viral nature of </string>
+    <string name="intro_screenthreelinefive">fake news spreads too fast.</string>
+    <!--Intro screen discription four -->
+
+    <string name="intro_screenfourlineone">VideoLock\'s patented solution  </string>
+    <string name="intro_screenfourlinetwo">creates a cryptographic DNA  </string>
+    <string name="intro_screenfourlinethree">fingerprint, 30 times a second, </string>
+    <string name="intro_screenfourlinefour">with 50+ layers of metadata...</string>
+    <string name="intro_screenfourlinefive">and it does it all in real-time.</string>
+    <!--Intro screen discription five -->
+
+
+    <string name="intro_screenfivelineone">Recordings are 100% private and  </string>
+    <string name="intro_screenfivelinetwo">exist ONLY on your smartphone. </string>
+    <string name="intro_screenfivelinethree">If a deepfake is created, you can </string>
+    <string name="intro_screenfivelinefour">share your authentic VideoLock </string>
+    <string name="intro_screenfivelinefive">recording and spread the truth.</string>
+
     <string name="intro_detail1">Deepfakes are high tech fake \nvideos and audios that make\npeople appear to say and do \nthings that never happened.\nThis a \"fake news\" is growing.</string>
     <string name="intro_titile2">The Result:\n Deception</string>
     <string name="intro_detail2">Deepfakes can quickly spread \naround the world and cause \npermanent damage: elections \ninfluenced, reputations ruined, \nand relationships destroyed.</string>

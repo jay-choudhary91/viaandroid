@@ -9,14 +9,22 @@ import android.os.Parcelable;
 
 public class intro implements Parcelable {
     public String title="";
-    public String description="";
+    public String screenonelineone="";
+    public String screentwolinetwo="";
+    public String screenthreelinethree="";
+    public String screenfourlinefour="";
+    public String screenfivelinefive="";
     public int image=0;
     public int position = 0;
 
-    public intro(String title,String description,int image,int position)
+    public intro(String title, String screenonelineone, String screentwolinetwo, String screenthreelinethree, String screenfourlinefour, String screenfivelinefive, int image, int position)
     {
         setTitle(title);
-        setDescription(description);
+        setScreenonelineone(screenonelineone);
+        setScreentwolinetwo(screentwolinetwo);
+        setScreenthreelinethree(screenthreelinethree);
+        setScreenfourlinefour(screenfourlinefour);
+        setScreenfivelinefive(screenfivelinefive);
         setImage(image);
         setPosition(position);
     }
@@ -49,12 +57,44 @@ public class intro implements Parcelable {
         this.position = position;
     }
 
-    public String getDescription() {
-        return description;
+    public String getScreenonelineone() {
+        return screenonelineone;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setScreenonelineone(String screenonelineone) {
+        this.screenonelineone = screenonelineone;
+    }
+
+    public String getScreentwolinetwo() {
+        return screentwolinetwo;
+    }
+
+    public void setScreentwolinetwo(String screentwolinetwo) {
+        this.screentwolinetwo = screentwolinetwo;
+    }
+
+    public String getScreenthreelinethree() {
+        return screenthreelinethree;
+    }
+
+    public void setScreenthreelinethree(String screenthreelinethree) {
+        this.screenthreelinethree = screenthreelinethree;
+    }
+
+    public String getScreenfourlinefour() {
+        return screenfourlinefour;
+    }
+
+    public void setScreenfourlinefour(String screenfourlinefour) {
+        this.screenfourlinefour = screenfourlinefour;
+    }
+
+    public String getScreenfivelinefive() {
+        return screenfivelinefive;
+    }
+
+    public void setScreenfivelinefive(String screenfivelinefive) {
+        this.screenfivelinefive = screenfivelinefive;
     }
 
     public int getImage() {
@@ -67,7 +107,11 @@ public class intro implements Parcelable {
 
     protected intro(Parcel in) {
         title = in.readString();
-        description = in.readString();
+        screenonelineone = in.readString();
+        screentwolinetwo = in.readString();
+        screenthreelinethree = in.readString();
+        screenfourlinefour = in.readString();
+        screenfivelinefive = in.readString();
         image = in.readInt();
     }
     @Override
@@ -78,7 +122,11 @@ public class intro implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(title);
-        parcel.writeString(description);
+        parcel.writeString(screenonelineone);
+        parcel.writeString(screentwolinetwo);
+        parcel.writeString(screenthreelinethree);
+        parcel.writeString(screenfourlinefour);
+        parcel.writeString(screenfivelinefive);
         parcel.writeInt(image);
     }
 }

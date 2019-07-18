@@ -40,16 +40,28 @@ public class footerpagerfragment extends Fragment {
         {
             rootview = inflater.inflate(R.layout.fragment_pager_footer, container, false);
             TextView txt_title = (TextView) rootview.findViewById(R.id.txt_title);
-            TextView txt_description = (TextView) rootview.findViewById(R.id.txt_description);
+            TextView txt_descriptionone = (TextView) rootview.findViewById(R.id.txt_descriptionone);
+            TextView txt_descriptiontwo = (TextView) rootview.findViewById(R.id.txt_descriptiontwo);
+            TextView txt_descriptionthree = (TextView) rootview.findViewById(R.id.txt_descriptionthree);
+            TextView txt_descriptionfour = (TextView) rootview.findViewById(R.id.txt_descriptionfour);
+            TextView txt_descriptionfive = (TextView) rootview.findViewById(R.id.txt_descriptionfive);
             introobject=(intro)getArguments().getParcelable("object");
             btnstartrecord = (TextView) rootview.findViewById(R.id.btn_start_record);
 
             txt_title.setText(introobject.getTitle());
-            txt_description.setText(introobject.getDescription());
+            txt_descriptionone.setText(introobject.getScreenonelineone());
+            txt_descriptiontwo.setText(introobject.getScreentwolinetwo());
+            txt_descriptionthree.setText(introobject.getScreenthreelinethree());
+            txt_descriptionfour.setText(introobject.getScreenfourlinefour());
+            txt_descriptionfive.setText(introobject.getScreenfivelinefive());
 
            if(introobject.getPosition() == 6){
                txt_title.setVisibility(View.GONE);
-               txt_description.setVisibility(View.INVISIBLE);
+               txt_descriptionone.setVisibility(View.GONE);
+               txt_descriptiontwo.setVisibility(View.GONE);
+               txt_descriptionthree.setVisibility(View.INVISIBLE);
+               txt_descriptionfour.setVisibility(View.INVISIBLE);
+               txt_descriptionfive.setVisibility(View.INVISIBLE);
                btnstartrecord.setVisibility(View.VISIBLE);
            }
 
