@@ -1138,7 +1138,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 if(object != null)
                 {
                     int position=(int)object;
-                    if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_dropbox))
+                    if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_googledrive))
                     {
                         requestgooglesignin();
                     }
