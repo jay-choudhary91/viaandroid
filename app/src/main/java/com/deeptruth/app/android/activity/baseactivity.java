@@ -1133,6 +1133,37 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         recyclerView.setAdapter(adaptersend);
         send_item_dialog.show();
     }
+
+    public  void videolocksharedialog(final Context context, final String title, String content){
+        final Dialog dialog =new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.videolockshare_popup);
+
+        ImageView imageview = (ImageView) dialog.findViewById(R.id.back);
+        TextView txt_upload = (TextView) dialog.findViewById(R.id.btn_upload);
+
+        imageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        txt_upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
 }
 
 
