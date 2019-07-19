@@ -24,6 +24,10 @@
     <string name="login_here">Please login here to update title and description!</string>
     <string name="metadata_updated">Metadata updated successfully!</string>
 
+    <string name="purchase_for_peryear">Purchase for $10/year</string>
+    <string name="purchase_for_permonth">Purchase for $10/month</string>
+    <string name="i_have_upgrade_code">I have on upgrade code</string>
+
     <string name="sharing_a_trimmed_video">Sharing a trimmed version is an advanced feature. Upgrade</string>
 
     <string name="send_to">Send To</string>

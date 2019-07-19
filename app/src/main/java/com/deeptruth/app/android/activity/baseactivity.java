@@ -1,5 +1,6 @@
 package com.deeptruth.app.android.activity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.arch.lifecycle.Lifecycle;
 import android.content.BroadcastReceiver;
@@ -320,6 +321,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         {
             if(resultCode == RESULT_OK) {
                 callsharapiafterlogin();
+            }
+        }
+        else if (requestCode == config.requestcode_googlesignin)
+        {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag("dialog");
+                fragment.onActivityResult(requestCode, resultCode, data);
             }
         }
     }
