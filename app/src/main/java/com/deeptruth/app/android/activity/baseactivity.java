@@ -1101,7 +1101,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 array_name.add("Google Drive");
                 array_name.add("Microsoft OneDrive");
                 array_name.add("VideoLock Share");
-                
+
                 if(!isuserlogin()){
                     redirecttologin();
                     return;
