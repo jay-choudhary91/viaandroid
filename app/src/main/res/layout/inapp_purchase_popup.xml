@@ -27,7 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:gravity="center" >
+            android:gravity="center"
+            android:orientation="vertical">
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_title"
@@ -36,77 +37,70 @@
                 android:gravity="center"
                 android:text="TRIM"
                 android:textColor="@android:color/black"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 app:fontType="bahnschrift_regular"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_5dp"
-            android:padding="@dimen/margin_10dp"
-            android:gravity="center" >
 
             <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
                 android:id="@+id/txt_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="15dp"
-                android:textColor="@color/black"
-               />
+                android:layout_margin="@dimen/margin_10dp"
+                android:textColor="@color/audiowave" />
+
         </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_10dp"
+        android:paddingLeft="@dimen/margin_15dp"
+        android:paddingRight="@dimen/margin_15dp"
+        android:paddingTop="@dimen/margin_10dp"
+        android:paddingBottom="@dimen/margin_10dp"
         android:orientation="vertical"
         android:gravity="center" >
 
         <com.deeptruth.app.android.views.customfonttextview
+            app:fontType="Comfortaa-Regular"
             android:id="@+id/tv_purchase1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="15sp"
-            android:text="Purchase for $10/year"
+            android:textSize="14sp"
+            android:text="@string/purchase_for_peryear"
             android:padding="@dimen/margin_5dp"
-            android:layout_marginLeft="@dimen/margin_15dp"
-            android:layout_marginRight="@dimen/margin_15dp"
             android:background="@drawable/round_corner_btn_allow"
             android:textColor="@color/white"
             />
 
         <com.deeptruth.app.android.views.customfonttextview
+            app:fontType="Comfortaa-Regular"
             android:id="@+id/tv_purchase2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="@dimen/margin_5dp"
-            android:text="Purchase for $10/month"
-            android:layout_marginLeft="@dimen/margin_15dp"
-            android:layout_marginRight="@dimen/margin_15dp"
+            android:text="@string/purchase_for_permonth"
             android:layout_marginTop="@dimen/margin_10dp"
             android:background="@drawable/round_corner_btn_allow"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textColor="@color/white"
            />
 
         <com.deeptruth.app.android.views.customfonttextview
+            app:fontType="Comfortaa-Regular"
             android:id="@+id/tv_upgradecode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:padding="@dimen/margin_5dp"
-            android:layout_marginLeft="@dimen/margin_15dp"
-            android:layout_marginRight="@dimen/margin_15dp"
             android:layout_marginTop="@dimen/margin_10dp"
             android:background="@drawable/round_corner_btn_allow"
-            android:text="I have on upgrade code"
-            android:textColor="@color/white"
-            app:fontType="Comfortaa-Regular"/>
+            android:text="@string/i_have_upgrade_code"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 
@@ -117,15 +111,15 @@
             android:orientation="vertical">
 
             <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
                 android:id="@+id/btn_nothanks"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:text="No thank you"
+                android:layout_height="wrap_content"
+                android:text="No Thank You"
                 android:gravity="center"
                 android:textColor="@color/grey_xx"
-                app:fontType="Comfortaa-Regular"
-                android:layout_marginBottom="@dimen/margin_5dp"
-                android:textSize="15dp"/>
+                android:layout_marginBottom="@dimen/margin_10dp"
+                android:textSize="12sp"/>
 
         </LinearLayout>
 

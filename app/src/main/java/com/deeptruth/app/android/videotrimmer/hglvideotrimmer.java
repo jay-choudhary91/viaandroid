@@ -160,8 +160,8 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         txt_cancel.setOnClickListener(this);
 
         try {
-            DrawableCompat.setTint(mplayview.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                    , R.color.white));
+            if(mplayview.getDrawable() != null)
+                DrawableCompat.setTint(mplayview.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity(), R.color.white));
         }catch (Exception e)
         {
             e.printStackTrace();

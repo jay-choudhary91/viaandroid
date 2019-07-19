@@ -1,7 +1,9 @@
 package com.deeptruth.app.android.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -9,31 +11,28 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.CardView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.billingclient.api.Purchase;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.inapputils.IabHelper;
-import com.deeptruth.app.android.inapputils.IabResult;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.googledriveutils.DriveServiceHelper;
 import com.deeptruth.app.android.utils.pinviewtext;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
@@ -41,9 +40,20 @@ import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.videotrimmer.hglvideotrimmer;
 import com.deeptruth.app.android.videotrimmer.interfaces.onhglvideolistener;
 import com.deeptruth.app.android.videotrimmer.interfaces.ontrimvideolistener;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -76,21 +86,8 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     // Debug tag, for logging
     final String TAG = "TestInApp";
     String SelectedSku = "";
-    Dialog dialogtrimevideo=null,dialogupgradecode=null;
-
-    /*@Override
-    public int getlayoutid() {
-        return R.layout.fragment_trimvideo;
-    }
-
-    @Override
-    public void initviews(View parent, Bundle savedInstanceState) {
-        super.initviews(parent, savedInstanceState);
-
-        gethelper().updateheader("");
-        ButterKnife.bind(this, parent);
-    }*/
-
+    Dialog dialoginapppurchase =null,dialogupgradecode=null;
+    private static final int REQUEST_CODE_SIGN_IN = 102;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(rootview == null) {
@@ -120,25 +117,86 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
             @Override
             public void run() {
                 if(common.getapppaidlevel() <= 0)
-                {
-                    //showtrimfeaturealert();
-                    showinapppurchasepopup(applicationviavideocomposer.
-                            getactivity(), "", new adapteritemclick(){
-
-                        @Override
-                        public void onItemClicked(Object object) {
-
-                        }
-
-                        @Override
-                        public void onItemClicked(Object object, int type) {
-
-                        }
-                    });
-                }
+                    checkinapppurchasestatus();
             }
         });
+
+
+       // requestSignIn();
+
         return rootview;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        switch (requestCode) {
+            case REQUEST_CODE_SIGN_IN:
+                if (resultCode == Activity.RESULT_OK && resultData != null) {
+                    handleSignInResult(resultData);
+                }
+                break;
+        }
+        //super.onActivityResult(requestCode, resultCode, resultData);
+    }
+
+    /**
+     * Handles the {@code result} of a completed sign-in activity initiated from {@link
+     * #requestSignIn()}.
+     */
+    private void handleSignInResult(Intent result) {
+        GoogleSignIn.getSignedInAccountFromIntent(result)
+                .addOnSuccessListener(googleAccount -> {
+                    Log.d(TAG, "Signed in as " + googleAccount.getEmail());
+
+                    // Use the authenticated account to sign in to the Drive service.
+                    GoogleAccountCredential credential =
+                            GoogleAccountCredential.usingOAuth2(
+                                    applicationviavideocomposer.getactivity(), Collections.singleton(DriveScopes.DRIVE_FILE));
+                    credential.setSelectedAccount(googleAccount.getAccount());
+                    Drive googleDriveService =
+                            new Drive.Builder(
+                                    AndroidHttp.newCompatibleTransport(),
+                                    new GsonFactory(),
+                                    credential)
+                                    .setApplicationName(applicationviavideocomposer.getactivity().getResources().getString(R.string.app_name))
+                                    .build();
+
+                    DriveServiceHelper mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
+                })
+                .addOnFailureListener(exception -> Log.e(TAG, "Unable to sign in.", exception));
+    }
+
+
+    /**
+     * Starts a sign-in activity using {@link #REQUEST_CODE_SIGN_IN}.
+     */
+    private void requestSignIn() {
+        Log.d(TAG, "Requesting sign-in");
+
+        GoogleSignInOptions signInOptions =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
+                        .build();
+        GoogleSignInClient client = GoogleSignIn.getClient(applicationviavideocomposer.getactivity(), signInOptions);
+        Intent signInIntent = client.getSignInIntent();
+        // The result of the sign-in Intent is handled in onActivityResult.
+        getActivity().startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN);
+    }
+
+    public void checkinapppurchasestatus()
+    {
+        showinapppurchasepopup(applicationviavideocomposer.
+                getactivity(), "", new adapteritemclick(){
+            @Override
+            public void onItemClicked(Object object) {
+
+            }
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
+        });
     }
 
     @Override
@@ -146,9 +204,13 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         switch (view.getId()){
 
             case R.id.lyout_publish:
-                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
+                if(common.getapppaidlevel() <= 0)
+                {
+                    checkinapppurchasestatus();
+                    return;
+                }
 
-                Log.e("enablenotification",""+xdata.getinstance().getSetting(config.enableplubishnotification));
+                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0")) {
                          baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
@@ -156,6 +218,12 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 break;
 
             case R.id.lyout_send:
+                if(common.getapppaidlevel() <= 0)
+                {
+                    checkinapppurchasestatus();
+                    return;
+                }
+
                 String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.send_details2);
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
@@ -165,6 +233,12 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 break;
 
             case R.id.lyout_export:
+                if(common.getapppaidlevel() <= 0)
+                {
+                    checkinapppurchasestatus();
+                    return;
+                }
+
                 String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.export_details2);
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
@@ -224,81 +298,24 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     @Override
     public void onerror(final String message) {
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
     public void onclik() {
 
         getDialog().dismiss();
-
-        //gethelper().onBack();
-       // gethelper().showsharepopupsub(videopath,"video",videotoken);
     }
 
     @Override
     public void onvideoprepared() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Toast.makeText(getactivity(), "onvideoprepared", Toast.LENGTH_SHORT).show();
-            }
-        });
+
     }
-
-   /* @Override
-    public void onHeaderBtnClick(int btnid) {
-        super.onHeaderBtnClick(btnid);
-        switch (btnid)
-        {
-            case R.id.img_share_icon:
-
-                if(mvideotrimmer != null)
-                {
-                    //progressdialog.showwaitingdialog(getActivity());
-                    mvideotrimmer.onSaveClicked();
-                }
-
-                break;
-
-            case R.id.img_menu:
-                gethelper().onBack();
-                break;
-        }
-    }
-*/
 
     @Override
     public void onResume() {
         super.onResume();
 
         getscreenwidthheight(100,85);
-    }
-
-    public void showdialog(){
-        if(common.getapppaidlevel() <= 0)
-        {
-            //showtrimfeaturealert();
-            showinapppurchasepopup(applicationviavideocomposer.
-                    getactivity(), "", new adapteritemclick(){
-
-                @Override
-                public void onItemClicked(Object object) {
-                    inapppurchase(object.toString());
-                }
-
-                @Override
-                public void onItemClicked(Object object, int type) {
-
-                }
-            });
-            return;
-        }
     }
 
     public void setdata(String videoPath, int duration, String videotoken)
@@ -332,27 +349,25 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
     public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
     {
-        dialogtrimevideo =new Dialog(activity);
-        dialogtrimevideo.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogtrimevideo.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialogtrimevideo.setCanceledOnTouchOutside(false);
-        dialogtrimevideo.setCancelable(true);
-        dialogtrimevideo.setContentView(R.layout.inapp_purchase_popup);
 
-        TextView txt_content = (TextView) dialogtrimevideo.findViewById(R.id.txt_content);
-        TextView tv_purchase1 = (TextView) dialogtrimevideo.findViewById(R.id.tv_purchase1);
-        TextView tv_purchase2 = (TextView) dialogtrimevideo.findViewById(R.id.tv_purchase2);
-        TextView tv_upgradecode = (TextView) dialogtrimevideo.findViewById(R.id.tv_upgradecode);
-        TextView tvcancel = (TextView) dialogtrimevideo.findViewById(R.id.btn_nothanks);
-        TextView txt_title = (TextView) dialogtrimevideo.findViewById(R.id.txt_title);
+        if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
+            dialoginapppurchase.dismiss();
+
+        dialoginapppurchase =new Dialog(activity);
+        dialoginapppurchase.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialoginapppurchase.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialoginapppurchase.setCanceledOnTouchOutside(false);
+        dialoginapppurchase.setCancelable(true);
+        dialoginapppurchase.setContentView(R.layout.inapp_purchase_popup);
+
+        TextView txt_content = (TextView) dialoginapppurchase.findViewById(R.id.txt_content);
+        TextView tv_purchase1 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase1);
+        TextView tv_purchase2 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase2);
+        TextView tv_upgradecode = (TextView) dialoginapppurchase.findViewById(R.id.tv_upgradecode);
+        TextView tvnothanks = (TextView) dialoginapppurchase.findViewById(R.id.btn_nothanks);
+        TextView txt_title = (TextView) dialoginapppurchase.findViewById(R.id.txt_title);
 
         String content = applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_trim)+"\n"+"\n"+ applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_upgrade);
-        txt_content.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
-        tv_purchase1.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
-        tv_purchase2.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
-        tv_upgradecode.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
-        tvcancel.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
-        txt_title.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
         txt_content.setText(content);
 
         tv_upgradecode.setOnClickListener(new View.OnClickListener() {
@@ -366,42 +381,32 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         tv_purchase1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dialogtrimevideo != null && dialogtrimevideo.isShowing())
-                    dialogtrimevideo.dismiss();
-
-
-                if(mitemclick != null)
-                    mitemclick.onItemClicked("ABC");
+                baseactivity.getinstance().inapppurchase("ABC");
             }
         });
 
         tv_purchase2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dialogtrimevideo != null && dialogtrimevideo.isShowing())
-                    dialogtrimevideo.dismiss();
-
-
-                if(mitemclick != null)
-                    mitemclick.onItemClicked("ABC");
+                baseactivity.getinstance().inapppurchase("ABC");
             }
         });
 
-        tvcancel.setOnClickListener(new View.OnClickListener() {
+        tvnothanks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dialogtrimevideo != null && dialogtrimevideo.isShowing())
-                    dialogtrimevideo.dismiss();
-                    getDialog().dismiss();
-                    baseactivity.getinstance().showsharepopupsub(videopath,"video",videotoken);
+                if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
+                    dialoginapppurchase.dismiss();
             }
         });
-
-        dialogtrimevideo.show();
+        dialoginapppurchase.show();
     }
 
     public void showupgradecodepopup(final Context activity)
     {
+        if(dialogupgradecode != null && dialogupgradecode.isShowing())
+            dialogupgradecode.dismiss();
+
         dialogupgradecode =new Dialog(activity);
         dialogupgradecode.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogupgradecode.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -422,6 +427,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         txt_title.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
         txt_content.setText(content);
 
+        pinview.setTextColor(Color.WHITE);
 
         tv_upgrade.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -448,8 +454,14 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                                         if(object.has("message"))
                                             Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("message"), Toast.LENGTH_SHORT).show();
 
+                                        if(object.getString("success").equalsIgnoreCase("1"))
+                                            xdata.getinstance().saveSetting(xdata.app_paid_level,"1");
+
+                                        if(dialogupgradecode != null && dialogupgradecode.isShowing())
                                             dialogupgradecode.dismiss();
-                                            dialogtrimevideo.dismiss();
+
+                                        if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
+                                            dialoginapppurchase.dismiss();
                                     }
 
                                 }catch (Exception e)
@@ -477,79 +489,4 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
         dialogupgradecode.show();
     }
-
-    public void inapppurchase(final String productId)
-    {
-        SelectedSku=productId;
-        if (mHelper != null)
-            mHelper.flagEndAsync();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    /*mHelper.launchPurchaseFlow(baseactivity.this, productId, 10001,
-                            mPurchaseFinishedListener, "mypurchasetoken");*/
-                    mHelper.launchPurchaseFlow(applicationviavideocomposer.getactivity(), "android.test.purchased", 10001,
-                            mPurchaseFinishedListener, "purchasetoken");
-
-                } catch (IabHelper.IabAsyncInProgressException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
-        @Override
-        public void onIabPurchaseFinished(IabResult result, com.deeptruth.app.android.inapputils.Purchase info) {
-
-        }
-
-        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-            Log.d(TAG, "Purchase finished: " + result + ", purchase: " + purchase);
-
-            /*if (result.isFailure()) {
-                return;
-            }*/
-
-            switch (result.getResponse())
-            {
-                /*case 0:
-                    ConfigUtil.configaction("alert|"+result.getMessage());
-                    break;
-                case 1:
-                    ConfigUtil.configaction("alert|"+result.getMessage());
-                    break;
-                case 2:
-                    ConfigUtil.configaction("alert|"+result.getMessage());
-                    break;
-                case 3:
-                    configutil.configaction("alert|"+result.getMessage());
-                    break;
-                case 4:
-                {
-                    String message=xData.getInstance().getSetting("inapppurchase_invalidproduct_message");
-                    message=message.replaceAll("PRODUCT",SelectedSku);
-                    ConfigUtil.configaction("alert|"+message);
-                }
-                break;
-                case 5:
-                    ConfigUtil.configaction("alert|"+result.getMessage());
-                    break;
-                case 6:
-                    ConfigUtil.configaction("alert|"+result.getMessage());
-                    break;
-                case 7:
-                    ConfigUtil.configaction("alert|"+result.getMessage());
-                    break;
-                case 8:
-                    ConfigUtil.configaction("alert|"+result.getMessage());
-                    break;*/
-            }
-
-
-            // Response code 7 => item already purchased
-        }
-    };
 }
