@@ -261,8 +261,10 @@
     <string name="satellite_altitudes_at">Satellite altitudes at:</string>
     <string name="world_clock_time">World Clock Time</string>
 
-    <string name="sun_text">Sun Zenith: 8\°28\' North | 143\°14\' West</string>
-    <string name="moon_text">Moon Zenith: 22\°01\' North | 62\°18\' West</string>
+    <string name="sun_text">Sun Zenith: </string>
+    <string name="sun_direction">8\°28\' North | 143\°14\' West</string>
+    <string name="moon_text">Moon Zenith: </string>
+    <string name="moon_direction">22\°01\' North | 62\°18\' West</string>
 
     <string name="json_parsing_failed">Failed to parse json!</string>
     <string name="valid">Valid</string>
