@@ -1131,6 +1131,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         send_item_dialog.setCanceledOnTouchOutside(true);
         send_item_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         RecyclerView recyclerView = (RecyclerView) send_item_dialog.findViewById(R.id.ryclr_send_items);
+        ImageView img_backbutton = (ImageView) send_item_dialog.findViewById(R.id.img_backbutton);
         adaptersenddialog adaptersend = new adaptersenddialog(context, sharemedia, new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
@@ -1149,6 +1150,15 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
             }
         });
+
+        img_backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(send_item_dialog != null && send_item_dialog.isShowing())
+                    send_item_dialog.dismiss();
+            }
+        });
+
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context,2);
         ((GridLayoutManager)mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
