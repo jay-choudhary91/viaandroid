@@ -654,7 +654,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         xapiupload.execute();
     }
 
-    @Override
     public void showsharepopupsub(final String path, final String type, final String mediatoken) {
             if (subdialogshare != null && subdialogshare.isShowing())
                 subdialogshare.dismiss();
@@ -796,9 +795,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             subdialogshare.show();
     }
 
-
-
-
+    
     public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
     {
         final Dialog dialog =new Dialog(activity);
@@ -1044,7 +1041,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         return;
     }
 
-    @Override
     public  void share_alert_dialog(final Context context, final String title, String content){
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1102,10 +1098,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 array_name.add("Microsoft OneDrive");
                 array_name.add("VideoLock Share");
 
-                if(!isuserlogin()){
-                    redirecttologin();
-                    return;
-                }
                 baseactivity.getinstance().senditemsdialog(context,array_image,array_name);
                 dialog.dismiss();
 
@@ -1119,7 +1111,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.show();
     }
 
-    @Override
     public  void senditemsdialog(Context context, ArrayList<Integer> arrayImage, ArrayList<String> arrayName){
         Dialog send_item_dialog = new Dialog(context, android.R.style.Theme_Dialog);
         send_item_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
