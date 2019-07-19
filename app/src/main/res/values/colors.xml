@@ -100,4 +100,5 @@
 
     <color name="heading_color">#143a64</color>
     <color name="divider_line">#cfcfcf</color>
+    <color name="text_shadow">#7F000000</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.applicationviavideocomposer;
 
 import java.util.ArrayList;
 
@@ -49,6 +51,7 @@ public class adaptersenddialog extends RecyclerView.Adapter<adaptersenddialog.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
+        holder.textView.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.NORMAL);
         holder.textView.setText(name.get(position));
         holder.imageView.setImageResource(images.get(position));
         //Glide.with(mContext).load(images.get(position)).into(holder.imageView);
