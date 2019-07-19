@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_timeinformation"
     style="@style/drawer_frames"
-    android:id="@+id/layout_timeinformation">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,16 +20,14 @@
                 android:id="@+id/txt_timeinformation"
                 style="@style/txt_drawer_graphical_title_big"
                 android:text="TIME"
-                app:fontType="bahnschrift_light"
-                />
+                app:fontType="bahnschrift_light" />
 
             <ImageView
                 android:id="@+id/img_drawer_time"
-                android:src="@drawable/ic_drawer_time"
-                style="@style/img_drawer_graphical_icon"/>
+                style="@style/img_drawer_graphical_icon"
+                android:src="@drawable/ic_drawer_time" />
 
         </RelativeLayout>
-
 
 
         <LinearLayout
@@ -38,110 +37,110 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="0.4"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.4"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <com.deeptruth.app.android.views.customfonttextview
-                    app:fontType="OpenSans_Regular"
-                    style="@style/txt_normalview"
-                    android:textColor="@color/white"
-                    android:gravity="center"
-                    android:textSize="12sp"
                     android:id="@+id/txt_phonetime"
-                    android:text="@string/phone_time"/>
+                    style="@style/txt_normalview"
+                    android:gravity="center"
+                    android:text="@string/phone_time"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:fontType="OpenSans_Regular" />
 
                 <com.deeptruth.app.android.utils.AnalogClock
+                    android:id="@+id/phone_time_clock_white"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:id="@+id/phone_time_clock_white"
                     android:layout_marginTop="0dp"
                     android:elevation="10dp"
-                    app:showSecondHand="true"/>
+                    app:showSecondHand="true" />
 
                 <com.deeptruth.app.android.utils.AnalogClockBlack
+                    android:id="@+id/phone_time_clock_black"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:id="@+id/phone_time_clock_black"
                     android:layout_marginTop="5dp"
                     android:elevation="10dp"
-                    app:showSecondHand="true"/>
+                    app:showSecondHand="true" />
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_phone_time"
-                    app:fontType="OpenSans_Semibold"
                     style="@style/txt_normalview"
-                    android:textColor="@color/white"
-                    android:gravity="center"
                     android:layout_marginTop="0dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/white"
                     android:textSize="13sp"
-                    android:text=""/>
+                    app:fontType="OpenSans_Semibold" />
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_phone_date"
-                    app:fontType="OpenSans_Semibold"
                     style="@style/txt_normalview"
-                    android:textColor="@color/white"
-                    android:gravity="center"
                     android:layout_marginTop="0dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/white"
                     android:textSize="13sp"
-                    android:text=""/>
+                    app:fontType="OpenSans_Semibold" />
 
             </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="0.4"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.4"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <com.deeptruth.app.android.views.customfonttextview
-                    app:fontType="OpenSans_Regular"
-                    style="@style/txt_normalview"
-                    android:textColor="@color/white"
-                    android:gravity="center"
-                    android:textSize="12sp"
                     android:id="@+id/txt_worldclocktime"
-                    android:text="@string/world_clock_time"/>
+                    style="@style/txt_normalview"
+                    android:gravity="center"
+                    android:text="@string/world_clock_time"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:fontType="OpenSans_Regular" />
 
                 <com.deeptruth.app.android.utils.AnalogClock
+                    android:id="@+id/world_time_clock_white"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:id="@+id/world_time_clock_white"
-                    android:elevation="10dp"
                     android:layout_marginTop="0dp"
-                    app:showSecondHand="true"/>
+                    android:elevation="10dp"
+                    app:showSecondHand="true" />
 
                 <com.deeptruth.app.android.utils.AnalogClockBlack
+                    android:id="@+id/world_time_clock_black"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
-                    android:id="@+id/world_time_clock_black"
-                    android:elevation="10dp"
                     android:layout_marginTop="5dp"
-                    app:showSecondHand="true"/>
+                    android:elevation="10dp"
+                    app:showSecondHand="true" />
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_world_time"
-                    app:fontType="OpenSans_Semibold"
                     style="@style/txt_normalview"
-                    android:textColor="@color/white"
-                    android:gravity="center"
-                    android:textSize="13sp"
                     android:layout_marginTop="0dp"
-                    android:text=""/>
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    app:fontType="OpenSans_Semibold" />
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_world_date"
-                    app:fontType="OpenSans_Semibold"
                     style="@style/txt_normalview"
-                    android:textColor="@color/white"
-                    android:gravity="center"
-                    android:textSize="13sp"
                     android:layout_marginTop="0dp"
-                    android:text=""/>
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    app:fontType="OpenSans_Semibold" />
 
             </LinearLayout>
 
@@ -162,43 +161,104 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:scaleType="fitXY"
-            android:visibility="visible"
-            android:src="@drawable/satellite_dashboard_image"/>
+            android:src="@drawable/satellite_dashboard_image"
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:weightSum="2"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="25dp"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/ic_sun" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_moon" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_sun"
+                    style="@style/txt_normalview"
+                    android:layout_width="wrap_content"
+                    android:gravity="left"
+                    android:justificationMode="inter_word"
+                    android:text="@string/sun_text"
+                    android:textColor="@color/white"
+                    android:layout_marginBottom="8dp"
+                    android:textSize="12sp"
+                    app:fontType="OpenSans_Semibold" />
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_moon"
+                    style="@style/txt_normalview"
+                    android:layout_width="wrap_content"
+                    android:gravity="left"
+                    android:justificationMode="inter_word"
+                    android:text="@string/moon_text"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:fontType="OpenSans_Semibold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <com.deeptruth.app.android.views.customfonttextview
-                app:fontType="OpenSans_Regular"
-                style="@style/txt_normalview"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:textSize="12sp"
                 android:id="@+id/txt_satellite_altitude"
+                style="@style/txt_normalview"
                 android:layout_width="wrap_content"
-                android:text="@string/satellite_altitudes_at"/>
+                android:gravity="center"
+                android:text="@string/satellite_altitudes_at"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:fontType="OpenSans_Regular" />
 
             <com.deeptruth.app.android.views.customfonttextview
-                app:fontType="OpenSans_Semibold"
-                style="@style/txt_normalview"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
                 android:id="@+id/txt_satellite_altitudes_at"
-                android:text="@string/satellite_altitudes_at"/>
+                style="@style/txt_normalview"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:text="@string/satellite_altitudes_at"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:fontType="OpenSans_Semibold" />
 
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_satellite_itemlist"
             android:layout_width="match_parent"
-            android:layout_marginTop="5dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>
