@@ -254,7 +254,7 @@ public class appdialog
         return false;
     }
 
-    public static void share_alert_dialog(final Context context, final String title, String content){
+    /*public static void share_alert_dialog(final Context context, final String title, String content){
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -346,5 +346,5 @@ public class appdialog
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adaptersend);        send_item_dialog.show();
-    }
+    }*/
 }

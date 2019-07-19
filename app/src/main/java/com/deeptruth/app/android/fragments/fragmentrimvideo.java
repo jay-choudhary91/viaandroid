@@ -151,7 +151,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 Log.e("enablenotification",""+xdata.getinstance().getSetting(config.enableplubishnotification));
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0")) {
-                         appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+                         baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
                 }
                 break;
 
@@ -159,7 +159,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.send_details2);
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
-                    appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_send),send);
+                         baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_send),send);
                 }
 
                 break;
@@ -168,7 +168,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.export_details2);
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
-                    appdialog.share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_export),export);
+                        baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_export),export);
                 }
 
                 break;
