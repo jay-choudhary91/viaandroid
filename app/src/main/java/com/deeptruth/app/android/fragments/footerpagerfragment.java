@@ -58,45 +58,44 @@ public class footerpagerfragment extends Fragment {
 
             if(introobject.getPosition() == 1)
             {
-                txt_descriptionone.setTextSize(17);
-                txt_descriptiontwo.setTextSize(17);
-                txt_descriptionthree.setTextSize(17);
-                txt_descriptionfour.setTextSize(17);
-                txt_descriptionfive.setTextSize(16.8f);
+                txt_descriptionone.setTextSize(15);
+                txt_descriptiontwo.setTextSize(15);
+                txt_descriptionthree.setTextSize(15.35f);
+                txt_descriptionfour.setTextSize(15.35f);
+                txt_descriptionfive.setTextSize(14.8f);
             }
             else if(introobject.getPosition() == 2)
             {
-                txt_descriptionone.setTextSize(17);
-                txt_descriptiontwo.setTextSize(17.8f);
-                txt_descriptionthree.setTextSize(17);
-                txt_descriptionfour.setTextSize(16.5f);
-                txt_descriptionfive.setTextSize(17.8f);
+                txt_descriptionone.setTextSize(15);
+                txt_descriptiontwo.setTextSize(15.9f);
+                txt_descriptionthree.setTextSize(15);
+                txt_descriptionfour.setTextSize(14.5f);
+                txt_descriptionfive.setTextSize(15.8f);
             }
             else if(introobject.getPosition() == 3)
             {
-                txt_descriptionone.setTextSize(17);
-                txt_descriptiontwo.setTextSize(16.5f);
-                txt_descriptionthree.setTextSize(17);
-                txt_descriptionfour.setTextSize(17);
-                txt_descriptionfive.setTextSize(17);
+                txt_descriptionone.setTextSize(15.2f);
+                txt_descriptiontwo.setTextSize(14.8f);
+                txt_descriptionthree.setTextSize(15.3f);
+                txt_descriptionfour.setTextSize(15.5f);
+                txt_descriptionfive.setTextSize(15.8f);
             }
             else if(introobject.getPosition() == 4)
             {
-                txt_descriptionone.setTextSize(16);
-                txt_descriptiontwo.setTextSize(17);
-                txt_descriptionthree.setTextSize(16);
-                txt_descriptionfour.setTextSize(16.5f);
-                txt_descriptionfive.setTextSize(17);
+                txt_descriptionone.setTextSize(14.5f);
+                txt_descriptiontwo.setTextSize(15.2f);
+                txt_descriptionthree.setTextSize(14.5f);
+                txt_descriptionfour.setTextSize(14.7f);
+                txt_descriptionfive.setTextSize(15.2f);
             }
             else if(introobject.getPosition() == 5)
             {
-                txt_descriptionone.setTextSize(16);
-                txt_descriptiontwo.setTextSize(16);
-                txt_descriptionthree.setTextSize(16);
-                txt_descriptionfour.setTextSize(16);
-                txt_descriptionfive.setTextSize(16);
+                txt_descriptionone.setTextSize(14.5f);
+                txt_descriptiontwo.setTextSize(14.7f);
+                txt_descriptionthree.setTextSize(14.6f);
+                txt_descriptionfour.setTextSize(15);
+                txt_descriptionfive.setTextSize(15);
             }
-
 
            if(introobject.getPosition() == 6){
                txt_title.setVisibility(View.GONE);
