@@ -1044,7 +1044,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         return;
     }
 
-    public static void share_alert_dialog(final Context context, final String title, String content){
+    @Override
+    public  void share_alert_dialog(final Context context, final String title, String content){
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -1100,10 +1101,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 array_name.add("Google Drive");
                 array_name.add("Microsoft OneDrive");
                 array_name.add("VideoLock Share");
-
+                
+                if(!isuserlogin()){
+                    redirecttologin();
+                    return;
+                }
                 baseactivity.getinstance().senditemsdialog(context,array_image,array_name);
-
-
                 dialog.dismiss();
 
             }
@@ -1116,7 +1119,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.show();
     }
 
-    public static void senditemsdialog(Context context, ArrayList<Integer> arrayImage, ArrayList<String> arrayName){
+    @Override
+    public  void senditemsdialog(Context context, ArrayList<Integer> arrayImage, ArrayList<String> arrayName){
         Dialog send_item_dialog = new Dialog(context, android.R.style.Theme_Dialog);
         send_item_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         send_item_dialog.setContentView(R.layout.send_alert_dialog);
@@ -1135,7 +1139,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adaptersend);        send_item_dialog.show();
+        recyclerView.setAdapter(adaptersend);
+        send_item_dialog.show();
     }
 }
 
