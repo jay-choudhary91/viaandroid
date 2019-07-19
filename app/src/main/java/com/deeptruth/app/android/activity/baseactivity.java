@@ -806,8 +806,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-
-
     public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
     {
         final Dialog dialog =new Dialog(activity);

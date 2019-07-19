@@ -280,7 +280,7 @@ public abstract class basefragment extends Fragment {
         public void xapi_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void xapipost_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void xapipost_sendjson(Context mContext, String Action, HashMap<String,Object> mPairList, apiresponselistener mListener);
-        public void showsharepopupsub(String path,String type,String videotoken);
+        public  void senditemsdialog(Context context, ArrayList<Integer> arrayImage, ArrayList<String> arrayName);
         public void xapi_uploadfile(Context mContext,String serverurl,String filepath,apiresponselistener mListener);
         public void setsoundwaveinformation(int ampletudevalue ,int decibelvalue);
         public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick);

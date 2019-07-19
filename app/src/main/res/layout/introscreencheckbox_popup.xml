@@ -30,7 +30,7 @@
             android:layout_gravity="left"
             android:text="Alert"
             android:textColor="@color/black"
-            card_view:fontType="Comfortaa-Bold"
+            card_view:fontType="OpenSans_ExtraBold"
             android:gravity="center"
             android:layout_marginTop="5dp"
             android:textSize="15sp"
