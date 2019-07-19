@@ -168,61 +168,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:weightSum="2"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+            android:layout_marginTop="25dp"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_marginLeft="5dp"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="25dp"
-                    android:layout_marginBottom="5dp"
-                    android:src="@drawable/ic_sun" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="4dp"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/ic_moon" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_sun" />
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_sun"
                     style="@style/txt_normalview"
                     android:layout_width="wrap_content"
                     android:gravity="left"
-                    android:justificationMode="inter_word"
                     android:text="@string/sun_text"
                     android:textColor="@color/white"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="10dp"
                     android:textSize="12sp"
                     app:fontType="OpenSans_Semibold" />
 
-                <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_moon"
-                    style="@style/txt_normalview"
-                    android:layout_width="wrap_content"
-                    android:gravity="left"
-                    android:justificationMode="inter_word"
-                    android:text="@string/moon_text"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:fontType="OpenSans_Semibold" />
+        </LinearLayout>
 
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_moon" />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_moon"
+                style="@style/txt_normalview"
+                android:layout_width="wrap_content"
+                android:text="@string/moon_text"
+                android:textColor="@color/white"
+                android:layout_marginLeft="10dp"
+                android:textSize="12sp"
+                app:fontType="OpenSans_Semibold" />
 
         </LinearLayout>
 
@@ -261,6 +256,6 @@
             android:layout_height="wrap_content" />
 
 
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
