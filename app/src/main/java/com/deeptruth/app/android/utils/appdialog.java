@@ -254,7 +254,7 @@ public class appdialog
         return false;
     }
 
-    public static void share_alert_dialog(final Context context, final String title, String content){
+    /*public static void share_alert_dialog(final Context context, final String title, String content){
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -306,7 +306,7 @@ public class appdialog
                 array_image.add(R.drawable.videolock);
                 ArrayList<String> array_name = new ArrayList<String>();
                 array_name.add("Box");
-                array_name.add("DropBox");
+                array_name.add("Dropbox");
                 array_name.add("Google Drive");
                 array_name.add("Microsoft OneDrive");
                 array_name.add("VideoLock Share");
@@ -346,5 +346,5 @@ public class appdialog
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adaptersend);        send_item_dialog.show();
-    }
+    }*/
 }
