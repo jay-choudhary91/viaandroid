@@ -150,10 +150,57 @@
 
     </LinearLayout>
 
-    <ImageView
+    <LinearLayout
+        android:id="@+id/layout_satellite_informations"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/satellite_dashboard_image"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="fitXY"
+            android:visibility="visible"
+            android:src="@drawable/satellite_dashboard_image"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                style="@style/txt_normalview"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:id="@+id/txt_satellite_altitude"
+                android:layout_width="wrap_content"
+                android:text="@string/satellite_altitudes_at"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Semibold"
+                style="@style/txt_normalview"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:id="@+id/txt_satellite_altitudes_at"
+                android:text="@string/satellite_altitudes_at"/>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_satellite_itemlist"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"/>
+
+
+    </LinearLayout>
 
 </LinearLayout>

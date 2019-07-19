@@ -72,6 +72,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -1457,7 +1458,50 @@ public class common {
     }
 
     public static void showalertdialog(Activity activity, String msg, final adapteritemclick mitemclick) {
-        alertdialog = new AlertDialog.Builder(activity)
+
+
+        final Dialog dialog =new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.share_alert_popup);
+
+        TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
+        TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
+        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
+        notifycheckbox.setText(msg);
+        notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
+        txttitle.setVisibility(View.GONE);
+        txtcontent.setVisibility(View.GONE);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                    if (notifycheckbox.isChecked())
+                    {
+                        if(mitemclick != null)
+                            mitemclick.onItemClicked(null,0);
+                    }
+                    else
+                    {
+                        if(mitemclick != null)
+                            mitemclick.onItemClicked(null,1);
+                    }
+                dialog.dismiss();
+
+            }
+        });
+
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+       /* alertdialog = new AlertDialog.Builder(activity)
                 .setTitle("Alert")
                 .setMessage(msg)
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
@@ -1479,7 +1523,7 @@ public class common {
                             mitemclick.onItemClicked(null,1);
                     }
                 })
-                .show();
+                .show();*/
     }
 
     public static void showalert(Activity activity, String meg, final adapteritemclick mitemclick) {
