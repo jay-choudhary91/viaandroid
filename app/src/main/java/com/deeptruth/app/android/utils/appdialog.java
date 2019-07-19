@@ -306,7 +306,7 @@ public class appdialog
                 array_image.add(R.drawable.videolock);
                 ArrayList<String> array_name = new ArrayList<String>();
                 array_name.add("Box");
-                array_name.add("DropBox");
+                array_name.add("Dropbox");
                 array_name.add("Google Drive");
                 array_name.add("Microsoft OneDrive");
                 array_name.add("VideoLock Share");
