@@ -21,7 +21,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -37,7 +36,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,6 +61,7 @@ import com.deeptruth.app.android.fragments.videoreaderfragment;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.interfaces.homepressedlistener;
+import com.deeptruth.app.android.models.sharemedia;
 import com.deeptruth.app.android.netutils.connectivityreceiver;
 import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
@@ -71,6 +70,7 @@ import com.deeptruth.app.android.netutils.xapipostfile;
 import com.deeptruth.app.android.inapputils.IabBroadcastReceiver;
 import com.deeptruth.app.android.inapputils.IabHelper;
 import com.deeptruth.app.android.inapputils.IabResult;
+import com.deeptruth.app.android.utils.googledriveutils.DriveServiceHelper;
 import com.deeptruth.app.android.utils.pinviewtext;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -78,12 +78,22 @@ import com.deeptruth.app.android.utils.homewatcher;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -333,8 +343,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         else if (requestCode == config.requestcode_googlesignin)
         {
             if (resultCode == Activity.RESULT_OK && data != null) {
-                Fragment fragment = getSupportFragmentManager().findFragmentByTag("dialog");
-                fragment.onActivityResult(requestCode, resultCode, data);
+                handleSignInResult(data);
             }
         }
     }
@@ -1044,7 +1053,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         return;
     }
 
-    public static void share_alert_dialog(final Context context, final String title, String content){
+    public void share_alert_dialog(final Context context, final String title, String content){
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -1088,21 +1097,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     else
                         xdata.getinstance().saveSetting(config.enableexportnotification,"0");
                 }
-                ArrayList<Integer> array_image = new ArrayList<Integer>();
-                array_image.add(R.drawable.dropbox);
-                array_image.add(R.drawable.dropbox);
-                array_image.add(R.drawable.googledrive);
-                array_image.add(R.drawable.onedrive);
-                array_image.add(R.drawable.videolock);
-                ArrayList<String> array_name = new ArrayList<String>();
-                array_name.add("Box");
-                array_name.add("Dropbox");
-                array_name.add("Google Drive");
-                array_name.add("Microsoft OneDrive");
-                array_name.add("VideoLock Share");
 
-                baseactivity.getinstance().senditemsdialog(context,array_image,array_name);
-
+                baseactivity.getinstance().senditemsdialog(context);
 
                 dialog.dismiss();
 
@@ -1116,14 +1112,45 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.show();
     }
 
-    public static void senditemsdialog(Context context, ArrayList<Integer> arrayImage, ArrayList<String> arrayName){
+    public void senditemsdialog(Context context){
+
+        if(!isuserlogin()){
+            redirecttologin();
+            return;
+        }
+
+        ArrayList<sharemedia> sharemedia=new ArrayList<>();
+        sharemedia.add(new sharemedia(R.drawable.dropbox,config.item_box));
+        sharemedia.add(new sharemedia(R.drawable.dropbox,config.item_dropbox));
+        sharemedia.add(new sharemedia(R.drawable.googledrive,config.item_googledrive));
+        sharemedia.add(new sharemedia(R.drawable.onedrive,config.item_microsoft_onedrive));
+        sharemedia.add(new sharemedia(R.drawable.videolock,config.item_videoLock_share));
+
+
         Dialog send_item_dialog = new Dialog(context, android.R.style.Theme_Dialog);
         send_item_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         send_item_dialog.setContentView(R.layout.send_alert_dialog);
         send_item_dialog.setCanceledOnTouchOutside(true);
         send_item_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         RecyclerView recyclerView = (RecyclerView) send_item_dialog.findViewById(R.id.ryclr_send_items);
-        adaptersenddialog adaptersend = new adaptersenddialog(context, arrayImage, arrayName);
+        adaptersenddialog adaptersend = new adaptersenddialog(context, sharemedia, new adapteritemclick() {
+            @Override
+            public void onItemClicked(Object object) {
+                if(object != null)
+                {
+                    int position=(int)object;
+                    if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_dropbox))
+                    {
+                        requestgooglesignin();
+                    }
+                }
+            }
+
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
+        });
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context,2);
         ((GridLayoutManager)mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -1135,8 +1162,52 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adaptersend);        send_item_dialog.show();
+        recyclerView.setAdapter(adaptersend);
+        send_item_dialog.show();
     }
+
+    /**
+     * Handles the {@code result} of a completed sign-in activity initiated from {@link
+     * #requestgooglesignin()}.
+     */
+    private void handleSignInResult(Intent result) {
+        GoogleSignIn.getSignedInAccountFromIntent(result)
+                .addOnSuccessListener(googleAccount -> {
+                    Log.d(TAG, "Signed in as " + googleAccount.getEmail());
+
+                    // Use the authenticated account to sign in to the Drive service.
+                    GoogleAccountCredential credential =
+                            GoogleAccountCredential.usingOAuth2(
+                                    applicationviavideocomposer.getactivity(), Collections.singleton(DriveScopes.DRIVE_FILE));
+                    credential.setSelectedAccount(googleAccount.getAccount());
+                    Drive googleDriveService =
+                            new Drive.Builder(
+                                    AndroidHttp.newCompatibleTransport(),
+                                    new GsonFactory(),
+                                    credential)
+                                    .setApplicationName(applicationviavideocomposer.getactivity().getResources().getString(R.string.app_name))
+                                    .build();
+
+                    DriveServiceHelper mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
+                })
+                .addOnFailureListener(exception -> Log.e(TAG, "Unable to sign in.", exception));
+    }
+
+
+    private void requestgooglesignin() {
+        Log.d(TAG, "Requesting sign-in");
+
+        GoogleSignInOptions signInOptions =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
+                        .build();
+        GoogleSignInClient client = GoogleSignIn.getClient(applicationviavideocomposer.getactivity(), signInOptions);
+        Intent signInIntent = client.getSignInIntent();
+        // The result of the sign-in Intent is handled in onActivityResult.
+        applicationviavideocomposer.getactivity().startActivityForResult(signInIntent, config.requestcode_googlesignin);
+    }
+
 }
 
 
