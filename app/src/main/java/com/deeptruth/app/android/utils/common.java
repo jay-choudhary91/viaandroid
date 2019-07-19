@@ -1466,21 +1466,15 @@ public class common {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
-        dialog.setContentView(R.layout.share_alert_popup);
+        dialog.setContentView(R.layout.introscreencheckbox_popup);
 
-        TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
-        TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
-        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
+        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.showintroscreen_checkbox);
         notifycheckbox.setText(msg);
         notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
         TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
-        txttitle.setVisibility(View.GONE);
-        txtcontent.setVisibility(View.GONE);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
                     if (notifycheckbox.isChecked())
                     {
                         if(mitemclick != null)
@@ -1501,29 +1495,6 @@ public class common {
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
-       /* alertdialog = new AlertDialog.Builder(activity)
-                .setTitle("Alert")
-                .setMessage(msg)
-                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertdialog.dismiss();
-                        if(mitemclick != null)
-                            mitemclick.onItemClicked(null,0);
-
-
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Perform Your Task Here--When No is pressed
-                        alertdialog.dismiss();
-
-                        if(mitemclick != null)
-                            mitemclick.onItemClicked(null,1);
-                    }
-                })
-                .show();*/
     }
 
     public static void showalert(Activity activity, String meg, final adapteritemclick mitemclick) {

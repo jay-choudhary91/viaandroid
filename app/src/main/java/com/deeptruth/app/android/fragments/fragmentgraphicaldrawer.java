@@ -396,6 +396,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     TextView txt_world_date;
     @BindView(R.id.txt_phone_date)
     TextView txt_phone_date;
+    @BindView(R.id.txt_sun)
+    TextView txt_sun;
+    @BindView(R.id.txt_moon)
+    TextView txt_moon;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -837,6 +841,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                     String latitude=xdata.getinstance().getSetting("lat");
                     String longitude=xdata.getinstance().getSetting("lng");
+
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.sun_text)," "+applicationviavideocomposer.getactivity().getResources().getString(R.string.sun_direction), txt_sun);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.moon_text)," "+applicationviavideocomposer.getactivity().getResources().getString(R.string.moon_direction), txt_moon);
+
 
                     common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
                     common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);

@@ -1,5 +1,6 @@
 package com.deeptruth.app.android.activity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.arch.lifecycle.Lifecycle;
 import android.content.BroadcastReceiver;
@@ -11,6 +12,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -25,6 +27,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -33,6 +38,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,6 +48,7 @@ import android.widget.Toast;
 import com.android.billingclient.api.Purchase;
 import com.android.vending.billing.IInAppBillingService;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.adaptersenddialog;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
@@ -76,6 +83,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -320,6 +328,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         {
             if(resultCode == RESULT_OK) {
                 callsharapiafterlogin();
+            }
+        }
+        else if (requestCode == config.requestcode_googlesignin)
+        {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag("dialog");
+                fragment.onActivityResult(requestCode, resultCode, data);
             }
         }
     }
@@ -639,7 +654,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         xapiupload.execute();
     }
 
-    @Override
     public void showsharepopupsub(final String path, final String type, final String mediatoken) {
             if (subdialogshare != null && subdialogshare.isShowing())
                 subdialogshare.dismiss();
@@ -780,8 +794,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             });
             subdialogshare.show();
     }
-
-
 
 
     public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
@@ -1027,6 +1039,99 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     public void callloginscreen(){
         redirecttologin();
         return;
+    }
+
+    public  void share_alert_dialog(final Context context, final String title, String content){
+        final Dialog dialog =new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.share_alert_popup);
+
+        TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
+        TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
+        txtcontent.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+
+        txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
+        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
+        notifycheckbox.setText("Do not notify again");
+        notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+
+        txttitle.setText(title);
+        txtcontent.setText(content);
+
+        TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_publish))){
+                    if(notifycheckbox.isChecked())
+                        xdata.getinstance().saveSetting(config.enableplubishnotification,"1");
+                    else
+                        xdata.getinstance().saveSetting(config.enableplubishnotification,"0");
+                }
+                if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_send))){
+                    if(notifycheckbox.isChecked())
+                        xdata.getinstance().saveSetting(config.enablesendnotification,"1");
+                    else
+                        xdata.getinstance().saveSetting(config.enablesendnotification,"0");
+                }
+                if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
+                    if(notifycheckbox.isChecked())
+                        xdata.getinstance().saveSetting(config.enableexportnotification,"1");
+                    else
+                        xdata.getinstance().saveSetting(config.enableexportnotification,"0");
+                }
+                ArrayList<Integer> array_image = new ArrayList<Integer>();
+                array_image.add(R.drawable.dropbox);
+                array_image.add(R.drawable.dropbox);
+                array_image.add(R.drawable.googledrive);
+                array_image.add(R.drawable.onedrive);
+                array_image.add(R.drawable.videolock);
+                ArrayList<String> array_name = new ArrayList<String>();
+                array_name.add("Box");
+                array_name.add("Dropbox");
+                array_name.add("Google Drive");
+                array_name.add("Microsoft OneDrive");
+                array_name.add("VideoLock Share");
+
+                baseactivity.getinstance().senditemsdialog(context,array_image,array_name);
+                dialog.dismiss();
+
+            }
+        });
+
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    public  void senditemsdialog(Context context, ArrayList<Integer> arrayImage, ArrayList<String> arrayName){
+        Dialog send_item_dialog = new Dialog(context, android.R.style.Theme_Dialog);
+        send_item_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        send_item_dialog.setContentView(R.layout.send_alert_dialog);
+        send_item_dialog.setCanceledOnTouchOutside(true);
+        send_item_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        RecyclerView recyclerView = (RecyclerView) send_item_dialog.findViewById(R.id.ryclr_send_items);
+        adaptersenddialog adaptersend = new adaptersenddialog(context, arrayImage, arrayName);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(context,2);
+        ((GridLayoutManager)mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == 4) {
+                    return 2;
+                }else return 1;
+            }
+        });
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adaptersend);
+        send_item_dialog.show();
     }
 }
 

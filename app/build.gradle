@@ -43,11 +43,23 @@ android {
         pickFirst 'lib/armeabi/libavcodec.so'
         pickFirst 'lib/armeabi/libswscale.so'
         pickFirst 'lib/armeabi/libavfilter.so'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/commons-io-2.6.jar')
     implementation files('libs/json-simple-1.1.jar')
     implementation files('libs/org.apache.http.legacy.jar')
@@ -61,14 +73,13 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.google.android.gms:play-services-auth:15.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-    implementation("com.github.bumptech.glide:glide:4.8.0@aar") {
+    implementation('com.github.bumptech.glide:glide:4.8.0@aar') {
         transitive = true
     }
-
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.pedrovgs:draggablepanel:1.9'
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
@@ -90,15 +101,25 @@ dependencies {
     implementation 'com.facebook.network.connectionclass:connectionclass:1.0.1'
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     implementation 'com.android.billingclient:billing:2.0.1'
-    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
     implementation 'com.tyorikan:voice-recording-visualizer:1.0.3@aar'
     implementation 'com.github.adityagohad:HorizontalPicker:1.0.1'
-
-
+    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
+    implementation('com.google.api-client:google-api-client-android:1.26.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
 
+    configurations {
+        all {
+            exclude module: 'httpclient'
+        }
+    }
 }
 apply plugin: 'com.google.gms.google-services'
