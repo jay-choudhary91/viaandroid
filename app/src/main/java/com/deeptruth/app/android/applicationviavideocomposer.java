@@ -1,7 +1,6 @@
 package com.deeptruth.app.android;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.Application;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
@@ -10,7 +9,6 @@ import android.arch.lifecycle.ProcessLifecycleOwner;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
@@ -22,7 +20,6 @@ import com.deeptruth.app.android.utils.xdata;
 import com.crashlytics.android.Crashlytics;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 import io.fabric.sdk.android.Fabric;
@@ -52,7 +49,8 @@ public class applicationviavideocomposer extends Application implements Lifecycl
         //common.setting_check(xdata.xapi_url, "http://prod.api.deeptruth.com/xapi.php?");  // Make changes on 2019-06-03 (videolock production)
         common.setting_check(xdata.app_paid_level, "0");
         common.setting_check(xdata.developer_mode, "0");// 0 - false, 1 - true
-        common.setting_check(xdata.unpaid_video_record_length, "1800");
+        common.setting_check(xdata.unpaid_media_record_length, "30"); // 30 seconds media record length as changes on 2019-07-22
+        common.setting_check(xdata.unpaid_media_record_count, "5"); // 5 media record allow for unpaid user as changes on 2019-07-22
 
         common.setting_check(config.enabledevelopment, "1");
         common.setting_check(config.enableproduction, "0");

@@ -23,6 +23,9 @@ public class config {
     public static String item_microsoft_onedrive="Microsoft OneDrive";
     public static String item_videoLock_share="VideoLock Share";
 
+    public static String mediarecordcount="mediarecordcount";
+    public static String mediatrimcount="mediatrimcount";
+
 
     public static String settingpageurl="http://console.dev.crypto-servers.com/inapp-settings.php";
 

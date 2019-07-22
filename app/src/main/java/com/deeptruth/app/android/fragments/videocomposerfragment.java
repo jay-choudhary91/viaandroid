@@ -1069,7 +1069,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mediarecorder.setAudioSamplingRate(profile.audioSampleRate);
             mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
             mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            if(common.getapppaidlevel() <= 0)
+            if(common.shouldrestrictmedialimit(config.mediarecordcount))
             {
                 int length=common.getunpaidvideorecordlength();
                 int maxduartion=length * 1000;
@@ -1154,63 +1154,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 Log.v("VIDEOCAPTURE","Maximum Duration Reached");
                 try {
 
-                    /*resetpreviewsession();
-                    startmetaservices();
-                    stopblinkanimation();
-
-                    mediarecorder.stop();
-                    mediarecorder.release();*/
-
                     startstopvideo();
 
                 }catch (Exception e)
                 {
                     e.printStackTrace();
                 }
-
-                showvideorecordlengthalert();
             }
         }
     };
-
-    public void showvideorecordlengthalert() {
-        try
-        {
-            double length=common.getunpaidvideorecordlength();
-            double recordtime=length/60;
-            DecimalFormat precision = new DecimalFormat("0.0");
-            String time=precision.format(recordtime)+" minutes";
-
-            gethelper().showinapppurchasepopup(applicationviavideocomposer.getactivity(),"Recording is limited to "+ time +
-                    " in the basic version. Upgrade",new adapteritemclick() {
-                @Override
-                public void onItemClicked(Object object) {
-                    gethelper().inapppurchase(object.toString());
-                }
-
-                @Override
-                public void onItemClicked(Object object, int type) {
-
-                }
-            });
-
-            /*new AlertDialog.Builder(getActivity(), R.style.customdialogtheme)
-                    .setTitle("Alert")
-                    .setMessage("Recording is limited to "+ xdata.getinstance().getSetting(xdata.unpaid_video_record_length)+" seconds" +
-                            " in the basic version. Upgrade")
-                    .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (dialog != null)
-                                dialog.dismiss();
-                        }
-                    })
-                    .show();*/
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
 
     private File getVideoFile(Context context) {
         String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
@@ -1528,12 +1480,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             stopresetmediarecorder();
             startmetaservices();
             stopblinkanimation();
-           /* new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    start();
-                }
-            },1000);*/
+
+            if(common.shouldshowupgradepopup(config.mediarecordcount))
+                showvideorecordlengthalert();
 
         } else {
             selectedhashes="";

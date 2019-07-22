@@ -447,6 +447,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             stoprecording();
             stopblinkanimation();
             startwaverecord();
+
+            if(common.shouldshowupgradepopup(config.mediarecordcount))
+                showvideorecordlengthalert();
         }
     }
 
@@ -580,24 +583,19 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         mframetorecordcount =0;
         currentframenumber = currentframenumber + frameduration;
 
-        /*try{
-            if(mediarecorder != null)
-            {
-                mediarecorder.stop();
-                mediarecorder.release();
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }*/
-
         mediarecorder = new MediaRecorder();
         mediarecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediarecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         recordedmediafile = getfile().getAbsolutePath();
-        Log.d("filename", recordedmediafile);
         mediarecorder.setOutputFile(recordedmediafile);
         mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        if(common.shouldrestrictmedialimit(config.mediarecordcount))
+        {
+            int length=common.getunpaidvideorecordlength();
+            int maxduartion=length * 1000;
+            mediarecorder.setMaxDuration(maxduartion);
+            mediarecorder.setOnInfoListener(mediainfolistener);
+        }
 
         try {
             mediarecorder.prepare();
@@ -627,6 +625,23 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         isaudiorecording=true;
         gethelper().setrecordingrunning(true);
     }
+
+    MediaRecorder.OnInfoListener mediainfolistener=new MediaRecorder.OnInfoListener() {
+        @Override
+        public void onInfo(MediaRecorder mediarecorder, int what, int extra) {
+            if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
+                Log.v("AUDIOCAPTURE","Maximum Duration Reached");
+                try {
+
+                    startstopaudiorecording();
+
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
 
     //Conversion of short to byte
     private byte[] short2byte(short[] sData) {

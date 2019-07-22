@@ -93,6 +93,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -116,6 +117,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     String mediatype = "";
     String mediavideotoken = "",mediamethod = "";
     Dialog dialog;
+    Dialog dialoginapppurchase =null,dialogupgradecode=null;
 
     // The helper object
     IabHelper mHelper;
@@ -741,30 +743,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
 
-                    /*if(common.getapppaidlevel() <= 0)
-                    {
-                        //showtrimfeaturealert();
-                        showinapppurchasepopup(applicationviavideocomposer.
-                                getactivity(), applicationviavideocomposer.getactivity().getResources().
-                                getString(R.string.sharing_a_trimmed_video), new adapteritemclick() {
-                            @Override
-                            public void onItemClicked(Object object) {
-                                inapppurchase(object.toString());
-                            }
-
-                            @Override
-                            public void onItemClicked(Object object, int type) {
-
-                            }
-                        });
-                        return;
-                    }*/
-
                 if (subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
-
-                /*if(getcurrentfragment() instanceof fragmentrimvideo)
-                    return;*/
 
                 if(type.equalsIgnoreCase(config.item_video))
                 {
@@ -805,119 +785,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             });
             subdialogshare.show();
     }
-
-
-    public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
-    {
-        final Dialog dialog =new Dialog(activity);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.dialog_inapppurchase_options);
-
-        TextView txt_purchase1 = (TextView) dialog.findViewById(R.id.txt_purchase1);
-        TextView txt_purchase2 = (TextView) dialog.findViewById(R.id.txt_purchase2);
-        TextView TxtPositiveButton = (TextView) dialog.findViewById(R.id.tv_positive);
-        TextView txt_message = (TextView) dialog.findViewById(R.id.txt_message);
-        ImageView img_cancelicon = (ImageView) dialog.findViewById(R.id.img_cancelicon);
-        final pinviewtext pinview = (pinviewtext) dialog.findViewById(R.id.pinview);
-
-        txt_message.setText(message);
-        TxtPositiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if(pinview.getValue().trim().length() >= 6)
-                {
-
-                    HashMap<String,String> requestparams=new HashMap<>();
-                    requestparams.put("code",pinview.getValue().trim());
-                    requestparams.put("action","appunlockcode_use");
-                    progressdialog.showwaitingdialog(baseactivity.this);
-                    xapipost_send(baseactivity.this,requestparams, new apiresponselistener() {
-                        @Override
-                        public void onResponse(taskresult response) {
-                            progressdialog.dismisswaitdialog();
-                            if(response.isSuccess())
-                            {
-                                try {
-                                    JSONObject object=new JSONObject(response.getData().toString());
-                                    if(object.has("success"))
-                                    {
-                                        if(object.has("message"))
-                                            Toast.makeText(baseactivity.this, object.getString("message"), Toast.LENGTH_SHORT).show();
-
-                                    }
-
-                                }catch (Exception e)
-                                {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
-                }
-                else
-                {
-                    Toast.makeText(baseactivity.this, "Please enter 6 digit code!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        txt_purchase1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(dialog != null && dialog.isShowing())
-                    dialog.dismiss();
-
-                if(mitemclick != null)
-                    mitemclick.onItemClicked("ABC");
-            }
-        });
-
-        txt_purchase2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(dialog != null && dialog.isShowing())
-                    dialog.dismiss();
-
-                if(mitemclick != null)
-                    mitemclick.onItemClicked("ABC");
-            }
-        });
-
-        img_cancelicon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(dialog != null && dialog.isShowing())
-                    dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
-    public void showtrimfeaturealert() {
-        try
-        {
-            new AlertDialog.Builder(baseactivity.this, R.style.customdialogtheme)
-                    .setTitle("Alert")
-                    .setMessage("Sharing a trimmed version is an advanced feature.")
-                    .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (dialog != null)
-                                dialog.dismiss();
-                        }
-                    })
-                    .show();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
 
     public void callmediashareapi(final String mediatype, final String mediatoken, final String path, String method) {
 
@@ -1121,6 +988,148 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+    }
+
+    public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
+    {
+
+        if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
+            dialoginapppurchase.dismiss();
+
+        dialoginapppurchase =new Dialog(activity);
+        dialoginapppurchase.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialoginapppurchase.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialoginapppurchase.setCanceledOnTouchOutside(false);
+        dialoginapppurchase.setCancelable(true);
+        dialoginapppurchase.setContentView(R.layout.inapp_purchase_popup);
+
+        TextView txt_content = (TextView) dialoginapppurchase.findViewById(R.id.txt_content);
+        TextView tv_purchase1 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase1);
+        TextView tv_purchase2 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase2);
+        TextView tv_upgradecode = (TextView) dialoginapppurchase.findViewById(R.id.tv_upgradecode);
+        TextView tvnothanks = (TextView) dialoginapppurchase.findViewById(R.id.btn_nothanks);
+        TextView txt_title = (TextView) dialoginapppurchase.findViewById(R.id.txt_title);
+
+        txt_content.setText(message);
+
+        tv_upgradecode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                showupgradecodepopup(applicationviavideocomposer.getactivity());
+            }
+        });
+
+        tv_purchase1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                baseactivity.getinstance().inapppurchase("ABC");
+            }
+        });
+
+        tv_purchase2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                baseactivity.getinstance().inapppurchase("ABC");
+            }
+        });
+
+        tvnothanks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
+                    dialoginapppurchase.dismiss();
+            }
+        });
+        dialoginapppurchase.show();
+    }
+
+    public void showupgradecodepopup(final Context activity)
+    {
+        if(dialogupgradecode != null && dialogupgradecode.isShowing())
+            dialogupgradecode.dismiss();
+
+        dialogupgradecode =new Dialog(activity);
+        dialogupgradecode.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogupgradecode.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogupgradecode.setCanceledOnTouchOutside(false);
+        dialogupgradecode.setCancelable(true);
+        dialogupgradecode.setContentView(R.layout.upgradecode_popup);
+
+        TextView txt_content = (TextView) dialogupgradecode.findViewById(R.id.txt_content);
+        TextView tv_upgrade = (TextView) dialogupgradecode.findViewById(R.id.tv_upgrade);
+        TextView tvcancel = (TextView) dialogupgradecode.findViewById(R.id.btn_nothanks);
+        TextView txt_title = (TextView) dialogupgradecode.findViewById(R.id.txt_title);
+        final pinviewtext pinview = (pinviewtext) dialogupgradecode.findViewById(R.id.pinview);
+
+        String content = applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_upgradecode);
+        txt_content.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        tvcancel.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        tv_upgrade.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        txt_title.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
+        txt_content.setText(content);
+
+        pinview.setTextColor(Color.WHITE);
+
+        tv_upgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(pinview.getValue().trim().length() >= 6)
+                {
+
+                    HashMap<String,String> requestparams=new HashMap<>();
+                    requestparams.put("code",pinview.getValue().trim());
+                    requestparams.put("action","appunlockcode_use");
+                    progressdialog.showwaitingdialog(applicationviavideocomposer.
+                            getactivity());
+                    baseactivity.getinstance().xapipost_send(applicationviavideocomposer.
+                            getactivity(),requestparams, new apiresponselistener() {
+                        @Override
+                        public void onResponse(taskresult response) {
+                            progressdialog.dismisswaitdialog();
+                            if(response.isSuccess())
+                            {
+                                try {
+                                    JSONObject object=new JSONObject(response.getData().toString());
+                                    if(object.has("success"))
+                                    {
+                                        if(object.has("message"))
+                                            Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("message"), Toast.LENGTH_SHORT).show();
+
+                                        if(object.getString("success").equalsIgnoreCase("1"))
+                                            xdata.getinstance().saveSetting(xdata.app_paid_level,"1");
+
+                                        if(dialogupgradecode != null && dialogupgradecode.isShowing())
+                                            dialogupgradecode.dismiss();
+
+                                        if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
+                                            dialoginapppurchase.dismiss();
+                                    }
+
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    Toast.makeText(applicationviavideocomposer.getactivity(), "Please enter 6 digit code!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        tvcancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(dialogupgradecode != null && dialogupgradecode.isShowing())
+                    dialogupgradecode.dismiss();
+            }
+        });
+
+        dialogupgradecode.show();
     }
 
     public void senditemsdialog(Context context){

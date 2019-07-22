@@ -126,8 +126,11 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
     public void checkinapppurchasestatus()
     {
-        showinapppurchasepopup(applicationviavideocomposer.
-                getactivity(), "", new adapteritemclick(){
+        String message = applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_trim)+"\n"+"\n"+
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_upgrade);
+
+        baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
+                getactivity(), message, new adapteritemclick(){
             @Override
             public void onItemClicked(Object object) {
 
@@ -296,149 +299,5 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
         getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         getDialog().getWindow().setLayout(percentagewidth, percentageheight);
-    }
-
-
-    public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
-    {
-
-        if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
-            dialoginapppurchase.dismiss();
-
-        dialoginapppurchase =new Dialog(activity);
-        dialoginapppurchase.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialoginapppurchase.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialoginapppurchase.setCanceledOnTouchOutside(false);
-        dialoginapppurchase.setCancelable(true);
-        dialoginapppurchase.setContentView(R.layout.inapp_purchase_popup);
-
-        TextView txt_content = (TextView) dialoginapppurchase.findViewById(R.id.txt_content);
-        TextView tv_purchase1 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase1);
-        TextView tv_purchase2 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase2);
-        TextView tv_upgradecode = (TextView) dialoginapppurchase.findViewById(R.id.tv_upgradecode);
-        TextView tvnothanks = (TextView) dialoginapppurchase.findViewById(R.id.btn_nothanks);
-        TextView txt_title = (TextView) dialoginapppurchase.findViewById(R.id.txt_title);
-
-        String content = applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_trim)+"\n"+"\n"+ applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_upgrade);
-        txt_content.setText(content);
-
-        tv_upgradecode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                showupgradecodepopup(applicationviavideocomposer.getactivity());
-            }
-        });
-
-        tv_purchase1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                baseactivity.getinstance().inapppurchase("ABC");
-            }
-        });
-
-        tv_purchase2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                baseactivity.getinstance().inapppurchase("ABC");
-            }
-        });
-
-        tvnothanks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
-                    dialoginapppurchase.dismiss();
-            }
-        });
-        dialoginapppurchase.show();
-    }
-
-    public void showupgradecodepopup(final Context activity)
-    {
-        if(dialogupgradecode != null && dialogupgradecode.isShowing())
-            dialogupgradecode.dismiss();
-
-        dialogupgradecode =new Dialog(activity);
-        dialogupgradecode.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogupgradecode.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialogupgradecode.setCanceledOnTouchOutside(false);
-        dialogupgradecode.setCancelable(true);
-        dialogupgradecode.setContentView(R.layout.upgradecode_popup);
-
-        TextView txt_content = (TextView) dialogupgradecode.findViewById(R.id.txt_content);
-        TextView tv_upgrade = (TextView) dialogupgradecode.findViewById(R.id.tv_upgrade);
-        TextView tvcancel = (TextView) dialogupgradecode.findViewById(R.id.btn_nothanks);
-        TextView txt_title = (TextView) dialogupgradecode.findViewById(R.id.txt_title);
-        final pinviewtext pinview = (pinviewtext) dialogupgradecode.findViewById(R.id.pinview);
-
-        String content = applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_upgradecode);
-        txt_content.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
-        tvcancel.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
-        tv_upgrade.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
-        txt_title.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
-        txt_content.setText(content);
-
-        pinview.setTextColor(Color.WHITE);
-
-        tv_upgrade.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(pinview.getValue().trim().length() >= 6)
-                {
-
-                    HashMap<String,String> requestparams=new HashMap<>();
-                    requestparams.put("code",pinview.getValue().trim());
-                    requestparams.put("action","appunlockcode_use");
-                    progressdialog.showwaitingdialog(applicationviavideocomposer.
-                            getactivity());
-                    baseactivity.getinstance().xapipost_send(applicationviavideocomposer.
-                            getactivity(),requestparams, new apiresponselistener() {
-                        @Override
-                        public void onResponse(taskresult response) {
-                            progressdialog.dismisswaitdialog();
-                            if(response.isSuccess())
-                            {
-                                try {
-                                    JSONObject object=new JSONObject(response.getData().toString());
-                                    if(object.has("success"))
-                                    {
-                                        if(object.has("message"))
-                                            Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("message"), Toast.LENGTH_SHORT).show();
-
-                                        if(object.getString("success").equalsIgnoreCase("1"))
-                                            xdata.getinstance().saveSetting(xdata.app_paid_level,"1");
-
-                                        if(dialogupgradecode != null && dialogupgradecode.isShowing())
-                                            dialogupgradecode.dismiss();
-
-                                        if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
-                                            dialoginapppurchase.dismiss();
-                                    }
-
-                                }catch (Exception e)
-                                {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
-                }
-                else
-                {
-                    Toast.makeText(applicationviavideocomposer.getactivity(), "Please enter 6 digit code!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        tvcancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(dialogupgradecode != null && dialogupgradecode.isShowing())
-                    dialogupgradecode.dismiss();
-            }
-        });
-
-        dialogupgradecode.show();
     }
 }

@@ -3,42 +3,24 @@ package com.deeptruth.app.android.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.GradientDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.AudioManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.BatteryManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
-import android.os.Environment;
-import android.os.StatFs;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +32,7 @@ import android.widget.TextView;
 
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
@@ -59,16 +42,10 @@ import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 
-import java.io.File;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.TimeZone;
 
-import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
 
 public abstract class basefragment extends Fragment {
@@ -198,19 +175,26 @@ public abstract class basefragment extends Fragment {
         }
     }
 
-    public void showvideorecordlengthalert() {
-        new AlertDialog.Builder(getContext(), R.style.customdialogtheme)
-        .setTitle("Alert")
-        .setMessage("Recording is limited to "+ xdata.getinstance().getSetting(xdata.unpaid_video_record_length)+" seconds" +
-                " in the basic version.   Upgrade")
-        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+    public void showvideorecordlengthalert()
+    {
+        //double length=common.getunpaidvideorecordlength();
+        //double recordtime=length/60;
+        //DecimalFormat precision = new DecimalFormat("0.0");
+        //String time=precision.format(recordtime)+" seconds";
+        String time=common.getunpaidvideorecordlength()+" seconds";
+        String message="Recording is limited to "+ time + " in the basic version. Upgrade";
+
+        baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
+                getactivity(), message, new adapteritemclick(){
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (dialog != null)
-                    dialog.dismiss();
+            public void onItemClicked(Object object) {
+                gethelper().inapppurchase(object.toString());
             }
-        })
-        .show();
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
+        });
     }
 
     public View getmediaseekbarbackgroundview(String weight,String color)
@@ -282,7 +266,7 @@ public abstract class basefragment extends Fragment {
         public void xapipost_sendjson(Context mContext, String Action, HashMap<String,Object> mPairList, apiresponselistener mListener);
         public void xapi_uploadfile(Context mContext,String serverurl,String filepath,apiresponselistener mListener);
         public void setsoundwaveinformation(int ampletudevalue ,int decibelvalue);
-        public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick);
+        //public void showinapppurchasepopup(final Context activity,final adapteritemclick mitemclick);
         public void showsharepopupsub(final String path, final String type, final String mediatoken);
         public void inapppurchase(String productid);
         public void finishactivity();

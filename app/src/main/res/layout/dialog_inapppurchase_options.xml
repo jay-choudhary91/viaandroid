@@ -64,6 +64,7 @@
             android:textSize="15dp"
             app:fontType="OpenSans_Regular"
             android:gravity="center"
+            android:text="@string/limit_reached"
             android:textStyle="bold"/>
 
 

@@ -95,7 +95,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
 
 import org.apache.http.NameValuePair;
@@ -1714,8 +1713,8 @@ public class common {
     public static int getunpaidvideorecordlength()
     {
         int unpaidvideorecordlength=30;
-        if(! xdata.getinstance().getSetting(xdata.unpaid_video_record_length).isEmpty())
-            unpaidvideorecordlength = Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_video_record_length));
+        if(! xdata.getinstance().getSetting(xdata.unpaid_media_record_length).isEmpty())
+            unpaidvideorecordlength = Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_media_record_length));
 
         return unpaidvideorecordlength;
     }
@@ -2994,6 +2993,44 @@ public class common {
                 return true;
             }
         }
+        return false;
+    }
+
+    public static boolean shouldrestrictmedialimit(String xdatakey)
+    {
+        if(common.getapppaidlevel() > 0)
+            return false;
+
+        int count=0;
+        if(xdata.getinstance().getSetting(xdatakey).trim().isEmpty())
+            xdata.getinstance().saveSetting(xdatakey,"0");
+        else
+            count=Integer.parseInt(xdata.getinstance().getSetting(xdatakey).trim());
+
+        if(count > Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_media_record_count)))
+            return true;
+
+        return false;
+    }
+
+    public static boolean shouldshowupgradepopup(String xdatakey)
+    {
+        if(common.getapppaidlevel() > 0)
+            return false;
+
+        int count=0;
+        if(xdata.getinstance().getSetting(xdatakey).trim().isEmpty())
+            xdata.getinstance().saveSetting(xdatakey,"0");
+        else
+            count=Integer.parseInt(xdata.getinstance().getSetting(xdatakey).trim());
+
+        count++;
+        xdata.getinstance().saveSetting(xdatakey,""+count);
+        Log.e(xdatakey,""+xdata.getinstance().getSetting(xdatakey).trim());
+
+        if(count > Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_media_record_count)))
+            return true;
+
         return false;
     }
 }
