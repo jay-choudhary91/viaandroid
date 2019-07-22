@@ -467,6 +467,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     public void getconnectionspeed() {
         if (!common.isnetworkconnected(locationawareactivity.this)) {
             connectionspeed = "NA";
+            connectiondatadelay = "NA";
             return;
         }
 
@@ -1147,7 +1148,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("simserialnumber")) {
             metricItemValue = telephonymanager.getSimSerialNumber();
         } else if (key.equalsIgnoreCase("carrier")) {
-            metricItemValue = telephonymanager.getNetworkOperatorName();
+            if(common.getxdatavalue(xdata.getinstance().getSetting(config.airplanemode)).equalsIgnoreCase("ON")){
+                Log.e("airoplanemode","on");
+                metricItemValue = "NA";
+            }else{
+                metricItemValue = telephonymanager.getNetworkOperatorName();
+            }
         } else if (key.equalsIgnoreCase("carrierVOIP")) {
 
         } else if (key.equalsIgnoreCase("manufacturer")) {
@@ -1288,7 +1294,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = "" + height;
         } else if (key.equalsIgnoreCase("wificonnect") || key.equalsIgnoreCase(config.wifinetworkavailable) || key.equalsIgnoreCase("wifiname")
                 || key.equalsIgnoreCase("connectedwifiquality") || key.equalsIgnoreCase("externalip")) {
-            metricItemValue = "NO";
+            metricItemValue = "NA";
             ConnectivityManager connManager = (ConnectivityManager) locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             if (networkInfo.isConnected()) {
@@ -1559,66 +1565,71 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = xdata.getinstance().getSetting("currentaddress");
         } else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")|| (key.equalsIgnoreCase("deviceconnection"))) {
 
-            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            int networkType = telephonyManager.getNetworkType();
+            if(common.getxdatavalue(xdata.getinstance().getSetting(config.airplanemode)).equalsIgnoreCase("ON")){
+                metricItemValue = "NA";
+            }else
+            {
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                int networkType = telephonyManager.getNetworkType();
 
-            if (towerinfolist != null && towerinfolist.size() > 0) {
-                CellInfo info = towerinfolist.get(0);
-                if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
-                    metricItemValue = "";
-                } else {
-                    if (key.equalsIgnoreCase("celltowersignalstrength")) {
+                if (towerinfolist != null && towerinfolist.size() > 0) {
+                    CellInfo info = towerinfolist.get(0);
+                    if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
+                        metricItemValue = "";
+                    } else {
+                        if (key.equalsIgnoreCase("celltowersignalstrength")) {
 
-                        if (info != null) {
-                            try {
-                                if (TelephonyManager.NETWORK_TYPE_LTE == networkType) {
-                                    CellSignalStrengthLte gsm = ((CellInfoLte) info).getCellSignalStrength();
-                                    int signalstrength = gsm.getDbm();
-                                    metricItemValue = "" + signalstrength + " " + "dBm";
-                                } else {
+                            if (info != null) {
+                                try {
+                                    if (TelephonyManager.NETWORK_TYPE_LTE == networkType) {
+                                        CellSignalStrengthLte gsm = ((CellInfoLte) info).getCellSignalStrength();
+                                        int signalstrength = gsm.getDbm();
+                                        metricItemValue = "" + signalstrength + " " + "dBm";
+                                    } else {
 
-                                    CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
-                                    int signalstrength = gsm.getDbm();
-                                    metricItemValue = "" + signalstrength + " " + "dBm";
+                                        CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
+                                        int signalstrength = gsm.getDbm();
+                                        metricItemValue = "" + signalstrength + " " + "dBm";
+                                    }
+
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
-                        }
 
-                    } else if (key.equalsIgnoreCase("celltowerid")) {
-                        if (info != null) {
+                        } else if (key.equalsIgnoreCase("celltowerid")) {
+                            if (info != null) {
 
-                            try {
-                                if (TelephonyManager.NETWORK_TYPE_LTE == networkType) {
-                                    CellIdentityLte identity = ((CellInfoLte) info).getCellIdentity();
-                                    int celltowerid = identity.getCi();
-                                    metricItemValue = "" + celltowerid;
-                                } else {
-                                    CellIdentityGsm identityGsm = ((CellInfoGsm) info).getCellIdentity();
-                                    int celltowerid = identityGsm.getCid();
-                                    metricItemValue = "" + celltowerid;
+                                try {
+                                    if (TelephonyManager.NETWORK_TYPE_LTE == networkType) {
+                                        CellIdentityLte identity = ((CellInfoLte) info).getCellIdentity();
+                                        int celltowerid = identity.getCi();
+                                        metricItemValue = "" + celltowerid;
+                                    } else {
+                                        CellIdentityGsm identityGsm = ((CellInfoGsm) info).getCellIdentity();
+                                        int celltowerid = identityGsm.getCid();
+                                        metricItemValue = "" + celltowerid;
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
-                        }
-                    } else if (key.equalsIgnoreCase("deviceconnection")) {
+                        } else if (key.equalsIgnoreCase("deviceconnection")) {
 
-                        switch (networkType) {
-                            case TelephonyManager.NETWORK_TYPE_IDEN:
-                                metricItemValue = "2G";
-                                break;
+                            switch (networkType) {
+                                case TelephonyManager.NETWORK_TYPE_IDEN:
+                                    metricItemValue = "2G";
+                                    break;
 
-                            case TelephonyManager.NETWORK_TYPE_HSPAP:
-                                metricItemValue = "3G";
-                                break;
+                                case TelephonyManager.NETWORK_TYPE_HSPAP:
+                                    metricItemValue = "3G";
+                                    break;
 
-                            case TelephonyManager.NETWORK_TYPE_LTE:
-                                metricItemValue = "4G";
-                                break;
+                                case TelephonyManager.NETWORK_TYPE_LTE:
+                                    metricItemValue = "4G";
+                                    break;
+                            }
                         }
                     }
                 }
