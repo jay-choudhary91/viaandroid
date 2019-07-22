@@ -37,7 +37,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,6 +50,8 @@ import android.widget.Toast;
 
 import com.android.billingclient.api.Purchase;
 import com.android.vending.billing.IInAppBillingService;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.adapter.adaptersenddialog;
@@ -1226,7 +1231,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-    public  void videolocksharedialog(final Context context, final String title, String content){
+    public void videolocksharedialog(final Context context){
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
@@ -1248,6 +1253,112 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
 
 
+            }
+        });
+
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+
+    public void afterfirstmediarecordingdialog(Context context){
+
+        final Dialog dialog =new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.mediafirstrecording_popup);
+
+        TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
+        TextView txt_title = (TextView) dialog.findViewById(R.id.txt_title);
+        TextView btn_next = (TextView) dialog.findViewById(R.id.btn_next);
+        TextView btn_cancel = (TextView) dialog.findViewById(R.id.btn_cancel);
+        YoYo.YoYoString rope;
+
+        txt_content.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        txt_title.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
+        btn_next.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        btn_cancel.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+
+        txt_content.setText(context.getResources().getString(R.string.txt_congrats_content));
+
+
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(btn_next.getText().toString().equalsIgnoreCase("NEXT")){
+                    txt_title.setText(context.getResources().getString(R.string.txt_privacy));
+                    txt_content.setText(context.getResources().getString(R.string.txt_privacy_content));
+                    YoYo.with(Techniques.SlideInRight)
+                            .duration(100)
+                            .repeat(0)
+                            .playOn(txt_title);
+                    YoYo.with(Techniques.SlideInRight)
+                            .duration(100)
+                            .repeat(0)
+                            .playOn(txt_content);
+
+                    btn_next.setText(context.getResources().getString(R.string.txt_close));
+                    btn_cancel.setText(context.getResources().getString(R.string.txt_back));
+                }else{
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(btn_cancel.getText().toString().equalsIgnoreCase("cancel")){
+                    dialog.dismiss();
+                }else{
+                    txt_title.setText(context.getResources().getString(R.string.txt_congrats));
+                    txt_content.setText(context.getResources().getString(R.string.txt_congrats_content));
+                    YoYo.with(Techniques.SlideInLeft)
+                            .duration(100)
+                            .repeat(0)
+                            .playOn(txt_title);
+                    YoYo.with(Techniques.SlideInLeft)
+                            .duration(100)
+                            .repeat(0)
+                            .playOn(txt_content);
+                    btn_next.setText(context.getResources().getString(R.string.txt_next));
+                    btn_cancel.setText(context.getResources().getString(R.string.txt_cancel));
+                }
+            }
+        });
+
+        xdata.getinstance().saveSetting(config.firstmediacreated,"firstmediacreated").isEmpty();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    public void welcomedialog(final Context context){
+        final Dialog dialog =new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.welcome_popup);
+
+        TextView btn_watch = (TextView) dialog.findViewById(R.id.watch);
+        TextView btn_close = (TextView) dialog.findViewById(R.id.close);
+        btn_watch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
 

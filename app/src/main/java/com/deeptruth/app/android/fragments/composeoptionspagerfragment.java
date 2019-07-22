@@ -48,6 +48,7 @@ import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
@@ -1292,6 +1293,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             public void run() {
                 setonmediathumbnail(expandedImageView,startBounds,startScaleFinal,thumbView,uri);
                 expandedImageView.setVisibility(View.VISIBLE);
+                if(xdata.getinstance().getSetting(config.firstmediacreated).isEmpty())
+                     baseactivity.getinstance().afterfirstmediarecordingdialog(getActivity());
             }
         },750);
 
