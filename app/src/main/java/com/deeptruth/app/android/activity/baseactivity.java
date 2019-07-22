@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -1095,6 +1096,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     else
                         xdata.getinstance().saveSetting(config.enableexportnotification,"0");
                 }
+                ArrayList<Integer> array_image = new ArrayList<Integer>();
+                array_image.add(R.drawable.dropbox);
+                array_image.add(R.drawable.dropbox);
+                array_image.add(R.drawable.googledrive);
+                array_image.add(R.drawable.onedrive);
+                array_image.add(R.drawable.videolock);
+                ArrayList<String> array_name = new ArrayList<String>();
+                array_name.add("Box");
+                array_name.add("Dropbox");
+                array_name.add("Google Drive");
+                array_name.add("Microsoft OneDrive");
+                array_name.add("VideoLock Share");
 
                 baseactivity.getinstance().senditemsdialog(context);
 
