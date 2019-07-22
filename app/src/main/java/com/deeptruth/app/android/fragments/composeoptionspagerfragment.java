@@ -39,7 +39,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,14 +51,12 @@ import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
-import com.deeptruth.app.android.enumclasses.cryptomediatypepagerenum;
 import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
-import com.github.rongi.rotate_layout.layout.RotateLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -67,7 +64,6 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import kotlin.text.Regex;
 
 import static android.content.ContentValues.TAG;
 import static android.widget.RelativeLayout.TRUE;
@@ -1294,7 +1290,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 setonmediathumbnail(expandedImageView,startBounds,startScaleFinal,thumbView,uri);
                 expandedImageView.setVisibility(View.VISIBLE);
                 if(xdata.getinstance().getSetting(config.firstmediacreated).isEmpty())
-                     baseactivity.getinstance().afterfirstmediarecordingdialog(getActivity());
+                     baseactivity.getinstance().firstmediacapturedialog(getActivity());
             }
         },750);
 

@@ -1266,7 +1266,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-    public void afterfirstmediarecordingdialog(Context context){
+    public void firstmediacapturedialog(Context context){
 
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1335,7 +1335,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        xdata.getinstance().saveSetting(config.firstmediacreated,"firstmediacreated").isEmpty();
+        xdata.getinstance().saveSetting(config.firstmediacreated,"1").isEmpty();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

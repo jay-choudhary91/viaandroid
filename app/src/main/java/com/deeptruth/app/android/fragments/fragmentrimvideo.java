@@ -100,8 +100,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
     public void checkinapppurchasestatus()
     {
-        String message = applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_trim)+"\n"+"\n"+
-                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_upgrade);
+        String message = applicationviavideocomposer.getactivity().getResources().getString(R.string.if_you_would_like_the_option);
 
         baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
                 getactivity(), "", message, new adapteritemclick(){
