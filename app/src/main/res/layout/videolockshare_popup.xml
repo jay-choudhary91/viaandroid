@@ -56,11 +56,12 @@
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeMaxTextSize="30sp"
                 android:text="@string/txt_vl_share_detail"
-                android:textSize="18sp"
+                android:autoSizeTextType="uniform"
                 android:textColor="@color/black"
                 app:fontType="Comfortaa-Regular"/>
         </LinearLayout>
