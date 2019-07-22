@@ -370,8 +370,8 @@
     <string name="txt_upgrade">Would you like to upgrade?</string>
     <string name="txt_upgradecode">Please enter your upgrade code:</string>
 
-    <string name="txt_vl_share_title">VIDEOLOCK SHARE</string>
-    <string name="txt_vl_share_detail">The VideoLock share tool provides a way to temporarily send your files. \n\n Your uploaded files will be saved on the VideoLock servers for one hours. Please have people download the media file before it is deleted from the servers. (Note: The videos/audios are not removed from your phone.)</string>
+    <string name="txt_vl_share_title">VIDEOlOCK \nSHARE</string>
+    <string name="txt_vl_share_detail">The VideoLock share tool provides a way to temporarily send your files. \n\n Your uploaded files will be saved on the VideoLock servers for one hour. Please have people download the media file before it is deleted from the servers. (Note: The videos/audios are not removed from your phone.)</string>
     <string name="btn_vl_share">Upload &amp; Send</string>
 
     <string name="txt_congrats">CONGRATS!</string>
@@ -382,5 +382,9 @@
     <string name="txt_close">Close</string>
     <string name="txt_cancel">Cancel</string>
     <string name="txt_back">Back</string>
+    <string name="btn_watch">Watch</string>
+    <string name="btn_close">Close</string>
+    <string name="welcome_dialog_title">WELCOME!</string>
+    <string name="welcome_dialog_text">We have included a quick 45-second video that will explain all the features of your new VideoLock app. \n Would you like to watch a VideoLock demo video?</string>
 
 </resources>
