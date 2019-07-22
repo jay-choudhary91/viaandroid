@@ -1,31 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/tools"
-    android:id="@+id/rootlayout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:elevation="8dp"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0.0px"
-    android:clipToPadding="false"
-    android:clipChildren="false"
-    card_view:cardElevation="10dp"
-    card_view:cardCornerRadius="10dp"
-    app:cardUseCompatPadding="true"
-    card_view:cardPreventCornerOverlap="false"
-    app:ignore="NamespaceTypo">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:layout_marginLeft="@dimen/margin_15dp"
+    android:layout_marginRight="@dimen/margin_15dp"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_height="match_parent"
+        android:background="@drawable/new_dialog_bg"
+        android:gravity="bottom"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:gravity="center" >
 
             <ImageView
@@ -33,7 +25,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:scaleType="fitXY"
-                android:layout_marginLeft="@dimen/margin_10dp"
+                android:layout_marginLeft="2dp"
                 android:src="@drawable/ic_reply"/>
 
             <LinearLayout
@@ -43,13 +35,13 @@
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_title"
-                    android:layout_width="170dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
+                    android:gravity="center"
                     android:text="@string/txt_vl_share_title"
                     android:textColor="@android:color/black"
-                    android:textSize="30dp"
-                    app:fontType="bahnschrift_regular"/>
+                    android:textSize="30sp"
+                    app:fontType="Comfortaa-Regular"/>
 
             </LinearLayout>
 
@@ -58,8 +50,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:padding="@dimen/margin_10dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_10dp"
             android:gravity="center" >
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -68,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/txt_vl_share_detail"
-                android:textSize="15dp"
+                android:textSize="18sp"
                 android:textColor="@color/black"
                 app:fontType="Comfortaa-Regular"/>
         </LinearLayout>
@@ -78,10 +70,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="@dimen/margin_12dp"
-            android:layout_marginTop="@dimen/margin_40dp"
-            android:layout_marginBottom="50dp"
-            android:background="@drawable/videoloacksharebtnshadow"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/back"
             android:orientation="vertical">
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -90,17 +81,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/btn_vl_share"
                 android:gravity="center"
+                android:padding="@dimen/margin_10dp"
                 android:textColor="@color/soundwavecolor"
-                android:shadowColor="@color/text_shadow"
-                android:shadowDx="1"
-                android:shadowDy="1"
-                android:shadowRadius="2"
                 android:textStyle="bold"
-                app:fontType="Comfortaa-Regular"
-                android:textSize="20dp"/>
+                app:fontType="Comfortaa-Bold"
+                android:textSize="20sp"/>
 
         </LinearLayout>
 
     </LinearLayout>
-
-</android.support.v7.widget.CardView>
+</LinearLayout>
