@@ -17,11 +17,9 @@
             android:id="@+id/txt_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="TextView"
+            android:gravity="center_horizontal"
             android:textColor="@color/white"
-            android:textSize="22sp"
+            android:textSize="21sp"
             android:minLines="2"
             app:fontType="OpenSans_Semibold" />
 
@@ -36,36 +34,34 @@
                 android:layout_marginTop="@dimen/margin_10dp"
                 style="@style/layout_introdiscription"
                 android:justificationMode="inter_word"
-                app:fontType="OpenSans_Semibold" />
+                app:fontType="Comfortaa-Regular" />
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_descriptiontwo"
                 style="@style/layout_introdiscription"
                 android:textColor="@color/white"
                 android:justificationMode="inter_word"
-                app:fontType="OpenSans_Semibold" />
+                app:fontType="Comfortaa-Regular" />
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_descriptionthree"
                 style="@style/layout_introdiscription"
                 android:textColor="@color/white"
                 android:justificationMode="inter_word"
-                app:fontType="OpenSans_Semibold"/>
+                app:fontType="Comfortaa-Regular"/>
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_descriptionfour"
                 style="@style/layout_introdiscription"
                 android:textColor="@color/white"
                 android:justificationMode="inter_word"
-                app:fontType="OpenSans_Semibold" />
+                app:fontType="Comfortaa-Regular" />
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_descriptionfive"
                 style="@style/layout_introdiscription"
                 android:textColor="@color/white"
-                android:maxLines="1"
-                android:text="@string/intro_screenfivelinefive"
-                app:fontType="OpenSans_Semibold" />
+                app:fontType="Comfortaa-Regular" />
         </LinearLayout>
 
         <com.deeptruth.app.android.views.customfonttextview

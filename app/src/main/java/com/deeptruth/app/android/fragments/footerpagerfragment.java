@@ -60,41 +60,41 @@ public class footerpagerfragment extends Fragment {
             {
                 txt_descriptionone.setTextSize(15);
                 txt_descriptiontwo.setTextSize(15);
-                txt_descriptionthree.setTextSize(15.35f);
-                txt_descriptionfour.setTextSize(15.35f);
-                txt_descriptionfive.setTextSize(14.8f);
+                txt_descriptionthree.setTextSize(15.1f);
+                txt_descriptionfour.setTextSize(15.4f);
+                txt_descriptionfive.setTextSize(15.2f);
             }
             else if(introobject.getPosition() == 2)
             {
                 txt_descriptionone.setTextSize(15);
                 txt_descriptiontwo.setTextSize(15.9f);
                 txt_descriptionthree.setTextSize(15);
-                txt_descriptionfour.setTextSize(14.5f);
+                txt_descriptionfour.setTextSize(14.6f);
                 txt_descriptionfive.setTextSize(15.8f);
             }
             else if(introobject.getPosition() == 3)
             {
                 txt_descriptionone.setTextSize(15.2f);
-                txt_descriptiontwo.setTextSize(14.8f);
-                txt_descriptionthree.setTextSize(15.3f);
-                txt_descriptionfour.setTextSize(15.5f);
-                txt_descriptionfive.setTextSize(15.8f);
+                txt_descriptiontwo.setTextSize(15f);
+                txt_descriptionthree.setTextSize(15.1f);
+                txt_descriptionfour.setTextSize(15.8f);
+                txt_descriptionfive.setTextSize(15.9f);
             }
             else if(introobject.getPosition() == 4)
             {
                 txt_descriptionone.setTextSize(14.5f);
-                txt_descriptiontwo.setTextSize(15.2f);
+                txt_descriptiontwo.setTextSize(14.9f);
                 txt_descriptionthree.setTextSize(14.5f);
-                txt_descriptionfour.setTextSize(14.7f);
-                txt_descriptionfive.setTextSize(15.2f);
+                txt_descriptionfour.setTextSize(15f);
+                txt_descriptionfive.setTextSize(15.1f);
             }
             else if(introobject.getPosition() == 5)
             {
                 txt_descriptionone.setTextSize(14.5f);
-                txt_descriptiontwo.setTextSize(14.7f);
-                txt_descriptionthree.setTextSize(14.6f);
-                txt_descriptionfour.setTextSize(15);
-                txt_descriptionfive.setTextSize(15);
+                txt_descriptiontwo.setTextSize(14.6f);
+                txt_descriptionthree.setTextSize(14.55f);
+                txt_descriptionfour.setTextSize(14.8f);
+                txt_descriptionfive.setTextSize(14.8f);
             }
 
            if(introobject.getPosition() == 6){
