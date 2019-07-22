@@ -1,12 +1,6 @@
 package com.deeptruth.app.android.fragments;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -16,45 +10,22 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.inapputils.IabHelper;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
-import com.deeptruth.app.android.interfaces.apiresponselistener;
-import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
-import com.deeptruth.app.android.utils.googledriveutils.DriveServiceHelper;
-import com.deeptruth.app.android.utils.pinviewtext;
 import com.deeptruth.app.android.utils.progressdialog;
-import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.videotrimmer.hglvideotrimmer;
 import com.deeptruth.app.android.videotrimmer.interfaces.onhglvideolistener;
 import com.deeptruth.app.android.videotrimmer.interfaces.ontrimvideolistener;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.Scope;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
-
-import org.json.JSONObject;
-
-import java.util.Collections;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -116,8 +87,11 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         rootview.post(new Runnable() {
             @Override
             public void run() {
-                if(common.getapppaidlevel() <= 0)
+                if(common.ismediatrimcountexceed(config.mediatrimcount))
+                {
                     checkinapppurchasestatus();
+                    return;
+                }
             }
         });
 
@@ -147,58 +121,84 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         switch (view.getId()){
 
             case R.id.lyout_publish:
-                if(common.getapppaidlevel() <= 0)
+
+                common.shouldshowupgradepopup(config.mediatrimcount);
+                if(common.ismediatrimcountexceed(config.mediatrimcount))
                 {
                     checkinapppurchasestatus();
                     return;
                 }
 
-                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.publish_details2);
+                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
+                        getActivity().getResources().getString(R.string.publish_details2);
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
-                        xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0")) {
-                         baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+                        xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))
+                {
+                         baseactivity.getinstance().share_alert_dialog(getActivity(), getActivity().
+                                 getResources().getString(R.string.txt_publish), publish, new adapteritemclick() {
+                             @Override
+                             public void onItemClicked(Object object) {
+                                 baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken);
+                             }
 
+                             @Override
+                             public void onItemClicked(Object object, int type) {
+
+                             }
+                         });
                          return;
                 }
-
-                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
+                baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken);
                 break;
 
             case R.id.lyout_send:
-                if(common.getapppaidlevel() <= 0)
+
+                common.shouldshowupgradepopup(config.mediatrimcount);
+                if(common.ismediatrimcountexceed(config.mediatrimcount))
                 {
                     checkinapppurchasestatus();
                     return;
                 }
 
-                String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.send_details2);
+                String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+"\n"+
+                        getActivity().getResources().getString(R.string.send_details2);
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
-                         baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_send),send);
+                         baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
+                                 getResources().getString(R.string.txt_send),send, new adapteritemclick() {
+                             @Override
+                             public void onItemClicked(Object object) {
+                                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
+                             }
 
+                             @Override
+                             public void onItemClicked(Object object, int type) {
+
+                             }
+                         });
                          return;
                 }
-
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
-
                 break;
 
             case R.id.lyout_export:
-                if(common.getapppaidlevel() <= 0)
+                /*if(common.ismediatrimcountexceed(config.mediatrimcount))
                 {
                     checkinapppurchasestatus();
                     return;
                 }
 
-                String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+getActivity().getResources().getString(R.string.export_details2);
+                String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
+                        getActivity().getResources().getString(R.string.export_details2);
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
-                        baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_export),export);
-
+                        baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
+                                getResources().getString(R.string.txt_export),export);
                         return;
                 }
 
-                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
+                common.shouldshowupgradepopup(config.mediatrimcount);*/
+                //baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
 
                 break;
 

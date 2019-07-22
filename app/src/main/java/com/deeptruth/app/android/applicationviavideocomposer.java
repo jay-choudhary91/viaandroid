@@ -50,7 +50,7 @@ public class applicationviavideocomposer extends Application implements Lifecycl
         common.setting_check(xdata.app_paid_level, "0");
         common.setting_check(xdata.developer_mode, "0");// 0 - false, 1 - true
         common.setting_check(xdata.unpaid_media_record_length, "30"); // 30 seconds media record length as changes on 2019-07-22
-        common.setting_check(xdata.unpaid_media_record_count, "5"); // 5 media record allow for unpaid user as changes on 2019-07-22
+        common.setting_check(xdata.unpaid_media_record_trim_count, "5"); // 5 media record allow for unpaid user as changes on 2019-07-22
 
         common.setting_check(config.enabledevelopment, "1");
         common.setting_check(config.enableproduction, "0");

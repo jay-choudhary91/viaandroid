@@ -3007,7 +3007,26 @@ public class common {
         else
             count=Integer.parseInt(xdata.getinstance().getSetting(xdatakey).trim());
 
-        if(count > Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_media_record_count)))
+        Log.e(xdatakey,"Steps "+xdata.getinstance().getSetting(xdatakey).trim());
+
+        if(count >= Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_media_record_trim_count)))
+            return true;
+
+        return false;
+    }
+
+    public static boolean ismediatrimcountexceed(String xdatakey)
+    {
+        if(common.getapppaidlevel() > 0)
+            return false;
+
+        int count=0;
+        if(xdata.getinstance().getSetting(xdatakey).trim().isEmpty())
+            xdata.getinstance().saveSetting(xdatakey,"0");
+        else
+            count=Integer.parseInt(xdata.getinstance().getSetting(xdatakey).trim());
+
+        if(count > Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_media_record_trim_count)))
             return true;
 
         return false;
@@ -3028,7 +3047,7 @@ public class common {
         xdata.getinstance().saveSetting(xdatakey,""+count);
         Log.e(xdatakey,""+xdata.getinstance().getSetting(xdatakey).trim());
 
-        if(count > Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_media_record_count)))
+        if(count > Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_media_record_trim_count)))
             return true;
 
         return false;

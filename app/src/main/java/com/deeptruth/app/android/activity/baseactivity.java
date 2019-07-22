@@ -25,6 +25,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -46,6 +47,7 @@ import android.widget.Toast;
 
 import com.android.billingclient.api.Purchase;
 import com.android.vending.billing.IInAppBillingService;
+import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.adapter.adaptersenddialog;
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -690,18 +692,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             final LinearLayout linear_share_btn1 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn1);
             final LinearLayout linear_share_btn2 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn2);
             final LinearLayout linear_share_btn3 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn3);
-            final LinearLayout linear_share_btn4 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn4);
             TextView txt_title1 = (TextView) subdialogshare.findViewById(R.id.txt_title1);
             TextView txt_title2 = (TextView) subdialogshare.findViewById(R.id.txt_title2);
             ImageView img_cancel = subdialogshare.findViewById(R.id.img_cancelicon);
-            ImageView img_lock_trimmer = subdialogshare.findViewById(R.id.img_lock_trimmer);
-
-            if(common.getapppaidlevel() <= 0)
-                img_lock_trimmer.setVisibility(View.VISIBLE);
-
-            linear_share_btn4.setVisibility(View.GONE);
-            if(type.equalsIgnoreCase(config.item_video))
-            linear_share_btn4.setVisibility(View.VISIBLE);
 
             linear_share_btn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -739,43 +732,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
             });
 
-            linear_share_btn4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
-
-                if(type.equalsIgnoreCase(config.item_video))
-                {
-                    Uri selectedimageuri = Uri.fromFile(new File(path));
-                    final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), selectedimageuri);
-                    if (mp != null) {
-                        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer mediaPlayer) {
-                                int duration = mediaPlayer.getDuration();
-                                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                                Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-                                if (prev != null) {
-                                    ft.remove(prev);
-                                }
-                                ft.addToBackStack(null);
-                                fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
-                                fragtrimvideo.setdata(mediapath, duration,mediatoken);
-                                fragtrimvideo.show(ft, "dialog");
-
-                               /* int duration = mediaPlayer.getDuration();
-                                fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
-                                fragtrimvideo.setdata(mediapath, duration,mediatoken);
-                                addFragment(fragtrimvideo, false, true);*/
-                            }
-                        });
-                    }
-                }
-            }
-            });
-
             img_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -784,6 +740,43 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
             });
             subdialogshare.show();
+    }
+
+    public void showtrimdialogfragment(String filepath,String mediatoken)
+    {
+        try
+        {
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", new File(filepath));
+
+            final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), uri);
+            if (mp != null) {
+                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                        int duration = mediaPlayer.getDuration();
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                        if (prev != null) {
+                            ft.remove(prev);
+                        }
+                        ft.addToBackStack(null);
+                        fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
+                        fragtrimvideo.setdata(filepath, duration,mediatoken);
+                        fragtrimvideo.show(ft, "dialog");
+
+                               /* int duration = mediaPlayer.getDuration();
+                                fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
+                                fragtrimvideo.setdata(mediapath, duration,mediatoken);
+                                addFragment(fragtrimvideo, false, true);*/
+                    }
+                });
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public void callmediashareapi(final String mediatype, final String mediatoken, final String path, String method) {
@@ -919,7 +912,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         return;
     }
 
-    public void share_alert_dialog(final Context context, final String title, String content){
+    public void share_alert_dialog(final Context context, final String title, String content,adapteritemclick mitemclick ){
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -963,20 +956,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     else
                         xdata.getinstance().saveSetting(config.enableexportnotification,"0");
                 }
-                ArrayList<Integer> array_image = new ArrayList<Integer>();
-                array_image.add(R.drawable.dropbox);
-                array_image.add(R.drawable.dropbox);
-                array_image.add(R.drawable.googledrive);
-                array_image.add(R.drawable.onedrive);
-                array_image.add(R.drawable.videolock);
-                ArrayList<String> array_name = new ArrayList<String>();
-                array_name.add("Box");
-                array_name.add("Dropbox");
-                array_name.add("Google Drive");
-                array_name.add("Microsoft OneDrive");
-                array_name.add("VideoLock Share");
 
-                baseactivity.getinstance().senditemsdialog(context);
+                if(mitemclick != null)
+                    mitemclick.onItemClicked(null);
+
+                //baseactivity.getinstance().senditemsdialog(context);
 
                 dialog.dismiss();
 

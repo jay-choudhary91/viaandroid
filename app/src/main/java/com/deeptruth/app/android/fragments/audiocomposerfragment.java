@@ -1,11 +1,8 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaMetadataRetriever;
@@ -30,7 +27,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,15 +50,11 @@ import com.deeptruth.app.android.utils.visualizerview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
-import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.sha;
 import com.deeptruth.app.android.utils.visualizeraudiorecorder;
 import com.deeptruth.app.android.utils.xdata;
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.gson.Gson;
 
@@ -444,12 +436,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
         else
         {
+            if(common.shouldshowupgradepopup(config.mediarecordcount))
+                showvideorecordlengthalert();
+
             stoprecording();
             stopblinkanimation();
             startwaverecord();
-
-            if(common.shouldshowupgradepopup(config.mediarecordcount))
-                showvideorecordlengthalert();
         }
     }
 

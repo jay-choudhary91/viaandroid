@@ -1201,10 +1201,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 int brightnessValue = Settings.System.getInt(locationawareactivity.this.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
                 float total = 0;
                  if(brightnessValue >= 255){
-                     Log.e("brightnessValue",""+brightnessValue);
                       total = (brightnessValue * 100) / 4095;
                  }else{
-                     Log.e("brightnessValue",""+brightnessValue);
                       total = (brightnessValue * 100) / 255;
                  }
 
