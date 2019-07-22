@@ -372,6 +372,10 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     View horizontal_datatimedelayline;
     @BindView(R.id.vertical_datatimedelayline)
     View vertical_datatimedelayline;
+    @BindView(R.id.txt_sun)
+    TextView txt_sun;
+    @BindView(R.id.txt_moon)
+    TextView txt_moon;
 
 
     GoogleMap mgooglemap;
@@ -550,6 +554,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 }
             });
         }
+        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.sun_text)," "+applicationviavideocomposer.getactivity().getResources().getString(R.string.sun_direction), txt_sun);
+        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.moon_text)," "+applicationviavideocomposer.getactivity().getResources().getString(R.string.moon_direction), txt_moon);
         return rootview;
     }
 
@@ -710,6 +716,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicetime")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.phone_time),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvlocaltime);
                         }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("pictureqty")){
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvpicture_qty);
+                        }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("timezone")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.timezone),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvtimezone);
                         }
@@ -779,11 +788,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
                             txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
-                            txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
-                        }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
-                            txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.worldclockdate)){
+                            txt_world_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.Battery))
@@ -2328,6 +2334,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         settextviewcolor(tvcurrency, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         settextviewcolor(tvbarometer, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         settextviewcolor(tvdeviceconnection, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        settextviewcolor(txt_sun, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        settextviewcolor(txt_moon, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
     }
 
     public void setgraphviewlinecolor(){
