@@ -17,6 +17,12 @@ public class config {
     public static String cachefolder="cache";
     public static String audiotempfile="audiotemp.pcm";
 
+    public static String item_box="Box";
+    public static String item_dropbox="Dropbox";
+    public static String item_googledrive="Google Drive";
+    public static String item_microsoft_onedrive="Microsoft OneDrive";
+    public static String item_videoLock_share="VideoLock Share";
+
 
     public static String settingpageurl="http://console.dev.crypto-servers.com/inapp-settings.php";
 

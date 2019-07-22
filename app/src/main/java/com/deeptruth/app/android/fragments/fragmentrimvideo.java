@@ -121,67 +121,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
             }
         });
 
-
-       // requestSignIn();
-
         return rootview;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        switch (requestCode) {
-            case REQUEST_CODE_SIGN_IN:
-                if (resultCode == Activity.RESULT_OK && resultData != null) {
-                    handleSignInResult(resultData);
-                }
-                break;
-        }
-        //super.onActivityResult(requestCode, resultCode, resultData);
-    }
-
-    /**
-     * Handles the {@code result} of a completed sign-in activity initiated from {@link
-     * #requestSignIn()}.
-     */
-    private void handleSignInResult(Intent result) {
-        GoogleSignIn.getSignedInAccountFromIntent(result)
-                .addOnSuccessListener(googleAccount -> {
-                    Log.d(TAG, "Signed in as " + googleAccount.getEmail());
-
-                    // Use the authenticated account to sign in to the Drive service.
-                    GoogleAccountCredential credential =
-                            GoogleAccountCredential.usingOAuth2(
-                                    applicationviavideocomposer.getactivity(), Collections.singleton(DriveScopes.DRIVE_FILE));
-                    credential.setSelectedAccount(googleAccount.getAccount());
-                    Drive googleDriveService =
-                            new Drive.Builder(
-                                    AndroidHttp.newCompatibleTransport(),
-                                    new GsonFactory(),
-                                    credential)
-                                    .setApplicationName(applicationviavideocomposer.getactivity().getResources().getString(R.string.app_name))
-                                    .build();
-
-                    DriveServiceHelper mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
-                })
-                .addOnFailureListener(exception -> Log.e(TAG, "Unable to sign in.", exception));
-    }
-
-
-    /**
-     * Starts a sign-in activity using {@link #REQUEST_CODE_SIGN_IN}.
-     */
-    private void requestSignIn() {
-        Log.d(TAG, "Requesting sign-in");
-
-        GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
-                        .build();
-        GoogleSignInClient client = GoogleSignIn.getClient(applicationviavideocomposer.getactivity(), signInOptions);
-        Intent signInIntent = client.getSignInIntent();
-        // The result of the sign-in Intent is handled in onActivityResult.
-        getActivity().startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN);
     }
 
     public void checkinapppurchasestatus()
@@ -214,7 +154,11 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0")) {
                          baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_publish),publish);
+
+                         return;
                 }
+
+                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
                 break;
 
             case R.id.lyout_send:
@@ -228,7 +172,11 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
                          baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_send),send);
+
+                         return;
                 }
+
+                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
 
                 break;
 
@@ -243,7 +191,11 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
                         baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().getResources().getString(R.string.txt_export),export);
+
+                        return;
                 }
+
+                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
 
                 break;
 
