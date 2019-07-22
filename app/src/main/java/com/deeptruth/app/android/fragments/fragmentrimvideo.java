@@ -104,7 +104,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_upgrade);
 
         baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
-                getactivity(), message, new adapteritemclick(){
+                getactivity(), "", message, new adapteritemclick(){
             @Override
             public void onItemClicked(Object object) {
 

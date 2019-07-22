@@ -28,6 +28,8 @@
     <string name="purchase_for_permonth">Purchase for $10/month</string>
     <string name="i_have_upgrade_code">I have on upgrade code</string>
 
+    <string name="limit_reached_title">30-SECOND LIMIT REACHED</string>
+
     <string name="limit_reached">This lite version of the VideoLock app lets you record unlimited short videos and audios.\nTo record and
         certify longer videos/audios, please upgrade to the full version VideoLock.</string>
 

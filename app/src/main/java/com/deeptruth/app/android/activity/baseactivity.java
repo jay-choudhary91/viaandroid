@@ -979,7 +979,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.show();
     }
 
-    public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
+    public void showinapppurchasepopup(final Context activity, String title,String message, final adapteritemclick mitemclick)
     {
 
         if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
@@ -998,6 +998,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView tv_upgradecode = (TextView) dialoginapppurchase.findViewById(R.id.tv_upgradecode);
         TextView tvnothanks = (TextView) dialoginapppurchase.findViewById(R.id.btn_nothanks);
         TextView txt_title = (TextView) dialoginapppurchase.findViewById(R.id.txt_title);
+
+        if(! title.trim().isEmpty())
+            txt_title.setText(title);
 
         txt_content.setText(message);
 
@@ -1154,7 +1157,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         requestgooglesignin();
                     } else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_videoLock_share))
                     {
-                        videolocksharedialog(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_vl_share_title),applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_vl_share_detail));
+                        videolocksharedialog(applicationviavideocomposer.getactivity());
                     }
                 }
             }

@@ -181,11 +181,12 @@ public abstract class basefragment extends Fragment {
         //double recordtime=length/60;
         //DecimalFormat precision = new DecimalFormat("0.0");
         //String time=precision.format(recordtime)+" seconds";
-        String time=common.getunpaidvideorecordlength()+" seconds";
-        String message="Recording is limited to "+ time + " in the basic version. Upgrade";
+        //String time=common.getunpaidvideorecordlength()+" seconds";
+        //String message="Recording is limited to "+ time + " in the basic version. Upgrade";
 
+        String message=applicationviavideocomposer.getactivity().getResources().getString(R.string.limit_reached);
         baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
-                getactivity(), message, new adapteritemclick(){
+                getactivity(), "Alert", message, new adapteritemclick(){
             @Override
             public void onItemClicked(Object object) {
                 gethelper().inapppurchase(object.toString());
