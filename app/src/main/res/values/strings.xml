@@ -313,7 +313,6 @@
     <string name="txt_help">HELP</string>
 
 
-    <string name="intro_titile1">The Problem:\n Deepfakes</string>
     <!---->
     <string name="intro_screenonelineone">Deepfakes are high tech fake </string>
     <string name="intro_screenonelinetwo">videos and audios that make </string>
@@ -349,14 +348,15 @@
     <string name="intro_screenfivelinefour">share your authentic VideoLock </string>
     <string name="intro_screenfivelinefive">recording and spread the truth.</string>
 
+    <string name="intro_titile1">The Problem:\nDeepfakes</string>
     <string name="intro_detail1">Deepfakes are high tech fake \nvideos and audios that make\npeople appear to say and do \nthings that never happened.\nThis a \"fake news\" is growing.</string>
-    <string name="intro_titile2">The Result:\n Deception</string>
+    <string name="intro_titile2">The Result:\nDeception</string>
     <string name="intro_detail2">Deepfakes can quickly spread \naround the world and cause \npermanent damage: elections \ninfluenced, reputations ruined, \nand relationships destroyed.</string>
-    <string name="intro_titile3">The Challenge:\n Defense Doesn\'t Work</string>
+    <string name="intro_titile3">The Challenge:\nDefense Doesn\'t Work</string>
     <string name="intro_detail3">Solutions that try to identify \nand disprove every deepfake \nare playing a losing game of \ndefense. The viral nature of \nfake news spreads too fast.</string>
-    <string name="intro_titile4">The Solution:\n VideoLock</string>
+    <string name="intro_titile4">The Solution:\nVideoLock</string>
     <string name="intro_detail4">VideoLock\'s patented solution \ncreates a cryptographic DNA \nfingerprint, 30 times a second, \nwith 50+ layers of metadata... \nand it does it all in real-time.</string>
-    <string name="intro_titile5">The Result:\n Privacy &amp; Protection</string>
+    <string name="intro_titile5">The Result:\nPrivacy &amp; Protection</string>
     <string name="intro_detail5">Recordings are 100% private and \nexist ONLY on your smartphone.\nIf a deepfake is created, you can \nshare your authentic VideoLock \nrecording and spread the truth.</string>
 
     <string name="checkboxstring">Do not notify again</string>

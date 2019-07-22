@@ -4,21 +4,14 @@
     <declare-styleable name="customfonttextview">
         <attr name="fontType">
             <enum name="OpenSans_Bold" value="0" />
-            <enum name="OpenSans_BoldItalic" value="1" />
-            <enum name="OpenSans_ExtraBold" value="2" />
-            <enum name="OpenSans_ExtraBoldItalic" value="3" />
-            <enum name="OpenSans_Italic" value="4" />
-            <enum name="OpenSans_light" value="5" />
-            <enum name="OpenSans_LightItalic" value="6" />
-            <enum name="OpenSans_Regular" value="7" />
-            <enum name="OpenSans_Semibold" value="8" />
-            <enum name="OpenSans_SemiboldItalic" value="9" />
-            <enum name="Comfortaa-Bold" value="10" />
-            <enum name="Comfortaa-Light" value="11" />
-            <enum name="Comfortaa-Regular" value="12" />
-            <enum name="bahnschrift_regular" value="13" />
-            <enum name="bahnschrift_light" value="14" />
-            <enum name="arial_narrow_bold" value="15" />
+            <enum name="OpenSans_Regular" value="1" />
+            <enum name="OpenSans_Semibold" value="2" />
+            <enum name="Comfortaa-Bold" value="3" />
+            <enum name="Comfortaa-Light" value="4" />
+            <enum name="Comfortaa-Regular" value="5" />
+            <enum name="bahnschrift_regular" value="6" />
+            <enum name="bahnschrift_light" value="7" />
+            <enum name="arial_narrow_bold" value="8" />
 
 
         </attr>

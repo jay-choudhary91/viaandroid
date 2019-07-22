@@ -1909,7 +1909,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.phoneclockdate)){
                             txt_phone_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
                         }
-
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.worldclockdate)){
+                            txt_world_date.setText( metricItemArraylist.get(j).getMetricTrackValue());
+                        }
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.Battery))
                         {
                             if(chart_battery!= null)

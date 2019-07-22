@@ -55,9 +55,9 @@ public class applicationviavideocomposer extends Application implements Lifecycl
         common.setting_check(config.enabledevelopment, "1");
         common.setting_check(config.enableproduction, "0");
 
-        regularfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Regular.ttf");
-        semiboldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Semibold.ttf");
-        boldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/OpenSans-Bold.ttf");
+        regularfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/Comfortaa-Regular.ttf");
+        semiboldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/Comfortaa-Bold.ttf");
+        boldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/Comfortaa-Bold.ttf");
         comfortaaregular = Typeface.createFromAsset(mcontext.getAssets(), "fonts/Comfortaa-Regular.ttf");
         bahnschriftregular = Typeface.createFromAsset(mcontext.getAssets(), "fonts/BAHNSCHRIFT-11.TTF");
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);

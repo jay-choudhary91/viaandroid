@@ -263,7 +263,7 @@
                     android:gravity="center"
                     android:textColor="@color/dark_blue_solid_a"
                     android:text="TM"
-                    app:fontType="OpenSans_ExtraBold"
+                    app:fontType="Comfortaa-Bold"
                     android:background="@drawable/circle_trademark_background"
                     />
         </RelativeLayout>
