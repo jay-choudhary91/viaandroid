@@ -13,7 +13,7 @@ public class xdata {
     public static String app_paid_level = "app_paid_level";
     public static String developer_mode = "developer_mode";
     public static String unpaid_media_record_length = "unpaid_media_record_length";
-    public static String unpaid_media_record_count = "unpaid_media_record_count";
+    public static String unpaid_media_record_trim_count = "unpaid_media_record_trim_count";
     private static final String PREF_SETTINGS_PAIR = "pref_settings_pair";
 
     private static xdata ourInstance;

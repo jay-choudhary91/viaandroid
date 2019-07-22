@@ -62,6 +62,7 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.adapter.encryptiondataadapter;
 import com.deeptruth.app.android.adapter.folderdirectoryspinneradapter;
 import com.deeptruth.app.android.adapter.framebitmapadapter;
@@ -1229,7 +1230,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                     }, 1500);
                     if (mediafilepath != null && (!mediafilepath.isEmpty())){
-                        gethelper().showsharepopupsub(mediafilepath,"video",mediatoken);
+                        //gethelper().showsharepopupsub(mediafilepath,"video",mediatoken);
+                        baseactivity.getinstance().showtrimdialogfragment(mediafilepath,mediatoken);
                     }
                    // common.sharevideo(getActivity(), mediafilepath);
                     break;

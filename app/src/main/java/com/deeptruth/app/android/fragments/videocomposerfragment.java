@@ -1,7 +1,6 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -10,13 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
-import android.graphics.drawable.ColorDrawable;
-import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
@@ -48,11 +44,9 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -62,29 +56,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
-import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.dbitemcontainer;
 import com.deeptruth.app.android.models.frameinfo;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.permissions;
 import com.deeptruth.app.android.models.videomodel;
-import com.deeptruth.app.android.models.wavevisualizer;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.services.insertmediadataservice;
 import com.deeptruth.app.android.utils.CenteredImageSpan;
-import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.camerautil;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.noise;
-import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.sha;
-import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.gson.Gson;
@@ -1473,16 +1461,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void startstopvideo()
     {
-        if (isvideorecording) {
+        if (isvideorecording)
+        {
+            if(common.shouldshowupgradepopup(config.mediarecordcount))
+                showvideorecordlengthalert();
+
             gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             resetpreviewsession();
             stopresetmediarecorder();
             startmetaservices();
             stopblinkanimation();
-
-            if(common.shouldshowupgradepopup(config.mediarecordcount))
-                showvideorecordlengthalert();
 
         } else {
             selectedhashes="";

@@ -51,6 +51,7 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.adapter.adaptermediagrid;
 import com.deeptruth.app.android.adapter.adaptermedialist;
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -1443,7 +1444,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             }else if(videoobj.getmimetype().startsWith("video")){
 
-                gethelper().showsharepopupsub(videoobj.getPath(),"video",videoobj.getVideotoken());
+                //gethelper().showsharepopupsub(videoobj.getPath(),"video",videoobj.getVideotoken());
+
+                baseactivity.getinstance().showtrimdialogfragment(videoobj.getPath(),videoobj.getVideotoken());
+
                /* Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
