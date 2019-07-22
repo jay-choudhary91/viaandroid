@@ -182,7 +182,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 break;
 
             case R.id.lyout_export:
-                /*if(common.ismediatrimcountexceed(config.mediatrimcount))
+                if(common.ismediatrimcountexceed(config.mediatrimcount))
                 {
                     checkinapppurchasestatus();
                     return;
@@ -193,12 +193,19 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
                         baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
-                                getResources().getString(R.string.txt_export),export);
+                                getResources().getString(R.string.txt_export),export, new adapteritemclick() {
+                            @Override
+                            public void onItemClicked(Object object) {
+                                //baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
+                            }
+
+                            @Override
+                            public void onItemClicked(Object object, int type) {
+
+                            }
+                        });
                         return;
                 }
-
-                common.shouldshowupgradepopup(config.mediatrimcount);*/
-                //baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
 
                 break;
 
