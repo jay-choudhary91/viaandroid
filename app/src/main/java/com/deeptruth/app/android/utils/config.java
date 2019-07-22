@@ -161,6 +161,7 @@ public class config {
     public static final String loginpage = "loginpage";
     public static final String camera = "camera";
     public static final String pictureqty = "pictureqty";
+    public static final String firstmediacreated = "firstmediacreated";
 
 
     //graphicaldata
