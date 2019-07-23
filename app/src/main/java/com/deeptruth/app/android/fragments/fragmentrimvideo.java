@@ -27,6 +27,7 @@ import com.deeptruth.app.android.videotrimmer.hglvideotrimmer;
 import com.deeptruth.app.android.videotrimmer.interfaces.onhglvideolistener;
 import com.deeptruth.app.android.videotrimmer.interfaces.ontrimvideolistener;
 
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -126,7 +127,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                                  getResources().getString(R.string.txt_send),send, new adapteritemclick() {
                              @Override
                              public void onItemClicked(Object object) {
-                                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
+                                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath);
                              }
 
                              @Override
@@ -136,7 +137,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                          });
                          return;
                 }
-                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
+                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath);
                 break;
 
             case R.id.lyout_export:
