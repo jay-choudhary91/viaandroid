@@ -1329,7 +1329,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     }
                 }
             } else {
-                metricItemValue = "NO";
+                metricItemValue = "NA";
                 xdata.getinstance().saveSetting("wificonnected", "0");
                 xdata.getinstance().saveSetting(config.availablewifis, "");
             }
