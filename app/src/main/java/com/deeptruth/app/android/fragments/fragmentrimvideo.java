@@ -82,6 +82,8 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 mvideotrimmer.setVideoInformationVisibility(true);
             }
 
+            common.shouldshowupgradepopup(config.mediatrimcount);
+
         }
 
         rootview.post(new Runnable() {
@@ -121,7 +123,6 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
             case R.id.lyout_publish:
 
-                common.shouldshowupgradepopup(config.mediatrimcount);
                 if(common.ismediatrimcountexceed(config.mediatrimcount))
                 {
                     checkinapppurchasestatus();
@@ -152,7 +153,6 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
             case R.id.lyout_send:
 
-                common.shouldshowupgradepopup(config.mediatrimcount);
                 if(common.ismediatrimcountexceed(config.mediatrimcount))
                 {
                     checkinapppurchasestatus();
