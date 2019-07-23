@@ -1154,7 +1154,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         requestgooglesignin();
                     } else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_videoLock_share))
                     {
-                        videolocksharedialog(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_vl_share_title),applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_vl_share_detail));
+                        videolocksharedialog(applicationviavideocomposer.getactivity());
                     }
                 }
             }

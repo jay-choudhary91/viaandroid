@@ -56,6 +56,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -1686,6 +1687,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if (textureview.isAvailable())
                 openCamera(textureview.getWidth(), textureview.getHeight());
             textureview.setSurfaceTextureListener(surfacetexturelistener);
+
+
         }
     }
 

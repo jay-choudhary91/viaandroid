@@ -139,6 +139,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private Animator currentAnimator;
     private int shortAnimationDuration;
     private static final int  RC_OVERLAY=21;
+    int showwelcomepopup=0;
 
     @Override
     public int getlayoutid() {
@@ -447,6 +448,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         @Override
                         public void onItemClicked(Object object) {
                             openOverlaySettings();
+
+                            if(showwelcomepopup==1)
+                                baseactivity.getinstance().welcomedialog(getActivity());
+
                         }
 
                         @Override
@@ -465,6 +470,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 Uri.parse("package:" + applicationviavideocomposer.getactivity().getPackageName()));
         try {
             startActivityForResult(intent, RC_OVERLAY);
+            showwelcomepopup=1;
         } catch (ActivityNotFoundException e) {
             Log.e(TAG, e.getMessage());
         }
