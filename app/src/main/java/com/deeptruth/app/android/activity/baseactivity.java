@@ -745,6 +745,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
                 {
+                    common.shouldshowupgradepopup(config.mediatrimcount);
                     if(common.ismediatrimcountexceed(config.mediatrimcount))
                     {
                         checkinapppurchasestatus();
@@ -765,9 +766,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
                 mediamethod = config.type_public;
 
-                if(type.equalsIgnoreCase(config.type_video))
+                if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
                 {
-                    if(common.ismediatrimcountexceed(config.mediatrimcount) && ismediatrimmed)
+                    common.shouldshowupgradepopup(config.mediatrimcount);
+                    if(common.ismediatrimcountexceed(config.mediatrimcount))
                     {
                         checkinapppurchasestatus();
                         return;
@@ -787,9 +789,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
                 mediamethod = config.type_linkinvite;
 
-                if(type.equalsIgnoreCase(config.type_video))
+                if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
                 {
-                    if(common.ismediatrimcountexceed(config.mediatrimcount) && ismediatrimmed)
+                    common.shouldshowupgradepopup(config.mediatrimcount);
+                    if(common.ismediatrimcountexceed(config.mediatrimcount))
                     {
                         checkinapppurchasestatus();
                         return;
@@ -1235,6 +1238,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onItemClicked(Object object) {
                 if(object != null)
                 {
+                    common.shouldshowupgradepopup(config.mediatrimcount);
+
                     int position=(int)object;
                     if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_googledrive))
                     {
