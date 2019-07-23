@@ -1423,7 +1423,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if(videoobj.getmimetype().startsWith("image")){
                 String imagepath = videoobj.getPath();
 
-                gethelper().showsharepopupsub(videoobj.getPath(),"image",videoobj.getVideotoken());
+                gethelper().showsharepopupsub(videoobj.getPath(),"image",videoobj.getVideotoken(),false);
                 /*Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
@@ -1433,7 +1433,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share photo"));*/
             }else if(videoobj.getmimetype().startsWith("audio")){
 
-                gethelper().showsharepopupsub(videoobj.getPath(),"audio",videoobj.getVideotoken());
+                gethelper().showsharepopupsub(videoobj.getPath(),"audio",videoobj.getVideotoken(),false);
                 /*Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);

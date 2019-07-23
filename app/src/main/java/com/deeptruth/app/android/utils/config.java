@@ -70,6 +70,8 @@ public class config {
     public static final String launchtypemedialist = "launchtypemedialist";
     public static final String selectedsyncsetting = "selectedsyncsetting";
 
+    public static final String dropboxauthtoken = "dropboxauthtoken";
+
     public static final String updatinglocation = " Updating location .....";
 
     public static final String selectedsyncsetting_0 = "Keep running sync & notify me when completed";

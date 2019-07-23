@@ -6,7 +6,6 @@ import android.arch.lifecycle.Lifecycle;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -21,12 +20,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -37,10 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,6 +72,7 @@ import com.deeptruth.app.android.netutils.xapipostfile;
 import com.deeptruth.app.android.inapputils.IabBroadcastReceiver;
 import com.deeptruth.app.android.inapputils.IabHelper;
 import com.deeptruth.app.android.inapputils.IabResult;
+import com.deeptruth.app.android.utils.DropboxClientFactory;
 import com.deeptruth.app.android.utils.googledriveutils.DriveServiceHelper;
 import com.deeptruth.app.android.utils.pinviewtext;
 import com.deeptruth.app.android.utils.common;
@@ -85,7 +80,10 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.homewatcher;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
+import com.deeptruth.app.android.utils.uploadfileatdropbox;
 import com.deeptruth.app.android.utils.xdata;
+import com.dropbox.core.android.Auth;
+import com.dropbox.core.v2.files.FileMetadata;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -100,7 +98,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -125,7 +122,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     String mediavideotoken = "",mediamethod = "";
     Dialog dialog;
     Dialog dialoginapppurchase =null,dialogupgradecode=null;
-
+    // In the class declaration section:
+    //private DropboxAPI<AndroidAuthSession> mdropboxapi;
     // The helper object
     IabHelper mHelper;
 
@@ -172,6 +170,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         isapprunning = true;
         instance = this;
 
+        if(! xdata.getinstance().getSetting(config.dropboxauthtoken).trim().isEmpty())
+        {
+            String authtoken=xdata.getinstance().getSetting(config.dropboxauthtoken);
+            DropboxClientFactory.init(authtoken);
+        }
+
+        //mdropboxapi = new DropboxAPI<AndroidAuthSession>(builddropboxsession());
+
         LayoutInflater inflater = getLayoutInflater();
         View contentview = inflater.inflate(getlayoutid(), null);
         setContentView(contentview);
@@ -198,16 +204,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
             mHelper.startSetup(new
                                        IabHelper.OnIabSetupFinishedListener() {
-                                           public void onIabSetupFinished(IabResult result)
-                                           {
-                                               if (!result.isSuccess()) {
-                                                   Log.d(TAG, "In-app Billing setup failed: " +
-                                                           result);
-                                               } else {
-                                                   Log.d(TAG, "In-app Billing is set up OK");
-                                               }
-                                           }
-                                       });
+               public void onIabSetupFinished(IabResult result)
+               {
+                   if (!result.isSuccess()) {
+                       Log.d(TAG, "In-app Billing setup failed: " +
+                               result);
+                   } else {
+                       Log.d(TAG, "In-app Billing is set up OK");
+                   }
+               }
+            });
 
             mServiceConn = new ServiceConnection() {
                 @Override
@@ -228,6 +234,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
     }
+
+    /*private AndroidAuthSession builddropboxsession() {
+        // And later in some initialization function:
+        AppKeyPair appKeys = new AppKeyPair(applicationviavideocomposer.getactivity().getResources().getString(R.string.dropbox_appkey),
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.dropbox_appsecret));
+        AndroidAuthSession session = new AndroidAuthSession(appKeys);
+
+        return session;
+    }*/
+
 
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         @Override
@@ -314,6 +330,27 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public basefragment getcurrentfragment() {
         return mcurrentfragment;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try
+        {
+            if(xdata.getinstance().getSetting(config.dropboxauthtoken).trim().isEmpty())
+            {
+                if(Auth.getOAuth2Token() != null && (! Auth.getOAuth2Token().equalsIgnoreCase("null")) && (!
+                        Auth.getOAuth2Token().trim().isEmpty()))
+                {
+                    String authtoken=Auth.getOAuth2Token();
+                    xdata.getinstance().saveSetting(config.dropboxauthtoken,authtoken);
+                    DropboxClientFactory.init(xdata.getinstance().getSetting(config.dropboxauthtoken));
+                }
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -674,7 +711,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     @Override
-    public void showsharepopupsub(final String path, final String type, final String mediatoken) {
+    public void showsharepopupsub(final String path, final String type, final String mediatoken,boolean ismediatrimmed) {
             if (subdialogshare != null && subdialogshare.isShowing())
                 subdialogshare.dismiss();
 
@@ -705,6 +742,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
                 mediamethod = config.type_private;
+
+                if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
+                {
+                    if(common.ismediatrimcountexceed(config.mediatrimcount))
+                    {
+                        checkinapppurchasestatus();
+                        return;
+                    }
+                }
+
                 if(!isuserlogin()){
                     redirecttologin();
                     return;
@@ -717,6 +764,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
                 mediamethod = config.type_public;
+
+                if(type.equalsIgnoreCase(config.type_video))
+                {
+                    if(common.ismediatrimcountexceed(config.mediatrimcount) && ismediatrimmed)
+                    {
+                        checkinapppurchasestatus();
+                        return;
+                    }
+                }
+
                 if(!isuserlogin()){
                     redirecttologin();
                     return;
@@ -729,6 +786,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
                 mediamethod = config.type_linkinvite;
+
+                if(type.equalsIgnoreCase(config.type_video))
+                {
+                    if(common.ismediatrimcountexceed(config.mediatrimcount) && ismediatrimmed)
+                    {
+                        checkinapppurchasestatus();
+                        return;
+                    }
+                }
+
                 if(!isuserlogin()){
                     redirecttologin();
                     return;
@@ -745,6 +812,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
             });
             subdialogshare.show();
+    }
+
+    public void checkinapppurchasestatus()
+    {
+        String message = applicationviavideocomposer.getactivity().getResources().getString(R.string.if_you_would_like_the_option);
+
+        baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
+                getactivity(), "", message, new adapteritemclick(){
+            @Override
+            public void onItemClicked(Object object) {
+
+            }
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
+        });
     }
 
     public void showtrimdialogfragment(String filepath,String mediatoken)
@@ -932,7 +1016,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
         final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
-        notifycheckbox.setText("Do not notify again");
+        notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
         notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
 
         txttitle.setText(title);
@@ -979,7 +1063,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.show();
     }
 
-    public void showinapppurchasepopup(final Context activity, String message, final adapteritemclick mitemclick)
+    public void showinapppurchasepopup(final Context activity, String title,String message, final adapteritemclick mitemclick)
     {
 
         if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
@@ -998,6 +1082,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView tv_upgradecode = (TextView) dialoginapppurchase.findViewById(R.id.tv_upgradecode);
         TextView tvnothanks = (TextView) dialoginapppurchase.findViewById(R.id.btn_nothanks);
         TextView txt_title = (TextView) dialoginapppurchase.findViewById(R.id.txt_title);
+
+        if(! title.trim().isEmpty())
+            txt_title.setText(title);
 
         txt_content.setText(message);
 
@@ -1121,7 +1208,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialogupgradecode.show();
     }
 
-    public void senditemsdialog(Context context){
+    public void senditemsdialog(Context context,String mediafilepath){
 
         if(!isuserlogin()){
             redirecttologin();
@@ -1152,9 +1239,26 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_googledrive))
                     {
                         requestgooglesignin();
-                    } else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_videoLock_share))
+                    }
+                    else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_videoLock_share))
                     {
                         videolocksharedialog(applicationviavideocomposer.getactivity());
+                    }
+                    else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_dropbox))
+                    {
+                        if(xdata.getinstance().getSetting(config.dropboxauthtoken).trim().isEmpty())
+                        {
+                            Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
+                                    .getResources().getString(R.string.dropbox_appkey));
+                          //  mdropboxapi.getSession().startOAuth2Authentication(baseactivity.this);
+                        }
+                        else
+                        {
+                            dropboxuploadfile(mediafilepath);
+                            /*uploadfileatdropbox upload = new uploadfileatdropbox(baseactivity.this, mdropboxapi, "",
+                                    new File(mediafilepath));
+                            upload.execute();*/
+                        }
                     }
                 }
             }
@@ -1186,6 +1290,25 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adaptersend);
         send_item_dialog.show();
+    }
+
+    public void dropboxuploadfile(String filepath) {
+
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+        new uploadfileatdropbox(applicationviavideocomposer.getactivity(), DropboxClientFactory.getClient(),
+                new uploadfileatdropbox.Callback() {
+            @Override
+            public void onUploadComplete(FileMetadata result) {
+                progressdialog.dismisswaitdialog();
+                Toast.makeText(applicationviavideocomposer.getactivity(), "File uploaded successfully!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                progressdialog.dismisswaitdialog();
+                Toast.makeText(applicationviavideocomposer.getactivity(), "Failed to upload file!", Toast.LENGTH_SHORT).show();
+            }
+        }).execute(filepath);
     }
 
     /**
@@ -1263,7 +1386,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-    public void afterfirstmediarecordingdialog(Context context){
+    public void firstmediacapturedialog(Context context){
 
         final Dialog dialog =new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1332,7 +1455,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        xdata.getinstance().saveSetting(config.firstmediacreated,"firstmediacreated").isEmpty();
+        xdata.getinstance().saveSetting(config.firstmediacreated,"1").isEmpty();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

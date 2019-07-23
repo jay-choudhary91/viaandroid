@@ -24,9 +24,15 @@
     <string name="login_here">Please login here to update title and description!</string>
     <string name="metadata_updated">Metadata updated successfully!</string>
 
+    <string name="dropbox_appkey_followedbydb">db-unm21q9pupo7xyg</string>
+    <string name="dropbox_appkey">unm21q9pupo7xyg</string>
+    <string name="dropbox_appsecret">szxh2fqpibooc3o</string>
+
     <string name="purchase_for_peryear">Purchase for $10/year</string>
     <string name="purchase_for_permonth">Purchase for $10/month</string>
     <string name="i_have_upgrade_code">I have an upgrade code</string>
+
+    <string name="limit_reached_title">30-SECOND LIMIT REACHED</string>
 
     <string name="limit_reached">This lite version of the VideoLock app lets you record unlimited short videos and audios.\nTo record and
         certify longer videos/audios, please upgrade to the full version VideoLock.</string>
@@ -370,8 +376,13 @@
     <string name="do_not_notify_me_again">Do you want to display the intro screens again?</string>
 
     <string name="txt_trim">The ability to trim and send portion of videos or audios is available in the full version.</string>
+
+    <string name="if_you_would_like_the_option">If you would like the option to trim a longer recording and send (or publish) only a portion of a video or audio,
+        please consider upgrading your VideoLock app.</string>
     <string name="txt_upgrade">Would you like to upgrade?</string>
     <string name="txt_upgradecode">Please enter your upgrade code:</string>
+
+    <string name="do_not_notify_again">Do not notify again</string>
 
     <string name="txt_vl_share_title">VIDEOlOCK \nSHARE</string>
     <string name="txt_vl_share_detail">The VideoLock share tool provides a way to temporarily send your files. \n\nYour uploaded files will be saved on the VideoLock servers for one hour. Please have people download the media file before it is deleted from the servers. (Note: The videos/audios are not removed from your phone.)</string>
