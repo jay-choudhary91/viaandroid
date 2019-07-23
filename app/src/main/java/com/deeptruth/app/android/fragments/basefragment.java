@@ -268,7 +268,7 @@ public abstract class basefragment extends Fragment {
         public void xapi_uploadfile(Context mContext,String serverurl,String filepath,apiresponselistener mListener);
         public void setsoundwaveinformation(int ampletudevalue ,int decibelvalue);
         //public void showinapppurchasepopup(final Context activity,final adapteritemclick mitemclick);
-        public void showsharepopupsub(final String path, final String type, final String mediatoken);
+        public void showsharepopupsub(final String path, final String type, final String mediatoken,boolean ismediatrimmed);
         public void inapppurchase(String productid);
         public void finishactivity();
         public basefragment getcurrentfragment();

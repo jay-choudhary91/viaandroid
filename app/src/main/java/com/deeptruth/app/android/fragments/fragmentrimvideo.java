@@ -59,6 +59,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     String SelectedSku = "";
     Dialog dialoginapppurchase =null,dialogupgradecode=null;
     private static final int REQUEST_CODE_SIGN_IN = 102;
+    private boolean ismediatrimmed=false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(rootview == null) {
@@ -83,38 +84,9 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
             }
 
             common.shouldshowupgradepopup(config.mediatrimcount);
-
         }
 
-        rootview.post(new Runnable() {
-            @Override
-            public void run() {
-                if(common.ismediatrimcountexceed(config.mediatrimcount))
-                {
-                    checkinapppurchasestatus();
-                    return;
-                }
-            }
-        });
-
         return rootview;
-    }
-
-    public void checkinapppurchasestatus()
-    {
-        String message = applicationviavideocomposer.getactivity().getResources().getString(R.string.if_you_would_like_the_option);
-
-        baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
-                getactivity(), "", message, new adapteritemclick(){
-            @Override
-            public void onItemClicked(Object object) {
-
-            }
-            @Override
-            public void onItemClicked(Object object, int type) {
-
-            }
-        });
     }
 
     @Override
@@ -122,13 +94,6 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         switch (view.getId()){
 
             case R.id.lyout_publish:
-
-                if(common.ismediatrimcountexceed(config.mediatrimcount))
-                {
-                    checkinapppurchasestatus();
-                    return;
-                }
-
                 String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.publish_details2);
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
@@ -138,7 +103,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                                  getResources().getString(R.string.txt_publish), publish, new adapteritemclick() {
                              @Override
                              public void onItemClicked(Object object) {
-                                 baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken);
+                                 baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken,ismediatrimmed);
                              }
 
                              @Override
@@ -148,16 +113,10 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                          });
                          return;
                 }
-                baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken);
+                baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken,ismediatrimmed);
                 break;
 
             case R.id.lyout_send:
-
-                if(common.ismediatrimcountexceed(config.mediatrimcount))
-                {
-                    checkinapppurchasestatus();
-                    return;
-                }
 
                 String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.send_details2);
@@ -181,11 +140,6 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 break;
 
             case R.id.lyout_export:
-                if(common.ismediatrimcountexceed(config.mediatrimcount))
-                {
-                    checkinapppurchasestatus();
-                    return;
-                }
 
                 String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.export_details2);
@@ -219,7 +173,9 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     @Override
     public void ontrimstarted() {
 
-        checkinapppurchasestatus();
+        ismediatrimmed=true;
+        if(common.ismediatrimcountexceed(config.mediatrimcount))
+            baseactivity.getinstance().checkinapppurchasestatus();
     }
 
     @Override
@@ -239,7 +195,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                     //progressdialog.showwaitingdialog(getActivity());
                     String selectedvideopath = filePath;
                     getDialog().dismiss();
-                    baseactivity.getinstance().showsharepopupsub(selectedvideopath,"video",videotoken);
+                    //baseactivity.getinstance().showsharepopupsub(selectedvideopath,"video",videotoken,ismediatrimmed);
                     //common.sharevideo(getActivity(),selectedvideopath);
                 }
             }

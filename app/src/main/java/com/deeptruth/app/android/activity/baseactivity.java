@@ -674,7 +674,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     @Override
-    public void showsharepopupsub(final String path, final String type, final String mediatoken) {
+    public void showsharepopupsub(final String path, final String type, final String mediatoken,boolean ismediatrimmed) {
             if (subdialogshare != null && subdialogshare.isShowing())
                 subdialogshare.dismiss();
 
@@ -705,6 +705,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
                 mediamethod = config.type_private;
+
+                if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
+                {
+                    if(common.ismediatrimcountexceed(config.mediatrimcount))
+                    {
+                        checkinapppurchasestatus();
+                        return;
+                    }
+                }
+
                 if(!isuserlogin()){
                     redirecttologin();
                     return;
@@ -717,6 +727,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
                 mediamethod = config.type_public;
+
+                if(type.equalsIgnoreCase(config.type_video))
+                {
+                    if(common.ismediatrimcountexceed(config.mediatrimcount) && ismediatrimmed)
+                    {
+                        checkinapppurchasestatus();
+                        return;
+                    }
+                }
+
                 if(!isuserlogin()){
                     redirecttologin();
                     return;
@@ -729,6 +749,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
                 mediamethod = config.type_linkinvite;
+
+                if(type.equalsIgnoreCase(config.type_video))
+                {
+                    if(common.ismediatrimcountexceed(config.mediatrimcount) && ismediatrimmed)
+                    {
+                        checkinapppurchasestatus();
+                        return;
+                    }
+                }
+
                 if(!isuserlogin()){
                     redirecttologin();
                     return;
@@ -745,6 +775,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
             });
             subdialogshare.show();
+    }
+
+    public void checkinapppurchasestatus()
+    {
+        String message = applicationviavideocomposer.getactivity().getResources().getString(R.string.if_you_would_like_the_option);
+
+        baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
+                getactivity(), "", message, new adapteritemclick(){
+            @Override
+            public void onItemClicked(Object object) {
+
+            }
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
+        });
     }
 
     public void showtrimdialogfragment(String filepath,String mediatoken)
