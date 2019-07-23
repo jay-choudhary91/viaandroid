@@ -219,6 +219,8 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
     @Override
     public void ontrimstarted() {
+
+        checkinapppurchasestatus();
     }
 
     @Override
@@ -238,7 +240,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                     //progressdialog.showwaitingdialog(getActivity());
                     String selectedvideopath = filePath;
                     getDialog().dismiss();
-                   baseactivity.getinstance().showsharepopupsub(selectedvideopath,"video",videotoken);
+                    baseactivity.getinstance().showsharepopupsub(selectedvideopath,"video",videotoken);
                     //common.sharevideo(getActivity(),selectedvideopath);
                 }
             }

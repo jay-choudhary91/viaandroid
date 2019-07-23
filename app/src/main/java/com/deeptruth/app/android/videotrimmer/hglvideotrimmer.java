@@ -267,12 +267,12 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         @Override
         public void onseek(rangeseekbarview rangeseekbarview, int index, float value) {
             onSeekThumbs(index, value);
-
         }
 
         @Override
         public void onseekstart(rangeseekbarview rangeseekbarview, int index, float value) {
-
+            if (montrimvideolistener != null)
+                montrimvideolistener.ontrimstarted();
         }
 
         @Override
@@ -364,7 +364,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
 
             //notify that video trimming started
             if (montrimvideolistener != null)
-                montrimvideolistener.ontrimstarted();
+                    montrimvideolistener.ontrimstarted();
 
             backgroundexecutor.execute(
                     new backgroundexecutor.task("", 0L, "") {
