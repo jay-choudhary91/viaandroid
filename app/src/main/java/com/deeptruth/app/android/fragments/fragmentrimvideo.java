@@ -83,8 +83,6 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 mvideotrimmer.setVideoURI(Uri.parse(videopath));
                 mvideotrimmer.setVideoInformationVisibility(true);
             }
-
-            common.shouldshowupgradepopup(config.mediatrimcount);
         }
 
         return rootview;
