@@ -186,7 +186,7 @@ public abstract class basefragment extends Fragment {
 
         String message=applicationviavideocomposer.getactivity().getResources().getString(R.string.limit_reached);
         baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
-                getactivity(), "Alert", message, new adapteritemclick(){
+                getactivity(), getActivity().getResources().getString(R.string.limit_reached_title), message, new adapteritemclick(){
             @Override
             public void onItemClicked(Object object) {
                 gethelper().inapppurchase(object.toString());

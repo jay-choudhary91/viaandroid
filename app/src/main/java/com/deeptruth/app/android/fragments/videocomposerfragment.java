@@ -1464,7 +1464,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         if (isvideorecording)
         {
-            if(common.shouldshowupgradepopup(config.mediarecordcount))
+           // if(common.shouldshowupgradepopup(config.mediarecordcount))
                 showvideorecordlengthalert();
 
             gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
