@@ -44,6 +44,13 @@ import android.widget.Toast;
 
 import com.android.billingclient.api.Purchase;
 import com.android.vending.billing.IInAppBillingService;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.deeptruth.app.android.BuildConfig;
@@ -93,6 +100,14 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import com.microsoft.identity.client.AuthenticationCallback;
+import com.microsoft.identity.client.IAccount;
+import com.microsoft.identity.client.IAuthenticationResult;
+import com.microsoft.identity.client.PublicClientApplication;
+import com.microsoft.identity.client.exception.MsalClientException;
+import com.microsoft.identity.client.exception.MsalException;
+import com.microsoft.identity.client.exception.MsalServiceException;
+import com.microsoft.identity.client.exception.MsalUiRequiredException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,6 +117,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -128,7 +145,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     IabHelper mHelper;
 
     // Debug tag, for logging
-    final String TAG = "TestInApp";
     String SelectedSku = "";
     //String SKU_ID="com.matraex.xapi.hackcheck.inapp.credits";
     //String ItemApple = "android.test.purchased";
@@ -141,6 +157,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     IInAppBillingService mService;
     ServiceConnection mServiceConn;
     Bundle skuDetails;
+
+    /* Azure AD Variables */
+    private PublicClientApplication onedriveapplication;
+    private IAuthenticationResult onedriveresult;
+
+    /* Azure AD v2 Configs */
+    final static String[] onedrivescopes = {"https://graph.microsoft.com/User.Read"};
+    final static String msgraphurl = "https://graph.microsoft.com/v1.0/me";
+
+    /* UI & Debugging Variables */
+    private static final String TAG = baseactivity.class.getSimpleName();
 
     public boolean isisapprunning() {
         return isapprunning;
@@ -175,6 +202,29 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             String authtoken=xdata.getinstance().getSetting(config.dropboxauthtoken);
             DropboxClientFactory.init(authtoken);
         }
+
+        /* Configure your sample app and save state for this activity */
+        /*onedriveapplication = new PublicClientApplication(
+                applicationviavideocomposer.getactivity(),
+                R.raw.auth_config);*/
+
+
+        /* Attempt to get a user and acquireTokenSilent
+         * If this fails we do an interactive request
+         */
+        /*onedriveapplication.getAccounts(new PublicClientApplication.AccountsLoadedCallback() {
+            @Override
+            public void onAccountsLoaded(final List<IAccount> accounts) {
+
+                if (!accounts.isEmpty()) {
+                    *//* This sample doesn't support multi-account scenarios, use the first account *//*
+                    onedriveapplication.acquireTokenSilentAsync(onedrivescopes, accounts.get(0), getAuthSilentCallback());
+                } else {
+                    *//* No accounts or >1 account *//*
+                }
+            }
+        });*/
+
 
         //mdropboxapi = new DropboxAPI<AndroidAuthSession>(builddropboxsession());
 
@@ -1239,7 +1289,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 if(object != null)
                 {
                     common.shouldshowupgradepopup(config.mediatrimcount);
-
                     int position=(int)object;
                     if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_googledrive))
                     {
@@ -1249,20 +1298,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     {
                         videolocksharedialog(applicationviavideocomposer.getactivity());
                     }
+                    else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
+                    {
+                        //getmsonedrivetoken();
+                    }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_dropbox))
                     {
                         if(xdata.getinstance().getSetting(config.dropboxauthtoken).trim().isEmpty())
                         {
                             Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
                                     .getResources().getString(R.string.dropbox_appkey));
-                          //  mdropboxapi.getSession().startOAuth2Authentication(baseactivity.this);
                         }
                         else
                         {
                             dropboxuploadfile(mediafilepath);
-                            /*uploadfileatdropbox upload = new uploadfileatdropbox(baseactivity.this, mdropboxapi, "",
-                                    new File(mediafilepath));
-                            upload.execute();*/
                         }
                     }
                 }
@@ -1494,6 +1543,196 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+    }
+
+
+    // MS Onedrive callbacks and methods
+
+
+    //
+    // Core Identity methods used by MSAL
+    // ==================================
+    // getmsonedrivetoken() - attempts to get tokens for graph, if it succeeds calls graph & updates UI
+    // msonedrivesignout() - Signs account out of the app & updates UI
+    // callGraphAPI() - called on successful token acquisition which makes an HTTP request to graph
+    //
+
+    /* Use MSAL to acquireToken for the end-user
+     * Callback will call Graph api w/ access token & update UI
+     */
+    private void getmsonedrivetoken() {
+        onedriveapplication.acquireToken(applicationviavideocomposer.getactivity(), onedrivescopes, getAuthInteractiveCallback());
+    }
+
+    /* Clears an account's tokens from the cache.
+     * Logically similar to "sign out" but only signs out of this app.
+     * User will get interactive SSO if trying to sign back-in.
+     */
+    private void msonedrivesignout() {
+        /* Attempt to get a user and acquireTokenSilent
+         * If this fails we do an interactive request
+         */
+        onedriveapplication.getAccounts(new PublicClientApplication.AccountsLoadedCallback() {
+            @Override
+            public void onAccountsLoaded(final List<IAccount> accounts) {
+
+                if (accounts.isEmpty()) {
+                    /* No accounts to remove */
+
+                } else {
+                    for (final IAccount account : accounts) {
+                        onedriveapplication.removeAccount(
+                                account,
+                                new PublicClientApplication.AccountsRemovedCallback() {
+                                    @Override
+                                    public void onAccountsRemoved(Boolean isSuccess) {
+                                        if (isSuccess) {
+                                    /* successfully removed account */
+                                        } else {
+                                    /* failed to remove account */
+                                        }
+                                    }
+                                });
+                    }
+                }
+
+               // updateSignedOutUI();
+            }
+        });
+    }
+
+    /* Use Volley to make an HTTP request to the /me endpoint from MS Graph using an access token */
+    private void callGraphAPI() {
+        Log.d(TAG, "Starting volley request to graph");
+
+        /* Make sure we have a token to send to graph */
+        if (onedriveresult.getAccessToken() == null) {return;}
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JSONObject parameters = new JSONObject();
+
+        try {
+            parameters.put("key", "value");
+        } catch (Exception e) {
+            Log.d(TAG, "Failed to put parameters: " + e.toString());
+        }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, msgraphurl,
+                parameters,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                /* Successfully called graph, process data and send to UI */
+                Log.d(TAG, "Response: " + response.toString());
+
+               // updateGraphUI(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Error: " + error.toString());
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + onedriveresult.getAccessToken());
+                return headers;
+            }
+        };
+
+        Log.d(TAG, "Adding HTTP GET to Queue, Request: " + request.toString());
+
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                3000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+    }
+
+
+    /* Callback used in for silent acquireToken calls.
+     * Looks if tokens are in the cache (refreshes if necessary and if we don't forceRefresh)
+     * else errors that we need to do an interactive request.
+     */
+    private AuthenticationCallback getAuthSilentCallback() {
+        return new AuthenticationCallback() {
+
+            @Override
+            public void onSuccess(IAuthenticationResult authenticationResult) {
+                /* Successfully got a token, call graph now */
+                Log.d(TAG, "Successfully authenticated");
+
+                /* Store the onedriveresult */
+                onedriveresult = authenticationResult;
+
+                /* call graph */
+                callGraphAPI();
+
+                /* update the UI to post call graph state */
+              //  updateSuccessUI();
+            }
+
+            @Override
+            public void onError(MsalException exception) {
+                /* Failed to acquireToken */
+
+                //Log.e("MsalException ",exception.getMessage());
+                /*if (exception instanceof MsalClientException) {
+                    *//* Exception inside MSAL, more info inside MsalError.java *//*
+                } else if (exception instanceof MsalServiceException) {
+                    *//* Exception when communicating with the STS, likely config issue *//*
+                } else if (exception instanceof MsalUiRequiredException) {
+                    *//* Tokens expired or no session, retry with interactive *//*
+                }*/
+            }
+
+            @Override
+            public void onCancel() {
+                /* User cancelled the authentication */
+                Log.d(TAG, "User cancelled login.");
+            }
+        };
+    }
+
+    /* Callback used for interactive request.  If succeeds we use the access
+     * token to call the Microsoft Graph. Does not check cache
+     */
+    private AuthenticationCallback getAuthInteractiveCallback() {
+        return new AuthenticationCallback() {
+
+            @Override
+            public void onSuccess(IAuthenticationResult authenticationResult) {
+                /* Successfully got a token, call graph now */
+                Log.d(TAG, "Successfully authenticated");
+                Log.d(TAG, "ID Token: " + authenticationResult.getIdToken());
+
+                /* Store the auth result */
+                onedriveresult = authenticationResult;
+
+                /* call graph */
+                callGraphAPI();
+
+                /* update the UI to post call graph state */
+               // updateSuccessUI();
+            }
+
+            @Override
+            public void onError(MsalException exception) {
+                /* Failed to acquireToken */
+
+             //   Log.e("MsalException ",exception.getMessage());
+                /*if (exception instanceof MsalClientException) {
+                    *//* Exception inside MSAL, more info inside MsalError.java *//*
+                } else if (exception instanceof MsalServiceException) {
+                    *//* Exception when communicating with the STS, likely config issue *//*
+                }*/
+            }
+
+            @Override
+            public void onCancel() {
+                /* User canceled the authentication */
+                Log.d(TAG, "User cancelled login.");
+            }
+        };
     }
 }
 

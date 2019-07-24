@@ -48,7 +48,6 @@ public class splashactivity extends Activity {
         img_logo= (ImageView) findViewById(R.id.img_logo);
         img_fadefirst= (ImageView) findViewById(R.id.img_fadefirst);
 
-
         img_logotext.post(new Runnable() {
             @Override
             public void run() {
@@ -145,38 +144,35 @@ public class splashactivity extends Activity {
                                                         }
 
                                                         // Login portion commented on app launch till furthure notice.
-                    /*if(xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
-                    {
-                        Intent intent=new Intent(splashactivity.this,signinactivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else
-                    {
-                        if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() ||
-                                xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("1"))
-                        {
-                            if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
-                                xdata.getinstance().saveSetting(config.enableintroscreen,"0");
+                                                        /*if(xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
+                                                        {
+                                                            Intent intent=new Intent(splashactivity.this,signinactivity.class);
+                                                            startActivity(intent);
+                                                            finish();
+                                                        }
+                                                        else
+                                                        {
+                                                            if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() ||
+                                                                    xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("1"))
+                                                            {
+                                                                if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
+                                                                    xdata.getinstance().saveSetting(config.enableintroscreen,"0");
 
-                            Intent intent=new Intent(splashactivity.this,introscreenactivity.class);
-                            startActivity(intent);
-                            finish();
+                                                                Intent intent=new Intent(splashactivity.this,introscreenactivity.class);
+                                                                startActivity(intent);
+                                                                finish();
 
-                        }else{
-                            Intent intent=new Intent(splashactivity.this,homeactivity.class);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
-                            finish();
-                        }
-                    }*/
+                                                            }else{
+                                                                Intent intent=new Intent(splashactivity.this,homeactivity.class);
+                                                                startActivity(intent);
+                                                                overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
+                                                                finish();
+                                                            }
+                                                        }*/
                                                     }
 
                                                 }
                                             },1000);
-
-
-
                                         }
 
                                         @Override
@@ -184,10 +180,6 @@ public class splashactivity extends Activity {
 
                                         }
                                     });
-
-
-
-
                                 }
                             },100);
                         }
@@ -241,3 +233,21 @@ public class splashactivity extends Activity {
         return percentageheight;
     }
 }
+
+
+/*try {
+            android.content.pm.PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.deeptruth.app.composer.android",
+                    android.content.pm.PackageManager.GET_SIGNATURES);
+            for (android.content.pm.Signature signature : info.signatures) {
+                java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String keyhash=android.util.Base64.encodeToString(md.digest(),android.util.Base64.DEFAULT);
+                Log.e("KeyHash ", keyhash);
+
+            }
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+
+        } catch (java.security.NoSuchAlgorithmException e) {
+
+        }*/

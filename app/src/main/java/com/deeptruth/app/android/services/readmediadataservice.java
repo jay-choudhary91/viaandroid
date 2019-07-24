@@ -557,9 +557,9 @@ public class readmediadataservice extends Service {
                             {
                                 updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_complete);
                                 sendbroadcastreader();
-                                if(xdata.getinstance().getSetting(config.selectedsyncsetting).
+                                /*if(xdata.getinstance().getSetting(config.selectedsyncsetting).
                                         equalsIgnoreCase(config.selectedsyncsetting_0))
-                                    common.shownotification(applicationviavideocomposer.getactivity());
+                                    common.shownotification(applicationviavideocomposer.getactivity());*/
                             }
 
                         }

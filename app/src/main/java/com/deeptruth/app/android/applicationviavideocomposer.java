@@ -124,8 +124,9 @@ public class applicationviavideocomposer extends Application implements Lifecycl
 
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    private void onAppBackgrounded() {
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+    private void onAppBackgrounded()
+    {
+        /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
         {
             if(! isactivitybecomefinish)
             {
@@ -134,7 +135,7 @@ public class applicationviavideocomposer extends Application implements Lifecycl
 
                 startService(new Intent(getBaseContext(), appbackgroundactionservice.class));
             }
-        }
+        }*/
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
