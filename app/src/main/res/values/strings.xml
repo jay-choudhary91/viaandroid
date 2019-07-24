@@ -400,5 +400,6 @@
     <string name="btn_close">Close</string>
     <string name="welcome_dialog_title">WELCOME!</string>
     <string name="welcome_dialog_text">We have included a quick 45-second video that will explain all the features of your new VideoLock app. \n Would you like to watch a VideoLock demo video?</string>
+    <string name="betaversion">Beta Version</string>
 
 </resources>
