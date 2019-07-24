@@ -4,95 +4,69 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
-    android:layout_margin="@dimen/margin_20dp"
+    android:background="@color/white"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/new_dialog_bg"
+        android:layout_margin="@dimen/margin_25dp"
+        android:gravity="center"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/welcome_dialog_title"
-                android:textColor="@android:color/black"
-                android:textSize="30sp"
-                app:fontType="Comfortaa-Regular"/>
-
-
-        </LinearLayout>
+            android:text="@string/welcome_dialog_title"
+            app:fontType="Comfortaa-Regular"
+            android:textSize="30sp"
+            android:textColor="@android:color/black"
+            android:gravity="center"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="@dimen/margin_5dp"
-            android:layout_marginTop="@dimen/margin_10dp"
-            android:gravity="center" >
+            android:layout_width="wrap_content"
+            android:layout_height="220dp"
+            android:gravity="center">
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:text="@string/welcome_dialog_text"
+                app:fontType="Comfortaa-Regular"
                 android:textSize="18sp"
                 android:textColor="@color/black"
-                app:fontType="Comfortaa-Regular"/>
+                android:gravity="center"/>
+
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/margin_20dp"
-            android:background="@android:color/darker_gray"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="2"
-            android:orientation="horizontal">
-
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/close"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/btn_close"
-                android:gravity="center"
-                android:textColor="@color/blue"
-                app:fontType="Comfortaa-Regular"
-                android:layout_weight="1"
-                android:textSize="20dp"/>
-
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="@dimen/margin_40dp"
-                android:background="@android:color/darker_gray"/>
 
 
             <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/watch"
-                android:layout_width="match_parent"
+                android:id="@+id/btn_yes"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:text="@string/btn_watch"
-                android:gravity="center"
-                android:textColor="@color/blue"
+                android:text="@string/btn_yes"
                 app:fontType="Comfortaa-Regular"
-                android:layout_weight="1"
-                android:textSize="20dp"/>
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:background="@drawable/round_corner_btn_allow"
+                android:gravity="center"
+                android:padding="15dp"/>
 
-        </LinearLayout>
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/btn_maybe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_maybe_later"
+                app:fontType="Comfortaa-Regular"
+                android:textSize="18sp"
+                android:textColor="@color/grey_xx"
+                android:gravity="center"
+                android:layout_marginTop="14dp"/>
+
 
     </LinearLayout>
 
