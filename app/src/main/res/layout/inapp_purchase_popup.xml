@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_30dp">
+    android:orientation="vertical"
+    android:background="@drawable/popup_background"
+    android:padding="@dimen/margin_2dp"
+    android:layout_margin="@dimen/margin_20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
@@ -113,5 +115,4 @@
         </LinearLayout>
 
     </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

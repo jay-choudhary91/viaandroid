@@ -394,11 +394,15 @@
     <string name="txt_privacy_content">Your VideoLock recordings are 100% private. The only copy of the recording is on your phone.You can share it with others by sending it or by publishing it directly on the VideoLock website.</string>
     <string name="txt_next">Next</string>
     <string name="txt_close">Close</string>
+    <string name="txt_ok">OK</string>
     <string name="txt_cancel">Cancel</string>
     <string name="txt_back">Back</string>
     <string name="btn_watch">Watch</string>
     <string name="btn_close">Close</string>
     <string name="welcome_dialog_title">WELCOME!</string>
+    <string name="btn_yes">YES</string>
+    <string name="btn_maybe_later">Maybe Later</string>
+    <string name="btn_next">NEXT</string>
     <string name="welcome_dialog_text">We have included a quick 45-second video that will explain all the features of your new VideoLock app. \n Would you like to watch a VideoLock demo video?</string>
     <string name="betaversion">Beta Version</string>
 

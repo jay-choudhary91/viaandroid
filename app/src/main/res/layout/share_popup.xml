@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/dialog_bg"
+    android:background="@drawable/popup_background"
     android:layout_height="match_parent">
 
     <ImageView

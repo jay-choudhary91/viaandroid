@@ -20,7 +20,7 @@ customfonttextview extends android.support.v7.widget.AppCompatTextView {
     public static final String SANS_BOLD_COMFORTAA = "fonts/Comfortaa-Bold.ttf";
     public static final String SANS_LIGHT_COMFORTAA = "fonts/Comfortaa-Light.ttf";
     public static final String SANS_REGULAR_COMFORTAA = "fonts/Comfortaa-Regular.ttf";
-    public static final String bahnschrift_regular = "fonts/Bahnschrift_Regular.TTF";
+    public static final String bahnschrift_regular = "fonts/Comfortaa-Regular.ttf";
     public static final String bahnschrift_light = "fonts/BAHNSCHRIFT-11.TTF";
     public static final String arial_narrow_bold = "fonts/Arial-Narrow-Bold.ttf";
 
