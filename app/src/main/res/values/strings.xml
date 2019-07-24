@@ -336,8 +336,8 @@
     <string name="intro_screenthreelineone">Solutions that try to identify </string>
     <string name="intro_screenthreelinetwo">and disprove every deepfake </string>
     <string name="intro_screenthreelinethree">are playing a losing game of </string>
-    <string name="intro_screenthreelinefour">defense. The viral nature of </string>
-    <string name="intro_screenthreelinefive">fake news spreads too fast.</string>
+    <string name="intro_screenthreelinefour">defense.</string>
+    <string name="intro_screenthreelinefive"></string>
     <!--Intro screen discription four -->
 
     <string name="intro_screenfourlineone">VideoLock\'s patented solution  </string>
@@ -385,20 +385,29 @@
     <string name="do_not_notify_again">Do not notify again</string>
 
     <string name="txt_vl_share_title">VIDEOlOCK \nSHARE</string>
-    <string name="txt_vl_share_detail">The VideoLock share tool provides a way to temporarily send your files. \n\nYour uploaded files will be saved on the VideoLock servers for one hour. Please have people download the media file before it is deleted from the servers. (Note: The videos/audios are not removed from your phone.)</string>
+    <string name="txt_vl_share_detail">The VideoLock share tool provides \n a way to temporarily send your files. \n\nYour uploaded files will be saved on \n the VideoLock servers for one hour. \n Please have people download the \n media file before it is deleted from \n the servers. (Note: The videos/audios \n are not removed from your phone.)</string>
     <string name="btn_vl_share">Upload &amp; Send</string>
 
     <string name="txt_congrats">CONGRATS!</string>
     <string name="txt_privacy">PRIVACY</string>
-     <string name="txt_congrats_content">You have just created your first cryptomedia! \n\nYour recording has already been registered with over 50 layer of unchangeable and encrypted digital DNA cryptographic fingerprints.</string>
-    <string name="txt_privacy_content">Your VideoLock recordings are 100% private. The only copy of the recording is on your phone.You can share it with others by sending it or publishing it directly on the VideoLock website.</string>
+    <string name="txt_congrats_content">You have just created your first certified cryptomedia! \n\nYour recording has already been registered with over 50 layers of unchangeable and encrypted digital DNA cryptographic fingerprints.</string>
+    <string name="txt_privacy_content">Your VideoLock recordings are 100% private. The only copy of the recording is on your phone.You can share it with others by sending it or by publishing it directly on the VideoLock website.</string>
     <string name="txt_next">Next</string>
     <string name="txt_close">Close</string>
+    <string name="txt_ok">OK</string>
     <string name="txt_cancel">Cancel</string>
     <string name="txt_back">Back</string>
     <string name="btn_watch">Watch</string>
     <string name="btn_close">Close</string>
     <string name="welcome_dialog_title">WELCOME!</string>
+    <string name="btn_yes">YES</string>
+    <string name="btn_maybe_later">Maybe Later</string>
+    <string name="btn_next">NEXT</string>
     <string name="welcome_dialog_text">We have included a quick 45-second video that will explain all the features of your new VideoLock app. \n Would you like to watch a VideoLock demo video?</string>
+    <string name="betaversion">Beta Version</string>
+
+    <string name="txt_congrats_content_demo">You have just created your \nfirst certified cryptomedia! \n\nYour recording has already \nbeen registered with over \n50 layers of unchangeable \nand encrypted digital DNA \ncryptographic fingerprints.</string>
+
+    txt_congrats_content_demo
 
 </resources>

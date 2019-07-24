@@ -1638,13 +1638,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     position++;
                 }
 
-                mgooglemap.addPolyline(new PolylineOptions()
-                        .addAll(currentSegment)
-                        .color(Color.parseColor(common.getcolorbystring(currentColor)))
-                        .width(7));
+                if(mgooglemap != null){
+                    mgooglemap.addPolyline(new PolylineOptions()
+                            .addAll(currentSegment)
+                            .color(Color.parseColor(common.getcolorbystring(currentColor)))
+                            .width(7));
 
-                common.mapzoomalongwithtraveledpath(applicationviavideocomposer.getactivity(),mgooglemap,currentSegment,
-                        googlemap.getWidth(),googlemap.getHeight());
+                    common.mapzoomalongwithtraveledpath(applicationviavideocomposer.getactivity(),mgooglemap,currentSegment,
+                            googlemap.getWidth(),googlemap.getHeight());
+                }
+
             }
         });
     }
@@ -1885,7 +1888,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_camera),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvcamera);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("pictureqty")){
-                            Log.e("pictureqty",""+metricItemArraylist.get(j).getMetricTrackValue());
+                            Log.e("picturequality",""+metricItemArraylist.get(j).getMetricTrackValue());
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvpicture_qty);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){

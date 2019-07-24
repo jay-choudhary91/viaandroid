@@ -53,6 +53,7 @@ public class config {
     public static final String worldclocktime_format = "hh:mm:ss a";
     public static final String phonetime_format = "hh:mm:ss";
     public static final String date_format = "MM/dd/yyyy";
+    public static final String betaversion_dateformat ="dd.MM.yy";
     public static final String date_time_format = "MM-dd-yyyy hh:mm:ss";
     public static final String build_flavor_videocreater = "creater";
     public static final String build_flavor_videoviewer = "viewer";

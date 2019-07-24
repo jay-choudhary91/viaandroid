@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
-    android:background="@drawable/new_dialog_bg"
-    android:orientation="vertical">
+    android:background="@drawable/popup_background"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/margin_20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="5dp"
+        android:paddingTop="10dp"
         android:layout_margin="10dp"
         android:orientation="vertical">
 
@@ -23,7 +24,6 @@
                 android:id="@+id/back"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:scaleType="fitXY"
                 android:src="@drawable/ic_reply"/>
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -45,38 +45,43 @@
             android:layout_marginTop="@dimen/margin_10dp"
             android:gravity="center" >
 
-            <com.deeptruth.app.android.views.customfonttextview
+            <TextView
                 android:id="@+id/txt_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoSizeMinTextSize="10sp"
-                android:autoSizeMaxTextSize="30sp"
                 android:text="@string/txt_vl_share_detail"
-                android:autoSizeTextType="uniform"
                 android:textColor="@color/black"
-                app:fontType="Comfortaa-Regular"/>
+                app:fontType="Comfortaa-Regular" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/tableRow5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_width="match_parent"
             android:layout_marginTop="@dimen/margin_10dp"
-            android:background="@drawable/back">
+            android:layout_height="100dp"
+            android:gravity="center">
 
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/btn_upload"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/btn_vl_share"
-                android:gravity="center"
-                android:padding="@dimen/margin_10dp"
-                android:textColor="@color/soundwavecolor"
-                android:textStyle="bold"
-                app:fontType="Comfortaa-Bold"
-                android:textSize="20sp"/>
+                android:background="@drawable/back">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/btn_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_vl_share"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_10dp"
+                    android:textColor="@color/soundwavecolor"
+                    android:textStyle="bold"
+                    app:fontType="Comfortaa-Bold"
+                    android:textSize="20sp"/>
+
+
+            </LinearLayout>
 
         </LinearLayout>
 

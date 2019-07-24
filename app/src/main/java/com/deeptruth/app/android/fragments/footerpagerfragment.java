@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,8 @@ public class footerpagerfragment extends Fragment {
             TextView txt_descriptionthree = (TextView) rootview.findViewById(R.id.txt_descriptionthree);
             TextView txt_descriptionfour = (TextView) rootview.findViewById(R.id.txt_descriptionfour);
             TextView txt_descriptionfive = (TextView) rootview.findViewById(R.id.txt_descriptionfive);
+            TextView txt_betaversion = (TextView) rootview.findViewById(R.id.txt_betaversion);
+
             introobject=(intro)getArguments().getParcelable("object");
             btnstartrecord = (TextView) rootview.findViewById(R.id.btn_start_record);
 
@@ -63,6 +66,9 @@ public class footerpagerfragment extends Fragment {
                 txt_descriptionthree.setTextSize(15.1f);
                 txt_descriptionfour.setTextSize(15.4f);
                 txt_descriptionfive.setTextSize(15.2f);
+                txt_betaversion.setVisibility(View.VISIBLE);
+                txt_betaversion.setText(getActivity().getResources().getString(R.string.betaversion)
+                       + " " + common.betaversion_dateformat());
             }
             else if(introobject.getPosition() == 2)
             {
@@ -77,6 +83,8 @@ public class footerpagerfragment extends Fragment {
                 txt_descriptionone.setTextSize(15.2f);
                 txt_descriptiontwo.setTextSize(15f);
                 txt_descriptionthree.setTextSize(15.1f);
+                txt_descriptionfour.setGravity(Gravity.LEFT);
+                txt_descriptionfour.setPadding((int) getResources().getDimension(R.dimen.margin_20dp),0,0,0);
                 txt_descriptionfour.setTextSize(15.8f);
                 txt_descriptionfive.setTextSize(15.9f);
             }

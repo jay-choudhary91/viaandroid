@@ -4,7 +4,7 @@
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/new_dialog_bg">
+    android:background="@drawable/popup_background">
 
 
     <LinearLayout
@@ -48,6 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_weight="0.5"
                     android:gravity="bottom"
+
                     android:layout_height="0dp">
 
                     <ImageView
@@ -62,17 +63,13 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_weight="0.3"
-
                     android:layout_height="0dp">
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/layout_sharepopup"
                         android:layout_below="@id/img_publish"
-                        android:layout_centerHorizontal="true"
                         android:text="@string/txt_publish"
-                        card_view:fontType="Comfortaa-Regular"
-                        android:layout_marginTop="@dimen/margin_5dp"/>
+                        card_view:fontType="Comfortaa-Regular" />
                 </LinearLayout>
 
 
@@ -96,7 +93,7 @@
 
                     <ImageView
                         android:id="@+id/img_send"
-                        android:layout_width="40dp"
+                        android:layout_width="60dp"
                         android:layout_height="wrap_content"
                         android:gravity="bottom"
                         android:scaleType="fitEnd"
@@ -110,13 +107,10 @@
                     android:layout_height="0dp">
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/layout_sharepopup"
                         android:layout_below="@id/img_send"
-                        android:layout_centerHorizontal="true"
                         android:text="@string/txt_send"
-                        card_view:fontType="Comfortaa-Bold"
-                        android:layout_marginTop="@dimen/margin_5dp"/>
+                        card_view:fontType="Comfortaa-Bold" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -129,7 +123,6 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 >
-
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -152,13 +145,10 @@
                     android:layout_height="0dp">
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/layout_sharepopup"
                         android:layout_below="@id/img_expoet"
-                        android:layout_centerHorizontal="true"
                         android:text="@string/txt_export"
-                        card_view:fontType="Comfortaa-Bold"
-                        android:layout_marginTop="@dimen/margin_5dp"/>
+                        card_view:fontType="Comfortaa-Bold" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -195,13 +185,10 @@
                     android:layout_height="0dp">
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/layout_sharepopup"
                         android:layout_below="@id/img_help"
-                        android:layout_centerHorizontal="true"
                         android:text="@string/txt_help"
-                        card_view:fontType="Comfortaa-Bold"
-                        android:layout_marginTop="@dimen/margin_5dp"/>
+                        card_view:fontType="Comfortaa-Bold" />
                 </LinearLayout>
 
             </LinearLayout>

@@ -3052,5 +3052,12 @@ public class common {
 
         return false;
     }
+
+    public static String betaversion_dateformat(){
+        Calendar calander = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(config.betaversion_dateformat);
+        String date = simpleDateFormat.format(calander.getTime());
+        return date;
+    }
 }
 
