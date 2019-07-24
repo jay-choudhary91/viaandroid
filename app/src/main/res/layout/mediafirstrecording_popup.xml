@@ -12,6 +12,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="@dimen/margin_20dp"
         android:orientation="vertical">
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -21,12 +23,14 @@
             android:text="@string/txt_congrats"
             app:fontType="Comfortaa-Regular"
             android:textSize="30sp"
+            android:layout_marginTop="@dimen/margin_10dp"
             android:textColor="@android:color/black"
             android:gravity="center"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="220dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_30dp"
             android:gravity="center">
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -47,13 +51,15 @@
             android:layout_height="wrap_content"
             android:text="@string/btn_next"
             app:fontType="Comfortaa-Regular"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/white"
+            android:layout_marginTop="@dimen/margin_30dp"
             android:background="@drawable/round_corner_btn_allow"
             android:gravity="center"
-            android:padding="13dp"/>
+            android:padding="10dp"
+
+            android:layout_marginBottom="@dimen/margin_10dp"/>
 
     </LinearLayout>
 
     </LinearLayout>
-</LinearLayout>

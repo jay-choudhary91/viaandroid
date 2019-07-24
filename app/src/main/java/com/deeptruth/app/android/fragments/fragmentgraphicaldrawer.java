@@ -1638,13 +1638,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     position++;
                 }
 
-                mgooglemap.addPolyline(new PolylineOptions()
-                        .addAll(currentSegment)
-                        .color(Color.parseColor(common.getcolorbystring(currentColor)))
-                        .width(7));
+                if(mgooglemap != null){
+                    mgooglemap.addPolyline(new PolylineOptions()
+                            .addAll(currentSegment)
+                            .color(Color.parseColor(common.getcolorbystring(currentColor)))
+                            .width(7));
 
-                common.mapzoomalongwithtraveledpath(applicationviavideocomposer.getactivity(),mgooglemap,currentSegment,
-                        googlemap.getWidth(),googlemap.getHeight());
+                    common.mapzoomalongwithtraveledpath(applicationviavideocomposer.getactivity(),mgooglemap,currentSegment,
+                            googlemap.getWidth(),googlemap.getHeight());
+                }
+
             }
         });
     }

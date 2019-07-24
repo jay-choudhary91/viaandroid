@@ -1362,7 +1362,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
 
     public void videolocksharedialog(final Context context){
-        final Dialog dialog =new Dialog(context);
+        final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
@@ -1395,7 +1395,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void firstmediacapturedialog(Context context){
 
-        final Dialog dialog =new Dialog(context);
+        final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
@@ -1404,7 +1404,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
         TextView txt_title = (TextView) dialog.findViewById(R.id.txt_title);
         TextView btn_next = (TextView) dialog.findViewById(R.id.btn_next);
-        TextView btn_cancel = (TextView) dialog.findViewById(R.id.btn_cancel);
         YoYo.YoYoString rope;
 
         txt_content.setText(context.getResources().getString(R.string.txt_congrats_content));
@@ -1426,33 +1425,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             .repeat(0)
                             .playOn(txt_content);
 
-                    btn_next.setText(context.getResources().getString(R.string.txt_close));
-                    btn_cancel.setText(context.getResources().getString(R.string.txt_back));
+                    btn_next.setText(context.getResources().getString(R.string.ok));
                 }else{
                     dialog.dismiss();
-                }
-            }
-        });
-
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(btn_cancel.getText().toString().equalsIgnoreCase("cancel")){
-                    dialog.dismiss();
-                }else{
-                    txt_title.setText(context.getResources().getString(R.string.txt_congrats));
-                    txt_content.setText(context.getResources().getString(R.string.txt_congrats_content));
-                    YoYo.with(Techniques.SlideInLeft)
-                            .duration(100)
-                            .repeat(0)
-                            .playOn(txt_title);
-                    YoYo.with(Techniques.SlideInLeft)
-                            .duration(100)
-                            .repeat(0)
-                            .playOn(txt_content);
-                    btn_next.setText(context.getResources().getString(R.string.txt_next));
-                    btn_cancel.setText(context.getResources().getString(R.string.txt_cancel));
                 }
             }
         });
@@ -1465,22 +1440,22 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     public void welcomedialog(final Context context){
-        final Dialog dialog =new Dialog(context);
+        final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.welcome_popup);
 
-        TextView btn_watch = (TextView) dialog.findViewById(R.id.watch);
-        TextView btn_close = (TextView) dialog.findViewById(R.id.close);
-        btn_watch.setOnClickListener(new View.OnClickListener() {
+        TextView btn_yes = (TextView) dialog.findViewById(R.id.btn_yes);
+        TextView btn_maybe = (TextView) dialog.findViewById(R.id.btn_maybe);
+        btn_yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
 
-        btn_close.setOnClickListener(new View.OnClickListener() {
+        btn_maybe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
