@@ -1073,7 +1073,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
         final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
         notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
-        notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        notifycheckbox.setTextColor(Color.BLACK);
+        // notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
 
         txttitle.setText(title);
         txtcontent.setText(content);
