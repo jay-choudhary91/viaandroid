@@ -64,6 +64,7 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.interfaces.homepressedlistener;
 import com.deeptruth.app.android.models.sharemedia;
+import com.deeptruth.app.android.models.sharepopuptextspanning;
 import com.deeptruth.app.android.netutils.connectivityreceiver;
 import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
@@ -1405,9 +1406,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView txt_title = (TextView) dialog.findViewById(R.id.txt_title);
         TextView btn_next = (TextView) dialog.findViewById(R.id.btn_next);
         YoYo.YoYoString rope;
+        String str = getResources().getString(R.string.txt_congrats_content_demo);
 
-        txt_content.setText(context.getResources().getString(R.string.txt_congrats_content));
+       // txt_content.setText(context.getResources().getString(R.string.txt_congrats_content));
+        ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+        textsharepopup.add(new sharepopuptextspanning(1.0f,0,26,str));
+        textsharepopup.add(new sharepopuptextspanning(1.0f,27,55,str));
 
+        textsharepopup.add(new sharepopuptextspanning(0.96f,56,85,str));
+        textsharepopup.add(new sharepopuptextspanning(1.03f,86,113,str));
+        textsharepopup.add(new sharepopuptextspanning(0.98f,114,140,str));
+        textsharepopup.add(new sharepopuptextspanning(0.96f,141,167,str));
+        textsharepopup.add(new sharepopuptextspanning(0.96f,168,str.length(),str));
+
+        common.setspanning(textsharepopup,txt_content);
 
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override

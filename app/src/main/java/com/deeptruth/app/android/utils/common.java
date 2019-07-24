@@ -61,6 +61,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
 import android.text.style.RelativeSizeSpan;
@@ -86,6 +87,7 @@ import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.pair;
+import com.deeptruth.app.android.models.sharepopuptextspanning;
 import com.deeptruth.app.android.views.customfontedittext;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -3058,6 +3060,17 @@ public class common {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(config.betaversion_dateformat);
         String date = simpleDateFormat.format(calander.getTime());
         return date;
+    }
+
+    public static void setspanning(ArrayList<sharepopuptextspanning> spanarraylist, TextView txtview){
+        String line = spanarraylist.get(0).getLinecontent();
+        SpannableString ss1=  new SpannableString(line);
+        for (int i =0;i< spanarraylist.size();i++)
+        {
+            ss1.setSpan(new RelativeSizeSpan(spanarraylist.get(i).getTextsize()), spanarraylist.get(i).getStartindex(),spanarraylist.get(i).getEndindex(), 0); // set size
+
+        }
+        txtview.setText(ss1);
     }
 }
 
