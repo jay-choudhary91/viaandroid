@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="8dp"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0.0px"
-    android:clipToPadding="false"
-    android:clipChildren="false"
-    card_view:cardElevation="10dp"
-    card_view:cardCornerRadius="10dp"
-    app:cardUseCompatPadding="true"
-    card_view:cardPreventCornerOverlap="false"
-    app:ignore="NamespaceTypo"
+    android:orientation="vertical"
+    android:background="@drawable/popup_background"
+    android:padding="@dimen/margin_2dp"
     android:layout_margin="@dimen/margin_20dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical">
 
             <RelativeLayout
@@ -108,5 +99,4 @@
         </RelativeLayout>
 
     </LinearLayout>
-
-</android.support.v7.widget.CardView>
+</LinearLayout>
