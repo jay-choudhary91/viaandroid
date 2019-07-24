@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:layout_margin="@dimen/margin_25dp"
+    android:padding="@dimen/margin_2dp"
     android:background="@drawable/popup_background"
     android:orientation="vertical">
 
@@ -12,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_margin="@dimen/margin_5dp"
         android:orientation="vertical">
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -21,7 +23,7 @@
             android:text="@string/welcome_dialog_title"
             android:layout_marginTop="@dimen/margin_15dp"
             app:fontType="Comfortaa-Regular"
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:textColor="@android:color/black"
             android:gravity="center"/>
 
@@ -50,12 +52,15 @@
                 android:layout_height="wrap_content"
                 android:text="@string/btn_yes"
                 app:fontType="Comfortaa-Regular"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:textColor="@color/white"
                 android:layout_marginTop="@dimen/margin_25dp"
                 android:background="@drawable/round_corner_btn_allow"
                 android:gravity="center"
-                android:padding="10dp"/>
+                android:paddingBottom="5dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:paddingTop="5dp"/>
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/btn_maybe"
@@ -63,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/btn_maybe_later"
                 app:fontType="Comfortaa-Regular"
-                android:textSize="18sp"
+                android:textSize="17sp"
                 android:textColor="@color/grey_xx"
                 android:gravity="center"
                 android:layout_marginBottom="@dimen/margin_20dp"

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@drawable/popup_background"
     android:padding="@dimen/margin_2dp"
-    android:layout_margin="@dimen/margin_20dp">
+    android:layout_margin="@dimen/margin_25dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:text="@string/txt_congrats"
             app:fontType="Comfortaa-Regular"
-            android:textSize="30sp"
+            android:textSize="25sp"
             android:layout_marginTop="@dimen/margin_10dp"
             android:textColor="@android:color/black"
             android:gravity="center"/>
@@ -40,6 +40,7 @@
                 app:fontType="Comfortaa-Regular"
                 android:text="@string/txt_congrats_content"
                 android:textSize="18sp"
+                android:layout_margin="@dimen/margin_10dp"
                 android:textColor="@color/black"
                 android:gravity="center"/>
 
@@ -51,13 +52,15 @@
             android:layout_height="wrap_content"
             android:text="@string/btn_next"
             app:fontType="Comfortaa-Regular"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:textColor="@color/white"
             android:layout_marginTop="@dimen/margin_30dp"
             android:background="@drawable/round_corner_btn_allow"
             android:gravity="center"
-            android:padding="10dp"
-
+            android:paddingBottom="5dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="5dp"
             android:layout_marginBottom="@dimen/margin_10dp"/>
 
     </LinearLayout>
