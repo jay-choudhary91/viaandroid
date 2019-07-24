@@ -58,7 +58,7 @@ public class uploadfileatdropbox extends AsyncTask<String, Void, FileMetadata> {
             String remoteFileName = localFile.getName();
 
             try (InputStream inputStream = new FileInputStream(localFile)) {
-                return mDbxClient.files().uploadBuilder(remoteFileName)
+                return mDbxClient.files().uploadBuilder("/"+remoteFileName)
                         .withMode(WriteMode.OVERWRITE)
                         .uploadAndFinish(inputStream);
             } catch (Exception e) {
