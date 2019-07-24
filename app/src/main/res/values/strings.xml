@@ -385,7 +385,7 @@
     <string name="do_not_notify_again">Do not notify again</string>
 
     <string name="txt_vl_share_title">VIDEOlOCK \nSHARE</string>
-    <string name="txt_vl_share_detail">The VideoLock share tool provides a way to temporarily send your files. \n\nYour uploaded files will be saved on the VideoLock servers for one hour. Please have people download the media file before it is deleted from the servers. (Note: The videos/audios are not removed from your phone.)</string>
+    <string name="txt_vl_share_detail">The VideoLock share tool provides \n a way to temporarily send your files. \n\nYour uploaded files will be saved on \n the VideoLock servers for one hour. \n Please have people download the \n media file before it is deleted from \n the servers. (Note: The videos/audios \n are not removed from your phone.)</string>
     <string name="btn_vl_share">Upload &amp; Send</string>
 
     <string name="txt_congrats">CONGRATS!</string>
@@ -399,6 +399,9 @@
     <string name="btn_watch">Watch</string>
     <string name="btn_close">Close</string>
     <string name="welcome_dialog_title">WELCOME!</string>
-    <string name="welcome_dialog_text">We have included a quick 45-second video that will explain all the features of your new VideoLock app. \n Would you like to watch a VideoLock demo video?</string>
+    <string name="welcome_dialog_text">We have included a quick 45-second video that will explain all the features of your new VideoLock app. \n\n Would you like to watch a VideoLock demo video?</string>
+    <string name="btn_yes">YES</string>
+    <string name="btn_maybe_later">Maybe Later</string>
+    <string name="btn_next">NEXT</string>
 
 </resources>
