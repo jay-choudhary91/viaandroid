@@ -1050,18 +1050,20 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             }
                         }
 
-                        if((xdata.getinstance().getSetting(config.selectedsyncsetting).trim().isEmpty()) ||
+                        /*if((xdata.getinstance().getSetting(config.selectedsyncsetting).trim().isEmpty()) ||
                                 (! xdata.getinstance().getSetting(config.selectedsyncsetting).
                                         equalsIgnoreCase(config.selectedsyncsetting_2))
                                 || (! isappinbackground))
                         {
-                            // Process for sync database with server for composer as well as reader app.
-                            dbtoxapiupdatecounter++;
-                            if (dbtoxapiupdatecounter > sidecarupdatorinterval)
-                            {
-                                dbtoxapiupdatecounter = 0;
-                                syncmediadatabase();
-                            }
+
+                        }*/
+
+                        // Process for sync database with server for composer as well as reader app.
+                        dbtoxapiupdatecounter++;
+                        if (dbtoxapiupdatecounter > sidecarupdatorinterval)
+                        {
+                            dbtoxapiupdatecounter = 0;
+                            syncmediadatabase();
                         }
 
                         timercounterhandler++;
@@ -3050,9 +3052,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         e.printStackTrace();
                     }
 
-                    if(isappinbackground  && xdata.getinstance().getSetting(config.selectedsyncsetting).
+                    /*if(isappinbackground  && xdata.getinstance().getSetting(config.selectedsyncsetting).
                             equalsIgnoreCase(config.selectedsyncsetting_0))
-                        common.shownotification(applicationviavideocomposer.getactivity());
+                        common.shownotification(applicationviavideocomposer.getactivity());*/
                 }
             }
         });

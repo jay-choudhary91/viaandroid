@@ -119,6 +119,12 @@ dependencies {
     implementation 'com.daimajia.easing:library:2.0@aar'
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
     implementation 'com.dropbox.core:dropbox-core-sdk:3.1.1'
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation('com.microsoft.identity.client:msal:0.3.+')
+    {
+        transitive = false
+    }
+
 
     configurations {
         all {

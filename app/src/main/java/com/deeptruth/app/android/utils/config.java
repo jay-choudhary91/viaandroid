@@ -71,6 +71,7 @@ public class config {
     public static final String launchtypemedialist = "launchtypemedialist";
     public static final String selectedsyncsetting = "selectedsyncsetting";
 
+    public static final String welcomedialog = "welcomedialog";
     public static final String dropboxauthtoken = "dropboxauthtoken";
 
     public static final String updatinglocation = " Updating location .....";

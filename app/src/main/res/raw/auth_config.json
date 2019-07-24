@@ -1,0 +1,14 @@
+{
+  "client_id" : "7508a6c1-f3e4-4873-8558-15b46db2085a",
+  "authorization_user_agent" : "DEFAULT",
+  "redirect_uri" : "msauth://com.deeptruth.app.android/T2tqMKs1NjXeJ7%2FsmmD08yDnSdE%3D",
+  "authorities" : [
+    {
+      "type": "AAD",
+      "audience": {
+        "type": "AzureADandPersonalMicrosoftAccount",
+        "tenant_id": "common"
+      }
+    }
+  ]
+}
