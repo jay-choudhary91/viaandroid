@@ -1888,7 +1888,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_camera),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvcamera);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("pictureqty")){
-                            Log.e("pictureqty",""+metricItemArraylist.get(j).getMetricTrackValue());
+                            Log.e("picturequality",""+metricItemArraylist.get(j).getMetricTrackValue());
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvpicture_qty);
                         }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){

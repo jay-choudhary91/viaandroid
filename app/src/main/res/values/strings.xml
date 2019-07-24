@@ -336,8 +336,8 @@
     <string name="intro_screenthreelineone">Solutions that try to identify </string>
     <string name="intro_screenthreelinetwo">and disprove every deepfake </string>
     <string name="intro_screenthreelinethree">are playing a losing game of </string>
-    <string name="intro_screenthreelinefour">defense. The viral nature of </string>
-    <string name="intro_screenthreelinefive">fake news spreads too fast.</string>
+    <string name="intro_screenthreelinefour">defense.</string>
+    <string name="intro_screenthreelinefive"></string>
     <!--Intro screen discription four -->
 
     <string name="intro_screenfourlineone">VideoLock\'s patented solution  </string>
@@ -404,5 +404,7 @@
     <string name="btn_yes">YES</string>
     <string name="btn_maybe_later">Maybe Later</string>
     <string name="btn_next">NEXT</string>
+    <string name="welcome_dialog_text">We have included a quick 45-second video that will explain all the features of your new VideoLock app. \n Would you like to watch a VideoLock demo video?</string>
+    <string name="betaversion">Beta Version</string>
 
 </resources>
