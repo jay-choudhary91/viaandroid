@@ -67,8 +67,9 @@ public class footerpagerfragment extends Fragment {
                 txt_descriptionfour.setTextSize(15.4f);
                 txt_descriptionfive.setTextSize(15.2f);
                 txt_betaversion.setVisibility(View.VISIBLE);
-                txt_betaversion.setText(getActivity().getResources().getString(R.string.betaversion)
-                       + " " + common.betaversion_dateformat());
+                txt_betaversion.setText(getActivity().getResources().getString(R.string.betaversion));
+                /*txt_betaversion.setText(getActivity().getResources().getString(R.string.betaversion)
+                        + " " + common.betaversion_dateformat());*/
             }
             else if(introobject.getPosition() == 2)
             {
