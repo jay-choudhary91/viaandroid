@@ -402,4 +402,8 @@
     <string name="welcome_dialog_text">We have included a quick 45-second video that will explain all the features of your new VideoLock app. \n Would you like to watch a VideoLock demo video?</string>
     <string name="betaversion">Beta Version</string>
 
+    <string name="txt_congrats_content_demo">You have just created your \nfirst certified cryptomedia! \n\nYour recording has already \nbeen registered with over \n50 layers of unchangeable \nand encrypted digital DNA \ncryptographic fingerprints.</string>
+
+    txt_congrats_content_demo
+
 </resources>
