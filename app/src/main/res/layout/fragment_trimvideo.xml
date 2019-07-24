@@ -1,157 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:elevation="8dp"
-    android:divider="@android:color/transparent"
-    android:dividerHeight="0.0px"
-    android:clipToPadding="false"
-    android:clipChildren="false"
-    card_view:cardElevation="10dp"
-    card_view:cardCornerRadius="10dp"
-    app:cardUseCompatPadding="true"
-    card_view:cardPreventCornerOverlap="false"
-    app:ignore="NamespaceTypo">
+    android:background="@drawable/new_dialog_bg">
 
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_weight="2"
-    >
-    <ImageView
-        android:id="@+id/img_cancel"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="right"
-        android:layout_marginTop="@dimen/margin_10dp"
-        android:layout_marginRight="@dimen/margin_10dp"
-        android:layout_marginBottom="@dimen/margin_5dp"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/error"/>
-
-    <com.deeptruth.app.android.videotrimmer.hglvideotrimmer
-        android:id="@+id/trimerview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.6"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".4"
-        android:background="@color/white">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="2"
+        >
+        <ImageView
+            android:id="@+id/img_cancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/margin_10dp"
+            android:layout_marginRight="@dimen/margin_10dp"
+            android:layout_marginBottom="@dimen/margin_5dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/error"/>
+
+        <com.deeptruth.app.android.videotrimmer.hglvideotrimmer
+            android:id="@+id/trimerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.6"/>
 
         <LinearLayout
-            android:id="@+id/lyout_publish"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-           >
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".4"
+            android:background="@color/white">
 
-            <ImageView
-                android:id="@+id/img_publish"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/publilsh"/>
+            <LinearLayout
+                android:id="@+id/lyout_publish"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/img_publish"
-                android:layout_centerHorizontal="true"
-                android:text="@string/txt_publish"
-                android:layout_marginTop="@dimen/margin_5dp"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="bottom"
+
+                    android:layout_height="0dp">
+
+                    <ImageView
+                        android:id="@+id/img_publish"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/publilsh"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="0dp">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        style="@style/layout_sharepopup"
+                        android:layout_below="@id/img_publish"
+                        android:text="@string/txt_publish"
+                        card_view:fontType="Comfortaa-Regular" />
+                </LinearLayout>
 
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lyout_send"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="bottom"
+
+                    android:layout_height="0dp">
+
+                    <ImageView
+                        android:id="@+id/img_send"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/send"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+
+                    android:layout_height="0dp">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        style="@style/layout_sharepopup"
+                        android:layout_below="@id/img_send"
+                        android:text="@string/txt_send"
+                        card_view:fontType="Comfortaa-Bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lyout_export"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="bottom"
+                    android:layout_height="0dp">
+
+                    <ImageView
+                        android:id="@+id/img_expoet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/export" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="0dp">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        style="@style/layout_sharepopup"
+                        android:layout_below="@id/img_expoet"
+                        android:text="@string/txt_export"
+                        card_view:fontType="Comfortaa-Bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lyout_help"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="bottom"
+                    android:layout_height="0dp">
+
+                    <ImageView
+                        android:id="@+id/img_help"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/help"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="0dp">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        style="@style/layout_sharepopup"
+                        android:layout_below="@id/img_help"
+                        android:text="@string/txt_help"
+                        card_view:fontType="Comfortaa-Bold" />
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/lyout_send"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            >
 
-            <ImageView
-                android:id="@+id/img_send"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/send"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/img_send"
-                android:layout_centerHorizontal="true"
-                android:text="@string/txt_send"
-                android:layout_marginTop="@dimen/margin_5dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/lyout_export"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            >
-            <ImageView
-                android:id="@+id/img_expoet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/export"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/img_expoet"
-                android:layout_centerHorizontal="true"
-                android:text="@string/txt_export"
-                android:layout_marginTop="@dimen/margin_5dp"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/lyout_help"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            >
-
-            <ImageView
-                android:id="@+id/img_help"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/help"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/img_help"
-                android:layout_centerHorizontal="true"
-                android:text="@string/txt_help"
-                android:layout_marginTop="@dimen/margin_5dp"/>
-
-        </LinearLayout>
     </LinearLayout>
 
-
-</LinearLayout>
-
-</android.support.v7.widget.CardView>
+</RelativeLayout>
