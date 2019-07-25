@@ -1508,6 +1508,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.welcome_popup);
 
+        TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
+        String str = getResources().getString(R.string.welcome_dialog_text);
+
+        ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+        textsharepopup.add(new sharepopuptextspanning(1.0f,0,25,str));
+        textsharepopup.add(new sharepopuptextspanning(1.03f,26,50,str));
+
+        textsharepopup.add(new sharepopuptextspanning(1.02f,51,77,str));
+        textsharepopup.add(new sharepopuptextspanning(1.02f,78,100,str));
+        textsharepopup.add(new sharepopuptextspanning(1.0f,101,125,str));
+        textsharepopup.add(new sharepopuptextspanning(1.06f,126,str.length(),str));
+
+        common.setspanning(textsharepopup,txt_content);
+
         TextView btn_yes = (TextView) dialog.findViewById(R.id.btn_yes);
         TextView btn_maybe = (TextView) dialog.findViewById(R.id.btn_maybe);
         btn_yes.setOnClickListener(new View.OnClickListener() {
