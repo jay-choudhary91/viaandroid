@@ -391,7 +391,7 @@
     <string name="do_not_notify_again">Do not notify again</string>
 
     <string name="txt_vl_share_title">VIDEOlOCK \nSHARE</string>
-    <string name="txt_vl_share_detail">The VideoLock share tool provides \na way to temporarily send your files.\n\nYour uploaded files will be saved on\nthe VideoLock servers for one hour.\nPlease have people download the\nmedia file before it is deleted from\nthe servers. (Note: The videos/audios\nare not removed from your phone.)</string>
+    <string name="txt_vl_share_detail">The VideoLock share tool provides\na way to temporarily send your files.\n\nYour uploaded files will be saved on\nthe VideoLock servers for one hour.\nPlease have people download the\nmedia file before it is deleted from\nthe servers. (Note: The videos/audios\nare not removed from your phone.)</string>
     <string name="btn_vl_share">Upload &amp; Send</string>
 
     <string name="txt_congrats">CONGRATS!</string>

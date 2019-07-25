@@ -1519,7 +1519,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
         textsharepopup.add(new sharepopuptextspanning(0.8f,0,32,str));
-        textsharepopup.add(new sharepopuptextspanning(0.7f,33,69,str));
+        textsharepopup.add(new sharepopuptextspanning(0.8f,33,69,str));
         textsharepopup.add(new sharepopuptextspanning(0.8f,70,105,str));
         textsharepopup.add(new sharepopuptextspanning(0.8f,106,140,str));
         textsharepopup.add(new sharepopuptextspanning(0.8f,141,171,str));
@@ -1589,14 +1589,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     txt_content.setText(context.getResources().getString(R.string.txt_privacy_content));
 
                     ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-                    textsharepopup.add(new sharepopuptextspanning(1.0f,0,25,str1));
+                    textsharepopup.add(new sharepopuptextspanning(0.95f,0,25,str1));
                     textsharepopup.add(new sharepopuptextspanning(1.0f,26,51,str1));
 
                     textsharepopup.add(new sharepopuptextspanning(0.95f,52,77,str1));
-                    textsharepopup.add(new sharepopuptextspanning(1.03f,78,101,str1));
+                    textsharepopup.add(new sharepopuptextspanning(1.02f,78,101,str1));
                     textsharepopup.add(new sharepopuptextspanning(0.98f,102,139,str1));
                     textsharepopup.add(new sharepopuptextspanning(0.96f,140,167,str1));
-                    textsharepopup.add(new sharepopuptextspanning(0.96f,168,str1.length(),str1));
+                    textsharepopup.add(new sharepopuptextspanning(1.02f,168,str1.length(),str1));
 
                     common.setspanning(textsharepopup,txt_content);
                     YoYo.with(Techniques.SlideInRight)
@@ -1658,7 +1658,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        getscreenwidthheight(dialog,85,60);
+        getscreenwidthheight(dialog,85,65);
         dialog.show();
     }
 
