@@ -336,7 +336,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     int bottomlayoutheight = 0,layoutmediatypeheight = 0;
     FrameLayout framecontainer;
     File lastrecordedvideo=null;
-    String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "";
+    String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "",
+        upgradeapptitle="",upgradeappmessage="";
     //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     ArrayList<videomodel> metricsitems =new ArrayList<>();
     ArrayList<videomodel> hashesitems =new ArrayList<>();
@@ -1143,6 +1144,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 Log.v("VIDEOCAPTURE","Maximum Duration Reached");
                 try {
 
+                    upgradeapptitle=applicationviavideocomposer.getactivity().getResources().getString(R.string.limit_reached_title);
+                    upgradeappmessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.limit_reached);
+
                     startstopvideo();
 
                 }catch (Exception e)
@@ -1465,7 +1469,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if (isvideorecording)
         {
             if(common.shouldshowupgradepopup(config.mediarecordcount))
-                showvideorecordlengthalert();
+                showvideorecordlengthalert(upgradeapptitle,upgradeappmessage);
 
             gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
@@ -1475,6 +1479,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             stopblinkanimation();
 
         } else {
+
+            upgradeapptitle=applicationviavideocomposer.getactivity().getResources().getString(R.string.upgrade_app_title);
+            upgradeappmessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.thankyou_for_using);
+
             selectedhashes="";
             selectedmetrices="";
             metricsitems.clear();

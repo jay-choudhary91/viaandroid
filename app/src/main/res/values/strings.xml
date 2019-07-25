@@ -34,8 +34,12 @@
 
     <string name="limit_reached_title">30-SECOND \nLIMIT REACHED</string>
 
-    <string name="limit_reached">This lite version of the VideoLock app lets you record unlimited short videos and audios.\n\n\nTo record and
+    <string name="limit_reached">This lite version of the VideoLock app lets you record unlimited short videos and audios.\nTo record and
         certify longer videos/audios, please upgrade to the full version VideoLock.</string>
+
+    <string name="thankyou_for_using">Thank you for using the VideoLock app. This lite version helps you certify an unlimited number of
+        photos and 30-second long videos and audios. \nThe upgraded version of VideoLock allows you to record videos and audios
+        longer than 30-seconds.</string>
 
     <string name="sharing_a_trimmed_video">Sharing a trimmed version is an advanced feature. Upgrade</string>
 
@@ -199,6 +203,8 @@
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
 
+
+    <string name="upgrade_app_title">UPGRADE?</string>
 
     <string name="upgrade">Upgrade</string>
     <string name="privacy">Privacy</string>
@@ -408,6 +414,8 @@
 
     <string name="txt_congrats_content_demo">You have just created your \nfirst certified cryptomedia! \n\nYour recording has already \nbeen registered with over \n50 layers of unchangeable \nand encrypted digital DNA \ncryptographic fingerprints.</string>
 
-    txt_congrats_content_demo
+    <string name="fetching_user_info">Fetching user information!</string>
+    <string name="unable_signin">Unable to sign in!</string>
+    <string name="uploading_has_started">Uploading has started!</string>
 
 </resources>
