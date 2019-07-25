@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:background="@drawable/popup_background"
-    android:padding="@dimen/margin_2dp"
-    android:layout_margin="@dimen/margin_25dp">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginBottom="@dimen/margin_20dp"
+        android:layout_margin="@dimen/margin_5dp"
         android:orientation="vertical">
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -23,14 +23,14 @@
             android:text="@string/txt_congrats"
             app:fontType="Comfortaa-Regular"
             android:textSize="25sp"
-            android:layout_marginTop="@dimen/margin_10dp"
+            android:layout_marginTop="@dimen/margin_5dp"
             android:textColor="@android:color/black"
             android:gravity="center"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_30dp"
+            android:layout_marginTop="@dimen/margin_20dp"
             android:gravity="center">
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -61,7 +61,7 @@
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:paddingTop="5dp"
-            android:layout_marginBottom="@dimen/margin_10dp"/>
+            android:layout_marginBottom="@dimen/margin_20dp"/>
 
     </LinearLayout>
 
