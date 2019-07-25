@@ -1099,14 +1099,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
             Log.e("textpublish","publish");
             ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-            textsharepopup.add(new sharepopuptextspanning(1.28f,0,30,content));
-            textsharepopup.add(new sharepopuptextspanning(1.30f,31,59,content));
-            textsharepopup.add(new sharepopuptextspanning(1.2f,60,91,content));
-            textsharepopup.add(new sharepopuptextspanning(1.27f,92,122,content));
+            textsharepopup.add(new sharepopuptextspanning(1.05f,0,30,content));
+            textsharepopup.add(new sharepopuptextspanning(1.08f,31,59,content));
+            textsharepopup.add(new sharepopuptextspanning(0.98f,60,91,content));
+            textsharepopup.add(new sharepopuptextspanning(1.07f,92,122,content));
 
-            textsharepopup.add(new sharepopuptextspanning(1.22f,124,153,content));
-            textsharepopup.add(new sharepopuptextspanning(1.29f,154,183,content));
-            textsharepopup.add(new sharepopuptextspanning(1.32f,183,content.length(),content));
+            textsharepopup.add(new sharepopuptextspanning(1.05f,124,153,content));
+            textsharepopup.add(new sharepopuptextspanning(1.09f,154,183,content));
+            textsharepopup.add(new sharepopuptextspanning(1.13f,183,content.length(),content));
 
             common.setspanning(textsharepopup,txtcontent);
         }
@@ -1114,27 +1114,27 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
             Log.e("textpublish","txtsend");
             ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-            textsharepopup.add(new sharepopuptextspanning(1.19f,0,27,content));
-            textsharepopup.add(new sharepopuptextspanning(1.19f,28,52,content));
-            textsharepopup.add(new sharepopuptextspanning(1.19f,55,82,content));
-            textsharepopup.add(new sharepopuptextspanning(1.26f,83,110,content));
-            textsharepopup.add(new sharepopuptextspanning(1.22f,111,136,content));
-            textsharepopup.add(new sharepopuptextspanning(1.29f,137,165,content));
-            textsharepopup.add(new sharepopuptextspanning(1.31f,166,195,content));
+            textsharepopup.add(new sharepopuptextspanning(1.06f,0,26,content));
+            textsharepopup.add(new sharepopuptextspanning(1.07f,27,52,content));
+            textsharepopup.add(new sharepopuptextspanning(1.08f,53,80,content));
+            textsharepopup.add(new sharepopuptextspanning(1.11f,81,108,content));
+            textsharepopup.add(new sharepopuptextspanning(1.03f,109,135,content));
+            textsharepopup.add(new sharepopuptextspanning(1.02f,136,166,content));
+            textsharepopup.add(new sharepopuptextspanning(1.02f,167,195,content));
 
-            textsharepopup.add(new sharepopuptextspanning(1.1f,0,29,content));
-            textsharepopup.add(new sharepopuptextspanning(1.1f,30,59,content));
-            textsharepopup.add(new sharepopuptextspanning(1.1f,60,91,content));
-            textsharepopup.add(new sharepopuptextspanning(1.1f,92,122,content));
+            textsharepopup.add(new sharepopuptextspanning(0.95f,0,29,content));//199-227
+            textsharepopup.add(new sharepopuptextspanning(0.95f,30,59,content));//258
+            textsharepopup.add(new sharepopuptextspanning(0.95f,60,91,content));//290
+            textsharepopup.add(new sharepopuptextspanning(0.92f,92,122,content));//323
             common.setspanning(textsharepopup,txtcontent);
         }
 
         if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
 
             Log.e("textpublish","publish");
-            ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-            textsharepopup.add(new sharepopuptextspanning(1.28f,0,30,content));
-            textsharepopup.add(new sharepopuptextspanning(1.30f,31,59,content));
+           /* ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+            textsharepopup.add(new sharepopuptextspanning(1.18f,0,25,content));
+            textsharepopup.add(new sharepopuptextspanning(1.30f,26,55,content));
             textsharepopup.add(new sharepopuptextspanning(1.2f,60,91,content));
             textsharepopup.add(new sharepopuptextspanning(1.26f,92,122,content));
             textsharepopup.add(new sharepopuptextspanning(1.22f,124,153,content));
@@ -1144,10 +1144,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             textsharepopup.add(new sharepopuptextspanning(1.28f,0,30,content));
             textsharepopup.add(new sharepopuptextspanning(1.30f,31,59,content));
             textsharepopup.add(new sharepopuptextspanning(1.2f,60,91,content));
-            common.setspanning(textsharepopup,txtcontent);
+            common.setspanning(textsharepopup,txtcontent);*/
+
+             txtcontent.setText(content);
         }
         txttitle.setText(title);
-       // txtcontent.setText(content);
 
         TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
         ok.setOnClickListener(new View.OnClickListener() {
@@ -1603,14 +1604,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
        // txt_content.setText(context.getResources().getString(R.string.txt_congrats_content));
         ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-        textsharepopup.add(new sharepopuptextspanning(1.0f,0,26,str));
-        textsharepopup.add(new sharepopuptextspanning(1.0f,27,55,str));
+        textsharepopup.add(new sharepopuptextspanning(0.93f,0,26,str));
+        textsharepopup.add(new sharepopuptextspanning(0.93f,27,55,str));
 
-        textsharepopup.add(new sharepopuptextspanning(0.96f,56,85,str));
-        textsharepopup.add(new sharepopuptextspanning(1.03f,86,113,str));
-        textsharepopup.add(new sharepopuptextspanning(0.98f,114,140,str));
-        textsharepopup.add(new sharepopuptextspanning(0.96f,141,167,str));
-        textsharepopup.add(new sharepopuptextspanning(0.96f,168,str.length(),str));
+        textsharepopup.add(new sharepopuptextspanning(0.91f,56,85,str));
+        textsharepopup.add(new sharepopuptextspanning(0.97f,86,113,str));
+        textsharepopup.add(new sharepopuptextspanning(0.92f,114,140,str));
+        textsharepopup.add(new sharepopuptextspanning(0.92f,141,167,str));
+        textsharepopup.add(new sharepopuptextspanning(0.92f,168,str.length(),str));
 
         common.setspanning(textsharepopup,txt_content);
 
@@ -1682,7 +1683,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        getscreenwidthheight(dialog,85,60);
+        getscreenwidthheight(dialog,85,65);
         dialog.show();
     }
 

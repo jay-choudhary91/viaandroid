@@ -95,7 +95,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         switch (view.getId()){
 
             case R.id.lyout_publish:
-                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
+                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.publish_details2);
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))
@@ -119,7 +119,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
             case R.id.lyout_send:
 
-                String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+"\n"+
+                String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.send_details2);
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
