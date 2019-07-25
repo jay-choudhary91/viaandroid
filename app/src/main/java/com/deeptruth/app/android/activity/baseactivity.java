@@ -30,6 +30,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1076,7 +1077,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         return;
     }
 
-    public void share_alert_dialog(final Context context, final String title, String content,adapteritemclick mitemclick ){
+    public void share_alert_dialog(final Context context, final String title, String content,adapteritemclick mitemclick,int percentageheight){
 
         dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1183,9 +1184,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         dialog.setCanceledOnTouchOutside(false);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getscreenwidthheight(dialog,85,percentageheight);
         dialog.show();
     }
 
@@ -1243,6 +1242,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     dialoginapppurchase.dismiss();
             }
         });
+
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int percentagewidth = (width / 100) * 85;
+        dialoginapppurchase.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialoginapppurchase.getWindow().setLayout(percentagewidth, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialoginapppurchase.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         dialoginapppurchase.show();
     }
 
@@ -1419,6 +1425,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adaptersend);
+
         dialogfileuploadoptions.show();
     }
 
@@ -1612,8 +1619,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
 
                 if(btn_next.getText().toString().equalsIgnoreCase("NEXT")){
+                    getscreenwidthheight(dialog,85,58);
                     txt_title.setText(context.getResources().getString(R.string.txt_privacy));
                     txt_content.setText(context.getResources().getString(R.string.txt_privacy_content));
+
                     YoYo.with(Techniques.SlideInRight)
                             .duration(100)
                             .repeat(0)
@@ -1631,9 +1640,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         xdata.getinstance().saveSetting(config.firstmediacreated,"1").isEmpty();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getscreenwidthheight(dialog,85,63);
         dialog.show();
     }
 
@@ -1658,6 +1665,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         common.setspanning(textsharepopup,txt_content);
 
+
         TextView btn_yes = (TextView) dialog.findViewById(R.id.btn_yes);
         TextView btn_maybe = (TextView) dialog.findViewById(R.id.btn_maybe);
         btn_yes.setOnClickListener(new View.OnClickListener() {
@@ -1674,9 +1682,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getscreenwidthheight(dialog,85,60);
         dialog.show();
     }
 
@@ -1868,6 +1874,30 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 Log.d(TAG, "User cancelled login.");
             }
         };
+    }
+
+
+    public void getscreenwidthheight(Dialog dialog,int widthpercentage,int heightpercentage) {
+
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
+
+        int percentageheight = (height / 100) * heightpercentage;
+        int percentagewidth = (width / 100) * widthpercentage;
+
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setLayout(percentagewidth, percentageheight);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+       /* WindowManager.LayoutParams params = this.getWindow().getAttributes();
+        params.width = percentageheight;
+        params.height = percentagewidth;
+        this.getWindow().setAttributes(params);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL);*/
+
     }
 }
 

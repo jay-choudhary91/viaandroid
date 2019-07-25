@@ -111,7 +111,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                              public void onItemClicked(Object object, int type) {
 
                              }
-                         });
+                         },60);
                          return;
                 }
                 baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken,ismediatrimmed);
@@ -134,7 +134,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                              public void onItemClicked(Object object, int type) {
 
                              }
-                         });
+                         },60);
                          return;
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath);
@@ -157,7 +157,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                             public void onItemClicked(Object object, int type) {
 
                             }
-                        });
+                        },60);
                         return;
                 }
 
@@ -235,7 +235,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     public void onResume() {
         super.onResume();
 
-        getscreenwidthheight(100,85);
+        getscreenwidthheight(97,85);
     }
 
     public void setdata(String videoPath, int duration, String videotoken)
@@ -254,7 +254,6 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     }
 
     public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
-
 
         int width = common.getScreenWidth(getActivity());
         int height = common.getScreenHeight(getActivity());
