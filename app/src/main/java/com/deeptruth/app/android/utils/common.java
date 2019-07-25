@@ -3065,6 +3065,7 @@ public class common {
 
     public static void setspanning(ArrayList<sharepopuptextspanning> spanarraylist, TextView txtview){
         String line = spanarraylist.get(0).getLinecontent();
+        Log.e("line",line);
         SpannableString ss1=  new SpannableString(line);
         for (int i =0;i< spanarraylist.size();i++)
         {

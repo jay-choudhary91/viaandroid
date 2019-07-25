@@ -366,12 +366,12 @@
     <string name="intro_detail5">Recordings are 100% private and \nexist ONLY on your smartphone.\nIf a deepfake is created, you can \nshare your authentic VideoLock \nrecording and spread the truth.</string>
 
     <string name="checkboxstring">Do not notify again</string>
-    <string name="publish_details1">Publishing your recordings to DeepTruth website allows you to share any validated and authenticated videos/audios.</string>
-    <string name="publish_details2">After a recording is uploaded, it can be shared on websites and social media platforms.</string>
-    <string name="send_details1">Many email/text messaging systems will compress your file attachments and cause recordings to be modified. Unfortunately, compressed files will no longer be valid VideoLock videos or audios.</string>
-    <string name="send_details2">VideoLock has integrated with the most popular file sharing services to help you avoid the compression modification issue.</string>
-    <string name="export_details1">Many email/text messaging systems will compress your file attachments and cause recordings to be modified. Unfortunately, compressed files will no longer be valid VideoLock videos and audios.</string>
-    <string name="export_details2">We recommend that you use a file sharing service to send your VideoLock files.</string>
+    <string name="publish_details1">Publishing your recordings to \nthe DeepTruth website allows \nyou to share any validated and \nauthenticated videos/audios.</string>
+    <string name="publish_details2">After a recording is uploaded, \nit can be shared on websites \nand social media platforms.</string>
+    <string name="send_details1">Many email/text messaging \nsystems will compress your \nfile attachments and cause \nrecordings to be modified. \nUnfortunately, compressed \nfiles will no longer be valid \nVideoLock videos or audios.</string>
+    <string name="send_details2">VideoLock has integrated with \nthe most popular file sharing \nservices to help you avoid the \ncompression modification issue.</string>
+    <string name="export_details1">Many email/text messaging \nsystems will compress your \nfile attachments and cause \nrecordings to be modified. \nUnfortunately, compressed \nfiles will no longer be valid \nVideoLock videos and audios.</string>
+    <string name="export_details2">We recommend that you use a \nfile sharing service to send \nyour VideoLock files.</string>
 
     <string name="do_not_notify_me_again">Do you want to display the intro screens again?</string>
 

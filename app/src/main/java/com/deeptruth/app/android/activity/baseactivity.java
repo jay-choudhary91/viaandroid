@@ -1068,16 +1068,66 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
         TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
-        txtcontent.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
 
         txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
         final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
         notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
         notifycheckbox.setTextColor(Color.BLACK);
-        // notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.NORMAL);
 
+        if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_publish))){
+
+            Log.e("textpublish","publish");
+            ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+            textsharepopup.add(new sharepopuptextspanning(1.28f,0,30,content));
+            textsharepopup.add(new sharepopuptextspanning(1.30f,31,59,content));
+            textsharepopup.add(new sharepopuptextspanning(1.2f,60,91,content));
+            textsharepopup.add(new sharepopuptextspanning(1.27f,92,122,content));
+
+            textsharepopup.add(new sharepopuptextspanning(1.22f,124,153,content));
+            textsharepopup.add(new sharepopuptextspanning(1.29f,154,183,content));
+            textsharepopup.add(new sharepopuptextspanning(1.32f,183,content.length(),content));
+
+            common.setspanning(textsharepopup,txtcontent);
+        }
+        else if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_send))){
+
+            Log.e("textpublish","publish");
+            ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+            textsharepopup.add(new sharepopuptextspanning(0.99f,0,22,content));
+            textsharepopup.add(new sharepopuptextspanning(0.99f,23,24,content));
+           /* textsharepopup.add(new sharepopuptextspanning(0.99f,55,82,content));
+            textsharepopup.add(new sharepopuptextspanning(1.26f,83,110,content));
+            textsharepopup.add(new sharepopuptextspanning(1.22f,111,136,content));
+            textsharepopup.add(new sharepopuptextspanning(1.29f,137,165,content));
+            textsharepopup.add(new sharepopuptextspanning(1.31f,166,193,content));
+*/
+            /*textsharepopup.add(new sharepopuptextspanning(1.28f,0,30,content));
+            textsharepopup.add(new sharepopuptextspanning(1.30f,31,59,content));
+            textsharepopup.add(new sharepopuptextspanning(1.2f,60,91,content));
+            textsharepopup.add(new sharepopuptextspanning(1.26f,92,122,content));*/
+            common.setspanning(textsharepopup,txtcontent);
+        }
+
+        if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
+
+            Log.e("textpublish","publish");
+            ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+            textsharepopup.add(new sharepopuptextspanning(1.28f,0,30,content));
+            textsharepopup.add(new sharepopuptextspanning(1.30f,31,59,content));
+            textsharepopup.add(new sharepopuptextspanning(1.2f,60,91,content));
+            textsharepopup.add(new sharepopuptextspanning(1.26f,92,122,content));
+            textsharepopup.add(new sharepopuptextspanning(1.22f,124,153,content));
+            textsharepopup.add(new sharepopuptextspanning(1.29f,154,183,content));
+            textsharepopup.add(new sharepopuptextspanning(1.31f,183,content.length(),content));
+
+            textsharepopup.add(new sharepopuptextspanning(1.28f,0,30,content));
+            textsharepopup.add(new sharepopuptextspanning(1.30f,31,59,content));
+            textsharepopup.add(new sharepopuptextspanning(1.2f,60,91,content));
+            common.setspanning(textsharepopup,txtcontent);
+        }
         txttitle.setText(title);
-        txtcontent.setText(content);
+       // txtcontent.setText(content);
 
         TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
         ok.setOnClickListener(new View.OnClickListener() {
