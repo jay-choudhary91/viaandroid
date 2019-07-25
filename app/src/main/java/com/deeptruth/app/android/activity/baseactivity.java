@@ -1090,22 +1090,22 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
             common.setspanning(textsharepopup,txtcontent);
         }
-        else if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_send))){
+         if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_send))){
 
-            Log.e("textpublish","publish");
+            Log.e("textpublish","txtsend");
             ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-            textsharepopup.add(new sharepopuptextspanning(0.99f,0,22,content));
-            textsharepopup.add(new sharepopuptextspanning(0.99f,23,24,content));
-           /* textsharepopup.add(new sharepopuptextspanning(0.99f,55,82,content));
+            textsharepopup.add(new sharepopuptextspanning(1.19f,0,27,content));
+            textsharepopup.add(new sharepopuptextspanning(1.19f,28,52,content));
+            textsharepopup.add(new sharepopuptextspanning(1.19f,55,82,content));
             textsharepopup.add(new sharepopuptextspanning(1.26f,83,110,content));
             textsharepopup.add(new sharepopuptextspanning(1.22f,111,136,content));
             textsharepopup.add(new sharepopuptextspanning(1.29f,137,165,content));
-            textsharepopup.add(new sharepopuptextspanning(1.31f,166,193,content));*/
+            textsharepopup.add(new sharepopuptextspanning(1.31f,166,195,content));
 
-            /*textsharepopup.add(new sharepopuptextspanning(1.28f,0,30,content));
-            textsharepopup.add(new sharepopuptextspanning(1.30f,31,59,content));
-            textsharepopup.add(new sharepopuptextspanning(1.2f,60,91,content));
-            textsharepopup.add(new sharepopuptextspanning(1.26f,92,122,content));*/
+            textsharepopup.add(new sharepopuptextspanning(1.1f,0,29,content));
+            textsharepopup.add(new sharepopuptextspanning(1.1f,30,59,content));
+            textsharepopup.add(new sharepopuptextspanning(1.1f,60,91,content));
+            textsharepopup.add(new sharepopuptextspanning(1.1f,92,122,content));
             common.setspanning(textsharepopup,txtcontent);
         }
 
