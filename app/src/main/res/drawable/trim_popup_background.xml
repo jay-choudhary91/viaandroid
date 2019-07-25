@@ -1,41 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Drop Shadow Stack -->
-    <item>
-        <shape>
-            <padding  android:right="0.5dp" android:bottom="0.5dp"  />
-            <stroke android:color="#491F1D1D" />
-            <corners android:radius="20dp" />
-            <stroke android:color="#00000000" />
-            <stroke android:width="0.5dp"/>
-        </shape>
-    </item><item>
-        <shape>
-            <padding  android:right="0.5dp" android:bottom="0.5dp"  />
-            <stroke android:color="#501F1D1D" />
-            <corners android:radius="20dp" />
-            <stroke android:color="#00000000" />
-            <stroke android:width="0.5dp"/>
-        </shape>
-    </item><item>
-        <shape>
-            <padding  android:right="0.5dp" android:bottom="0.5dp"  />
-            <stroke android:color="#551F1D1D" />
-            <corners android:radius="20dp" />
-            <stroke android:color="#00000000" />
-            <stroke android:width="0.5dp"/>
-        </shape>
-    </item><item>
+      <item>
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <solid android:color="#561F1D1D" />
-            <corners android:radius="20dp" />
+            <corners android:radius="13dp" />
         </shape>
-    </item><item>
+    </item>
+    <item>
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#571F1D1D" />
-            <corners android:radius="20dp" />
+            <corners android:radius="13dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
         </shape>
@@ -43,7 +20,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#571F1D1D" />
-            <corners android:radius="20dp" />
+            <corners android:radius="13dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
         </shape>
@@ -53,7 +30,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#581F1D1D" />
-            <corners android:radius="20dp" />
+            <corners android:radius="13dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
 
@@ -62,7 +39,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#591F1D1D" />
-            <corners android:radius="20dp" />
+            <corners android:radius="13dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
         </shape>
@@ -70,7 +47,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#601F1D1D" />
-            <corners android:radius="20dp" />
+            <corners android:radius="13dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
         </shape>
@@ -78,7 +55,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#611F1D1D" />
-            <corners android:radius="20dp" />
+            <corners android:radius="13dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
         </shape>
@@ -86,7 +63,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#631F1D1D" />
-            <corners android:radius="20dp" />
+            <corners android:radius="13dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
         </shape>
@@ -94,7 +71,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#641F1D1D" />
-            <corners android:radius="20dp" />
+            <corners android:radius="13dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
 
@@ -103,7 +80,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#651F1D1D" />
-            <corners android:radius="20dp" />
+            <corners android:radius="13dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
         </shape>
@@ -112,7 +89,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#661F1D1D" />
-            <corners android:radius="19dp" />
+            <corners android:radius="12dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
         </shape>
@@ -121,7 +98,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#671F1D1D" />
-            <corners android:radius="19dp" />
+            <corners android:radius="12dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
 
@@ -131,7 +108,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#681F1D1D" />
-            <corners android:radius="18dp" />
+            <corners android:radius="11dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
         </shape>
@@ -140,7 +117,7 @@
         <shape>
             <padding  android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#691F1D1D" />
-            <corners android:radius="15dp" />
+            <corners android:radius="8dp" />
             <stroke android:color="#00000000" />
             <stroke android:width="0.5dp"/>
         </shape>
@@ -150,7 +127,7 @@
             <padding android:top="1dp" android:left="1dp" android:right="0.5dp" android:bottom="0.5dp"  />
             <stroke android:color="#701F1D1D" />
             <stroke android:width="0.5dp"/>
-            <corners android:radius="15dp" />
+            <corners android:radius="8dp" />
             <stroke android:color="#201F1D1D"/>
 
         </shape>
@@ -160,7 +137,7 @@
     <item>
         <shape>
             <solid android:color="#E6ffffff" />
-            <corners android:radius="15dp" />
+            <corners android:radius="8dp" />
         </shape>
     </item>
 </layer-list>
