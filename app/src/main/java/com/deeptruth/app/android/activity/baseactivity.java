@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -29,6 +30,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,6 +84,7 @@ import com.deeptruth.app.android.inapputils.IabHelper;
 import com.deeptruth.app.android.inapputils.IabResult;
 import com.deeptruth.app.android.utils.DropboxClientFactory;
 import com.deeptruth.app.android.utils.googledriveutils.DriveServiceHelper;
+import com.deeptruth.app.android.utils.googledriveutils.GoogleDriveFileHolder;
 import com.deeptruth.app.android.utils.pinviewtext;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -96,8 +99,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
@@ -122,6 +128,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public abstract class baseactivity extends AppCompatActivity implements basefragment.fragmentnavigationhelper,
         connectivityreceiver.ConnectivityReceiverListener {
@@ -139,7 +148,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     String mediatype = "";
     String mediavideotoken = "",mediamethod = "";
     Dialog dialog;
-    Dialog dialoginapppurchase =null,dialogupgradecode=null;
+    Dialog dialoginapppurchase =null,dialogupgradecode=null,dialogfileuploadoptions=null;
     // In the class declaration section:
     //private DropboxAPI<AndroidAuthSession> mdropboxapi;
     // The helper object
@@ -170,23 +179,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     /* UI & Debugging Variables */
     private static final String TAG = baseactivity.class.getSimpleName();
 
-    public boolean isisapprunning() {
-        return isapprunning;
-    }
-
     homewatcher mHomeWatcher;
+    private Executor mexecutor = Executors.newSingleThreadExecutor();
+    private File readytouploadfile=null;
 
-    public static baseactivity getinstance() {
-        return instance;
-    }
-
-    public void isapprunning(boolean b) {
-        isapprunning = b;
-    }
-
-    protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -349,6 +345,28 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
     };
 
+    private void setreadytouploadfile(File file)
+    {
+        readytouploadfile=file;
+    }
+
+    private File getreadytouploadfile()
+    {
+        return readytouploadfile;
+    }
+
+    public static baseactivity getinstance() {
+        return instance;
+    }
+
+    public void isapprunning(boolean b) {
+        isapprunning = b;
+    }
+
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+    }
+
 
     public void inapppurchase(final String productId)
     {
@@ -434,13 +452,15 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         else if (requestCode == config.requestcode_login)
         {
-            if(resultCode == RESULT_OK) {
+            /*if(resultCode == RESULT_OK) {
                 callsharapiafterlogin();
-            }
+            }*/
         }
         else if (requestCode == config.requestcode_googlesignin)
         {
             if (resultCode == Activity.RESULT_OK && data != null) {
+                Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                        .getResources().getString(R.string.fetching_user_info),Toast.LENGTH_SHORT).show();
                 handleSignInResult(data);
             }
         }
@@ -1057,7 +1077,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         return;
     }
 
-    public void share_alert_dialog(final Context context, final String title, String content,adapteritemclick mitemclick ){
+    public void share_alert_dialog(final Context context, final String title, String content,adapteritemclick mitemclick,int percentageheight){
 
         dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1114,9 +1134,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         dialog.setCanceledOnTouchOutside(false);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getscreenwidthheight(dialog,85,percentageheight);
         dialog.show();
     }
 
@@ -1174,6 +1192,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     dialoginapppurchase.dismiss();
             }
         });
+
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int percentagewidth = (width / 100) * 85;
+        dialoginapppurchase.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialoginapppurchase.getWindow().setLayout(percentagewidth, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialoginapppurchase.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         dialoginapppurchase.show();
     }
 
@@ -1279,19 +1304,22 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         sharemedia.add(new sharemedia(R.drawable.onedrive,config.item_microsoft_onedrive));
         sharemedia.add(new sharemedia(R.drawable.videolock,config.item_videoLock_share));
 
+        if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
+            dialogfileuploadoptions.dismiss();
 
-        Dialog send_item_dialog = new Dialog(context, android.R.style.Theme_Dialog);
-        send_item_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        send_item_dialog.setContentView(R.layout.send_alert_dialog);
-        send_item_dialog.setCanceledOnTouchOutside(true);
-        send_item_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        RecyclerView recyclerView = (RecyclerView) send_item_dialog.findViewById(R.id.ryclr_send_items);
-        ImageView img_backbutton = (ImageView) send_item_dialog.findViewById(R.id.img_backbutton);
+        dialogfileuploadoptions = new Dialog(context, android.R.style.Theme_Dialog);
+        dialogfileuploadoptions.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogfileuploadoptions.setContentView(R.layout.send_alert_dialog);
+        dialogfileuploadoptions.setCanceledOnTouchOutside(true);
+        dialogfileuploadoptions.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        RecyclerView recyclerView = (RecyclerView) dialogfileuploadoptions.findViewById(R.id.ryclr_send_items);
+        ImageView img_backbutton = (ImageView) dialogfileuploadoptions.findViewById(R.id.img_backbutton);
         adaptersenddialog adaptersend = new adaptersenddialog(context, sharemedia, new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
                 if(object != null)
                 {
+                    setreadytouploadfile(new File(mediafilepath));
                     common.shouldshowupgradepopup(config.mediatrimcount);
                     int position=(int)object;
                     if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_googledrive))
@@ -1330,8 +1358,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         img_backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(send_item_dialog != null && send_item_dialog.isShowing())
-                    send_item_dialog.dismiss();
+                if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
+                    dialogfileuploadoptions.dismiss();
             }
         });
 
@@ -1347,7 +1375,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adaptersend);
-        send_item_dialog.show();
+
+        dialogfileuploadoptions.show();
     }
 
     public void dropboxuploadfile(String filepath) {
@@ -1359,6 +1388,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onUploadComplete(FileMetadata result) {
                 progressdialog.dismisswaitdialog();
                 Toast.makeText(applicationviavideocomposer.getactivity(), "File uploaded successfully!", Toast.LENGTH_SHORT).show();
+
+                if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
+                    dialogfileuploadoptions.dismiss();
             }
 
             @Override
@@ -1374,26 +1406,87 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
      * #requestgooglesignin()}.
      */
     private void handleSignInResult(Intent result) {
+
         GoogleSignIn.getSignedInAccountFromIntent(result)
-                .addOnSuccessListener(googleAccount -> {
-                    Log.d(TAG, "Signed in as " + googleAccount.getEmail());
+                .addOnSuccessListener(googleAccount ->
+                {
+                    try
+                    {
 
-                    // Use the authenticated account to sign in to the Drive service.
-                    GoogleAccountCredential credential =
-                            GoogleAccountCredential.usingOAuth2(
-                                    applicationviavideocomposer.getactivity(), Collections.singleton(DriveScopes.DRIVE_FILE));
-                    credential.setSelectedAccount(googleAccount.getAccount());
-                    Drive googleDriveService =
-                            new Drive.Builder(
-                                    AndroidHttp.newCompatibleTransport(),
-                                    new GsonFactory(),
-                                    credential)
-                                    .setApplicationName(applicationviavideocomposer.getactivity().getResources().getString(R.string.app_name))
-                                    .build();
+                        Log.d(TAG, "Signed in as " + googleAccount.getEmail());
+                        // Use the authenticated account to sign in to the Drive service.
+                        GoogleAccountCredential credential =
+                                GoogleAccountCredential.usingOAuth2(
+                                        applicationviavideocomposer.getactivity(), Collections.singleton(DriveScopes.DRIVE_FILE));
+                        credential.setSelectedAccount(googleAccount.getAccount());
+                        Drive googleDriveService =
+                                new Drive.Builder(
+                                        AndroidHttp.newCompatibleTransport(),
+                                        new GsonFactory(),
+                                        credential)
+                                        .setApplicationName(applicationviavideocomposer.getactivity().getResources().getString(R.string.app_name))
+                                        .build();
 
-                    DriveServiceHelper mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
+                        //DriveServiceHelper mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
+                        uploadfileatgoogledrive(googleDriveService,getreadytouploadfile(),
+                                common.getmimetype(getreadytouploadfile().getAbsolutePath()),null);
+
+                        progressdialog.dismisswaitdialog();
+                        Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                .getResources().getString(R.string.uploading_has_started),Toast.LENGTH_SHORT).show();
+
+                        if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
+                            dialogfileuploadoptions.dismiss();
+
+                    }catch (Exception e)
+                    {
+                        progressdialog.dismisswaitdialog();
+                        Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                .getResources().getString(R.string.unable_signin),Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+
                 })
-                .addOnFailureListener(exception -> Log.e(TAG, "Unable to sign in.", exception));
+                .addOnFailureListener(exception ->
+                {
+                    progressdialog.dismisswaitdialog();
+                    Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                            .getResources().getString(R.string.unable_signin),Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
+    public Task<GoogleDriveFileHolder> uploadfileatgoogledrive(Drive googleDriveService,
+                                                  final java.io.File localFile,final String mimeType, @Nullable String folderId) {
+        return Tasks.call(mexecutor, new Callable<GoogleDriveFileHolder>()
+        {
+            @Override
+            public GoogleDriveFileHolder call() throws Exception
+            {
+                // Retrieve the metadata as a File object.
+
+                List<String> root;
+                if (folderId == null) {
+                    root = Collections.singletonList("root");
+                } else {
+
+                    root = Collections.singletonList(folderId);
+                }
+
+                com.google.api.services.drive.model.File metadata = new com.google.api.services.drive.model.File()
+                        .setParents(root)
+                        .setMimeType(mimeType)
+                        .setName(localFile.getName());
+
+                FileContent fileContent = new FileContent(mimeType, localFile);
+
+                com.google.api.services.drive.model.File fileMeta = googleDriveService.files().create(metadata, fileContent).execute();
+                GoogleDriveFileHolder googleDriveFileHolder = new GoogleDriveFileHolder();
+                googleDriveFileHolder.setId(fileMeta.getId());
+                googleDriveFileHolder.setName(fileMeta.getName());
+                return googleDriveFileHolder;
+            }
+        });
     }
 
 
@@ -1489,10 +1582,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
 
                 if(btn_next.getText().toString().equalsIgnoreCase("NEXT")){
+                    getscreenwidthheight(dialog,85,58);
                     txt_title.setText(context.getResources().getString(R.string.txt_privacy));
                     String str1 = getResources().getString(R.string.txt_privacy_content);
 
                     txt_content.setText(context.getResources().getString(R.string.txt_privacy_content));
+
                     ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
                     textsharepopup.add(new sharepopuptextspanning(1.0f,0,25,str1));
                     textsharepopup.add(new sharepopuptextspanning(1.0f,26,51,str1));
@@ -1521,9 +1616,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         xdata.getinstance().saveSetting(config.firstmediacreated,"1").isEmpty();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getscreenwidthheight(dialog,85,63);
         dialog.show();
     }
 
@@ -1533,6 +1626,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.welcome_popup);
+
 
         TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
         String str = getResources().getString(R.string.welcome_dialog_text);
@@ -1564,9 +1658,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getscreenwidthheight(dialog,85,60);
         dialog.show();
     }
 
@@ -1758,6 +1850,30 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 Log.d(TAG, "User cancelled login.");
             }
         };
+    }
+
+
+    public void getscreenwidthheight(Dialog dialog,int widthpercentage,int heightpercentage) {
+
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
+
+        int percentageheight = (height / 100) * heightpercentage;
+        int percentagewidth = (width / 100) * widthpercentage;
+
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+       // dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setLayout(percentagewidth, percentageheight);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+       /* WindowManager.LayoutParams params = this.getWindow().getAttributes();
+        params.width = percentageheight;
+        params.height = percentagewidth;
+        this.getWindow().setAttributes(params);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL);*/
+
     }
 }
 
