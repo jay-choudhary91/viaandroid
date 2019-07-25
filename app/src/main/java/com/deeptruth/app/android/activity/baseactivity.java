@@ -1421,6 +1421,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         ImageView imageview = (ImageView) dialog.findViewById(R.id.back);
         TextView txt_upload = (TextView) dialog.findViewById(R.id.btn_upload);
+        TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
+        String str = getResources().getString(R.string.txt_vl_share_detail);
+
+        ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+        textsharepopup.add(new sharepopuptextspanning(0.8f,0,32,str));
+        textsharepopup.add(new sharepopuptextspanning(0.7f,33,69,str));
+        textsharepopup.add(new sharepopuptextspanning(0.8f,70,105,str));
+        textsharepopup.add(new sharepopuptextspanning(0.8f,106,140,str));
+        textsharepopup.add(new sharepopuptextspanning(0.8f,141,171,str));
+        textsharepopup.add(new sharepopuptextspanning(0.8f,172,206,str));
+        textsharepopup.add(new sharepopuptextspanning(0.8f,207,243,str));
+        textsharepopup.add(new sharepopuptextspanning(0.8f,244,str.length(),str));
+        common.setspanning(textsharepopup,txt_content);
 
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1477,7 +1490,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 if(btn_next.getText().toString().equalsIgnoreCase("NEXT")){
                     txt_title.setText(context.getResources().getString(R.string.txt_privacy));
+                    String str1 = getResources().getString(R.string.txt_privacy_content);
+
                     txt_content.setText(context.getResources().getString(R.string.txt_privacy_content));
+                    ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+                    textsharepopup.add(new sharepopuptextspanning(1.0f,0,25,str1));
+                    textsharepopup.add(new sharepopuptextspanning(1.0f,26,51,str1));
+
+                    textsharepopup.add(new sharepopuptextspanning(0.95f,52,77,str1));
+                    textsharepopup.add(new sharepopuptextspanning(1.03f,78,101,str1));
+                    textsharepopup.add(new sharepopuptextspanning(0.98f,102,139,str1));
+                    textsharepopup.add(new sharepopuptextspanning(0.96f,140,167,str1));
+                    textsharepopup.add(new sharepopuptextspanning(0.96f,168,str1.length(),str1));
+
+                    common.setspanning(textsharepopup,txt_content);
                     YoYo.with(Techniques.SlideInRight)
                             .duration(100)
                             .repeat(0)
