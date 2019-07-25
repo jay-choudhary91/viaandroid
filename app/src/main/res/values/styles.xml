@@ -386,8 +386,9 @@
 
     <style name="transparent_dialog_borderless" parent="android:Theme.Dialog">
         <item name="android:windowFrame">@null</item>
-        <item name="android:windowBackground">@null</item>
         <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 </resources>
