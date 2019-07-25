@@ -1077,7 +1077,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         return;
     }
 
-    public void share_alert_dialog(final Context context, final String title, String content,adapteritemclick mitemclick,int percentageheight ){
+    public void share_alert_dialog(final Context context, final String title, String content,adapteritemclick mitemclick,int percentageheight){
 
         dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1376,7 +1376,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adaptersend);
 
-        send_item_dialog.show();
         dialogfileuploadoptions.show();
     }
 
