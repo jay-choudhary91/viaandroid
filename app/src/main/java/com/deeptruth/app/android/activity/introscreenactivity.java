@@ -289,7 +289,7 @@ public class introscreenactivity extends AppCompatActivity {
                         getResources().getString(R.string.intro_screenonelinetwo),
                         getResources().getString(R.string.intro_screenonelinethree),
                         getResources().getString(R.string.intro_screenonelinefour),
-                        "",R.drawable.intro_icon1,1));
+                        getResources().getString(R.string.intro_screenonelinefive),R.drawable.intro_icon1,1));
                 case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.intro_titile2),
                         getResources().getString(R.string.intro_screentwolineone),
                         getResources().getString(R.string.intro_screentwolinetwo),
