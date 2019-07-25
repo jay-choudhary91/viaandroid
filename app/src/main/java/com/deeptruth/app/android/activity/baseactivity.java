@@ -1433,7 +1433,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
         int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
 
-        int percentageheight = (height / 100) * 80;
+        int percentageheight = (height / 100) * 75;
         int percentagewidth = (width / 100) * 95;
 
         dialogfileuploadoptions.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

@@ -43,8 +43,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="">
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/ryclr_send_items"
@@ -52,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:scrollbars="vertical"
+                android:layout_centerVertical="true"
                 app:spanCount="2"
                 android:layout_marginTop="@dimen/margin_10dp"
                 android:layout_marginBottom="@dimen/margin_10dp"/>
