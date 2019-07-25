@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
     >
 
     <RelativeLayout
@@ -11,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:background="@android:color/white"
         >
 
         <FrameLayout
@@ -25,6 +23,7 @@
                 android:id="@+id/video_loader"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 android:gravity="center"
                 android:layout_gravity="center" />
         </FrameLayout>

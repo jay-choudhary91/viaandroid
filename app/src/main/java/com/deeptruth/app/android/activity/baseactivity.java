@@ -887,6 +887,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 subdialogshare.dismiss();
             }
             });
+
+            getscreenwidthheight(subdialogshare,85,60);
             subdialogshare.show();
     }
 
@@ -1338,6 +1340,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
+        getscreenwidthheight(dialogupgradecode,85,60);
         dialogupgradecode.show();
     }
 
@@ -1358,7 +1361,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
             dialogfileuploadoptions.dismiss();
 
-        dialogfileuploadoptions = new Dialog(context, android.R.style.Theme_Dialog);
+        dialogfileuploadoptions = new Dialog(context, R.style.transparent_dialog_borderless);
         dialogfileuploadoptions.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogfileuploadoptions.setContentView(R.layout.send_alert_dialog);
         dialogfileuploadoptions.setCanceledOnTouchOutside(true);
@@ -1427,6 +1430,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adaptersend);
 
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
+
+        int percentageheight = (height / 100) * 80;
+        int percentagewidth = (width / 100) * 95;
+
+        dialogfileuploadoptions.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        dialogfileuploadoptions.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+        dialogfileuploadoptions.getWindow().setLayout(percentagewidth, percentageheight);
+        dialogfileuploadoptions.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        WindowManager.LayoutParams params = dialogfileuploadoptions.getWindow().getAttributes();
+        params.y = 30;
+        dialogfileuploadoptions.getWindow().setAttributes(params);
         dialogfileuploadoptions.show();
     }
 
@@ -1581,9 +1597,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
+
+        int percentageheight = (height / 100) * 75;
+        int percentagewidth = (width / 100) * 95;
+
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+        dialog.getWindow().setLayout(percentagewidth, percentageheight);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        params.y = 50;
+        dialog.getWindow().setAttributes(params);
         dialog.show();
     }
 

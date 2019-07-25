@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -128,6 +129,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                              @Override
                              public void onItemClicked(Object object) {
                                  baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath);
+                                 getDialog().dismiss();
                              }
 
                              @Override
@@ -138,6 +140,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                          return;
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath);
+                getDialog().dismiss();
                 break;
 
             case R.id.lyout_export:
@@ -235,7 +238,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     public void onResume() {
         super.onResume();
 
-        getscreenwidthheight(97,85);
+        getscreenwidthheight(97,80);
     }
 
     public void setdata(String videoPath, int duration, String videotoken)
@@ -264,5 +267,9 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         getDialog().getWindow().setLayout(percentagewidth, percentageheight);
+        WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        params.y = 30;
+        getDialog().getWindow().setAttributes(params);
+
     }
 }
