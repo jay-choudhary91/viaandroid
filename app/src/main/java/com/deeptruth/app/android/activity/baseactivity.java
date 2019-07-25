@@ -1518,14 +1518,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         String str = getResources().getString(R.string.txt_vl_share_detail);
 
         ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-        textsharepopup.add(new sharepopuptextspanning(0.8f,0,32,str));
-        textsharepopup.add(new sharepopuptextspanning(0.8f,33,69,str));
-        textsharepopup.add(new sharepopuptextspanning(0.8f,70,105,str));
-        textsharepopup.add(new sharepopuptextspanning(0.8f,106,140,str));
-        textsharepopup.add(new sharepopuptextspanning(0.8f,141,171,str));
-        textsharepopup.add(new sharepopuptextspanning(0.8f,172,206,str));
-        textsharepopup.add(new sharepopuptextspanning(0.8f,207,243,str));
-        textsharepopup.add(new sharepopuptextspanning(0.8f,244,str.length(),str));
+        textsharepopup.add(new sharepopuptextspanning(0.80f,0,33,str));
+        textsharepopup.add(new sharepopuptextspanning(0.77f,34,70,str));
+        textsharepopup.add(new sharepopuptextspanning(0.75f,71,109,str));
+        textsharepopup.add(new sharepopuptextspanning(0.75f,110,145,str));
+        textsharepopup.add(new sharepopuptextspanning(0.81f,146,172,str));
+        textsharepopup.add(new sharepopuptextspanning(0.78f,173,208,str));
+        textsharepopup.add(new sharepopuptextspanning(0.73f,209,245,str));
+        textsharepopup.add(new sharepopuptextspanning(0.78f,246,str.length(),str));
         common.setspanning(textsharepopup,txt_content);
 
         imageview.setOnClickListener(new View.OnClickListener() {
