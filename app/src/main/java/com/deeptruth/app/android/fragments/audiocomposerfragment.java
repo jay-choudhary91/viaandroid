@@ -135,7 +135,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     ArrayList<videomodel> metricsitems =new ArrayList<>();
     ArrayList<videomodel> hashesitems =new ArrayList<>();
     private MediaRecorder mediarecorder;
-    private String recordedmediafile = null,selectedmetrices="", selectedhashes ="";;
+    private String recordedmediafile = null,selectedmetrices="", selectedhashes ="",upgradeapptitle="",upgradeappmessage="";
     private Runnable doafterallpermissionsgranted;
     private static final int request_permissions = 1;
     View rootview;
@@ -422,7 +422,19 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void startstopaudiorecording()
     {
-        if(! isaudiorecording)
+        if(isaudiorecording)
+        {
+            upgradeapptitle=applicationviavideocomposer.getactivity().getResources().getString(R.string.upgrade_app_title);
+            upgradeappmessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.thankyou_for_using);
+
+            if(common.shouldshowupgradepopup(config.mediarecordcount))
+                showvideorecordlengthalert(upgradeapptitle,upgradeappmessage);
+
+            stoprecording();
+            stopblinkanimation();
+            startwaverecord();
+        }
+        else
         {
             try {
                 startrecording();
@@ -433,15 +445,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             if(madapterclick != null)
                 madapterclick.onItemClicked(null,1);
             img_dotmenu.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
-            if(common.shouldshowupgradepopup(config.mediarecordcount))
-                showvideorecordlengthalert();
-
-            stoprecording();
-            stopblinkanimation();
-            startwaverecord();
         }
     }
 
@@ -624,6 +627,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
                 Log.v("AUDIOCAPTURE","Maximum Duration Reached");
                 try {
+
+                    upgradeapptitle=applicationviavideocomposer.getactivity().getResources().getString(R.string.limit_reached_title);
+                    upgradeappmessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.limit_reached);
 
                     startstopaudiorecording();
 

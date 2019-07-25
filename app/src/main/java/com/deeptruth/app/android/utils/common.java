@@ -73,6 +73,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -3033,6 +3034,16 @@ public class common {
             return true;
 
         return false;
+    }
+
+    // url = file path or whatever suitable URL you want.
+    public static String getmimetype(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
     }
 
     public static boolean shouldshowupgradepopup(String xdatakey)
