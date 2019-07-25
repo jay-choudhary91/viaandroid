@@ -379,7 +379,7 @@
     <string name="export_details1">Many email/text messaging \nsystems will compress your \nfile attachments and cause \nrecordings to be modified. \nUnfortunately, compressed \nfiles will no longer be valid \nVideoLock videos and audios.</string>
     <string name="export_details2">We recommend that you use a \nfile sharing service to send \nyour VideoLock files.</string>
 
-    <string name="do_not_notify_me_again">Do you want to display the intro screens again?</string>
+    <string name="dispaly_startup_screens_again">Display startup screens again?</string>
 
     <string name="txt_trim">The ability to trim and send portion of videos or audios is available in the full version.</string>
 

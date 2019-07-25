@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +27,7 @@ import com.deeptruth.app.android.models.intro;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
+import com.suke.widget.SwitchButton;
 
 
 /**
@@ -34,6 +39,8 @@ public class footerpagerfragment extends Fragment {
     boolean isgifloaded =false;
     intro introobject=null;
     TextView btnstartrecord;
+    LinearLayout layout_checkbox;
+    CheckBox notifycheckbox;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -47,6 +54,16 @@ public class footerpagerfragment extends Fragment {
             TextView txt_descriptionfour = (TextView) rootview.findViewById(R.id.txt_descriptionfour);
             TextView txt_descriptionfive = (TextView) rootview.findViewById(R.id.txt_descriptionfive);
             TextView txt_betaversion = (TextView) rootview.findViewById(R.id.txt_betaversion);
+            layout_checkbox = rootview.findViewById(R.id.layout_checkbox);
+             notifycheckbox = (CheckBox) rootview.findViewById(R.id.showintroscreen_checkbox);
+            notifycheckbox.setText(getResources().getString(R.string.dispaly_startup_screens_again));
+            notifycheckbox.setTextColor(getResources().getColor(R.color.white));
+
+            if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() ||
+                    xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("1")){
+              notifycheckbox.setChecked(true);
+             }
+
 
             introobject=(intro)getArguments().getParcelable("object");
             btnstartrecord = (TextView) rootview.findViewById(R.id.btn_start_record);
@@ -110,36 +127,30 @@ public class footerpagerfragment extends Fragment {
                txt_title.setVisibility(View.GONE);
                txt_descriptionone.setVisibility(View.GONE);
                txt_descriptiontwo.setVisibility(View.GONE);
-               txt_descriptionthree.setVisibility(View.INVISIBLE);
+               txt_descriptionthree.setVisibility(View.GONE);
                txt_descriptionfour.setVisibility(View.INVISIBLE);
                txt_descriptionfive.setVisibility(View.INVISIBLE);
                btnstartrecord.setVisibility(View.VISIBLE);
+               layout_checkbox.setVisibility(View.VISIBLE);
            }
 
             btnstartrecord.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    common.showalertdialog(getActivity(), getActivity().getString(R.string.do_not_notify_me_again), new adapteritemclick() {
-                            @Override
-                            public void onItemClicked(Object object) {
+                    if (notifycheckbox.isChecked())
+                    {
+                        xdata.getinstance().saveSetting(config.enableintroscreen,"1");
+                    }
+                    else
+                    {
+                        xdata.getinstance().saveSetting(config.enableintroscreen,"0");
+                    }
 
-                            }
-
-                            @Override
-                            public void onItemClicked(Object object, int type) {
-                                if(type == 0 )
-                                    xdata.getinstance().saveSetting(config.enableintroscreen,"1");
-                                else
-                                    xdata.getinstance().saveSetting(config.enableintroscreen,"0");
-
-
-                                Intent in=new Intent(getActivity(),homeactivity.class);
-                                startActivity(in);
-                                getActivity().overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
-                                getActivity().finish();
-                        }
-                   });
+                    Intent in=new Intent(getActivity(),homeactivity.class);
+                    startActivity(in);
+                    getActivity().overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
+                    getActivity().finish();
                 }
             });
 
