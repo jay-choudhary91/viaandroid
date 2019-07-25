@@ -131,6 +131,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.registrationcontaineractivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
