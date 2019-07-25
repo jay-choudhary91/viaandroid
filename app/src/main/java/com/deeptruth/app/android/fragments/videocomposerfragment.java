@@ -1469,7 +1469,20 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if (isvideorecording)
         {
             if(common.shouldshowupgradepopup(config.mediarecordcount))
-                showvideorecordlengthalert(upgradeapptitle,upgradeappmessage);
+            {
+                if(upgradeapptitle.contains("UPGRADE"))
+                {
+                    if(xdata.getinstance().getSetting(config.upgradedialog_mediastop).trim().isEmpty())
+                    {
+                        xdata.getinstance().saveSetting(config.upgradedialog_mediastop,"1");
+                        showvideorecordlengthalert(upgradeapptitle,upgradeappmessage);
+                    }
+                }
+                else
+                {
+                    showvideorecordlengthalert(upgradeapptitle,upgradeappmessage);
+                }
+            }
 
             gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));

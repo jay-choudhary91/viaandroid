@@ -428,7 +428,20 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             upgradeappmessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.thankyou_for_using);
 
             if(common.shouldshowupgradepopup(config.mediarecordcount))
-                showvideorecordlengthalert(upgradeapptitle,upgradeappmessage);
+            {
+                if(upgradeapptitle.contains("UPGRADE"))
+                {
+                    if(xdata.getinstance().getSetting(config.upgradedialog_mediastop).trim().isEmpty())
+                    {
+                        xdata.getinstance().saveSetting(config.upgradedialog_mediastop,"1");
+                        showvideorecordlengthalert(upgradeapptitle,upgradeappmessage);
+                    }
+                }
+                else
+                {
+                    showvideorecordlengthalert(upgradeapptitle,upgradeappmessage);
+                }
+            }
 
             stoprecording();
             stopblinkanimation();
