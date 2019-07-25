@@ -1516,16 +1516,27 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView txt_upload = (TextView) dialog.findViewById(R.id.btn_upload);
         TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
         String str = getResources().getString(R.string.txt_vl_share_detail);
+        str.indexOf("The VideoLock share tool provides");
 
         ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+
         textsharepopup.add(new sharepopuptextspanning(0.80f,0,33,str));
         textsharepopup.add(new sharepopuptextspanning(0.77f,34,70,str));
-        textsharepopup.add(new sharepopuptextspanning(0.75f,71,109,str));
-        textsharepopup.add(new sharepopuptextspanning(0.75f,110,145,str));
-        textsharepopup.add(new sharepopuptextspanning(0.81f,146,172,str));
-        textsharepopup.add(new sharepopuptextspanning(0.78f,173,208,str));
-        textsharepopup.add(new sharepopuptextspanning(0.73f,209,245,str));
-        textsharepopup.add(new sharepopuptextspanning(0.78f,246,str.length(),str));
+        textsharepopup.add(new sharepopuptextspanning(0.75f,73,110,str));
+        textsharepopup.add(new sharepopuptextspanning(0.75f,110,146,str));
+        textsharepopup.add(new sharepopuptextspanning(0.81f,146,178,str));
+        textsharepopup.add(new sharepopuptextspanning(0.78f,178,215,str));
+        textsharepopup.add(new sharepopuptextspanning(0.73f,215,253,str));
+        textsharepopup.add(new sharepopuptextspanning(0.78f,253,str.length(),str));
+
+        /*textsharepopup.add(new sharepopuptextspanning(0.80f,0,33,str));
+        textsharepopup.add(new sharepopuptextspanning(0.77f,34,70,str));
+        textsharepopup.add(new sharepopuptextspanning(0.75f,73,107,str));
+        textsharepopup.add(new sharepopuptextspanning(0.75f,110,143,str));
+        textsharepopup.add(new sharepopuptextspanning(0.81f,146,175,str));
+        textsharepopup.add(new sharepopuptextspanning(0.78f,178,212,str));
+        textsharepopup.add(new sharepopuptextspanning(0.73f,215,250,str));
+        textsharepopup.add(new sharepopuptextspanning(0.78f,253,str.length(),str));*/
         common.setspanning(textsharepopup,txt_content);
 
         imageview.setOnClickListener(new View.OnClickListener() {
