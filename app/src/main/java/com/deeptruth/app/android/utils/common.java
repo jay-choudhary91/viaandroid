@@ -540,6 +540,7 @@ public class common {
         xdata.getinstance().saveSetting(config.gpsonoff, "NA");
         xdata.getinstance().saveSetting(config.deviceorientation, "NA");
         xdata.getinstance().saveSetting(config.screenorientatioin, "NA");
+        xdata.getinstance().saveSetting(config.picturequality, "NA");
     }
 
     public static void setgraphicalitems(String keyname, String value, boolean ismetricsselected) {
@@ -632,6 +633,8 @@ public class common {
             xdata.getinstance().saveSetting(config.deviceorientation, ((ismetricsselected) ? value : "NA"));
         }else if(keyname.equalsIgnoreCase(config.screenorientatioin)){
             xdata.getinstance().saveSetting(config.screenorientatioin, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.picturequality)){
+            xdata.getinstance().saveSetting(config.picturequality, ((ismetricsselected) ? value : "NA"));
         }
     }
 
@@ -646,10 +649,8 @@ public class common {
             xdata.getinstance().saveSetting(config.datahash, (ismetricsselected) ? value : "NA");
         } else if (keyname.equalsIgnoreCase(config.matrichash)) {
             xdata.getinstance().saveSetting(config.matrichash, (ismetricsselected) ? value : "NA");
-        }else if(keyname.equalsIgnoreCase(config.camera)){
+        }else if(keyname.equalsIgnoreCase(config.camera)) {
             xdata.getinstance().saveSetting(config.camera, (ismetricsselected) ? value : "NA");
-        }else if(keyname.equalsIgnoreCase(config.pictureqty)){
-            xdata.getinstance().saveSetting(config.pictureqty, (ismetricsselected) ? value : "NA");
         }
     }
 
@@ -899,8 +900,8 @@ public class common {
         else if (key.equalsIgnoreCase(config.camera)) {
             metricItemName = config.camera;
         }
-        else if (key.equalsIgnoreCase(config.pictureqty)) {
-            metricItemName = config.pictureqty;
+        else if (key.equalsIgnoreCase(config.picturequality)) {
+            metricItemName = config.picturequality;
         }
         return metricItemName;
     }
@@ -1756,7 +1757,7 @@ public class common {
                 config.cpuusageirq, config.compass, config.decibel, config.barometer, config.acceleration_x, config.acceleration_y,
                 config.acceleration_z, config.distancetravelled, config.currentcallinprogress, config.currentcalldurationseconds,
                 config.currentcallremotenumber, config.currentcalldecibel, config.airplanemode,
-                "camera","picturequality","jailbroken","screenorientatioin",
+                "camera",config.picturequality,"jailbroken","screenorientatioin",
                 "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country","jailbroken",
                 "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid","deviceconnection", "numberoftowers",
                 "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,

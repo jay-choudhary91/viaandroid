@@ -780,7 +780,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             Log.e("camera",""+metricItemArraylist.get(j).getMetricTrackValue());
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_camera),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvcamera);
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.pictureqty)){
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.picturequality)){
                             Log.e("qualitypicture",""+metricItemArraylist.get(j).getMetricTrackValue());
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvpicture_qty);
                         }

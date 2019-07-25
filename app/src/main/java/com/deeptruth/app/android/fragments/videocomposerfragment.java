@@ -1960,7 +1960,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     devicecameravideo = "Back";
                 }
                 xdata.getinstance().saveSetting(config.camera, devicecameravideo);
-                xdata.getinstance().saveSetting(config.pictureqty, selectedvideoquality);
+                xdata.getinstance().saveSetting(config.picturequality, selectedvideoquality);
 
                 try {
                     if(gethelper().isdraweropened())

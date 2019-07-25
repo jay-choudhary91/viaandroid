@@ -1548,7 +1548,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 }
 
                 xdata.getinstance().saveSetting(config.camera, devicecamera);
-                xdata.getinstance().saveSetting(config.pictureqty, selectedmediaquality);
+                xdata.getinstance().saveSetting(config.picturequality, selectedmediaquality);
 
                 ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
                 getselectedmetrics(mlocalarraylist);

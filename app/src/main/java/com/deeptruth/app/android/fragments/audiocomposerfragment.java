@@ -1250,7 +1250,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
                 common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
                 xdata.getinstance().saveSetting(config.camera, "NA");
-                xdata.getinstance().saveSetting(config.pictureqty, "NA");
+                xdata.getinstance().saveSetting(config.picturequality, "NA");
 
                 actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
                 layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));

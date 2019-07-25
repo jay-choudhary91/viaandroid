@@ -786,7 +786,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_gps),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.gpsonoff)), tvgps);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_jailbroken),"\n"+common.getxdatavalue("NA"), tvjailbroken);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_connection),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.deviceconnection)), tvdeviceconnection);
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.pictureqty)), tvpicture_qty);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.picturequality)), tvpicture_qty);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_camera),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.camera)), tvcamera);
 
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.screen),"\n"+xdata.getinstance().getSetting(config.ScreenWidth) +"*" +xdata.getinstance().getSetting(config.ScreenHeight), tvscreen);
@@ -1887,7 +1887,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             Log.e("camera",""+metricItemArraylist.get(j).getMetricTrackValue());
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_camera),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvcamera);
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("pictureqty")){
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.picturequality)){
                             Log.e("picturequality",""+metricItemArraylist.get(j).getMetricTrackValue());
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvpicture_qty);
                         }
