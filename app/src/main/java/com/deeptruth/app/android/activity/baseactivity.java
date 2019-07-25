@@ -1376,8 +1376,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adaptersend);
         dialogfileuploadoptions.show();
-
-        send_item_dialog.show();
     }
 
     public void dropboxuploadfile(String filepath) {
