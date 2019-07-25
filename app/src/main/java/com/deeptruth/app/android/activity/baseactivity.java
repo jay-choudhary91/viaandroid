@@ -1529,7 +1529,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         textsharepopup.add(new sharepopuptextspanning(0.73f,215,253,str));
         textsharepopup.add(new sharepopuptextspanning(0.78f,253,str.length(),str));
 
-        
+
         common.setspanning(textsharepopup,txt_content);
 
         imageview.setOnClickListener(new View.OnClickListener() {
