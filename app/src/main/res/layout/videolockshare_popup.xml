@@ -51,12 +51,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:fontType="Comfortaa-Regular"
-                android:text="@string/txt_congrats_content"
                 android:textSize="18sp"
                 android:layout_margin="@dimen/margin_10dp"
                 android:text="@string/txt_vl_share_detail"
-
-                android:gravity="center"
                 android:textColor="@color/black"
                 android:gravity="center"/>
 
