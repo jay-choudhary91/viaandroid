@@ -194,8 +194,6 @@ public class applicationviavideocomposer extends Application implements Lifecycl
      */
     public synchronized IOneDriveClient getOneDriveClient() {
         if (mClient.get() == null) {
-            Toast.makeText(getApplicationContext(),"Unable to generate",
-                    Toast.LENGTH_SHORT).show();
             throw new UnsupportedOperationException("Unable to generate a new service object");
         }
         return mClient.get();
@@ -212,15 +210,11 @@ public class applicationviavideocomposer extends Application implements Lifecycl
             public void success(final IOneDriveClient result) {
                 mClient.set(result);
                 serviceCreated.success(null);
-                Toast.makeText(getApplicationContext(),"Step pass",
-                        Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void failure(final ClientException error) {
                 serviceCreated.failure(error);
-                Toast.makeText(getApplicationContext(),"Step fail",
-                        Toast.LENGTH_SHORT).show();
             }
         };
         new OneDriveClient
