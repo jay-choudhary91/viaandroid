@@ -373,13 +373,13 @@
 
     <string name="checkboxstring">Do not notify again</string>
     <!--publish text details-->
-    <string name="publishtext_line1">Publishing your recordings to </string>
-    <string name="publishtext_line2">the DeepTruth website allows </string>
-    <string name="publishtext_line3">you to share any validated and </string>
+    <string name="publishtext_line1">Publishing your recordings to</string>
+    <string name="publishtext_line2">the DeepTruth website allows</string>
+    <string name="publishtext_line3">you to share any validated and</string>
     <string name="publishtext_line4">authenticated videos/audios.</string>
-    <string name="publishtext_line5">After a recording is uploaded, </string>
-    <string name="publishtext_line6">it can be shared on websites </string>
-    <string name="publishtext_line7">and social media platforms. </string>
+    <string name="publishtext_line5">After a recording is uploaded,</string>
+    <string name="publishtext_line6">it can be shared on websites</string>
+    <string name="publishtext_line7">and social media platforms.</string>
 
     <!--sendtext details-->
     <string name="sendtext_line1">Many email/text messaging</string>
@@ -388,7 +388,7 @@
     <string name="sendtext_line4">recordings to be modified.</string>
     <string name="sendtext_line5">Unfortunately, compressed </string>
     <string name="sendtext_line6">files will no longer be valid</string>
-    <string name="sendtext_line7">>VideoLock videos or audios.</string>
+    <string name="sendtext_line7">VideoLock videos or audios.</string>
     <string name="sendtext_line8">VideoLock has integrated with</string>
     <string name="sendtext_line9">the most popular file sharing</string>
     <string name="sendtext_line10">services to help you avoid the </string>
@@ -396,16 +396,16 @@
 
 
     <!--export_details-->
-    <string name="exporttext_line1">Many email/text messaging </string>
-    <string name="exporttext_line2">systems will compress your </string>
-    <string name="exporttext_line3">file attachments and cause </string>
-    <string name="exporttext_line4">recordings to be modified. </string>
-    <string name="exporttext_line5">Unfortunately, compressed </string>
-    <string name="exporttext_line6">files will no longer be valid </string>
-    <string name="exporttext_line7">VideoLock videos and audios.</string>
-    <string name="exporttext_line8">We recommend that you use a</string>
-    <string name="exporttext_line9">file sharing service to send</string>
-    <string name="exporttext_line10">your VideoLock files. </string>
+    <string name="exporttext_line1">Many email/text messaging</string>
+    <string name="exporttext_line2">systems will compress your</string>
+    <string name="exporttext_line3">file attachments and cause</string>
+    <string name="exporttext_line4">recordings to be modified.</string>
+    <string name="exporttext_line5">Unfortunately, compressed</string>
+    <string name="exporttext_line6">files will no longer be valid</string>
+    <string name="exporttext_line7">VideoLock videos or audios.</string>
+    <string name="exporttext_line8">We recommend that you </string>
+    <string name="exporttext_line9">use a file sharing service </string>
+    <string name="exporttext_line10">to send your VideoLock files.</string>
 
     <string name="dispaly_startup_screens_again">Display startup screens again?</string>
 
@@ -438,7 +438,7 @@
     <string name="btn_maybe_later">Maybe Later</string>
     <string name="btn_next">NEXT</string>
     <string name="welcome_dialog_text">We have included a quick\n45-second video that will\nexplain all the features of\nyour new VideoLock app.\n\nWould you like to watch a\nVideoLock demo video?</string>
-    <string name="betaversion">Beta Version 7.25.19</string>
+    <string name="betaversion">Beta Version 7.26.19</string>
 
     <string name="txt_congrats_content_demo">You have just created your \nfirst certified cryptomedia! \n\nYour recording has already \nbeen registered with over \n50 layers of unchangeable \nand encrypted digital DNA \ncryptographic fingerprints.</string>
 
