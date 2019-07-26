@@ -119,11 +119,17 @@ dependencies {
     implementation 'com.daimajia.easing:library:2.0@aar'
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
     implementation 'com.dropbox.core:dropbox-core-sdk:3.1.1'
-    implementation 'com.android.volley:volley:1.1.1'
+    /*implementation 'com.android.volley:volley:1.1.1'
     implementation('com.microsoft.identity.client:msal:0.3.+')
     {
         transitive = false
-    }
+    }*/
+    // Include the sdk as a dependency
+    implementation('com.onedrive.sdk:onedrive-sdk-android:+')
+    // Include the gson dependency
+    implementation 'com.google.code.gson:gson:2.3.1'
+    // Include supported authentication methods for your application
+    implementation 'com.microsoft.services.msa:msa-auth:0.8.4'
 
 
     configurations {
@@ -132,4 +138,11 @@ dependencies {
         }
     }
 }
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:support-v4:27.1.0'
+    }
+}
+
 apply plugin: 'com.google.gms.google-services'
