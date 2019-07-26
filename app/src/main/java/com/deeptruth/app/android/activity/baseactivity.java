@@ -1089,13 +1089,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             txt_lineseven.setVisibility(View.VISIBLE);
             txt_lineeight.setVisibility(View.VISIBLE);
 
-            txtlineone.setTextSize(15.9f);
-            txt_linetwo.setTextSize(16.05f);
-            txt_linethree.setTextSize(15.01f);
-            txt_linefour.setTextSize(15.99f);
-            txt_linesix.setTextSize(15.3f);
-            txt_lineseven.setTextSize(15.7f);
-            txt_lineeight.setTextSize(16.0f);
+            txtlineone.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_linetwo.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_linethree.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_linefour.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_linesix.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_lineseven.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_lineeight.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
 
 
             txtlineone.setText(getResources().getString(R.string.publishtext_line1));
@@ -1122,18 +1122,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
              txt_lineeleven.setVisibility(View.VISIBLE);
              txt_linetwelve.setVisibility(View.VISIBLE);
 
-             txtlineone.setTextSize(15.99f);
-             txt_linetwo.setTextSize(16.25f);
-             txt_linethree.setTextSize(15.95f);
-             txt_linefour.setTextSize(16.60f);
-             txt_linefive.setTextSize(15.97f);
-             txt_linesix.setTextSize(16.50f);
-             txt_lineseven.setTextSize(15.58f);
+             txtlineone.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+             txt_linetwo.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+             txt_linethree.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+             txt_linefour.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+             txt_linefive.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+             txt_linesix.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+             txt_lineseven.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
 
-             txt_linenine.setTextSize(14.98f);
-             txt_lineten.setTextSize(15.70f);
-             txt_lineeleven.setTextSize(15.00f);
-             txt_linetwelve.setTextSize(14.15f);
+             txt_linenine.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+             txt_lineten.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+             txt_lineeleven.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+             txt_linetwelve.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
 
 
              txtlineone.setText(getResources().getString(R.string.sendtext_line1));
@@ -1164,17 +1164,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             txt_lineeleven.setVisibility(View.VISIBLE);
             txt_linetwelve.setVisibility(View.VISIBLE);
 
-            txtlineone.setTextSize(15.99f);
-            txt_linetwo.setTextSize(16.25f);
-            txt_linethree.setTextSize(15.95f);
-            txt_linefour.setTextSize(16.60f);
-            txt_linefive.setTextSize(15.97f);
-            txt_linesix.setTextSize(16.50f);
-            txt_lineseven.setTextSize(15.58f);
+            txtlineone.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_linetwo.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_linethree.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_linefour.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_linefive.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_linesix.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_lineseven.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
 
-            txt_linenine.setTextSize(14.90f);
-            txt_lineten.setTextSize(15.70f);
-            txt_lineeleven.setTextSize(16.00f);
+            txt_linenine.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_lineten.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            txt_lineeleven.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
 
             txtlineone.setText(getResources().getString(R.string.exporttext_line1));
             txt_linetwo.setText(getResources().getString(R.string.exporttext_line2));
@@ -1797,7 +1797,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 if(btn_next.getText().toString().equalsIgnoreCase("NEXT")){
                     setscreenwidthheight(dialog,85,58,config.gravitycenter);
-                    getscreenwidthheight(dialog,82,60);
                     txt_title.setText(context.getResources().getString(R.string.txt_privacy));
 
                     txt_line_one.setText(R.string.priv_lineone);
