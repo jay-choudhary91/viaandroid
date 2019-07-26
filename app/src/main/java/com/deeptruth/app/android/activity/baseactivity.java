@@ -18,6 +18,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,13 +47,6 @@ import android.widget.Toast;
 
 import com.android.billingclient.api.Purchase;
 import com.android.vending.billing.IInAppBillingService;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.deeptruth.app.android.BuildConfig;
@@ -82,8 +76,8 @@ import com.deeptruth.app.android.netutils.xapipostfile;
 import com.deeptruth.app.android.inapputils.IabBroadcastReceiver;
 import com.deeptruth.app.android.inapputils.IabHelper;
 import com.deeptruth.app.android.inapputils.IabResult;
+import com.deeptruth.app.android.onedrive.onedrivedefaultcallback;
 import com.deeptruth.app.android.utils.DropboxClientFactory;
-import com.deeptruth.app.android.utils.googledriveutils.DriveServiceHelper;
 import com.deeptruth.app.android.utils.googledriveutils.GoogleDriveFileHolder;
 import com.deeptruth.app.android.utils.pinviewtext;
 import com.deeptruth.app.android.utils.common;
@@ -107,25 +101,25 @@ import com.google.api.client.http.FileContent;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
-import com.microsoft.identity.client.AuthenticationCallback;
-import com.microsoft.identity.client.IAccount;
-import com.microsoft.identity.client.IAuthenticationResult;
-import com.microsoft.identity.client.PublicClientApplication;
-import com.microsoft.identity.client.exception.MsalClientException;
-import com.microsoft.identity.client.exception.MsalException;
-import com.microsoft.identity.client.exception.MsalServiceException;
-import com.microsoft.identity.client.exception.MsalUiRequiredException;
+import com.onedrive.sdk.concurrency.ICallback;
+import com.onedrive.sdk.concurrency.IProgressCallback;
+import com.onedrive.sdk.core.ClientException;
+import com.onedrive.sdk.core.OneDriveErrorCodes;
+import com.onedrive.sdk.extensions.IOneDriveClient;
+import com.onedrive.sdk.extensions.Item;
+import com.onedrive.sdk.options.Option;
+import com.onedrive.sdk.options.QueryOption;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.Callable;
@@ -168,9 +162,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     ServiceConnection mServiceConn;
     Bundle skuDetails;
 
-    /* Azure AD Variables */
-    private PublicClientApplication onedriveapplication;
-    private IAuthenticationResult onedriveresult;
 
     /* Azure AD v2 Configs */
     final static String[] onedrivescopes = {"https://graph.microsoft.com/User.Read"};
@@ -200,27 +191,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             DropboxClientFactory.init(authtoken);
         }
 
-        /* Configure your sample app and save state for this activity */
-        /*onedriveapplication = new PublicClientApplication(
-                applicationviavideocomposer.getactivity(),
-                R.raw.auth_config);*/
-
-
-        /* Attempt to get a user and acquireTokenSilent
-         * If this fails we do an interactive request
-         */
-        /*onedriveapplication.getAccounts(new PublicClientApplication.AccountsLoadedCallback() {
-            @Override
-            public void onAccountsLoaded(final List<IAccount> accounts) {
-
-                if (!accounts.isEmpty()) {
-                    *//* This sample doesn't support multi-account scenarios, use the first account *//*
-                    onedriveapplication.acquireTokenSilentAsync(onedrivescopes, accounts.get(0), getAuthSilentCallback());
-                } else {
-                    *//* No accounts or >1 account *//*
-                }
-            }
-        });*/
 
 
         //mdropboxapi = new DropboxAPI<AndroidAuthSession>(builddropboxsession());
@@ -1516,7 +1486,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
                     {
-                        //getmsonedrivetoken();
+                        loginwithonedrive(mediafilepath);
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_dropbox))
                     {
@@ -1852,153 +1822,99 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.show();
     }
 
-
     // MS Onedrive callbacks and methods
 
-
-    //
-    // Core Identity methods used by MSAL
-    // ==================================
-    // getmsonedrivetoken() - attempts to get tokens for graph, if it succeeds calls graph & updates UI
-    // msonedrivesignout() - Signs account out of the app & updates UI
-    // callGraphAPI() - called on successful token acquisition which makes an HTTP request to graph
-    //
-
-    /* Use MSAL to acquireToken for the end-user
-     * Callback will call Graph api w/ access token & update UI
-     */
-    private void getmsonedrivetoken() {
-        onedriveapplication.acquireToken(applicationviavideocomposer.getactivity(), onedrivescopes, getAuthInteractiveCallback());
-    }
-
-    /* Clears an account's tokens from the cache.
-     * Logically similar to "sign out" but only signs out of this app.
-     * User will get interactive SSO if trying to sign back-in.
-     */
-    private void msonedrivesignout() {
-        /* Attempt to get a user and acquireTokenSilent
-         * If this fails we do an interactive request
-         */
-        onedriveapplication.getAccounts(new PublicClientApplication.AccountsLoadedCallback() {
+    public void loginwithonedrive(String filepath)
+    {
+        final applicationviavideocomposer app = (applicationviavideocomposer)baseactivity.this.getApplication();
+        final ICallback<Void> serviceCreated = new onedrivedefaultcallback<Void>(baseactivity.this) {
             @Override
-            public void onAccountsLoaded(final List<IAccount> accounts) {
-
-                if (accounts.isEmpty()) {
-                    /* No accounts to remove */
-
-                } else {
-                    for (final IAccount account : accounts) {
-                        onedriveapplication.removeAccount(
-                                account,
-                                new PublicClientApplication.AccountsRemovedCallback() {
-                                    @Override
-                                    public void onAccountsRemoved(Boolean isSuccess) {
-                                        if (isSuccess) {
-                                    /* successfully removed account */
-                                        } else {
-                                    /* failed to remove account */
-                                        }
-                                    }
-                                });
+            public void success(final Void result) {
+                progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        uploadfileatmsonedrive(filepath);
                     }
-                }
-
-               // updateSignedOutUI();
+                },500);
             }
-        });
-    }
-
-    /* Use Volley to make an HTTP request to the /me endpoint from MS Graph using an access token */
-    private void callGraphAPI() {
-        Log.d(TAG, "Starting volley request to graph");
-
-        /* Make sure we have a token to send to graph */
-        if (onedriveresult.getAccessToken() == null) {return;}
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        JSONObject parameters = new JSONObject();
-
+        };
         try {
-            parameters.put("key", "value");
+            app.createOneDriveClient(baseactivity.this, serviceCreated);
         } catch (Exception e) {
-            Log.d(TAG, "Failed to put parameters: " + e.toString());
+            //app.createOneDriveClient(baseactivity.this, serviceCreated);
         }
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, msgraphurl,
-                parameters,new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                /* Successfully called graph, process data and send to UI */
-                Log.d(TAG, "Response: " + response.toString());
-
-               // updateGraphUI(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Error: " + error.toString());
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + onedriveresult.getAccessToken());
-                return headers;
-            }
-        };
-
-        Log.d(TAG, "Adding HTTP GET to Queue, Request: " + request.toString());
-
-        request.setRetryPolicy(new DefaultRetryPolicy(
-                3000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        queue.add(request);
     }
 
 
-    /* Callback used in for silent acquireToken calls.
-     * Looks if tokens are in the cache (refreshes if necessary and if we don't forceRefresh)
-     * else errors that we need to do an interactive request.
-     */
-    private AuthenticationCallback getAuthSilentCallback() {
-        return new AuthenticationCallback() {
-
+    public void uploadfileatmsonedrive(String filepath)
+    {
+        final applicationviavideocomposer application = (applicationviavideocomposer)baseactivity.this.getApplication();
+        IOneDriveClient oneDriveClient = application.getOneDriveClient();
+        final AsyncTask<Void, Void, Void> uploadFile = new AsyncTask<Void, Void, Void>() {
             @Override
-            public void onSuccess(IAuthenticationResult authenticationResult) {
-                /* Successfully got a token, call graph now */
-                Log.d(TAG, "Successfully authenticated");
+            protected Void doInBackground(final Void... params) {
+                try
+                {
+                    File file = new File(filepath);
+                    byte[] fileInMemory = new byte[(int) file.length()];
+                    FileInputStream fis = new FileInputStream(file);
+                    fis.read(fileInMemory); //read file into bytes[]
+                    fis.close();
+                    // Fix up the file name (needed for camera roll photos, etc)
+                    final String filename = new File(filepath).getName();
+                    final Option option = new QueryOption("@name.conflictBehavior", "fail");
+                    oneDriveClient
+                            .getDrive()
+                            .getItems("root")
+                            .getChildren()
+                            .byId(filename)
+                            .getContent()
+                            .buildRequest(Collections.singletonList(option))
+                            .put(fileInMemory,
+                                    new IProgressCallback<Item>() {
+                                        @Override
+                                        public void success(final Item item) {
+                                            progressdialog.dismisswaitdialog();
+                                            Toast.makeText(baseactivity.this,applicationviavideocomposer.getactivity().getResources()
+                                                    .getString(R.string.file_uploaded),
+                                                    Toast.LENGTH_LONG).show();
 
-                /* Store the onedriveresult */
-                onedriveresult = authenticationResult;
+                                            if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
+                                                dialogfileuploadoptions.dismiss();
+                                        }
 
-                /* call graph */
-                callGraphAPI();
+                                        @Override
+                                        public void failure(final ClientException error) {
+                                            progressdialog.dismisswaitdialog();
+                                            if (error.isError(OneDriveErrorCodes.NameAlreadyExists)) {
+                                                Toast.makeText(baseactivity.this,"FileName already exist!",
+                                                        Toast.LENGTH_LONG).show();
 
-                /* update the UI to post call graph state */
-              //  updateSuccessUI();
-            }
+                                            } else {
+                                                Toast.makeText(baseactivity.this,applicationviavideocomposer.getactivity().getResources()
+                                                                .getString(R.string.upload_failed),
+                                                        Toast.LENGTH_LONG).show();
+                                            }
+                                        }
 
-            @Override
-            public void onError(MsalException exception) {
-                /* Failed to acquireToken */
-
-                //Log.e("MsalException ",exception.getMessage());
-                /*if (exception instanceof MsalClientException) {
-                    *//* Exception inside MSAL, more info inside MsalError.java *//*
-                } else if (exception instanceof MsalServiceException) {
-                    *//* Exception when communicating with the STS, likely config issue *//*
-                } else if (exception instanceof MsalUiRequiredException) {
-                    *//* Tokens expired or no session, retry with interactive *//*
-                }*/
-            }
-
-            @Override
-            public void onCancel() {
-                /* User cancelled the authentication */
-                Log.d(TAG, "User cancelled login.");
+                                        @Override
+                                        public void progress(final long current, final long max) {
+                                            /*dialog.setProgress((int) current);
+                                            dialog.setMax((int) max);*/
+                                        }
+                                    });
+                } catch (final Exception e) {
+                    Log.e(getClass().getSimpleName(), e.getMessage());
+                    Log.e(getClass().getSimpleName(), e.toString());
+                }
+                return null;
             }
         };
+        uploadFile.execute();
     }
+
+    public void getscreenwidthheight(Dialog dialog,int widthpercentage,int heightpercentage) {
 
     /* Callback used for interactive request.  If succeeds we use the access
      * token to call the Microsoft Graph. Does not check cache

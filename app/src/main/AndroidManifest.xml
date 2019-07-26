@@ -121,7 +121,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
@@ -151,21 +150,5 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!--Intent filter to capture System Browser calling back to our app after Sign In-->
-        <activity
-            android:name="com.microsoft.identity.client.BrowserTabActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <!--Add in your scheme/host from registered redirect URI-->
-                <data android:scheme="msauth"
-                    android:host= "com.deeptruth.app.android/"
-                    android:path= "/T2tqMKs1NjXeJ7%2FsmmD08yDnSdE%3D"/>
-            </intent-filter>
-        </activity>
-
     </application>
-
 </manifest>

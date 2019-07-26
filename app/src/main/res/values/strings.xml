@@ -23,6 +23,8 @@
     <string name="invalid_empty_mediaid">Invalid or empty media id!</string>
     <string name="login_here">Please login here to update title and description!</string>
     <string name="metadata_updated">Metadata updated successfully!</string>
+    <string name="file_uploaded">File uploaded successfully!</string>
+    <string name="create_onedrive_client">Please wait while create the client...</string>
 
     <string name="dropbox_appkey_followedbydb">db-unm21q9pupo7xyg</string>
     <string name="dropbox_appkey">unm21q9pupo7xyg</string>
@@ -475,5 +477,7 @@
     <string name="fetching_user_info">Fetching user information!</string>
     <string name="unable_signin">Unable to sign in!</string>
     <string name="uploading_has_started">Uploading has started!</string>
+    <string name="upload_failed">Upload failed!</string>
+
 
 </resources>
