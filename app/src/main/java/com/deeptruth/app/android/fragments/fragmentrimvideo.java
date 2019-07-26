@@ -112,7 +112,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                              public void onItemClicked(Object object, int type) {
 
                              }
-                         },60);
+                         });
                          return;
                 }
                 baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken,ismediatrimmed);
@@ -128,7 +128,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                                  getResources().getString(R.string.txt_send),send, new adapteritemclick() {
                              @Override
                              public void onItemClicked(Object object) {
-                                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath);
+                                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken);
                                  getDialog().dismiss();
                              }
 
@@ -136,10 +136,10 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                              public void onItemClicked(Object object, int type) {
 
                              }
-                         },60);
+                         });
                          return;
                 }
-                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath);
+                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken);
                 getDialog().dismiss();
                 break;
 
@@ -160,7 +160,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                             public void onItemClicked(Object object, int type) {
 
                             }
-                        },60);
+                        });
                         return;
                 }
 
@@ -179,7 +179,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
         ismediatrimmed=true;
         if(common.ismediatrimcountexceed(config.mediatrimcount))
-            baseactivity.getinstance().checkinapppurchasestatus();
+            baseactivity.getinstance().checkinapppurchasestatus(config.gravitycenter);
     }
 
     @Override

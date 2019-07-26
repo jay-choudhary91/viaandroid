@@ -74,6 +74,9 @@ public class config {
     public static final String upgradedialog_mediastop = "upgradedialog_mediastop";
     public static final String welcomedialog = "welcomedialog";
     public static final String dropboxauthtoken = "dropboxauthtoken";
+    public static final String gravitytop = "gravitytop";
+    public static final String gravitycenter= "gravitycenter";
+    public static final String gravitybottom= "gravitybottom";
 
     public static final String updatinglocation = " Updating location .....";
 

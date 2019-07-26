@@ -821,7 +821,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     common.shouldshowupgradepopup(config.mediatrimcount);
                     if(common.ismediatrimcountexceed(config.mediatrimcount))
                     {
-                        checkinapppurchasestatus();
+                        checkinapppurchasestatus(config.gravitycenter);
                         return;
                     }
                 }
@@ -844,7 +844,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     common.shouldshowupgradepopup(config.mediatrimcount);
                     if(common.ismediatrimcountexceed(config.mediatrimcount))
                     {
-                        checkinapppurchasestatus();
+                        checkinapppurchasestatus(config.gravitycenter);
                         return;
                     }
                 }
@@ -867,7 +867,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     common.shouldshowupgradepopup(config.mediatrimcount);
                     if(common.ismediatrimcountexceed(config.mediatrimcount))
                     {
-                        checkinapppurchasestatus();
+                        checkinapppurchasestatus(config.gravitycenter);
                         return;
                     }
                 }
@@ -888,11 +888,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
             });
 
-            getscreenwidthheight(subdialogshare,85,60);
+            setscreenwidthheight(subdialogshare,85,60,config.gravitycenter);
             subdialogshare.show();
     }
 
-    public void checkinapppurchasestatus()
+    public void checkinapppurchasestatus(String gravity)
     {
         String message = applicationviavideocomposer.getactivity().getResources().getString(R.string.if_you_would_like_the_option);
 
@@ -906,7 +906,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onItemClicked(Object object, int type) {
 
             }
-        });
+        },gravity);
     }
 
     public void showtrimdialogfragment(String filepath,String mediatoken)
@@ -1079,7 +1079,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         return;
     }
 
-    public void share_alert_dialog(final Context context, final String title, String content,adapteritemclick mitemclick,int percentageheight){
+    public void share_alert_dialog(final Context context, final String title, String content,adapteritemclick mitemclick){
 
         dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1187,11 +1187,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         dialog.setCanceledOnTouchOutside(false);
-        getscreenwidthheight(dialog,85,percentageheight);
+        setscreenwidthheight(dialog,85,60,config.gravitycenter);
         dialog.show();
     }
 
-    public void showinapppurchasepopup(final Context activity, String title,String message, final adapteritemclick mitemclick)
+    public void showinapppurchasepopup(final Context activity, String title,String message, final adapteritemclick mitemclick,String  gravity)
     {
 
         if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
@@ -1246,11 +1246,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
-        int percentagewidth = (width / 100) * 85;
-        dialoginapppurchase.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialoginapppurchase.getWindow().setLayout(percentagewidth, WindowManager.LayoutParams.WRAP_CONTENT);
-        dialoginapppurchase.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        if(gravity.equalsIgnoreCase(config.gravitytop)){
+            setscreenwidthheight(dialoginapppurchase,80,70,gravity);
+        }else{
+            setscreenwidthheight(dialoginapppurchase,80,65,gravity);
+        }
 
         dialoginapppurchase.show();
     }
@@ -1340,11 +1340,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        getscreenwidthheight(dialogupgradecode,85,60);
+        setscreenwidthheight(dialogupgradecode,85,60,config.gravitycenter);
         dialogupgradecode.show();
     }
 
-    public void senditemsdialog(Context context,String mediafilepath){
+    public void senditemsdialog(Context context,String mediafilepath,String mediatoken){
 
         if(!isuserlogin()){
             redirecttologin();
@@ -1382,6 +1382,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_videoLock_share))
                     {
+                        if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
+                            dialogfileuploadoptions.dismiss();
+
                         videolocksharedialog(applicationviavideocomposer.getactivity());
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
@@ -1414,6 +1417,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View view) {
                 if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                     dialogfileuploadoptions.dismiss();
+
+                showtrimdialogfragment(mediafilepath,mediatoken);
             }
         });
 
@@ -1430,19 +1435,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adaptersend);
 
-        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
-        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
-
-        int percentageheight = (height / 100) * 75;
-        int percentagewidth = (width / 100) * 95;
-
-        dialogfileuploadoptions.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialogfileuploadoptions.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
-        dialogfileuploadoptions.getWindow().setLayout(percentagewidth, percentageheight);
-        dialogfileuploadoptions.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        WindowManager.LayoutParams params = dialogfileuploadoptions.getWindow().getAttributes();
-        params.y = 30;
-        dialogfileuploadoptions.getWindow().setAttributes(params);
+        setscreenwidthheight(dialogfileuploadoptions,95,75,config.gravitybottom);
         dialogfileuploadoptions.show();
     }
 
@@ -1614,19 +1607,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
-        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
-
-        int percentageheight = (height / 100) * 75;
-        int percentagewidth = (width / 100) * 95;
-
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
-        dialog.getWindow().setLayout(percentagewidth, percentageheight);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-        params.y = 50;
-        dialog.getWindow().setAttributes(params);
+        setscreenwidthheight(dialog,95,75,config.gravitybottom);
         dialog.show();
     }
 
@@ -1663,7 +1644,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
 
                 if(btn_next.getText().toString().equalsIgnoreCase("NEXT")){
-                    getscreenwidthheight(dialog,85,58);
+                    setscreenwidthheight(dialog,85,58,config.gravitycenter);
                     txt_title.setText(context.getResources().getString(R.string.txt_privacy));
                     String str1 = getResources().getString(R.string.txt_privacy_content);
 
@@ -1697,7 +1678,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         xdata.getinstance().saveSetting(config.firstmediacreated,"1").isEmpty();
-        getscreenwidthheight(dialog,85,63);
+        setscreenwidthheight(dialog,85,63,config.gravitycenter);
         dialog.show();
     }
 
@@ -1740,7 +1721,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        getscreenwidthheight(dialog,85,65);
+        setscreenwidthheight(dialog,85,65,config.gravitycenter);
         dialog.show();
     }
 
@@ -1934,28 +1915,29 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         };
     }
 
-
-    public void getscreenwidthheight(Dialog dialog,int widthpercentage,int heightpercentage) {
+    public void setscreenwidthheight(Dialog dialog,int widthpercentage,int heightpercentage,String gravity) {
 
         int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
         int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
 
         int percentageheight = (height / 100) * heightpercentage;
         int percentagewidth = (width / 100) * widthpercentage;
+        if(gravity.equalsIgnoreCase(config.gravitytop)){
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            params.y = 80;
+            dialog.getWindow().setAttributes(params);
+        }else if(gravity.equalsIgnoreCase(config.gravitybottom)){
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            params.y = 30;
+            dialog.getWindow().setAttributes(params);
+        }
 
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-       // dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setLayout(percentagewidth, percentageheight);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-       /* WindowManager.LayoutParams params = this.getWindow().getAttributes();
-        params.width = percentageheight;
-        params.height = percentagewidth;
-        this.getWindow().setAttributes(params);
-
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL);*/
-
+        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation;
     }
 }
 
