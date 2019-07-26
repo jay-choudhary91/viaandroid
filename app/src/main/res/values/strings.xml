@@ -301,7 +301,7 @@
     <string name="add_setting">Add Settings</string>
     <string name="app_managment">AppManagment</string>
     <string name="input_text">Input text here....</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="save_setting">Save Setting</string>
     <string name="enter_url">Enter URL</string>
     <string name="enter_complete_url">Enter Complete URL</string>
@@ -450,14 +450,7 @@
 
     <string name="do_not_notify_again">Do not notify again</string>
 
-    <string name="txt_vl_share_title">VIDEOlOCK \nSHARE</string>
-    <string name="txt_vl_share_detail">The VideoLock share tool provides\na way to temporarily send your files.\n\nYour uploaded files will be saved on\nthe VideoLock servers for one hour.\nPlease have people download the\nmedia file before it is deleted from\nthe servers. (Note: The videos/audios\nare not removed from your phone.)</string>
-    <string name="btn_vl_share">Upload &amp; Send</string>
 
-    <string name="txt_congrats">CONGRATS!</string>
-    <string name="txt_privacy">PRIVACY</string>
-    <string name="txt_congrats_content">You have just created your first certified cryptomedia! \n\nYour recording has already been registered with over 50 layers of unchangeable and encrypted digital DNA cryptographic fingerprints.</string>
-    <string name="txt_privacy_content">Your VideoLock recordings\nare 100% private. The only\ncopy of the recording is on\nyour phone.You can share\nit with others by sending it\nor by publishing it directly\non the VideoLock website.</string>
     <string name="txt_next">Next</string>
     <string name="txt_close">Close</string>
     <string name="txt_ok">OK</string>
@@ -465,19 +458,54 @@
     <string name="txt_back">Back</string>
     <string name="btn_watch">Watch</string>
     <string name="btn_close">Close</string>
-    <string name="welcome_dialog_title">WELCOME!</string>
     <string name="btn_yes">YES</string>
     <string name="btn_maybe_later">Maybe Later</string>
     <string name="btn_next">NEXT</string>
+    <string name="betaversion">Beta Version 7.25.19</string>
     <string name="welcome_dialog_text">We have included a quick\n45-second video that will\nexplain all the features of\nyour new VideoLock app.\n\nWould you like to watch a\nVideoLock demo video?</string>
     <string name="betaversion">Beta Version 7.26.19</string>
-
-    <string name="txt_congrats_content_demo">You have just created your \nfirst certified cryptomedia! \n\nYour recording has already \nbeen registered with over \n50 layers of unchangeable \nand encrypted digital DNA \ncryptographic fingerprints.</string>
 
     <string name="fetching_user_info">Fetching user information!</string>
     <string name="unable_signin">Unable to sign in!</string>
     <string name="uploading_has_started">Uploading has started!</string>
     <string name="upload_failed">Upload failed!</string>
 
+
+    <string name="welcome_dialog_title">WELCOME!</string>
+    <string name="wel_lineone">We have included a quick</string>
+    <string name="wel_linetwo">45-second video that will</string>
+    <string name="wel_linethree">explain all the features of</string>
+    <string name="wel_linefour">your new VideoLock app.</string>
+    <string name="wel_linesix">Would you like to watch a</string>
+    <string name="wel_lineseven">VideoLock demo video?</string>
+
+    <string name="txt_congrats">CONGRATS!</string>
+    <string name="cong_lineone">You have just created your</string>
+    <string name="cong_linetwo">first certified cryptomedia!</string>
+    <string name="cong_linefour">Your recording has already</string>
+    <string name="cong_linefive">been registered with over</string>
+    <string name="cong_linesix">50 layers of unchangeable</string>
+    <string name="cong_lineseven">and encrypted digital DNA</string>
+    <string name="cong_lineeight">cryptographic fingerprints.</string>
+
+    <string name="txt_privacy">PRIVACY</string>
+    <string name="priv_lineone">Your VideoLock recordings</string>
+    <string name="priv_linetwo">are 100% private. The only</string>
+    <string name="priv_linethree">copy of the recording is on</string>
+    <string name="priv_linefour">your phone.You can share it</string>
+    <string name="priv_linefive">it with ohters by sending it</string>
+    <string name="priv_linesix">or by publishing it directly</string>
+    <string name="priv_lineseven">on the VideoLock website.</string>
+
+    <string name="txt_vl_share_title">VIDEOlOCK \nSHARE</string>
+    <string name="vl_share_lineone">The VideoLock share tool provides</string>
+    <string name="vl_share_linetwo">a way to temporarily send your files.</string>
+    <string name="vl_share_linefour">Your uploaded files will be saved on</string>
+    <string name="vl_share_linefive">the VideoLock servers for one hour.</string>
+    <string name="vl_share_linesix">Please have people download the</string>
+    <string name="vl_share_lineseven">media file before it is deleted from</string>
+    <string name="vl_share_lineeight">the servers. (Note: The videos/audios</string>
+    <string name="vl_share_linenine">are not removed from your phone.)</string>
+    <string name="btn_vl_share">Upload &amp; Send</string>
 
 </resources>

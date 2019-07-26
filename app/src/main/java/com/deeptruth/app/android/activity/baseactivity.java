@@ -1663,6 +1663,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
 
     public void videolocksharedialog(final Context context){
+
         final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
@@ -1672,22 +1673,55 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         ImageView imageview = (ImageView) dialog.findViewById(R.id.back);
         TextView txt_upload = (TextView) dialog.findViewById(R.id.btn_upload);
         TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
-        String str = getResources().getString(R.string.txt_vl_share_detail);
-        str.indexOf("The VideoLock share tool provides");
 
-        ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+        TextView txt_line_one = (TextView) dialog.findViewById(R.id.txt_lineone);
+        TextView txt_line_two = (TextView) dialog.findViewById(R.id.txt_linetwo);
+        TextView txt_line_three = (TextView) dialog.findViewById(R.id.txt_linethree);
+        TextView txt_line_four = (TextView) dialog.findViewById(R.id.txt_linefour);
+        TextView txt_line_five = (TextView) dialog.findViewById(R.id.txt_linefive);
+        TextView txt_line_six = (TextView) dialog.findViewById(R.id.txt_linesix);
+        TextView txt_line_seven = (TextView) dialog.findViewById(R.id.txt_lineseven);
+        TextView txt_line_eight = (TextView) dialog.findViewById(R.id.txt_lineeight);
+        TextView txt_line_nine = (TextView) dialog.findViewById(R.id.txt_linenine);
 
-        textsharepopup.add(new sharepopuptextspanning(0.80f,0,33,str));
-        textsharepopup.add(new sharepopuptextspanning(0.77f,34,70,str));
-        textsharepopup.add(new sharepopuptextspanning(0.75f,73,110,str));
-        textsharepopup.add(new sharepopuptextspanning(0.75f,110,146,str));
-        textsharepopup.add(new sharepopuptextspanning(0.81f,146,178,str));
-        textsharepopup.add(new sharepopuptextspanning(0.79f,178,215,str));
-        textsharepopup.add(new sharepopuptextspanning(0.73f,215,253,str));
-        textsharepopup.add(new sharepopuptextspanning(0.78f,253,str.length(),str));
+        txt_line_one.setVisibility(View.VISIBLE);
+        txt_line_two.setVisibility(View.VISIBLE);
+        txt_line_three.setVisibility(View.VISIBLE);
+        txt_line_four.setVisibility(View.VISIBLE);
+        txt_line_five.setVisibility(View.VISIBLE);
+        txt_line_six.setVisibility(View.VISIBLE);
+        txt_line_seven.setVisibility(View.VISIBLE);
+        txt_line_eight.setVisibility(View.VISIBLE);
+        txt_line_nine.setVisibility(View.VISIBLE);
 
+        txt_line_one.setText(R.string.vl_share_lineone);
+        txt_line_two.setText(R.string.vl_share_linetwo);
+        txt_line_three.setText("");
+        txt_line_four.setText(R.string.vl_share_linefour);
+        txt_line_five.setText(R.string.vl_share_linefive);
+        txt_line_six.setText(R.string.vl_share_linesix);
+        txt_line_seven.setText(R.string.vl_share_lineseven);
+        txt_line_eight.setText(R.string.vl_share_lineeight);
+        txt_line_nine.setText(R.string.vl_share_linenine);
 
-        common.setspanning(textsharepopup,txt_content);
+        /*txt_line_one.setTextSize(14.8f);
+        txt_line_two.setTextSize(13.9f);
+        txt_line_four.setTextSize(14.1f);
+        txt_line_five.setTextSize(14);
+        txt_line_six.setTextSize(14.99f);
+        txt_line_seven.setTextSize(14.1f);
+        txt_line_eight.setTextSize(13f);
+        txt_line_nine.setTextSize(14.1f);*/
+
+        txt_line_one.setTextSize(15);
+        txt_line_two.setTextSize(14.9f);
+        txt_line_four.setTextSize(14.3f);
+        txt_line_five.setTextSize(14.2f);
+        txt_line_six.setTextSize(15);
+        txt_line_seven.setTextSize(14.3f);
+        txt_line_eight.setTextSize(13.2f);
+        txt_line_nine.setTextSize(14.3f);
+
 
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1717,24 +1751,45 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.mediafirstrecording_popup);
 
-        TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
         TextView txt_title = (TextView) dialog.findViewById(R.id.txt_title);
         TextView btn_next = (TextView) dialog.findViewById(R.id.btn_next);
         YoYo.YoYoString rope;
-        String str = getResources().getString(R.string.txt_congrats_content_demo);
 
-       // txt_content.setText(context.getResources().getString(R.string.txt_congrats_content));
-        ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-        textsharepopup.add(new sharepopuptextspanning(0.93f,0,26,str));
-        textsharepopup.add(new sharepopuptextspanning(0.93f,27,55,str));
 
-        textsharepopup.add(new sharepopuptextspanning(0.91f,56,85,str));
-        textsharepopup.add(new sharepopuptextspanning(0.97f,86,113,str));
-        textsharepopup.add(new sharepopuptextspanning(0.92f,114,140,str));
-        textsharepopup.add(new sharepopuptextspanning(0.92f,141,167,str));
-        textsharepopup.add(new sharepopuptextspanning(0.92f,168,str.length(),str));
+        TextView txt_line_one = (TextView) dialog.findViewById(R.id.txt_lineone);
+        TextView txt_line_two = (TextView) dialog.findViewById(R.id.txt_linetwo);
+        TextView txt_line_three = (TextView) dialog.findViewById(R.id.txt_linethree);
+        TextView txt_line_four = (TextView) dialog.findViewById(R.id.txt_linefour);
+        TextView txt_line_five = (TextView) dialog.findViewById(R.id.txt_linefive);
+        TextView txt_line_six = (TextView) dialog.findViewById(R.id.txt_linesix);
+        TextView txt_line_seven = (TextView) dialog.findViewById(R.id.txt_lineseven);
+        TextView txt_line_eight = (TextView) dialog.findViewById(R.id.txt_lineeight);
 
-        common.setspanning(textsharepopup,txt_content);
+        txt_line_one.setVisibility(View.VISIBLE);
+        txt_line_two.setVisibility(View.VISIBLE);
+        txt_line_three.setVisibility(View.VISIBLE);
+        txt_line_four.setVisibility(View.VISIBLE);
+        txt_line_five.setVisibility(View.VISIBLE);
+        txt_line_six.setVisibility(View.VISIBLE);
+        txt_line_seven.setVisibility(View.VISIBLE);
+        txt_line_eight.setVisibility(View.VISIBLE);
+
+        txt_line_one.setText(R.string.cong_lineone);
+        txt_line_two.setText(R.string.cong_linetwo);
+        txt_line_three.setText("");
+        txt_line_four.setText(R.string.cong_linefour);
+        txt_line_five.setText(R.string.cong_linefive);
+        txt_line_six.setText(R.string.cong_linesix);
+        txt_line_seven.setText(R.string.cong_lineseven);
+        txt_line_eight.setText(R.string.cong_lineeight);
+
+        txt_line_one.setTextSize(14.8f);
+        txt_line_two.setTextSize(15.3f);
+        txt_line_four.setTextSize(14.5f);
+        txt_line_five.setTextSize(15.5f);
+        txt_line_six.setTextSize(15);
+        txt_line_seven.setTextSize(14.6f);
+        txt_line_eight.setTextSize(14.5f);
 
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1742,30 +1797,25 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 if(btn_next.getText().toString().equalsIgnoreCase("NEXT")){
                     setscreenwidthheight(dialog,85,58,config.gravitycenter);
+                    getscreenwidthheight(dialog,82,60);
                     txt_title.setText(context.getResources().getString(R.string.txt_privacy));
-                    String str1 = getResources().getString(R.string.txt_privacy_content);
 
-                    txt_content.setText(context.getResources().getString(R.string.txt_privacy_content));
+                    txt_line_one.setText(R.string.priv_lineone);
+                    txt_line_two.setText(R.string.priv_linetwo);
+                    txt_line_three.setText(R.string.priv_linethree);
+                    txt_line_four.setText(R.string.priv_linefour);
+                    txt_line_five.setText(R.string.priv_linefive);
+                    txt_line_six.setText(R.string.priv_linesix);
+                    txt_line_seven.setText(R.string.priv_lineseven);
+                    txt_line_eight.setVisibility(View.GONE);
 
-                    ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-                    textsharepopup.add(new sharepopuptextspanning(0.95f,0,25,str1));
-                    textsharepopup.add(new sharepopuptextspanning(1.0f,26,51,str1));
-
-                    textsharepopup.add(new sharepopuptextspanning(0.95f,52,77,str1));
-                    textsharepopup.add(new sharepopuptextspanning(1.02f,78,101,str1));
-                    textsharepopup.add(new sharepopuptextspanning(0.98f,102,139,str1));
-                    textsharepopup.add(new sharepopuptextspanning(0.96f,140,167,str1));
-                    textsharepopup.add(new sharepopuptextspanning(1.02f,168,str1.length(),str1));
-
-                    common.setspanning(textsharepopup,txt_content);
-                    YoYo.with(Techniques.SlideInRight)
-                            .duration(100)
-                            .repeat(0)
-                            .playOn(txt_title);
-                    YoYo.with(Techniques.SlideInRight)
-                            .duration(100)
-                            .repeat(0)
-                            .playOn(txt_content);
+                    txt_line_one.setTextSize(14.8f);
+                    txt_line_two.setTextSize(15.6f);
+                    txt_line_three.setTextSize(15);
+                    txt_line_four.setTextSize(14.3f);
+                    txt_line_five.setTextSize(15.3f);
+                    txt_line_six.setTextSize(15.4f);
+                    txt_line_seven.setTextSize(15.4f);
 
                     btn_next.setText(context.getResources().getString(R.string.ok));
                 }else{
@@ -1780,26 +1830,43 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     public void welcomedialog(final Context context){
+
         final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.welcome_popup);
 
+        TextView txt_line_one = (TextView) dialog.findViewById(R.id.txt_lineone);
+        TextView txt_line_two = (TextView) dialog.findViewById(R.id.txt_linetwo);
+        TextView txt_line_three = (TextView) dialog.findViewById(R.id.txt_linethree);
+        TextView txt_line_four = (TextView) dialog.findViewById(R.id.txt_linefour);
+        TextView txt_line_five = (TextView) dialog.findViewById(R.id.txt_linefive);
+        TextView txt_line_six = (TextView) dialog.findViewById(R.id.txt_linesix);
+        TextView txt_line_seven = (TextView) dialog.findViewById(R.id.txt_lineseven);
 
-        TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
-        String str = getResources().getString(R.string.welcome_dialog_text);
+        txt_line_one.setVisibility(View.VISIBLE);
+        txt_line_two.setVisibility(View.VISIBLE);
+        txt_line_three.setVisibility(View.VISIBLE);
+        txt_line_four.setVisibility(View.VISIBLE);
+        txt_line_five.setVisibility(View.VISIBLE);
+        txt_line_six.setVisibility(View.VISIBLE);
+        txt_line_seven.setVisibility(View.VISIBLE);
 
-        ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-        textsharepopup.add(new sharepopuptextspanning(1.0f,0,25,str));
-        textsharepopup.add(new sharepopuptextspanning(1.03f,26,50,str));
+        txt_line_one.setText(R.string.wel_lineone);
+        txt_line_two.setText(R.string.wel_linetwo);
+        txt_line_three.setText(R.string.wel_linethree);
+        txt_line_four.setText(R.string.wel_linefour);
+        txt_line_five.setText("");
+        txt_line_six.setText(R.string.wel_linesix);
+        txt_line_seven.setText(R.string.wel_lineseven);
 
-        textsharepopup.add(new sharepopuptextspanning(1.02f,51,77,str));
-        textsharepopup.add(new sharepopuptextspanning(1.02f,78,100,str));
-        textsharepopup.add(new sharepopuptextspanning(1.0f,101,125,str));
-        textsharepopup.add(new sharepopuptextspanning(1.06f,126,str.length(),str));
-
-        common.setspanning(textsharepopup,txt_content);
+        txt_line_one.setTextSize(14.8f);
+        txt_line_two.setTextSize(15.4f);
+        txt_line_three.setTextSize(15.1f);
+        txt_line_four.setTextSize(15.4f);
+        txt_line_six.setTextSize(15);
+        txt_line_seven.setTextSize(15.8f);
 
 
         TextView btn_yes = (TextView) dialog.findViewById(R.id.btn_yes);
