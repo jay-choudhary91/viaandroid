@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/lineone"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/linetwo"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/linethree"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/linefour"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/linefive"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/linesix"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/lineseven"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/lineeight"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/linenine"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/lineten"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/lineeleven"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/linetwelve"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/linethirteen"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+    <com.deeptruth.app.android.views.customfonttextview
+        android:id="@+id/linefourteen"
+        style="@style/layout_introdiscription"
+        android:textColor="@color/black"
+        android:justificationMode="inter_word"
+        app:fontType="Comfortaa-Regular" />
+
+</LinearLayout>
