@@ -7,98 +7,98 @@
 
 
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/lineone"
+        android:id="@+id/txt_lineone"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/linetwo"
+        android:id="@+id/txt_linetwo"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/linethree"
+        android:id="@+id/txt_linethree"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/linefour"
+        android:id="@+id/txt_linefour"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/linefive"
+        android:id="@+id/txt_linefive"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/linesix"
+        android:id="@+id/txt_linesix"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/lineseven"
+        android:id="@+id/txt_lineseven"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/lineeight"
+        android:id="@+id/txt_lineeight"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/linenine"
+        android:id="@+id/txt_linenine"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/lineten"
+        android:id="@+id/txt_lineten"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/lineeleven"
+        android:id="@+id/txt_lineeleven"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/linetwelve"
+        android:id="@+id/txt_linetwelve"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/linethirteen"
+        android:id="@+id/txt_linethirteen"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"
         android:visibility="gone"
         app:fontType="Comfortaa-Regular" />
     <com.deeptruth.app.android.views.customfonttextview
-        android:id="@+id/linefourteen"
+        android:id="@+id/txt_linefourteen"
         style="@style/layout_introdiscription"
         android:textColor="@color/black"
         android:justificationMode="inter_word"

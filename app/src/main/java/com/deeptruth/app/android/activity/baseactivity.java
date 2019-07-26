@@ -1089,6 +1089,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.setContentView(R.layout.share_alert_popup);
 
         TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
+        TextView txtlineone = (TextView)dialog.findViewById(R.id.lineone);
+        TextView txtcontent = (TextView)dialog.findViewById(R.id.linetwo);
+        TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
+        TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
+        TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
+        TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
+        TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
         TextView txtcontent = (TextView)dialog.findViewById(R.id.txt_content);
 
         txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
