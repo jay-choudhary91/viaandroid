@@ -407,6 +407,36 @@
     <string name="exporttext_line9">use a file sharing service </string>
     <string name="exporttext_line10">to send your VideoLock files.</string>
 
+    <!--upgrade_detail-->
+    <string name="upgrade_line1">Thank you for using the</string>
+    <string name="upgrade_line2">VideoLock app. This lite</string>
+    <string name="upgrade_line3">version helps you certify</string>
+    <string name="upgrade_line4">an unlimited number of</string>
+    <string name="upgrade_line5">photos and 30-second</string>
+    <string name="upgrade_line6">long videos and audios.</string>
+    <string name="upgrade_line7">The upgraded version of</string>
+    <string name="upgrade_line8">VideoLock allows you to</string>
+    <string name="upgrade_line9">record videos and audios</string>
+    <string name="upgrade_line10">longer than 30-seconds.</string>
+
+    <!--limitreach_detail-->
+    <string name="limit_reached_line1">This lite version of the</string>
+    <string name="limit_reached_line2">VideoLock app lets you</string>
+    <string name="limit_reached_line3">record unlimited short</string>
+    <string name="limit_reached_line4">videos and audios.</string>
+    <string name="limit_reached_line5">To record and certify</string>
+    <string name="limit_reached_line6">longer videos/audios,</string>
+    <string name="limit_reached_line7">please upgrade to the</string>
+    <string name="limit_reached_line8">full version VideoLock.</string>
+
+    <!--trim_detail-->
+    <string name="trim_line1">If you would like the option</string>
+    <string name="trim_line2">to trim a longer recording</string>
+    <string name="trim_line3">and send (or publish) only a</string>
+    <string name="trim_line4">portion of a video or audio,</string>
+    <string name="trim_line5">please consider upgrading</string>
+    <string name="trim_line6">to the full VideoLock app.</string>
+
     <string name="dispaly_startup_screens_again">Display startup screens again?</string>
 
     <string name="txt_trim">The ability to trim and send portion of videos or audios is available in the full version.</string>
