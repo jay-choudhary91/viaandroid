@@ -1789,7 +1789,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        getscreenwidthheight(dialog,85,65);
+        setscreenwidthheight(dialog,85,65,config.gravitycenter);
         dialog.show();
     }
 
