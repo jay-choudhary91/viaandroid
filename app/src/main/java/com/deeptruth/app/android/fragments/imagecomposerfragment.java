@@ -881,15 +881,16 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public void onPause() {
         closeCamera();
         stopBackgroundThread();
+
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
+
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        if(myhandler != null && myrunnable != null)
-            myhandler.removeCallbacks(myrunnable);
     }
 
     private void setUpCameraOutputs(int width, int height) {
@@ -1547,11 +1548,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     devicecamera = "Back";
                 }
 
+                ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                getselectedmetrics(mlocalarraylist);
+
                 xdata.getinstance().saveSetting(config.camera, devicecamera);
                 xdata.getinstance().saveSetting(config.picturequality, selectedmediaquality);
 
-                ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                getselectedmetrics(mlocalarraylist);
                 if(layout_recorder != null)
                     layout_recorder.setClickable(true);
 
