@@ -1097,9 +1097,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(fragvideocomposer != null)
                 fragvideocomposer.changeiconsorientation(rotateangle);
             if(rotateangle == 90 || rotateangle == -90){
-                txt_encrypting.setTextSize(9);
+                if ( fragvideocomposer != null && (! fragvideocomposer.isvideorecording) && currentselectedcomposer == 1)
+                    txt_encrypting.setTextSize(getActivity().getResources().getDimension(R.dimen.encryptinglandscape));
+                else if (fragaudiocomposer != null && currentselectedcomposer == 2 && !fragaudiocomposer.isaudiorecording)
+                    txt_encrypting.setTextSize(getActivity().getResources().getDimension(R.dimen.encryptinglandscape));
             }else{
-                txt_encrypting.setTextSize(9);
+                if ( fragvideocomposer != null && (! fragvideocomposer.isvideorecording) && currentselectedcomposer == 1)
+                    txt_encrypting.setTextSize(getActivity().getResources().getDimension(R.dimen.encrypting));
+                else if (fragaudiocomposer != null && currentselectedcomposer == 2 && !fragaudiocomposer.isaudiorecording)
+                    txt_encrypting.setTextSize(getActivity().getResources().getDimension(R.dimen.encrypting));
             }
 
             getscreenorientation(rotateangle);
