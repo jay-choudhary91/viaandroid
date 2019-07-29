@@ -434,12 +434,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     if(xdata.getinstance().getSetting(config.upgradedialog_mediastop).trim().isEmpty())
                     {
                         xdata.getinstance().saveSetting(config.upgradedialog_mediastop,"1");
-                        showvideorecordlengthalert(upgradeapptitle,upgradeappmessage);
+                        showvideorecordlengthalert(upgradeapptitle,upgradeappmessage,config.gravitytop);
                     }
                 }
                 else
                 {
-                    showvideorecordlengthalert(upgradeapptitle,upgradeappmessage);
+                    showvideorecordlengthalert(upgradeapptitle,upgradeappmessage,config.gravitytop);
                 }
             }
 

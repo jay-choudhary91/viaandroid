@@ -15,6 +15,7 @@
     <dimen name="margin_10dp">10dp</dimen>
     <dimen name="margin_11dp">11dp</dimen>
     <dimen name="margin_12dp">12dp</dimen>
+    <dimen name="margin_14dp">14dp</dimen>
     <dimen name="margin_15dp">15dp</dimen>
     <dimen name="margin_20dp">20dp</dimen>
     <dimen name="margin_21dp">21dp</dimen>
@@ -48,4 +49,6 @@
 
     <dimen name="header_text_size_18">18sp</dimen>
     <dimen name="bottom_nav_title_txt_size_14">14dp</dimen>
+
+    <dimen name="txt_size">13sp</dimen>
 </resources>

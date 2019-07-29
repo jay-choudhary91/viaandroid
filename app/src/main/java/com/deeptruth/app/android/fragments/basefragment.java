@@ -175,7 +175,7 @@ public abstract class basefragment extends Fragment {
         }
     }
 
-    public void showvideorecordlengthalert(String title,String message)
+    public void showvideorecordlengthalert(String title,String message,String gravity)
     {
         baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
                 getactivity(), title, message, new adapteritemclick(){
@@ -187,7 +187,7 @@ public abstract class basefragment extends Fragment {
             public void onItemClicked(Object object, int type) {
 
             }
-        });
+        },gravity);
     }
 
     public View getmediaseekbarbackgroundview(String weight,String color)

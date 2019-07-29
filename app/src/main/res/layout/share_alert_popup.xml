@@ -32,20 +32,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:padding="@dimen/margin_5dp"
             android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_10dp"
             android:gravity="center" >
 
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:textSize="15dp"
-                android:textColor="@color/black"
-                app:fontType="Comfortaa-Regular"/>
+            <include layout="@layout/layout_justifytextsharepopup">
+            </include>
         </LinearLayout>
     </LinearLayout>
 
@@ -55,14 +47,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/margin_5dp"
+            android:visibility="visible"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:gravity="center"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:orientation="horizontal">
 
                 <CheckBox
                     android:id="@+id/notifycheckbox"

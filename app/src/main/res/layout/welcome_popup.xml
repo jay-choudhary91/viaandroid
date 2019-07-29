@@ -31,20 +31,13 @@
             android:layout_marginTop="@dimen/margin_25dp"
             android:gravity="center">
 
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/welcome_dialog_text"
-                app:fontType="Comfortaa-Regular"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:gravity="center"/>
+            <include layout="@layout/layout_justifytextsharepopup"/>
 
         </LinearLayout>
 
 
-            <com.deeptruth.app.android.views.customfonttextview
+
+        <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/btn_yes"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"

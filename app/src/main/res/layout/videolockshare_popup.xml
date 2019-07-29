@@ -45,16 +45,7 @@
             android:layout_marginTop="@dimen/margin_30dp"
             android:gravity="center">
 
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:fontType="Comfortaa-Regular"
-                android:textSize="18sp"
-                android:layout_margin="@dimen/margin_10dp"
-                android:text="@string/txt_vl_share_detail"
-                android:textColor="@color/black"
-                android:gravity="center"/>
+            <include layout="@layout/layout_justifytextsharepopup"/>
 
         </LinearLayout>
 
