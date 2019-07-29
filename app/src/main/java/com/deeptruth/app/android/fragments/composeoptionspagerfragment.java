@@ -219,7 +219,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     }
                     else if(currentpagerpos == 2){
                         currentpagerpos=4;
-                        expandedImageView.setBackgroundColor(getResources().getColor(R.color.dark_blue_solid_a));
+                        expandedImageView.setBackgroundColor(getResources().getColor(R.color.black));
                     }
 
                     for(int i = 0; i<= mediatypepagerenum.values().length; i++)
@@ -646,8 +646,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             case R.id.img_mediathumbnail:
                 config.selectedmediatype=currentselectedcomposer;
                 medialistitemaddbroadcast();
-                ///gethelper().switchtomedialist();
-                baseactivity.getinstance().videolocksharedialog(getContext());
+                gethelper().switchtomedialist();
                 break;
         }
     }
@@ -980,11 +979,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(audioarraylist.size() > 0)
             {
                 setthumbnailimage(audioarraylist.get(0),zoominoutimage);
-                img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+                img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
             }
             else
             {
-                img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+                img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
             }
         }
     }
