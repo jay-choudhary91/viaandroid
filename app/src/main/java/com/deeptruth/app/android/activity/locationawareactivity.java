@@ -61,6 +61,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -80,6 +81,9 @@ import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.services.locationservice;
 import com.deeptruth.app.android.services.readmediadataservice;
+import com.deeptruth.app.android.utils.GetSpeedTestHostsHandler;
+import com.deeptruth.app.android.utils.HttpDownloadTest;
+import com.deeptruth.app.android.utils.PingTest;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.googleutils;
@@ -118,6 +122,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -196,11 +201,20 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     String[] processsysteminfo;
     BroadcastReceiver wifiReceiver;
     Intent locationService;
+    GetSpeedTestHostsHandler getSpeedTestHostsHandler = null;
+    HashSet<String> tempBlackList;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         applicationviavideocomposer.setActivity(locationawareactivity.this);
+        tempBlackList = new HashSet<>();
+        if (getSpeedTestHostsHandler == null) {
+            getSpeedTestHostsHandler = new GetSpeedTestHostsHandler();
+            getSpeedTestHostsHandler.start();
+        }
+
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         try {
@@ -510,10 +524,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                 endTime = System.currentTimeMillis();
 
-                // calculate how long it took by subtracting endtime from starttime
                 double timeTakenMills = Math.floor(endTime - startTime);  // time taken in milliseconds
                 double timeTakenSecs = timeTakenMills / 1000;  // divide by 1000 to get time in seconds
-                //Log.e("milisec second"," "+timeTakenMills+" "+timeTakenSecs);
                 connectiondatadelay = "" + String.valueOf(new DecimalFormat("#.#").format(timeTakenSecs)) + " Second";
                 final int kilobytePerSec = (int) Math.round(1024 / timeTakenSecs);
                 if (kilobytePerSec <= POOR_BANDWIDTH) {
@@ -524,16 +536,129 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 double speed = fileSize / timeTakenMills;
                 Log.d("speed  ", ""+speed);
                 double speedinmb = kilobytePerSec / 1024;
+                if(speedinmb >= config.max_connectionspeedrange)
+                    speedinmb=config.max_connectionspeedrange;
 
                 connectionspeed = speedinmb + " mbps";
-                /*Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
-                Log.d("Case2 ", "kilobyte per sec: " + kilobytePerSec);
-                Log.d("Case3 ", "Download Speed: " + speed);
-                Log.d("Case4 ", "File size: " + fileSize);*/
             }
 
         });
     }
+
+    /*public void getconnectionspeed()
+    {
+        //Get egcodes.speedtest hosts
+        int timeCount = 600; //1min
+        while (!getSpeedTestHostsHandler.isFinished()) {
+            timeCount--;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+            }
+            if (timeCount <= 0) {
+                // No internet
+                getSpeedTestHostsHandler = null;
+                return;
+            }
+        }
+
+        //Find closest server
+        HashMap<Integer, String> mapKey = getSpeedTestHostsHandler.getMapKey();
+        HashMap<Integer, List<String>> mapValue = getSpeedTestHostsHandler.getMapValue();
+        double selfLat = getSpeedTestHostsHandler.getSelfLat();
+        double selfLon = getSpeedTestHostsHandler.getSelfLon();
+        double tmp = 19349458;
+        double dist = 0.0;
+        int findServerIndex = 0;
+        for (int index : mapKey.keySet()) {
+            if (tempBlackList.contains(mapValue.get(index).get(5))) {
+                continue;
+            }
+
+            Location source = new Location("Source");
+            source.setLatitude(selfLat);
+            source.setLongitude(selfLon);
+
+            List<String> ls = mapValue.get(index);
+            Location dest = new Location("Dest");
+            dest.setLatitude(Double.parseDouble(ls.get(0)));
+            dest.setLongitude(Double.parseDouble(ls.get(1)));
+
+            double distance = source.distanceTo(dest);
+            if (tmp > distance) {
+                tmp = distance;
+                dist = distance;
+                findServerIndex = index;
+            }
+        }
+        String uploadAddr = mapKey.get(findServerIndex);
+        final List<String> info = mapValue.get(findServerIndex);
+        final double distance = dist;
+
+        if (info == null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            });
+            return;
+        }
+
+        final List<Double> pingRateList = new ArrayList<>();
+        final List<Double> downloadRateList = new ArrayList<>();
+        Boolean pingTestStarted = false;
+        Boolean pingTestFinished = false;
+        Boolean downloadTestStarted = false;
+        Boolean downloadTestFinished = false;
+
+        //Init Test
+        final PingTest pingTest = new PingTest(info.get(6).replace(":8080", ""), 6);
+        final HttpDownloadTest downloadTest = new HttpDownloadTest(uploadAddr.replace(uploadAddr.split("/")[uploadAddr.split("/").length - 1], ""));
+
+        //Tests
+        while (true) {
+            if (!pingTestStarted) {
+                pingTest.start();
+                pingTestStarted = true;
+            }
+            if (pingTestFinished && !downloadTestStarted) {
+                downloadTest.start();
+                downloadTestStarted = true;
+            }
+
+            //Ping Test
+            if (pingTestFinished) {
+                //Failure
+                if (pingTest.getAvgRtt() == 0) {
+                    System.out.println("Ping error...");
+                } else {
+                    //Success
+
+                }
+            }
+
+            //Download Test
+            if (pingTestFinished) {
+                if (downloadTestFinished) {
+                    //Failure
+                    if (downloadTest.getFinalDownloadRate() == 0) {
+                        System.out.println("Download error...");
+                    } else {
+                        //Success
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                connectionspeed=downloadTest.getFinalDownloadRate()+" Mbps";
+                                String bb=downloadTest.getFinalDownloadRate()+" Mbps";
+
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    }*/
 
     public void getallpermissions() {
         if (doafterallpermissionsgranted != null) {
