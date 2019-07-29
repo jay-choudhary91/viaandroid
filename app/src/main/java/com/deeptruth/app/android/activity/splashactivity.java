@@ -108,9 +108,10 @@ public class splashactivity extends Activity {
 
                                     img_logo.setVisibility(View.VISIBLE);
                                     img_logotext.setVisibility(View.VISIBLE);
+                                    txt_betaversion.setVisibility(View.VISIBLE);
                                     Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(),(R.anim.fadein));
                                     img_logo.startAnimation(animFadeIn);
-                                    img_logotext.startAnimation(animFadeIn);
+                                    layfooter.startAnimation(animFadeIn);
 
                                     animFadeIn.setAnimationListener(new Animation.AnimationListener() {
                                         @Override
