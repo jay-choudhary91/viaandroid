@@ -97,11 +97,11 @@ public class thumb {
             thumb th = new thumb();
             th.setindex(i);
             if (i == 0) {
-                int resimageleft = R.drawable.lefttrimmer;
+                int resimageleft = R.drawable.rightarrow;
                 th.setbitmap(BitmapFactory.decodeResource(resources, resimageleft));
             } else {
 
-                int resimageright = R.drawable.righttrimmer;
+                int resimageright = R.drawable.leftarrow;
                 th.setbitmap(BitmapFactory.decodeResource(resources, resimageright));
             }
 
