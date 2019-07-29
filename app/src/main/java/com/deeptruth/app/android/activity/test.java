@@ -1,147 +1,176 @@
 package com.deeptruth.app.android.activity;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
+import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.utils.config;
-import com.deeptruth.app.android.utils.gifdrawableimagetarget;
-import com.deeptruth.app.android.utils.xdata;
-import com.facebook.network.connectionclass.ConnectionClassManager;
-import com.facebook.network.connectionclass.ConnectionQuality;
-import com.facebook.network.connectionclass.DeviceBandwidthSampler;
+import com.deeptruth.app.android.utils.GetSpeedTestHostsHandler;
+import com.deeptruth.app.android.utils.HttpDownloadTest;
+import com.deeptruth.app.android.utils.PingTest;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-
-import pl.droidsonroids.gif.GifDrawable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 public class test extends Activity {
 
-
-    private static final String TAG = "test-Sample";
-
-    private ConnectionClassManager mConnectionClassManager;
-    private DeviceBandwidthSampler mDeviceBandwidthSampler;
-    private ConnectionChangedListener mListener;
-    //private String mURL = "http://connectionclass.parseapp.com/m100_hubble_4060.jpg";
-    private String mURL = "https://m.media-amazon.com/images/S/aplus-media/vc/6a9569ab-cb8e-46d9-8aea-a7022e58c74a.jpg";
-    private int mTries = 0;
-    private ConnectionQuality mConnectionClass = ConnectionQuality.UNKNOWN;
+    static int position = 0;
+    static int lastPosition = 0;
+    GetSpeedTestHostsHandler getSpeedTestHostsHandler = null;
+    HashSet<String> tempBlackList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test);
         Button btn_click= (Button) findViewById(R.id.btn_click);
+        tempBlackList = new HashSet<>();
         btn_click.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mTries=0;
-                mDeviceBandwidthSampler.startSampling();
-                new DownloadImage().execute(mURL);
+
+
             }
         });
+    }
 
-        mConnectionClassManager = ConnectionClassManager.getInstance();
-        mDeviceBandwidthSampler = DeviceBandwidthSampler.getInstance();
-        mListener = new ConnectionChangedListener();
+    public void getconnectionspeed()
+    {
+        if (getSpeedTestHostsHandler == null) {
+            getSpeedTestHostsHandler = new GetSpeedTestHostsHandler();
+            getSpeedTestHostsHandler.start();
+        }
+
+        //Get egcodes.speedtest hosts
+        int timeCount = 600; //1min
+        while (!getSpeedTestHostsHandler.isFinished()) {
+            timeCount--;
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+            }
+            if (timeCount <= 0) {
+                // No internet
+                getSpeedTestHostsHandler = null;
+                return;
+            }
+        }
+
+        //Find closest server
+        HashMap<Integer, String> mapKey = getSpeedTestHostsHandler.getMapKey();
+        HashMap<Integer, List<String>> mapValue = getSpeedTestHostsHandler.getMapValue();
+        double selfLat = getSpeedTestHostsHandler.getSelfLat();
+        double selfLon = getSpeedTestHostsHandler.getSelfLon();
+        double tmp = 19349458;
+        double dist = 0.0;
+        int findServerIndex = 0;
+        for (int index : mapKey.keySet()) {
+            if (tempBlackList.contains(mapValue.get(index).get(5))) {
+                continue;
+            }
+
+            Location source = new Location("Source");
+            source.setLatitude(selfLat);
+            source.setLongitude(selfLon);
+
+            List<String> ls = mapValue.get(index);
+            Location dest = new Location("Dest");
+            dest.setLatitude(Double.parseDouble(ls.get(0)));
+            dest.setLongitude(Double.parseDouble(ls.get(1)));
+
+            double distance = source.distanceTo(dest);
+            if (tmp > distance) {
+                tmp = distance;
+                dist = distance;
+                findServerIndex = index;
+            }
+        }
+        String uploadAddr = mapKey.get(findServerIndex);
+        final List<String> info = mapValue.get(findServerIndex);
+        final double distance = dist;
+
+        if (info == null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            });
+            return;
+        }
+
+        final List<Double> pingRateList = new ArrayList<>();
+        final List<Double> downloadRateList = new ArrayList<>();
+        Boolean pingTestStarted = false;
+        Boolean pingTestFinished = false;
+        Boolean downloadTestStarted = false;
+        Boolean downloadTestFinished = false;
+
+        //Init Test
+        final PingTest pingTest = new PingTest(info.get(6).replace(":8080", ""), 6);
+        final HttpDownloadTest downloadTest = new HttpDownloadTest(uploadAddr.replace(uploadAddr.split("/")[uploadAddr.split("/").length - 1], ""));
+
+        //Tests
+        while (true) {
+            if (!pingTestStarted) {
+                pingTest.start();
+                pingTestStarted = true;
+            }
+            if (pingTestFinished && !downloadTestStarted) {
+                downloadTest.start();
+                downloadTestStarted = true;
+            }
+
+            //Ping Test
+            if (pingTestFinished) {
+                //Failure
+                if (pingTest.getAvgRtt() == 0) {
+                    System.out.println("Ping error...");
+                } else {
+                    //Success
+
+                }
+            }
+
+            //Download Test
+            if (pingTestFinished) {
+                if (downloadTestFinished) {
+                    //Failure
+                    if (downloadTest.getFinalDownloadRate() == 0) {
+                        System.out.println("Download error...");
+                    } else {
+                        //Success
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String aa=downloadTest.getFinalDownloadRate()+" Mbps";
+                                Toast.makeText(getApplicationContext(), aa, Toast.LENGTH_LONG).show();
+                                String bb=downloadTest.getFinalDownloadRate()+" Mbps";
+
+                            }
+                        });
+                    }
+                }
+            }
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mConnectionClassManager.remove(mListener);
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        mConnectionClassManager.register(mListener);
-    }
 
-
-    /**
-     * Listener to update the UI upon connectionclass change.
-     */
-    private class ConnectionChangedListener
-            implements ConnectionClassManager.ConnectionClassStateChangeListener {
-
-        @Override
-        public void onBandwidthStateChange(ConnectionQuality bandwidthState) {
-            mConnectionClass = bandwidthState;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                   // Log.e("connection ",mConnectionClass.toString());
-                    Log.e("connection "," "+mConnectionClassManager.getDownloadKBitsPerSecond());
-
-                }
-            });
-        }
-    }
-
-    /**
-     * AsyncTask for handling downloading and making calls to the timer.
-     */
-    private class DownloadImage extends AsyncTask<String, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        @Override
-        protected Void doInBackground(String... url) {
-            String imageURL = url[0];
-            try {
-                // Open a stream to download the image from our URL.
-                URLConnection connection = new URL(imageURL).openConnection();
-                connection.setUseCaches(false);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                try {
-                    byte[] buffer = new byte[1024];
-
-                    // Do some busy waiting while the stream is open.
-                    while (input.read(buffer) != -1) {
-                    }
-                } finally {
-                    input.close();
-                }
-            } catch (IOException e) {
-                Log.e(TAG, "Error while downloading image.");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void v) {
-            // Retry for up to 10 times until we find a ConnectionClass.
-            if (mTries < 10) {
-                mTries++;
-                new DownloadImage().execute(mURL);
-            }
-            else
-            {
-                mDeviceBandwidthSampler.stopSampling();
-            }
-
-        }
+        getSpeedTestHostsHandler = new GetSpeedTestHostsHandler();
+        getSpeedTestHostsHandler.start();
     }
 
 }

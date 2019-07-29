@@ -410,7 +410,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     int navigationbarheight = 0;
     ValueAnimator lastPulseAnimator=null;
     LatLng usercurrentlocation=null;
-    Circle mappulsatecircle =null;
     Circle userlocationcircle =null;
     arraycontainer arraycontainerformetric =null;
     View rootview;
@@ -2191,12 +2190,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             if(lastPulseAnimator != null)
                 lastPulseAnimator.cancel();
 
-            if(mappulsatecircle != null && mgooglemap != null)
-            {
-                mappulsatecircle.remove();
-                mappulsatecircle=null;
-            }
-
             if(userlocationcircle != null && mgooglemap != null)
             {
                 userlocationcircle.remove();
@@ -2229,32 +2222,19 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 }
             }
 
-            lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
-                    new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator animation) {
-                            if(mappulsatecircle != null)
-                                mappulsatecircle.setRadius((Float) animation.getAnimatedValue());
-                            else {
-                                mappulsatecircle = mgooglemap.addCircle(new CircleOptions()
-                                        .center(usercurrentlocation)
-                                        .radius((Float) animation.getAnimatedValue())
-                                        .strokeWidth(0)
-                                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
+            if(userlocationcircle != null)
+            {
+                userlocationcircle.setCenter(usercurrentlocation);
+            }
+            else
+            {
+                userlocationcircle= mgooglemap.addCircle(new CircleOptions()
+                        .center(usercurrentlocation)
+                        .radius(common.getlocationcircleradius(mgooglemap.getCameraPosition().zoom))
+                        .strokeWidth(0)
+                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.selectedimagehash)));
+            }
 
-                                userlocationcircle= mgooglemap.addCircle(new CircleOptions()
-                                        .center(usercurrentlocation)
-                                        .radius(common.getlocationcircleradius(mgooglemap.getCameraPosition().zoom))
-                                        .strokeWidth(0)
-                                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.selectedimagehash)));
-                            }
-                            if(mappulsatecircle != null)
-                                mappulsatecircle.setCenter(usercurrentlocation);
-
-                            if(userlocationcircle != null)
-                                userlocationcircle.setCenter(usercurrentlocation);
-                        }
-                    });
         }catch (Exception e)
         {
             e.printStackTrace();
