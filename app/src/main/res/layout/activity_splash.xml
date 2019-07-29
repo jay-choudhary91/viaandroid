@@ -32,17 +32,32 @@
             android:src="@drawable/splash_logo_icon"
             android:visibility="invisible" />
 
-        <ImageView
-            android:id="@+id/img_logotext"
+        <LinearLayout
+            android:id="@+id/footer"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginRight="120dp"
-            android:layout_marginLeft="120dp"
             android:layout_alignParentBottom="true"
-            android:visibility="invisible"
-            android:src="@drawable/splash_icon_text"/>
+            android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/img_logotext"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:visibility="invisible"
+                android:src="@drawable/splash_icon_text"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_betaversion"
+                style="@style/layout_introdiscription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 </LinearLayout>

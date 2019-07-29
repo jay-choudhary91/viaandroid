@@ -53,7 +53,6 @@ public class footerpagerfragment extends Fragment {
             TextView txt_descriptionthree = (TextView) rootview.findViewById(R.id.txt_descriptionthree);
             TextView txt_descriptionfour = (TextView) rootview.findViewById(R.id.txt_descriptionfour);
             TextView txt_descriptionfive = (TextView) rootview.findViewById(R.id.txt_descriptionfive);
-            TextView txt_betaversion = (TextView) rootview.findViewById(R.id.txt_betaversion);
             layout_checkbox = rootview.findViewById(R.id.layout_checkbox);
              notifycheckbox = (CheckBox) rootview.findViewById(R.id.showintroscreen_checkbox);
             notifycheckbox.setText(getResources().getString(R.string.dispaly_startup_screens_again));
@@ -83,8 +82,6 @@ public class footerpagerfragment extends Fragment {
                 txt_descriptionthree.setTextSize(15.1f);
                 txt_descriptionfour.setTextSize(15.4f);
                 txt_descriptionfive.setTextSize(15.2f);
-                txt_betaversion.setVisibility(View.VISIBLE);
-                txt_betaversion.setText(getActivity().getResources().getString(R.string.betaversion));
                 /*txt_betaversion.setText(getActivity().getResources().getString(R.string.betaversion)
                         + " " + common.betaversion_dateformat());*/
             }
