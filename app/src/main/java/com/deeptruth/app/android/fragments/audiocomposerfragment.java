@@ -220,7 +220,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         startnoise();
         txt_title_actionbarcomposer.setText(config.mediarecorderformat);
         actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
-        layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+      //  layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
 
         try {
              bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
@@ -1491,6 +1491,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 xdata.getinstance().getSetting(config.GPSAccuracy) == null) {
 
             actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+            layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
         } else {
             String[] arrayitemgps = xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");

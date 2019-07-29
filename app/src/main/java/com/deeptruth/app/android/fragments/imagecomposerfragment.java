@@ -530,7 +530,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         linearLayout=rootview.findViewById(R.id.content);
         actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
-        layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+       // layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
         timerhandler = new Handler() ;
         textureview.setOnTouchListener(this);
         imgflashon.setOnClickListener(this);
@@ -1919,6 +1919,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 xdata.getinstance().getSetting(config.Connectionspeed) == null ||
                 xdata.getinstance().getSetting(config.GPSAccuracy) == null) {
 
+            layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
             actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
         } else {
