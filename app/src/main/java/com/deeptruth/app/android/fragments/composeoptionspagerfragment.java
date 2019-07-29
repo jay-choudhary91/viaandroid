@@ -647,7 +647,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 config.selectedmediatype=currentselectedcomposer;
                 medialistitemaddbroadcast();
                 gethelper().switchtomedialist();
-                //baseactivity.getinstance().videolocksharedialog(getContext());
                 break;
         }
     }
