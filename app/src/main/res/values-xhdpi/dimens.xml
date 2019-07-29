@@ -47,6 +47,8 @@
     <dimen name="logimage_width">220dp</dimen>
     <dimen name="logoimage_text_height">40dp</dimen>
     <dimen name="footer">60dp</dimen>
+    <dimen name="encryptinglandscape">3sp</dimen>
+    <dimen name="encrypting">6sp</dimen>
 
     <dimen name="header_text_size_18">18sp</dimen>
     <dimen name="bottom_nav_title_txt_size_14">14dp</dimen>
