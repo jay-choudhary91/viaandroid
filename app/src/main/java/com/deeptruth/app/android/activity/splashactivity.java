@@ -13,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -33,6 +34,8 @@ public class splashactivity extends Activity {
 
     ImageView img_fadefirst,img_logo,img_logotext;
     RelativeLayout rl_rootview;
+    TextView txt_betaversion;
+    LinearLayout layfooter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,9 @@ public class splashactivity extends Activity {
         img_logotext= (ImageView) findViewById(R.id.img_logotext);
         img_logo= (ImageView) findViewById(R.id.img_logo);
         img_fadefirst= (ImageView) findViewById(R.id.img_fadefirst);
+        txt_betaversion = (TextView) findViewById(R.id.txt_betaversion);
+        txt_betaversion.setText(R.string.betaversion);
+        layfooter = (LinearLayout) findViewById(R.id.footer);
 
         img_logotext.post(new Runnable() {
             @Override
@@ -102,9 +108,10 @@ public class splashactivity extends Activity {
 
                                     img_logo.setVisibility(View.VISIBLE);
                                     img_logotext.setVisibility(View.VISIBLE);
+                                    txt_betaversion.setVisibility(View.VISIBLE);
                                     Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(),(R.anim.fadein));
                                     img_logo.startAnimation(animFadeIn);
-                                    img_logotext.startAnimation(animFadeIn);
+                                    layfooter.startAnimation(animFadeIn);
 
                                     animFadeIn.setAnimationListener(new Animation.AnimationListener() {
                                         @Override
@@ -217,10 +224,16 @@ public class splashactivity extends Activity {
 
         img_logo.setLayoutParams(layoutParams);
 
-        RelativeLayout.LayoutParams layoutParamsimage = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,(int)getResources().getDimension(R.dimen.logoimage_text_height));
+        RelativeLayout.LayoutParams layoutParamsimage = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,(int)getResources().getDimension(R.dimen.footer));
         layoutParamsimage.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
-        layoutParamsimage.setMargins(0,0,0,getscreenwidthheight(12));
-        img_logotext.setLayoutParams(layoutParamsimage);
+        layoutParamsimage.setMargins(0,0,0,getscreenwidthheight(10));
+        layfooter.setLayoutParams(layoutParamsimage);
+
+        /*RelativeLayout.LayoutParams layoutParamstext = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,(int)getResources().getDimension(R.dimen.logoimage_text_height));
+        layoutParamstext.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
+        layoutParamstext.setMargins(0,0,0,getscreenwidthheight(10));
+        txt_betaversion.setLayoutParams(layoutParamstext);*/
+
     }
 
     public int getscreenwidthheight(int percentage) {

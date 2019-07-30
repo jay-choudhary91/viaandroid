@@ -474,7 +474,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         img_dotmenu.setVisibility(View.VISIBLE);
         textureview.setOnTouchListener(this);
         actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
-        layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+       // layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
         imgflashon.setOnClickListener(this);
         img_dotmenu.setOnClickListener(this);
         txt_media_quality.setOnClickListener(this);
@@ -1956,6 +1956,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                     layout_wifi_gps_data.setVisibility(View.VISIBLE);
                     actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+                    layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
 
                     visibleconnection();
                     setactionbarbackgroundcolor();
@@ -2401,6 +2402,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     xdata.getinstance().getSetting(config.GPSAccuracy) == null) {
 
                 actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+                layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
+
 
             } else {
                 String[] arrayitemgps = xdata.getinstance().getSetting(config.GPSAccuracy).split(" ");
