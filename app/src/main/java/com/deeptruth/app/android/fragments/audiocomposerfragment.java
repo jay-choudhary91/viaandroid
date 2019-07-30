@@ -912,7 +912,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 });
             }
 
-        } catch (FFmpegCommandAlreadyRunningException e) {
+        } catch (Exception e) {
             // do nothing for now
         }
     }
@@ -1036,22 +1036,28 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         if(isaudiorecording)
         {
-            selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
-            ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-            getselectedmetrics(mlocalarraylist);
-            JSONArray metricesarray=new JSONArray();
-            if(metadatametricesjson.length() > 0)
+            try
             {
-                try {
-                    metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
-                    metrichashvalue = md5.calculatestringtomd5(metricesarray.toString());
-
-                    uploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
-                    savemediaupdate(metricesarray);
-                }catch (Exception e)
+                selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
+                ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                getselectedmetrics(mlocalarraylist);
+                JSONArray metricesarray=new JSONArray();
+                if(metadatametricesjson.length() > 0)
                 {
-                    e.printStackTrace();
+                    try {
+                        metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
+                        metrichashvalue = md5.calculatestringtomd5(metricesarray.toString());
+
+                        uploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
+                        savemediaupdate(metricesarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
             }
         }
         else
