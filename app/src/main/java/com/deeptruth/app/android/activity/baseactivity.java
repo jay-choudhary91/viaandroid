@@ -51,6 +51,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.adapterbuttontrim;
 import com.deeptruth.app.android.adapter.adaptersenddialog;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
@@ -68,6 +69,7 @@ import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.interfaces.homepressedlistener;
 import com.deeptruth.app.android.models.sharemedia;
 import com.deeptruth.app.android.models.sharepopuptextspanning;
+import com.deeptruth.app.android.models.trimbuttontext;
 import com.deeptruth.app.android.netutils.connectivityreceiver;
 import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
@@ -1235,6 +1237,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
             dialoginapppurchase.dismiss();
 
+
+        ArrayList<trimbuttontext> trimbuttontext=new ArrayList<>();
+        trimbuttontext.add(new trimbuttontext(config.txtyear));
+        trimbuttontext.add(new trimbuttontext(config.txtmonth));
+        trimbuttontext.add(new trimbuttontext(config.txtupgrade));
+
         dialoginapppurchase =new Dialog(activity,R.style.transparent_dialog_borderless);
         dialoginapppurchase.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialoginapppurchase.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -1256,10 +1264,33 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView txt_lineeleven = (TextView)dialoginapppurchase.findViewById(R.id.txt_lineeleven);
         TextView txt_linetwelve = (TextView)dialoginapppurchase.findViewById(R.id.txt_linetwelve);
 
-        //TextView txt_content = (TextView) dialoginapppurchase.findViewById(R.id.txt_content);
-        TextView tv_purchase1 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase1);
-        TextView tv_purchase2 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase2);
-        TextView tv_upgradecode = (TextView) dialoginapppurchase.findViewById(R.id.tv_upgradecode);
+        RecyclerView recyclerView = (RecyclerView) dialoginapppurchase.findViewById(R.id.ryclr_trim_buttontext);
+        adapterbuttontrim adaptersend = new adapterbuttontrim(activity, trimbuttontext, new adapteritemclick() {
+            @Override
+            public void onItemClicked(Object object) {
+                if(object != null)
+                {
+                    int position=(int)object;
+                    if(trimbuttontext.get(position).getButtontext().equalsIgnoreCase(config.txtyear))
+                    {
+                        baseactivity.getinstance().inapppurchase("ABC");
+                    }
+                    else if(trimbuttontext.get(position).getButtontext().equalsIgnoreCase(config.txtmonth))
+                    {
+                        baseactivity.getinstance().inapppurchase("ABC");
+                    }
+                    else if(trimbuttontext.get(position).getButtontext().equalsIgnoreCase(config.txtupgrade))
+                    {
+                        showupgradecodepopup(applicationviavideocomposer.getactivity());
+                    }
+                }
+            }
+
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
+        });
         TextView tvnothanks = (TextView) dialoginapppurchase.findViewById(R.id.btn_nothanks);
         TextView txt_title = (TextView) dialoginapppurchase.findViewById(R.id.txt_title);
 
@@ -1311,30 +1342,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         }
 
-       // txt_content.setText(message);
-
-        tv_upgradecode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                showupgradecodepopup(applicationviavideocomposer.getactivity());
-            }
-        });
-
-        tv_purchase1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                baseactivity.getinstance().inapppurchase("ABC");
-            }
-        });
-
-        tv_purchase2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                baseactivity.getinstance().inapppurchase("ABC");
-            }
-        });
-
         tvnothanks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1342,6 +1349,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     dialoginapppurchase.dismiss();
             }
         });
+
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(activity,1);
+        ((GridLayoutManager)mLayoutManager).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (position == 4) {
+                    return 2;
+                }else return 1;
+            }
+        });
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adaptersend);
 
         if(gravity.equalsIgnoreCase(config.gravitytop)){
             setscreenwidthheight(dialoginapppurchase,80,70,gravity);
