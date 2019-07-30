@@ -23,6 +23,10 @@ public class config {
     public static String item_microsoft_onedrive="Microsoft OneDrive";
     public static String item_videoLock_share="VideoLock Share";
 
+    public static String txtyear="Upgrade for $10/year";
+    public static String txtmonth="Upgrade for $1/month";
+    public static String txtupgrade="I have an upgrade code";
+
     public static String mediarecordcount="mediarecordcount";
     public static String mediatrimcount="mediatrimcount";
 
