@@ -500,7 +500,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
+                double downloadElapsedTime = 0,finalDownloadRate=0,downloadedByte=0;
                 Headers responseHeaders = response.headers();
                 for (int i = 0, size = responseHeaders.size(); i < size; i++) {
                     //  Log.d(TAG, responseHeaders.name(i) + ": " + responseHeaders.value(i));
@@ -509,22 +509,39 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 InputStream input = response.body().byteStream();
 
                 try {
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    byte[] buffer = new byte[1024];
 
+                    byte[] buffer = new byte[1024];
+                    int len = 0,timeout=15;
+                    outer:
+
+                    while ((len = input.read(buffer)) != -1) {
+                        downloadedByte += len;
+                        endTime = System.currentTimeMillis();
+                        downloadElapsedTime = (endTime - startTime) / 1000.0;
+                        //setInstantDownloadRate(downloadedByte, downloadElapsedTime);
+                        if (downloadElapsedTime >= timeout) {
+                            break outer;
+                        }
+                    }
+
+                    /*ByteArrayOutputStream bos = new ByteArrayOutputStream();
                     while (input.read(buffer) != -1) {
                         bos.write(buffer);
                     }
                     byte[] docBuffer = bos.toByteArray();
-                    fileSize = bos.size();
+                    fileSize = bos.size();*/
 
                 } finally {
                     input.close();
                 }
 
                 endTime = System.currentTimeMillis();
+                downloadElapsedTime = (endTime - startTime) / 1000.0;
+                connectiondatadelay = "" + String.valueOf(new DecimalFormat("#.##").format(downloadElapsedTime)) + " second";
+                finalDownloadRate = ((downloadedByte * 8) / (1000 * 1000.0)) / downloadElapsedTime;
+                connectionspeed = String.valueOf(new DecimalFormat("#.##").format(finalDownloadRate)) + " mbps";
 
-                double timeTakenMills = Math.floor(endTime - startTime);  // time taken in milliseconds
+                /*double timeTakenMills = Math.floor(endTime - startTime);  // time taken in milliseconds
                 double timeTakenSecs = timeTakenMills / 1000;  // divide by 1000 to get time in seconds
                 connectiondatadelay = "" + String.valueOf(new DecimalFormat("#.#").format(timeTakenSecs)) + " Second";
                 final int kilobytePerSec = (int) Math.round(1024 / timeTakenSecs);
@@ -539,11 +556,20 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 if(speedinmb >= config.max_connectionspeedrange)
                     speedinmb=config.max_connectionspeedrange;
 
-                connectionspeed = speedinmb + " mbps";
+                connectionspeed = speedinmb + " mbps";*/
             }
 
         });
     }
+
+    /*public void setInstantDownloadRate(int downloadedByte, double elapsedTime) {
+
+        if (downloadedByte >= 0) {
+            this.instantDownloadRate = round((Double) (((downloadedByte * 8) / (1000 * 1000)) / elapsedTime), 2);
+        } else {
+            this.instantDownloadRate = 0.0;
+        }
+    }*/
 
     /*public void getconnectionspeed()
     {
