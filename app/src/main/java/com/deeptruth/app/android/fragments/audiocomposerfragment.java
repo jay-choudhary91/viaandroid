@@ -1022,46 +1022,54 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         if(array == null || array.length == 0)
             return;
-        final String keyvalue= getkeyvalue(array);
 
-        mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
-
-        hashvalue = keyvalue;
-
-        if(! selectedhashes.trim().isEmpty())
-            selectedhashes=selectedhashes+"\n";
-
-        if(isaudiorecording)
+        try
         {
-            try
-            {
-                ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                getselectedmetrics(mlocalarraylist);
+            final String keyvalue= getkeyvalue(array);
+            mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
+            hashvalue = keyvalue;
 
-                selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
-                JSONArray metricesarray=new JSONArray();
-                if(metadatametricesjson.length() > 0)
+            if(! selectedhashes.trim().isEmpty())
+                selectedhashes=selectedhashes+"\n";
+
+            if(isaudiorecording)
+            {
+                try
                 {
-                    try {
-                        metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
-                        metrichashvalue = md5.calculatestringtomd5(metricesarray.toString());
+                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                    getselectedmetrics(mlocalarraylist);
 
-                        uploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
-                        savemediaupdate(metricesarray);
-                    }catch (Exception e)
+                    selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
+                    JSONArray metricesarray=new JSONArray();
+                    if(metadatametricesjson.length() > 0)
                     {
-                        e.printStackTrace();
+                        try {
+                            metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
+                            metrichashvalue = md5.calculatestringtomd5(metricesarray.toString());
+
+                            uploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
+                            savemediaupdate(metricesarray);
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
-            }catch (Exception e)
-            {
-                e.printStackTrace();
             }
-        }
-        else
+            else
+            {
+                selectedhashes="";
+            }
+
+
+        }catch (Exception e)
         {
-            selectedhashes="";
+            e.printStackTrace();
         }
+
 
     }
 

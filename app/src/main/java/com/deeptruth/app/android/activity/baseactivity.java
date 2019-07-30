@@ -788,6 +788,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
                 mediamethod = config.type_private;
 
+                if(!isuserlogin()){
+                    redirecttologin();
+                    return;
+                }
+
                 if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
                 {
                     common.shouldshowupgradepopup(config.mediatrimcount);
@@ -798,10 +803,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                 }
 
-                if(!isuserlogin()){
-                    redirecttologin();
-                    return;
-                }
                 callmediashareapi(type, mediatoken, path, mediamethod);
             }
             });
@@ -811,6 +812,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
                 mediamethod = config.type_public;
 
+                if(!isuserlogin()){
+                    redirecttologin();
+                    return;
+                }
+
                 if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
                 {
                     common.shouldshowupgradepopup(config.mediatrimcount);
@@ -821,10 +827,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                 }
 
-                if(!isuserlogin()){
-                    redirecttologin();
-                    return;
-                }
                 callmediashareapi(type , mediatoken, path, mediamethod);
             }
             });
