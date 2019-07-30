@@ -1227,7 +1227,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         dialog.setCanceledOnTouchOutside(false);
-        setscreenwidthheight(dialog,85,80,config.gravitycenter);
+        setscreenwidthheight(dialog,85,63,config.gravitycenter);
         dialog.show();
     }
 
