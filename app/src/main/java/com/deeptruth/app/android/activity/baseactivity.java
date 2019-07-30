@@ -1225,7 +1225,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         dialog.setCanceledOnTouchOutside(false);
-        setscreenwidthheight(dialog,85,70,config.gravitycenter);
+        setscreenwidthheight(dialog,85,80,config.gravitycenter);
         dialog.show();
     }
 
@@ -1256,7 +1256,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView txt_lineeleven = (TextView)dialoginapppurchase.findViewById(R.id.txt_lineeleven);
         TextView txt_linetwelve = (TextView)dialoginapppurchase.findViewById(R.id.txt_linetwelve);
 
-        //TextView txt_content = (TextView) dialoginapppurchase.findViewById(R.id.txt_content);
         TextView tv_purchase1 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase1);
         TextView tv_purchase2 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase2);
         TextView tv_upgradecode = (TextView) dialoginapppurchase.findViewById(R.id.tv_upgradecode);
@@ -1307,7 +1306,65 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         }else if(txt_title.getText().toString().contains("30-SECOND")){
 
+
+            txtlineone.setVisibility(View.VISIBLE);
+            txt_linetwo.setVisibility(View.VISIBLE);
+            txt_linethree.setVisibility(View.VISIBLE);
+            txt_linefour.setVisibility(View.VISIBLE);
+            txt_linefive.setVisibility(View.INVISIBLE);
+            txt_linesix.setVisibility(View.VISIBLE);
+            txt_lineseven.setVisibility(View.VISIBLE);
+            txt_lineeight.setVisibility(View.VISIBLE);
+            txt_linenine.setVisibility(View.VISIBLE);
+
+            txtlineone.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linetwo.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linethree.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linefour.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linefive.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linesix.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+
+            txt_linenine.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_lineten.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_lineeleven.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linetwelve.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+
+            txtlineone.setText(getResources().getString(R.string.limit_reached_line1));
+            txt_linetwo.setText(getResources().getString(R.string.limit_reached_line2));
+            txt_linethree.setText(getResources().getString(R.string.limit_reached_line3));
+            txt_linefour.setText(getResources().getString(R.string.limit_reached_line4));
+            txt_linesix.setText(getResources().getString(R.string.limit_reached_line5));
+            txt_lineseven.setText(getResources().getString(R.string.limit_reached_line6));
+            txt_lineeight.setText(getResources().getString(R.string.limit_reached_line7));
+            txt_linenine.setText(getResources().getString(R.string.limit_reached_line8));
+
         }else if(txt_title.getText().toString().contains("TRIM")){
+
+            txtlineone.setVisibility(View.VISIBLE);
+            txt_linetwo.setVisibility(View.VISIBLE);
+            txt_linethree.setVisibility(View.VISIBLE);
+            txt_linefour.setVisibility(View.VISIBLE);
+            txt_linefive.setVisibility(View.VISIBLE);
+            txt_linesix.setVisibility(View.VISIBLE);
+
+            txtlineone.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linetwo.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linethree.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linefour.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linefive.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linesix.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+
+            txt_linenine.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_lineten.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_lineeleven.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+            txt_linetwelve.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
+
+            txtlineone.setText(getResources().getString(R.string.trim_line1));
+            txt_linetwo.setText(getResources().getString(R.string.trim_line2));
+            txt_linethree.setText(getResources().getString(R.string.trim_line3));
+            txt_linefour.setText(getResources().getString(R.string.trim_line4));
+            txt_linefive.setText(getResources().getString(R.string.trim_line5));
+            txt_linesix.setText(getResources().getString(R.string.trim_line6));
 
         }
 
@@ -1344,9 +1401,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         if(gravity.equalsIgnoreCase(config.gravitytop)){
-            setscreenwidthheight(dialoginapppurchase,80,70,gravity);
+            setscreenwidthheight(dialoginapppurchase,80,73,gravity);
         }else{
-            setscreenwidthheight(dialoginapppurchase,80,65,gravity);
+            setscreenwidthheight(dialoginapppurchase,80,60,gravity);
         }
 
         dialoginapppurchase.show();
