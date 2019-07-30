@@ -1049,7 +1049,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         return;
     }
 
-    public void share_alert_dialog(final Context context, final String title, String content,adapteritemclick mitemclick){
+    public void share_alert_dialog(final Context context, final String title,adapteritemclick mitemclick){
 
         dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

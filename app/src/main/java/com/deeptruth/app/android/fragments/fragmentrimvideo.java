@@ -96,19 +96,12 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         switch (view.getId()){
 
             case R.id.lyout_publish:
-                String publish = getActivity().getResources().getString(R.string.publishtext_line1)+
-                        getActivity().getResources().getString(R.string.publishtext_line2) +
-                        getActivity().getResources().getString(R.string.publishtext_line3)+
-                        getActivity().getResources().getString(R.string.publishtext_line4 )+
-                        getActivity().getResources().getString(R.string.publishtext_line5 )+
-                        getActivity().getResources().getString(R.string.publishtext_line6)+
-                        getActivity().getResources().getString(R.string.publishtext_line7);
 
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))
                 {
                          baseactivity.getinstance().share_alert_dialog(getActivity(), getActivity().
-                                 getResources().getString(R.string.txt_publish), publish, new adapteritemclick() {
+                                 getResources().getString(R.string.txt_publish), new adapteritemclick() {
                              @Override
                              public void onItemClicked(Object object) {
                                  baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken,ismediatrimmed);
@@ -126,22 +119,10 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
             case R.id.lyout_send:
 
-                String send = getActivity().getResources().getString(R.string.sendtext_line1)+
-                        getActivity().getResources().getString(R.string.sendtext_line2)+
-                        getActivity().getResources().getString(R.string.sendtext_line3)+
-                        getActivity().getResources().getString(R.string.sendtext_line4)+
-                        getActivity().getResources().getString(R.string.sendtext_line5)+
-                        getActivity().getResources().getString(R.string.sendtext_line6)+
-                        getActivity().getResources().getString(R.string.sendtext_line7)+
-                        getActivity().getResources().getString(R.string.sendtext_line8)+
-                        getActivity().getResources().getString(R.string.sendtext_line9)+
-                        getActivity().getResources().getString(R.string.sendtext_line10)+
-                        getActivity().getResources().getString(R.string.sendtext_line11);
-
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
                          baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
-                                 getResources().getString(R.string.txt_send),send, new adapteritemclick() {
+                                 getResources().getString(R.string.txt_send), new adapteritemclick() {
                              @Override
                              public void onItemClicked(Object object) {
                                  baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken);
@@ -161,21 +142,10 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
             case R.id.lyout_export:
 
-                String export = getActivity().getResources().getString(R.string.exporttext_line1)+
-                        getActivity().getResources().getString(R.string.exporttext_line2)+
-                        getActivity().getResources().getString(R.string.exporttext_line3)+
-                        getActivity().getResources().getString(R.string.exporttext_line4)+
-                        getActivity().getResources().getString(R.string.exporttext_line5)+
-                        getActivity().getResources().getString(R.string.exporttext_line6)+
-                        getActivity().getResources().getString(R.string.exporttext_line7)+
-                        getActivity().getResources().getString(R.string.exporttext_line8)+
-                        getActivity().getResources().getString(R.string.exporttext_line9)+
-                        getActivity().getResources().getString(R.string.exporttext_line10);
-
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
                         baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
-                                getResources().getString(R.string.txt_export),export, new adapteritemclick() {
+                                getResources().getString(R.string.txt_export), new adapteritemclick() {
                             @Override
                             public void onItemClicked(Object object) {
                                 //baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
