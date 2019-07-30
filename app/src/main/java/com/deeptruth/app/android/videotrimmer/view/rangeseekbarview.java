@@ -31,6 +31,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -85,7 +86,7 @@ public class rangeseekbarview extends View {
         int shadowcolor = ContextCompat.getColor(getContext(), R.color.shadow_color);
         mshadow.setAntiAlias(true);
         mshadow.setColor(shadowcolor);
-        mshadow.setAlpha(177);
+        //mshadow.setAlpha(177);
 
         int linecolor = ContextCompat.getColor(getContext(), R.color.line_color);
         mline.setAntiAlias(true);
@@ -180,6 +181,9 @@ public class rangeseekbarview extends View {
                 // Calculate the distance moved
                 final float dx = coordinate - mThumb.getlasttouchx();
                 final float newX = mThumb.getpos() + dx;
+
+                Log.e("leftposition=",""+dx);
+
                 if (currentThumb == 0) {
 
                     if ((newX + mThumb.getwidthbitmap()) >= mThumb2.getpos()) {
@@ -322,13 +326,13 @@ public class rangeseekbarview extends View {
                 if (th.getindex() == 0) {
                     final float x = th.getpos() + getPaddingLeft();
                     if (x > mpixelrangemin) {
-                        Rect mRect = new Rect((int) mthumbwidth, 0, (int) (x + mthumbwidth), mheighttimeline);
+                        Rect mRect = new Rect((int) mthumbwidth, 0, (int) (x + mthumbwidth), (mheighttimeline-8));
                         canvas.drawRect(mRect, mshadow);
                     }
                 } else {
                     final float x = th.getpos() - getPaddingRight();
                     if (x < mpixelrangemax) {
-                        Rect mRect = new Rect((int) x, 0, (int) (mviewwidth - mthumbwidth), mheighttimeline);
+                        Rect mRect = new Rect((int) x, 0, (int) (mviewwidth - mthumbwidth), (mheighttimeline-8));
                         canvas.drawRect(mRect, mshadow);
                     }
                 }
@@ -341,9 +345,9 @@ public class rangeseekbarview extends View {
         if (!mthumbs.isEmpty()) {
             for (thumb th : mthumbs) {
                 if (th.getindex() == 0) {
-                    canvas.drawBitmap(th.getbitmap(), th.getpos() + getPaddingLeft()+15, getPaddingTop() , null);
+                    canvas.drawBitmap(th.getbitmap(), th.getpos() + getPaddingLeft(), getPaddingTop() , null);
                 } else {
-                    canvas.drawBitmap(th.getbitmap(), th.getpos() - (getPaddingRight()+15), getPaddingTop() , null);
+                    canvas.drawBitmap(th.getbitmap(), th.getpos() - (getPaddingRight()), getPaddingTop() , null);
                 }
             }
         }

@@ -193,8 +193,8 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
                 updateVideoProgress(time);
             }
         });
-       // mlisteners.add(mvideoprogressindicator);
-        //mlisteners.add(mvideoprogressindicatorbottom);
+        mlisteners.add(mvideoprogressindicator);
+        mlisteners.add(mvideoprogressindicatorbottom);
 
         findViewById(R.id.btCancel)
                 .setOnClickListener(
@@ -517,14 +517,17 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
 
     private void setTimeFrames() {
         String seconds = getContext().getString(R.string.short_seconds);
-        mtexttimeframe.setText(String.format("%s %s - %s %s", stringfortime(mstartposition), seconds, stringfortime(mendposition), seconds));
-        mtexttimeframe.setVisibility(GONE);
+        mtextsize.setText(String.format(stringfortime(mstartposition), seconds));
+        mtexttime.setText(String.format( stringfortime(mendposition), seconds));
+
+       // mtexttimeframe.setText(String.format("%s %s - %s %s", stringfortime(mstartposition), seconds, stringfortime(mendposition), seconds));
+        mtexttimeframe.setVisibility(VISIBLE);
     }
 
     private void setTimeVideo(int position) {
         String seconds = getContext().getString(R.string.short_seconds);
-        mtexttime.setText(String.format("%s %s", stringfortime(position), seconds));
-        mtexttime.setVisibility(GONE);
+       // mtexttime.setText(String.format("%s %s", stringfortime(position), seconds));
+        mtexttime.setVisibility(VISIBLE);
     }
 
     public String stringfortime(int timeMs) {
@@ -535,9 +538,9 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
 
         Formatter mformatter = new Formatter();
         if (hours > 0) {
-            return mformatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
+            return mformatter.format("%02d:%02d:%02d", hours, minutes, seconds).toString();
         } else {
-            return mformatter.format("%02d:%02d", minutes, seconds).toString();
+            return mformatter.format("%02d:%02d:%02d",hours, minutes, seconds).toString();
         }
     }
 
@@ -709,11 +712,11 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
 
             if (fileSizeInKB > 1000) {
                 long fileSizeInMB = fileSizeInKB / 1024;
-                mtextsize.setText(String.format("%s %s", fileSizeInMB, getContext().getString(R.string.megabyte)));
+               // mtextsize.setText(String.format("%s %s", fileSizeInMB, getContext().getString(R.string.megabyte)));
             } else {
-                mtextsize.setText(String.format("%s %s", fileSizeInKB, getContext().getString(R.string.kilobyte)));
+                //mtextsize.setText(String.format("%s %s", fileSizeInKB, getContext().getString(R.string.kilobyte)));
             }
-            mtextsize.setVisibility(GONE);
+            mtextsize.setVisibility(VISIBLE);
         }
 
         mvideoview.setVideoURI(msrc);
