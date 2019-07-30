@@ -1,10 +1,13 @@
 package com.deeptruth.app.android.utils;
 
+import com.deeptruth.app.android.interfaces.adapteritemclick;
+
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +26,16 @@ public class HttpDownloadTest extends Thread {
     double instantDownloadRate = 0;
     int timeout = 15;
 
+    adapteritemclick mitemclick;
     HttpURLConnection httpConn = null;
 
     public HttpDownloadTest(String fileURL) {
         this.fileURL = fileURL;
+    }
+
+    public HttpDownloadTest(String fileURL, adapteritemclick mitemclick) {
+        this.fileURL = fileURL;
+        this.mitemclick = mitemclick;
     }
 
     private double round(double value, int places) {
@@ -115,6 +124,9 @@ public class HttpDownloadTest extends Thread {
         endTime = System.currentTimeMillis();
         downloadElapsedTime = (endTime - startTime) / 1000.0;
         finalDownloadRate = ((downloadedByte * 8) / (1000 * 1000.0)) / downloadElapsedTime;
+
+        if(mitemclick != null)
+            mitemclick.onItemClicked(String.valueOf(new DecimalFormat("#.##").format(finalDownloadRate)) + " mbps");
 
         finished = true;
     }

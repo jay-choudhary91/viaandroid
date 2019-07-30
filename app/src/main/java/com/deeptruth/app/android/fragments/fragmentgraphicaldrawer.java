@@ -760,6 +760,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                     String traveled=common.travelleddistanceformatter(xdata.getinstance().getSetting(config.distancetravelled));
                     String strconnectionspeed=xdata.getinstance().getSetting(config.Connectionspeed);
+                    Log.e("connectionindisplay ",strconnectionspeed);
                     String gpsaccuracy=xdata.getinstance().getSetting(config.GPSAccuracy);
                     String connectiontimedelaystr=xdata.getinstance().getSetting(config.connectiondatadelay);
 
