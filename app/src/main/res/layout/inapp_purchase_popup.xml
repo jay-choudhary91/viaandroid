@@ -44,70 +44,26 @@
 
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin_15dp"
-        android:paddingRight="@dimen/margin_15dp"
-        android:paddingTop="@dimen/margin_10dp"
-        android:paddingBottom="@dimen/margin_10dp"
-        android:orientation="vertical"
-        android:gravity="center" >
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/ryclr_trim_buttontext"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="13sp"
-            android:text="@string/purchase_for_peryear"
-            android:paddingTop="@dimen/margin_5dp"
-            android:paddingBottom="@dimen/margin_5dp"
-            android:layout_marginTop="@dimen/margin_10dp"
-            android:layout_marginLeft="@dimen/margin_20dp"
-            android:layout_marginRight="@dimen/margin_20dp"
-            android:background="@drawable/round_corner_btn_allow"
-            android:textColor="@color/white"
-            />
+            android:paddingLeft="@dimen/margin_15dp"
+            android:paddingRight="@dimen/margin_15dp"
+            android:paddingTop="@dimen/margin_10dp"
+            android:paddingBottom="@dimen/margin_10dp"
+            android:orientation="vertical"
+            android:gravity="center" >
 
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="Comfortaa-Regular"
-            android:id="@+id/tv_purchase2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="@dimen/margin_5dp"
-            android:paddingBottom="@dimen/margin_5dp"
-            android:text="@string/purchase_for_permonth"
-            android:layout_marginTop="@dimen/margin_10dp"
-            android:layout_marginLeft="@dimen/margin_20dp"
-            android:layout_marginRight="@dimen/margin_20dp"
-            android:background="@drawable/round_corner_btn_allow"
-            android:textSize="13sp"
-            android:textColor="@color/white"
-           />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/ryclr_trim_buttontext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scrollbars="vertical"
+                android:layout_centerVertical="true"
+                app:spanCount="1"/>
 
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="Comfortaa-Regular"
-            android:id="@+id/tv_upgradecode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="13sp"
-            android:paddingTop="@dimen/margin_5dp"
-            android:paddingBottom="@dimen/margin_5dp"
-            android:layout_marginTop="@dimen/margin_10dp"
-            android:layout_marginLeft="@dimen/margin_20dp"
-            android:layout_marginRight="@dimen/margin_20dp"
-            android:background="@drawable/round_corner_btn_allow"
-            android:text="@string/i_have_upgrade_code"
-            android:textColor="@color/white"/>
-            android:layout_gravity="center"
-            android:scrollbars="vertical"
-            android:layout_centerVertical="true"
-            app:spanCount="1"/>
-
-    </LinearLayout>
+        </LinearLayout>
 
          <LinearLayout
             android:id="@+id/tableRow5"

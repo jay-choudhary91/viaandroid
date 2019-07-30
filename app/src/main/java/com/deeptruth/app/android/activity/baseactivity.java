@@ -1264,9 +1264,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView txt_lineeleven = (TextView)dialoginapppurchase.findViewById(R.id.txt_lineeleven);
         TextView txt_linetwelve = (TextView)dialoginapppurchase.findViewById(R.id.txt_linetwelve);
 
-        TextView tv_purchase1 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase1);
-        TextView tv_purchase2 = (TextView) dialoginapppurchase.findViewById(R.id.tv_purchase2);
-        TextView tv_upgradecode = (TextView) dialoginapppurchase.findViewById(R.id.tv_upgradecode);
+
         RecyclerView recyclerView = (RecyclerView) dialoginapppurchase.findViewById(R.id.ryclr_trim_buttontext);
         adapterbuttontrim adaptersend = new adapterbuttontrim(activity, trimbuttontext, new adapteritemclick() {
             @Override
