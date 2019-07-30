@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -71,6 +72,7 @@ import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
+import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.celltowermodel;
 import com.deeptruth.app.android.models.mediametadatainfo;
@@ -87,6 +89,7 @@ import com.deeptruth.app.android.utils.PingTest;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.googleutils;
+import com.deeptruth.app.android.utils.logs;
 import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.noise;
 import com.deeptruth.app.android.utils.taskresult;
@@ -113,8 +116,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -126,6 +134,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -203,7 +212,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     Intent locationService;
     GetSpeedTestHostsHandler getSpeedTestHostsHandler = null;
     HashSet<String> tempBlackList;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -485,7 +493,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             return;
         }
 
-        Request request = new Request.Builder()
+        httpdownloadtest downloadtest=new httpdownloadtest();
+        downloadtest.execute();
+
+        /*HttpDownloadTest downloadTest = new HttpDownloadTest
+                ("https://m.media-amazon.com/images/S/aplus-media/vc/6a9569ab-cb8e-46d9-8aea-a7022e58c74a.jpg",
+                        downloadspeeddelayupdate);
+        downloadTest.start();*/
+
+        /*Request request = new Request.Builder()
                 .url("https://m.media-amazon.com/images/S/aplus-media/vc/6a9569ab-cb8e-46d9-8aea-a7022e58c74a.jpg")
                 .build();
 
@@ -524,13 +540,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         }
                     }
 
-                    /*ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    while (input.read(buffer) != -1) {
-                        bos.write(buffer);
-                    }
-                    byte[] docBuffer = bos.toByteArray();
-                    fileSize = bos.size();*/
-
                 } finally {
                     input.close();
                 }
@@ -540,26 +549,80 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 connectiondatadelay = "" + String.valueOf(new DecimalFormat("#.##").format(downloadElapsedTime)) + " second";
                 finalDownloadRate = ((downloadedByte * 8) / (1000 * 1000.0)) / downloadElapsedTime;
                 connectionspeed = String.valueOf(new DecimalFormat("#.##").format(finalDownloadRate)) + " mbps";
+                Log.e("connectionspeed ",connectionspeed);
 
-                /*double timeTakenMills = Math.floor(endTime - startTime);  // time taken in milliseconds
-                double timeTakenSecs = timeTakenMills / 1000;  // divide by 1000 to get time in seconds
-                connectiondatadelay = "" + String.valueOf(new DecimalFormat("#.#").format(timeTakenSecs)) + " Second";
-                final int kilobytePerSec = (int) Math.round(1024 / timeTakenSecs);
-                if (kilobytePerSec <= POOR_BANDWIDTH) {
-                    // slow connection
-                }
-
-                // get the download speed by dividing the file size by time taken to download
-                double speed = fileSize / timeTakenMills;
-                Log.d("speed  ", ""+speed);
-                double speedinmb = kilobytePerSec / 1024;
-                if(speedinmb >= config.max_connectionspeedrange)
-                    speedinmb=config.max_connectionspeedrange;
-
-                connectionspeed = speedinmb + " mbps";*/
             }
 
-        });
+        });*/
+    }
+
+
+    public class httpdownloadtest extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            HttpURLConnection httpConn = null;
+            long startTime = 0;
+            long endTime = 0;
+            double downloadElapsedTime = 0;
+            int downloadedByte = 0;
+            double finalDownloadRate = 0.0;
+            int timeout = 15;
+
+            URL url = null;
+            downloadedByte = 0;
+            int responseCode = 0;
+
+            startTime = System.currentTimeMillis();
+            try {
+                url = new URL("https://m.media-amazon.com/images/S/aplus-media/vc/6a9569ab-cb8e-46d9-8aea-a7022e58c74a.jpg");
+                httpConn = (HttpURLConnection) url.openConnection();
+                responseCode = httpConn.getResponseCode();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            try {
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    byte[] buffer = new byte[10240];
+
+                    InputStream inputStream = httpConn.getInputStream();
+                    int len = 0;
+
+                    while ((len = inputStream.read(buffer)) != -1) {
+                        downloadedByte += len;
+                        endTime = System.currentTimeMillis();
+                        downloadElapsedTime = (endTime - startTime) / 1000.0;
+                        //setInstantDownloadRate(downloadedByte, downloadElapsedTime);
+                        if (downloadElapsedTime >= timeout) {
+                            break;
+                        }
+                    }
+
+                    inputStream.close();
+                    httpConn.disconnect();
+                }
+
+                endTime = System.currentTimeMillis();
+                downloadElapsedTime = (endTime - startTime) / 1000.0;
+                finalDownloadRate = ((downloadedByte * 8) / (1000 * 1000.0)) / downloadElapsedTime;
+                connectiondatadelay = "" + String.valueOf(new DecimalFormat("#.##").format(downloadElapsedTime)) + " second";
+                connectionspeed = String.valueOf(new DecimalFormat("#.##").format(finalDownloadRate)) + " mbps";
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String aVoid) {
+            super.onPostExecute(aVoid);
+        }
     }
 
     /*public void setInstantDownloadRate(int downloadedByte, double elapsedTime) {
@@ -1464,9 +1527,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         xdata.getinstance().saveSetting("wificonnected", "1");
                     }
 
-                    //String connectionspeed=""+connectionInfo.getLinkSpeed()+" "+LINK_SPEED_UNITS;
-                    //Log.e("Connection speed",connectionspeed);
-
                     metricItemValue = metricItemValue.replace("\"", "");
                     if (key.equalsIgnoreCase("connectedwifiquality")) {
                         int rssi = connectionInfo.getRssi();
@@ -1708,8 +1768,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             } else if ((android.provider.Settings.Global.getInt(getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 0) == 1)) {
                 metricItemValue = "OFF";
             }
-        } else if (key.equalsIgnoreCase("connectionspeed")) {
-            metricItemValue = "" + connectionspeed;
         } else if (key.equalsIgnoreCase(config.connectiondatadelay)) {
             metricItemValue = "" + connectiondatadelay;
         } else if (key.equalsIgnoreCase("address")) {

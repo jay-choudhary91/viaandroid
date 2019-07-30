@@ -163,7 +163,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     FragmentManager fragmentmanager;
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
-    int layoutmediatypeheight = 0;
+    int layoutmediatypeheight = 0,handlerupdatorcounter=0;
     RelativeLayout layoutbottom;
     @BindView(R.id.img_roundblink)
     ImageView img_roundblink;
@@ -693,14 +693,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     public void run()
                     {
                         // writes the data to file from buffer stores the voice buffer
-                        Log.e("ShortBuffer",Arrays.toString(sData));
                         final byte data[] = short2byte(sData);
 
                         try {
                             finalOs.write(data, 0, bufferelements2rec * bytesperelement);
                             if(isaudiorecording)
                             {
-                                Log.e("Frame count ",""+mframetorecordcount);
                                 if(framegap[0] == frameduration || (mediakey.trim().isEmpty()))
                                 {
                                     if(mediakey.trim().isEmpty())
@@ -708,7 +706,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                                         sequencestarttime = Calendar.getInstance();
                                         String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                                         mediakey=currenttimestamp;
-                                        Log.e("localkey ",mediakey);
                                         String keyvalue= getkeyvalue(data);
                                         savestartmediainfo();
                                     }
@@ -1038,9 +1035,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
             try
             {
-                selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
                 ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
                 getselectedmetrics(mlocalarraylist);
+
+                selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
                 JSONArray metricesarray=new JSONArray();
                 if(metadatametricesjson.length() > 0)
                 {
@@ -1190,6 +1188,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)
     {
+        Log.e("getselectedmetrics"," getselectedmetrics");
         JSONArray metricesarray=new JSONArray();
         StringBuilder builder=new StringBuilder();
         JSONObject object=new JSONObject();
@@ -1232,6 +1231,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 if(isaudiorecording)
                 {
+                    handlerupdatorcounter=handlerupdatorcounter+10;
                     if(myvisualizerview != null)
                     {
                         if(mediarecorder != null)
@@ -1259,9 +1259,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         }
                         selectedmetrices="";
                     }
-                }
 
-                if(! isaudiorecording)
+                    if(handlerupdatorcounter >= 500)
+                    {
+                        handlerupdatorcounter=0;
+                        ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                        getselectedmetrics(mlocalarraylist);
+                    }
+
+                }
+                else
                 {
                     ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
                     getselectedmetrics(mlocalarraylist);
