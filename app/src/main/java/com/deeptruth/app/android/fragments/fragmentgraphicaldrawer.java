@@ -612,9 +612,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             vertical_slider_altitude.setMax(2000);
             vertical_slider_traveled.setMax(100);
 
-            initlinechart(linechart_connectionspeed,100f);
-            initlinechart(linechart_datatimedelay,50f);
-            initlinechart(linechart_gpsaccuracy,300f);
+            initlinechart(linechart_connectionspeed,50f,true);
+            initlinechart(linechart_datatimedelay,50f,true);
+            initlinechart(linechart_gpsaccuracy,300f,false);
             vertical_slider_connectionspeed.setMax(25);
             vertical_slider_connectiondatatimedely.setMax(10);
             vertical_slider_gpsaccuracy.setMax(100);
@@ -2541,7 +2541,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     }
 
-    public  void initlinechart(LineChart chart,Float maxrange)
+    public  void initlinechart(LineChart chart,Float maxrange,boolean shouldusemaxrange)
     {
 
         chart.setNoDataText("");
@@ -2554,7 +2554,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         YAxis yAxis;
         yAxis = chart.getAxisLeft();
         chart.getAxisRight().setEnabled(false);
-        //yAxis.setAxisMaximum(maxrange);
+        if(shouldusemaxrange)
+            yAxis.setAxisMaximum(maxrange);
+
         yAxis.setAxisMinimum(0f);
 
         // // Create Limit Lines // //

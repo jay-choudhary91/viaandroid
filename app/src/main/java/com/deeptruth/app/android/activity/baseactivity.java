@@ -1907,6 +1907,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         };
         try {
             app.createOneDriveClient(baseactivity.this, serviceCreated);
+            Toast.makeText(baseactivity.this,applicationviavideocomposer.getactivity().getResources()
+                            .getString(R.string.create_onedrive_client),
+                    Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             //app.createOneDriveClient(baseactivity.this, serviceCreated);
         }
@@ -1944,7 +1947,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                             progressdialog.dismisswaitdialog();
                                             Toast.makeText(baseactivity.this,applicationviavideocomposer.getactivity().getResources()
                                                     .getString(R.string.file_uploaded),
-                                                    Toast.LENGTH_LONG).show();
+                                                    Toast.LENGTH_SHORT).show();
 
                                             if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                                                 dialogfileuploadoptions.dismiss();

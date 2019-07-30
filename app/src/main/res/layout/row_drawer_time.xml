@@ -160,7 +160,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerInside"
             android:src="@drawable/satellite_dashboard_image"
             android:visibility="visible" />
 
@@ -168,7 +168,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="5dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -182,7 +182,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_sun" />
+                    android:src="@drawable/ic_img_sun" />
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_sun"
