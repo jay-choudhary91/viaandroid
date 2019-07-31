@@ -1229,7 +1229,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         dialog.setCanceledOnTouchOutside(false);
-        setscreenwidthheight(dialog,85,63,config.gravitycenter);
+        setscreenwidthheight(dialog,85,63,config.gravitybottom);
         dialog.show();
     }
 
@@ -1905,7 +1905,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         xdata.getinstance().saveSetting(config.firstmediacreated,"1").isEmpty();
-        setscreenwidthheight(dialog,85,63,config.gravitycenter);
+        setscreenwidthheight(dialog,85,63,config.gravitybottom);
         dialog.show();
     }
 
@@ -1965,7 +1965,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        setscreenwidthheight(dialog,85,65,config.gravitycenter);
+        setscreenwidthheight(dialog,80,63,config.gravitybottom);
         dialog.show();
     }
 
@@ -2070,22 +2070,29 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
         int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
 
+        Log.e("deviceheight",""+height);
+
         int percentageheight = (height / 100) * heightpercentage;
         int percentagewidth = (width / 100) * widthpercentage;
+
         if(gravity.equalsIgnoreCase(config.gravitytop)){
             dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            params.y = 80;
+            double topmargin = (height / 100) * 7;
+            params.y = (int)topmargin;
             dialog.getWindow().setAttributes(params);
-        }else if(gravity.equalsIgnoreCase(config.gravitybottom)){
+            dialog.getWindow().setLayout(percentagewidth, WindowManager.LayoutParams.WRAP_CONTENT);
+        }
+        else if(gravity.equalsIgnoreCase(config.gravitybottom)){
             dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            params.y = 30;
+            double bottommargin = (height / 100) * 20;
+            dialog.getWindow().setLayout(percentagewidth, WindowManager.LayoutParams.WRAP_CONTENT);
+            params.y = (int)bottommargin;
             dialog.getWindow().setAttributes(params);
         }
 
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dialog.getWindow().setLayout(percentagewidth, percentageheight);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation;
     }
