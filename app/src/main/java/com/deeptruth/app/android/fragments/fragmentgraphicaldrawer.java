@@ -425,6 +425,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ValueAnimator lastPulseAnimator=null;
     Circle mappulsatecircle =null;
     Circle userlocationcircle =null;
+    Marker locationmarker=null;
     LatLng usercurrentlocation=null;
     private Polyline mappathpolyline=null;
     private ArrayList<LatLng> mappathcoordinates=new ArrayList<>();
@@ -984,6 +985,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         {
                             mappulsatecircle.remove();
                             mappulsatecircle=null;
+                        }
+
+                        if(userlocationcircle != null && mgooglemap != null)
+                        {
+                            userlocationcircle.remove();
+                            userlocationcircle=null;
                         }
 
                         if(mappathpolyline != null)
@@ -1595,8 +1602,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             return;
         }
 
-        Drawable circleDrawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.ic_blue_circle);
-        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable, 30, 30);
+        Drawable circleDrawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.ic_blue_location_circle);
+        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable, 25, 25);
 
         mediacreatedpointmarker=mgooglemap.addMarker(new MarkerOptions()
                 .position(latLng)
@@ -2295,6 +2302,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 addPulsatingEffect();
             else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
                 addPulsatingEffect();
+
+            if(mediacreatedpointmarker != null)
+            {
+                mediacreatedpointmarker.remove();
+                mediacreatedpointmarker=null;
+            }
+        }
+        else
+        {
+            addmediacreatedpointmarker(usercurrentlocation);
         }
 
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -2320,15 +2337,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 public void onCameraMove()
                 {
                     float currentzoomlevel=mgooglemap.getCameraPosition().zoom;
-                    if(lastzoomlevel != currentzoomlevel)
+                    if(isrecodrunning)
                     {
-                        if(lastPulseAnimator == null)
-                            addPulsatingEffect();
-                        else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
-                            addPulsatingEffect();
+                        if(lastzoomlevel != currentzoomlevel)
+                        {
+                            if(lastPulseAnimator == null)
+                                addPulsatingEffect();
+                            else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
+                                addPulsatingEffect();
 
-                        if(userlocationcircle != null)
-                            userlocationcircle.setRadius(common.getlocationcircleradius(currentzoomlevel));
+                            if(userlocationcircle != null)
+                                userlocationcircle.setRadius(common.getlocationcircleradius(currentzoomlevel));
+                        }
                     }
                     lastzoomlevel=currentzoomlevel;
                 }
@@ -2344,21 +2364,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(usercurrentlocation == null)
                 return;
-
-
-            if(! isdatacomposing)
-            {
-                addmediacreatedpointmarker(usercurrentlocation);
-                return;
-            }
-            else
-            {
-                if(mediacreatedpointmarker != null)
-                {
-                    mediacreatedpointmarker.remove();
-                    mediacreatedpointmarker=null;
-                }
-            }
 
             lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
                     new ValueAnimator.AnimatorUpdateListener() {

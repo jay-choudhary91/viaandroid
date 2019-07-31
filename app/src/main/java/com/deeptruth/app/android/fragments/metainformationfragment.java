@@ -2299,8 +2299,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             return;
         }
 
-        Drawable circleDrawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.ic_blue_circle);
-        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable, 30, 30);
+        Drawable circleDrawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.ic_blue_location_circle);
+        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable, 25, 25);
 
         mediacreatedpointmarker=mgooglemap.addMarker(new MarkerOptions()
                 .position(latLng)
