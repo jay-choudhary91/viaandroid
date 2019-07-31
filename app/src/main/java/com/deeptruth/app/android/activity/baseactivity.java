@@ -1253,7 +1253,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialoginapppurchase.setContentView(R.layout.inapp_purchase_popup);
 
         TextView txttitle = (TextView)dialoginapppurchase.findViewById(R.id.txt_title);
-        TextView txtlineone = (TextView)dialoginapppurchase.findViewById(R.id.txt_lineone);
+        TextView txt_content = (TextView) dialoginapppurchase.findViewById(R.id.inapppurchasetext);
+        /*TextView txtlineone = (TextView)dialoginapppurchase.findViewById(R.id.txt_lineone);
         TextView txt_linetwo = (TextView)dialoginapppurchase.findViewById(R.id.txt_linetwo);
         TextView txt_linethree = (TextView)dialoginapppurchase.findViewById(R.id.txt_linethree);
         TextView txt_linefour = (TextView)dialoginapppurchase.findViewById(R.id.txt_linefour);
@@ -1264,7 +1265,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView txt_linenine = (TextView)dialoginapppurchase.findViewById(R.id.txt_linenine);
         TextView txt_lineten = (TextView)dialoginapppurchase.findViewById(R.id.txt_lineten);
         TextView txt_lineeleven = (TextView)dialoginapppurchase.findViewById(R.id.txt_lineeleven);
-        TextView txt_linetwelve = (TextView)dialoginapppurchase.findViewById(R.id.txt_linetwelve);
+        TextView txt_linetwelve = (TextView)dialoginapppurchase.findViewById(R.id.txt_linetwelve);*/
 
 
         RecyclerView recyclerView = (RecyclerView) dialoginapppurchase.findViewById(R.id.ryclr_trim_buttontext);
@@ -1303,7 +1304,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         if(txt_title.getText().toString().contains("UPGRADE")){
 
-            txtlineone.setVisibility(View.VISIBLE);
+            /*txtlineone.setVisibility(View.VISIBLE);
             txt_linetwo.setVisibility(View.VISIBLE);
             txt_linethree.setVisibility(View.VISIBLE);
             txt_linefour.setVisibility(View.VISIBLE);
@@ -1337,12 +1338,28 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             txt_linenine.setText(getResources().getString(R.string.exporttext_line7));
             txt_lineten.setText(getResources().getString(R.string.exporttext_line8));
             txt_lineeleven.setText(getResources().getString(R.string.exporttext_line9));
-            txt_linetwelve.setText(getResources().getString(R.string.exporttext_line10));
+            txt_linetwelve.setText(getResources().getString(R.string.exporttext_line10));*/
+
+            String str = getResources().getString(R.string.upgrade_line1)+ getResources().getString(R.string.upgrade_line2) +
+                    getResources().getString(R.string.upgrade_line3) + getResources().getString(R.string.upgrade_line4) +
+                    getResources().getString(R.string.upgrade_line5) + getResources().getString(R.string.upgrade_line6)+ "\n\n" +
+                    getResources().getString(R.string.upgrade_line7) + getResources().getString(R.string.upgrade_line8) +
+                    getResources().getString(R.string.upgrade_line9) + getResources().getString(R.string.upgrade_line10);
+
+            ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+            textsharepopup.add(new sharepopuptextspanning(0.93f,0,26,str));
+            textsharepopup.add(new sharepopuptextspanning(0.93f,27,55,str));
+            textsharepopup.add(new sharepopuptextspanning(0.91f,56,85,str));
+            textsharepopup.add(new sharepopuptextspanning(0.97f,86,113,str));
+            textsharepopup.add(new sharepopuptextspanning(0.92f,114,140,str));
+            textsharepopup.add(new sharepopuptextspanning(0.92f,141,167,str));
+            textsharepopup.add(new sharepopuptextspanning(0.92f,168,str.length(),str));
+            common.setspanning(textsharepopup,txt_content);
 
         }else if(txt_title.getText().toString().contains("30-SECOND")){
 
 
-            txtlineone.setVisibility(View.VISIBLE);
+            /*txtlineone.setVisibility(View.VISIBLE);
             txt_linetwo.setVisibility(View.VISIBLE);
             txt_linethree.setVisibility(View.VISIBLE);
             txt_linefour.setVisibility(View.VISIBLE);
@@ -1371,36 +1388,22 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             txt_linesix.setText(getResources().getString(R.string.limit_reached_line5));
             txt_lineseven.setText(getResources().getString(R.string.limit_reached_line6));
             txt_lineeight.setText(getResources().getString(R.string.limit_reached_line7));
-            txt_linenine.setText(getResources().getString(R.string.limit_reached_line8));
+            txt_linenine.setText(getResources().getString(R.string.limit_reached_line8));*/
 
         }else if(txt_title.getText().toString().contains("TRIM")){
 
-            txtlineone.setVisibility(View.VISIBLE);
-            txt_linetwo.setVisibility(View.VISIBLE);
-            txt_linethree.setVisibility(View.VISIBLE);
-            txt_linefour.setVisibility(View.VISIBLE);
-            txt_linefive.setVisibility(View.VISIBLE);
-            txt_linesix.setVisibility(View.VISIBLE);
+            String str = getResources().getString(R.string.trim_line1)+"\n"+ getResources().getString(R.string.trim_line2) +"\n"+
+                    getResources().getString(R.string.trim_line3) +"\n"+ getResources().getString(R.string.trim_line4) +"\n"+
+                    getResources().getString(R.string.trim_line5) +"\n"+ getResources().getString(R.string.trim_line6);
 
-            txtlineone.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
-            txt_linetwo.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
-            txt_linethree.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
-            txt_linefour.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
-            txt_linefive.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
-            txt_linesix.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
-
-            txt_linenine.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
-            txt_lineten.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
-            txt_lineeleven.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
-            txt_linetwelve.setTextSize(activity.getResources().getDimension(R.dimen.txt_size));
-
-            txtlineone.setText(getResources().getString(R.string.trim_line1));
-            txt_linetwo.setText(getResources().getString(R.string.trim_line2));
-            txt_linethree.setText(getResources().getString(R.string.trim_line3));
-            txt_linefour.setText(getResources().getString(R.string.trim_line4));
-            txt_linefive.setText(getResources().getString(R.string.trim_line5));
-            txt_linesix.setText(getResources().getString(R.string.trim_line6));
-
+            ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+            textsharepopup.add(new sharepopuptextspanning(0.91f,1,28,str));
+            textsharepopup.add(new sharepopuptextspanning(0.94f,30,55,str));
+            textsharepopup.add(new sharepopuptextspanning(0.89f,57,84,str));
+            textsharepopup.add(new sharepopuptextspanning(0.90f,86,113,str));
+            textsharepopup.add(new sharepopuptextspanning(0.90f,115,139,str));
+            textsharepopup.add(new sharepopuptextspanning(0.96f,141,str.length(),str));
+            common.setspanning(textsharepopup,txt_content);
         }
 
         tvnothanks.setOnClickListener(new View.OnClickListener() {
