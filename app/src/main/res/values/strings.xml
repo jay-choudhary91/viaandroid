@@ -328,7 +328,7 @@
     <string name="intro_screenonelinetwo">videos and audios that make </string>
     <string name="intro_screenonelinethree">people appear to say and do </string>
     <string name="intro_screenonelinefour">things that never happened. </string>
-    <string name="intro_screenonelinefive"></string>
+    <string name="intro_screenonelinefive">This a \"fake news\" is growing.</string>
     <!--This a \"fake news\" is growing.-->
     <!--Intro screen discription two-->
     <string name="intro_screentwolineone">Deepfakes can quickly spread </string>
@@ -342,7 +342,6 @@
     <string name="intro_screenthreelinetwo">and disprove every deepfake </string>
     <string name="intro_screenthreelinethree">are playing a losing game of </string>
     <string name="intro_screenthreelinefour">defense.</string>
-    <string name="intro_screenthreelinefive"></string>
     <!--Intro screen discription four -->
 
     <string name="intro_screenfourlineone">VideoLock\'s patented solution  </string>

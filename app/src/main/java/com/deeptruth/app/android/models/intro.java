@@ -16,8 +16,10 @@ public class intro implements Parcelable {
     public String screenfivelinefive="";
     public int image=0;
     public int position = 0;
+    public boolean shouldslidescreen=false;
 
-    public intro(String title, String screenonelineone, String screentwolinetwo, String screenthreelinethree, String screenfourlinefour, String screenfivelinefive, int image, int position)
+    public intro(String title, String screenonelineone, String screentwolinetwo, String screenthreelinethree, String screenfourlinefour,
+                 String screenfivelinefive, int image, int position,boolean shouldslidescreen)
     {
         setTitle(title);
         setScreenonelineone(screenonelineone);
@@ -27,6 +29,15 @@ public class intro implements Parcelable {
         setScreenfivelinefive(screenfivelinefive);
         setImage(image);
         setPosition(position);
+        setShouldslidescreen(shouldslidescreen);
+    }
+
+    public boolean isShouldslidescreen() {
+        return shouldslidescreen;
+    }
+
+    public void setShouldslidescreen(boolean shouldslidescreen) {
+        this.shouldslidescreen = shouldslidescreen;
     }
 
     public static final Creator<intro> CREATOR = new Creator<intro>() {

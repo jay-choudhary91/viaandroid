@@ -36,7 +36,6 @@ import com.suke.widget.SwitchButton;
 
 public class footerpagerfragment extends Fragment {
     View rootview;
-    boolean isgifloaded =false;
     intro introobject=null;
     TextView btnstartrecord;
     LinearLayout layout_checkbox;
@@ -136,13 +135,9 @@ public class footerpagerfragment extends Fragment {
                 public void onClick(View view) {
 
                     if (notifycheckbox.isChecked())
-                    {
                         xdata.getinstance().saveSetting(config.enableintroscreen,"1");
-                    }
                     else
-                    {
                         xdata.getinstance().saveSetting(config.enableintroscreen,"0");
-                    }
 
                     Intent in=new Intent(getActivity(),homeactivity.class);
                     startActivity(in);

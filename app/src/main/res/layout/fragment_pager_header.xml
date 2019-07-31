@@ -16,6 +16,7 @@
             android:layout_width="170dp"
             android:layout_marginTop="@dimen/margin_15dp"
             android:layout_centerInParent="true"
+            android:visibility="invisible"
             android:layout_height="170dp"
 
             />
