@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/popup_background"
     >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/tableRow5"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
@@ -31,7 +30,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_10dp"
             android:gravity="center" >
@@ -39,7 +38,6 @@
             <include layout="@layout/layout_justifytextsharepopup">
             </include>
         </LinearLayout>
-    </LinearLayout>
 
         <LinearLayout
             android:id="@+id/tableRow5"
@@ -47,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/margin_5dp"
+            android:layout_marginTop="@dimen/margin_20dp"
             android:visibility="visible"
             android:orientation="vertical">
 
@@ -80,5 +79,5 @@
                 android:textSize="20dp"/>
 
         </LinearLayout>
-
+    </LinearLayout>
     </RelativeLayout>
