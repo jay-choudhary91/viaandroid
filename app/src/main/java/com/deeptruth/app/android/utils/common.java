@@ -1053,7 +1053,9 @@ public class common {
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
+                Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
         };
         List<String> deniedpermissions = new ArrayList<>();
         for (String permission : neededpermissions) {

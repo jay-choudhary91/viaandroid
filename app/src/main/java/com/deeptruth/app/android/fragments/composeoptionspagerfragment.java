@@ -360,32 +360,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if (common.getlocationdeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 doafterpermissionsgranteddenied();
-            } else {
-                //String[] array = new String[deniedpermissions.size()];
-
-                String[] array = new String[common.getlocationdeniedpermissions().size()];
-                array = common.getlocationdeniedpermissions().toArray(array);
-                if(array.length > 0)
-                {
-                    final String[] finalArray = array;
-                    common.showcustompermissiondialog(applicationviavideocomposer.getactivity(), new adapteritemclick() {
-                        @Override
-                        public void onItemClicked(Object object) {
-                        }
-
-                        @Override
-                        public void onItemClicked(Object object, int type) {
-                            if(type == 0)
-                            {
-                                doafterpermissionsgranteddenied();
-                            }
-                            else if(type == 1)
-                            {
-                                ActivityCompat.requestPermissions(applicationviavideocomposer.getactivity(), finalArray, request_permissions);
-                            }
-                        }
-                    },array[0]);
-                }
             }
         }
     }

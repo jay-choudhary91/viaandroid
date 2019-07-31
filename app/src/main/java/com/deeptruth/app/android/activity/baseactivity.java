@@ -1522,7 +1522,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialogupgradecode.show();
     }
 
-    public void senditemsdialog(Context context,String mediafilepath,String mediatoken){
+    public void senditemsdialog(Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed){
 
         if(!isuserlogin()){
             redirecttologin();
@@ -1552,7 +1552,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 if(object != null)
                 {
                     setreadytouploadfile(new File(mediafilepath));
-                    common.shouldshowupgradepopup(config.mediatrimcount);
+                    if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
+                    {
+                        if(common.ismediatrimcountexceed(config.mediatrimcount))
+                        {
+                            checkinapppurchasestatus(config.gravitycenter);
+                            return;
+                        }
+                        common.shouldshowupgradepopup(config.mediatrimcount);
+                    }
+
                     int position=(int)object;
                     if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_googledrive))
                     {

@@ -104,7 +104,10 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                                  getResources().getString(R.string.txt_publish), new adapteritemclick() {
                              @Override
                              public void onItemClicked(Object object) {
-                                 baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken,ismediatrimmed);
+                                 //baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken,ismediatrimmed);
+                                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken,
+                                         config.item_video,ismediatrimmed);
+                                 getDialog().dismiss();
                              }
 
                              @Override
@@ -125,7 +128,8 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                                  getResources().getString(R.string.txt_send), new adapteritemclick() {
                              @Override
                              public void onItemClicked(Object object) {
-                                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken);
+                                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken,
+                                         config.item_video,ismediatrimmed);
                                  getDialog().dismiss();
                              }
 
@@ -136,7 +140,8 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                          });
                          return;
                 }
-                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken);
+                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken,
+                        config.item_video,ismediatrimmed);
                 getDialog().dismiss();
                 break;
 
