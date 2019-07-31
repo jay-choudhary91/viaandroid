@@ -862,7 +862,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
             });
 
-            setscreenwidthheight(subdialogshare,85,60,config.gravitycenter);
             subdialogshare.show();
     }
 
@@ -1229,7 +1228,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         dialog.setCanceledOnTouchOutside(false);
-        setscreenwidthheight(dialog,85,63,config.gravitybottom);
+        setscreenwidthheight(dialog,85,getResources().getString(R.string.popup_publish));
         dialog.show();
     }
 
@@ -1425,9 +1424,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         recyclerView.setAdapter(adaptersend);
 
         if(gravity.equalsIgnoreCase(config.gravitytop)){
-            setscreenwidthheight(dialoginapppurchase,80,73,gravity);
+            setscreenwidthheight(dialoginapppurchase,80,getResources().getString(R.string.popup_upgrade));
         }else{
-            setscreenwidthheight(dialoginapppurchase,80,60,gravity);
+            setscreenwidthheight(dialoginapppurchase,80,getResources().getString(R.string.popup_trim));
         }
 
         dialoginapppurchase.show();
@@ -1518,7 +1517,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        setscreenwidthheight(dialogupgradecode,85,60,config.gravitycenter);
+        setscreenwidthheight(dialogupgradecode,85,getResources().getString(R.string.popup_upgradecode));
         dialogupgradecode.show();
     }
 
@@ -1613,7 +1612,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adaptersend);
 
-        setscreenwidthheight(dialogfileuploadoptions,95,75,config.gravitybottom);
+        setscreenwidthheight(dialogfileuploadoptions,95,context.getResources().getString(R.string.popup_send));
         dialogfileuploadoptions.show();
     }
 
@@ -1819,7 +1818,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        setscreenwidthheight(dialog,95,75,config.gravitybottom);
+        setscreenwidthheight(dialog,95,context.getResources().getString(R.string.popup_videolock));
         dialog.show();
     }
 
@@ -1877,7 +1876,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
 
                 if(btn_next.getText().toString().equalsIgnoreCase("NEXT")){
-                    setscreenwidthheight(dialog,85,58,config.gravitycenter);
+                    setscreenwidthheight(dialog,85,context.getResources().getString(R.string.popup_congrats));
                     txt_title.setText(context.getResources().getString(R.string.txt_privacy));
 
                     txt_line_one.setText(R.string.priv_lineone);
@@ -1905,7 +1904,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         xdata.getinstance().saveSetting(config.firstmediacreated,"1").isEmpty();
-        setscreenwidthheight(dialog,85,63,config.gravitybottom);
+        setscreenwidthheight(dialog,85,context.getResources().getString(R.string.popup_congrats));
         dialog.show();
     }
 
@@ -1965,7 +1964,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        setscreenwidthheight(dialog,80,63,config.gravitybottom);
+        setscreenwidthheight(dialog,80,getResources().getString(R.string.popup_welcome));
         dialog.show();
     }
 
@@ -2065,32 +2064,55 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-    public void setscreenwidthheight(Dialog dialog,int widthpercentage,int heightpercentage,String gravity) {
+    public void setscreenwidthheight(Dialog dialog,int widthpercentage,String type) {
 
         int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
         int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
 
-        Log.e("deviceheight",""+height);
-
-        int percentageheight = (height / 100) * heightpercentage;
         int percentagewidth = (width / 100) * widthpercentage;
 
-        if(gravity.equalsIgnoreCase(config.gravitytop)){
+        if(type.equalsIgnoreCase(getResources().getString(R.string.popup_upgrade)) ){
+
             dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            double topmargin = (height / 100) * 7;
+            double topmargin = (height / 100) * 6;
             params.y = (int)topmargin;
             dialog.getWindow().setAttributes(params);
             dialog.getWindow().setLayout(percentagewidth, WindowManager.LayoutParams.WRAP_CONTENT);
+
         }
-        else if(gravity.equalsIgnoreCase(config.gravitybottom)){
+        else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_welcome)) ||
+                type.equalsIgnoreCase(getResources().getString(R.string.popup_congrats)) ){
+
             dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            double bottommargin = (height / 100) * 20;
-            dialog.getWindow().setLayout(percentagewidth, WindowManager.LayoutParams.WRAP_CONTENT);
+            double bottommargin = (height / 100) * 25;
+            params.y = (int)bottommargin;
+            dialog.getWindow().setAttributes(params);
+            dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
+        }
+        else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_publish))||
+                type.equalsIgnoreCase(getResources().getString(R.string.popup_trim))){
+
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            double bottommargin = (height / 100) * 18;
+            params.y = (int)bottommargin;
+            dialog.getWindow().setAttributes(params);
+            dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
+        }
+        else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_send))||
+                type.equalsIgnoreCase(getResources().getString(R.string.popup_videolock))){
+
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            int percentageheight = (height / 100) * 75;
+            double bottommargin = (height / 100) * 3;
+            dialog.getWindow().setLayout(percentagewidth,percentageheight);
             params.y = (int)bottommargin;
             dialog.getWindow().setAttributes(params);
         }
+
 
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

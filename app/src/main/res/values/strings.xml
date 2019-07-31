@@ -503,4 +503,14 @@
     <string name="vl_share_linenine">are not removed from your phone.)</string>
     <string name="btn_vl_share">Upload &amp; Send</string>
 
+    <!--popup types-->
+    <string name="popup_welcome">welcome</string>
+    <string name="popup_congrats">congrats</string>
+    <string name="popup_send">senditem</string>
+    <string name="popup_videolock">videolock</string>
+    <string name="popup_trim">trim</string>
+    <string name="popup_upgrade">upgrade</string>
+    <string name="popup_publish">publish</string>
+    <string name="popup_upgradecode">upgradecode</string>
+
 </resources>
