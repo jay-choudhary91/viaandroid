@@ -1053,7 +1053,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         return;
     }
 
-    public void share_alert_dialog(final Context context, final String title,adapteritemclick mitemclick){
+    public void share_alert_dialog(final Context context,final String title, String content,adapteritemclick mitemclick){
 
         dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1063,18 +1063,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.setContentView(R.layout.share_alert_popup);
 
         TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
-        TextView txtlineone = (TextView)dialog.findViewById(R.id.txt_lineone);
-        TextView txt_linetwo = (TextView)dialog.findViewById(R.id.txt_linetwo);
-        TextView txt_linethree = (TextView)dialog.findViewById(R.id.txt_linethree);
-        TextView txt_linefour = (TextView)dialog.findViewById(R.id.txt_linefour);
-        TextView txt_linefive = (TextView)dialog.findViewById(R.id.txt_linefive);
-        TextView txt_linesix = (TextView)dialog.findViewById(R.id.txt_linesix);
-        TextView txt_lineseven = (TextView)dialog.findViewById(R.id.txt_lineseven);
-        TextView txt_lineeight = (TextView)dialog.findViewById(R.id.txt_lineeight);
-        TextView txt_linenine = (TextView)dialog.findViewById(R.id.txt_linenine);
-        TextView txt_lineten = (TextView)dialog.findViewById(R.id.txt_lineten);
-        TextView txt_lineeleven = (TextView)dialog.findViewById(R.id.txt_lineeleven);
-        TextView txt_linetwelve = (TextView)dialog.findViewById(R.id.txt_linetwelve);
+        TextView txt_content = (TextView)dialog.findViewById(R.id.txt_content);
+        txttitle.setText(title);
+        String str = content;
 
         txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
         final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
@@ -1084,115 +1075,57 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_publish))){
 
-            txtlineone.setVisibility(View.VISIBLE);
-            txt_linetwo.setVisibility(View.VISIBLE);
-            txt_linethree.setVisibility(View.VISIBLE);
-            txt_linefour.setVisibility(View.VISIBLE);
-            txt_linefive.setVisibility(View.INVISIBLE);
-            txt_linesix.setVisibility(View.VISIBLE);
-            txt_lineseven.setVisibility(View.VISIBLE);
-            txt_lineeight.setVisibility(View.VISIBLE);
+            ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
 
-            txtlineone.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_linetwo.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_linethree.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_linefour.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_linesix.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_lineseven.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_lineeight.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
+            textsharepopup.add(new sharepopuptextspanning(0.97f,0,28,str));
+            textsharepopup.add(new sharepopuptextspanning(1.04f,29,56,str));
+            textsharepopup.add(new sharepopuptextspanning(0.90f,57,86,str));
+            textsharepopup.add(new sharepopuptextspanning(0.97f,87,114,str));
+
+            textsharepopup.add(new sharepopuptextspanning(0.92f,117,144,str));//144
+            textsharepopup.add(new sharepopuptextspanning(0.95f,144,172,str));//172
+            textsharepopup.add(new sharepopuptextspanning(0.98f,175,str.length(),str));
 
 
-            txtlineone.setText(getResources().getString(R.string.publishtext_line1));
-            txt_linetwo.setText(getResources().getString(R.string.publishtext_line2));
-            txt_linethree.setText(getResources().getString(R.string.publishtext_line3));
-            txt_linefour.setText(getResources().getString(R.string.publishtext_line4));
-            txt_linesix.setText(getResources().getString(R.string.publishtext_line5));
-            txt_lineseven.setText(getResources().getString(R.string.publishtext_line6));
-            txt_lineeight.setText(getResources().getString(R.string.publishtext_line7));
+            common.setspanning(textsharepopup,txt_content);
 
         }
          if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_send))){
+             char[] linecontent = str.toCharArray();
+             ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
 
-             txtlineone.setVisibility(View.VISIBLE);
-             txt_linetwo.setVisibility(View.VISIBLE);
-             txt_linethree.setVisibility(View.VISIBLE);
-             txt_linefour.setVisibility(View.VISIBLE);
-             txt_linefive.setVisibility(View.VISIBLE);
-             txt_linesix.setVisibility(View.VISIBLE);
-             txt_lineseven.setVisibility(View.VISIBLE);
-             txt_lineeight.setVisibility(View.INVISIBLE);
-             txt_linenine.setVisibility(View.VISIBLE);
-             txt_lineten.setVisibility(View.VISIBLE);
-             txt_lineeleven.setVisibility(View.VISIBLE);
-             txt_linetwelve.setVisibility(View.VISIBLE);
+             textsharepopup.add(new sharepopuptextspanning(0.97f,0,24,str));
+             textsharepopup.add(new sharepopuptextspanning(0.99f,25,52,str));
+             textsharepopup.add(new sharepopuptextspanning(0.98f,53,80,str));
+             textsharepopup.add(new sharepopuptextspanning(1.03f,81,108,str));
+             textsharepopup.add(new sharepopuptextspanning(0.98f,109,135,str));
+             textsharepopup.add(new sharepopuptextspanning(1.02f,136,166,str));
+             textsharepopup.add(new sharepopuptextspanning(0.96f,167,195,str));
 
-             txtlineone.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-             txt_linetwo.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-             txt_linethree.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-             txt_linefour.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-             txt_linefive.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-             txt_linesix.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-             txt_lineseven.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-
-             txt_linenine.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-             txt_lineten.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-             txt_lineeleven.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-             txt_linetwelve.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-
-
-             txtlineone.setText(getResources().getString(R.string.sendtext_line1));
-             txt_linetwo.setText(getResources().getString(R.string.sendtext_line2));
-             txt_linethree.setText(getResources().getString(R.string.sendtext_line3));
-             txt_linefour.setText(getResources().getString(R.string.sendtext_line4));
-             txt_linefive.setText(getResources().getString(R.string.sendtext_line5));
-             txt_linesix.setText(getResources().getString(R.string.sendtext_line6));
-             txt_lineseven.setText(getResources().getString(R.string.sendtext_line7));
-             txt_linenine.setText(getResources().getString(R.string.sendtext_line8));
-             txt_lineten.setText(getResources().getString(R.string.sendtext_line9));
-             txt_lineeleven.setText(getResources().getString(R.string.sendtext_line10));
-             txt_linetwelve.setText(getResources().getString(R.string.sendtext_line11));
+             textsharepopup.add(new sharepopuptextspanning(0.92f,199,227,str));//144
+             textsharepopup.add(new sharepopuptextspanning(0.97f,230,258,str));//172
+             textsharepopup.add(new sharepopuptextspanning(0.95f,261,290,str));
+             textsharepopup.add(new sharepopuptextspanning(0.90f,293,str.length(),str));
+             common.setspanning(textsharepopup,txt_content);
         }
 
         if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
+            ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
 
-            txtlineone.setVisibility(View.VISIBLE);
-            txt_linetwo.setVisibility(View.VISIBLE);
-            txt_linethree.setVisibility(View.VISIBLE);
-            txt_linefour.setVisibility(View.VISIBLE);
-            txt_linefive.setVisibility(View.VISIBLE);
-            txt_linesix.setVisibility(View.VISIBLE);
-            txt_lineseven.setVisibility(View.VISIBLE);
-            txt_lineeight.setVisibility(View.INVISIBLE);
-            txt_linenine.setVisibility(View.VISIBLE);
-            txt_lineten.setVisibility(View.VISIBLE);
-            txt_lineeleven.setVisibility(View.VISIBLE);
-            txt_linetwelve.setVisibility(View.VISIBLE);
+            textsharepopup.add(new sharepopuptextspanning(0.97f,0,24,str));
+            textsharepopup.add(new sharepopuptextspanning(1.00f,25,52,str));
+            textsharepopup.add(new sharepopuptextspanning(0.99f,53,80,str));
+            textsharepopup.add(new sharepopuptextspanning(0.99f,81,108,str));
+            textsharepopup.add(new sharepopuptextspanning(0.99f,109,135,str));
+            textsharepopup.add(new sharepopuptextspanning(0.99f,136,166,str));
+            textsharepopup.add(new sharepopuptextspanning(0.95f,167,195,str));
 
-            txtlineone.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_linetwo.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_linethree.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_linefour.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_linefive.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_linesix.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_lineseven.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-
-            txt_linenine.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_lineten.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-            txt_lineeleven.setTextSize(context.getResources().getDimension(R.dimen.txt_size));
-
-            txtlineone.setText(getResources().getString(R.string.exporttext_line1));
-            txt_linetwo.setText(getResources().getString(R.string.exporttext_line2));
-            txt_linethree.setText(getResources().getString(R.string.exporttext_line3));
-            txt_linefour.setText(getResources().getString(R.string.exporttext_line4));
-            txt_linefive.setText(getResources().getString(R.string.exporttext_line5));
-            txt_linesix.setText(getResources().getString(R.string.exporttext_line6));
-            txt_lineseven.setText(getResources().getString(R.string.exporttext_line7));
-            txt_linenine.setText(getResources().getString(R.string.exporttext_line8));
-            txt_lineten.setText(getResources().getString(R.string.exporttext_line9));
-            txt_lineeleven.setText(getResources().getString(R.string.exporttext_line10));
-
+            textsharepopup.add(new sharepopuptextspanning(1.00f,199,227,str));//144
+            textsharepopup.add(new sharepopuptextspanning(1.03f,230,258,str));//172
+            textsharepopup.add(new sharepopuptextspanning(1.00f,261,290,str));
+            textsharepopup.add(new sharepopuptextspanning(0.95f,293,str.length(),str));
+            common.setspanning(textsharepopup,txt_content);
         }
-        txttitle.setText(title);
 
         TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
         ok.setOnClickListener(new View.OnClickListener() {
