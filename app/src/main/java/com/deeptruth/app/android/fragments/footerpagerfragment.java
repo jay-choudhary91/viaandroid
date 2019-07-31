@@ -101,9 +101,7 @@ public class footerpagerfragment extends Fragment {
                 txt_descriptionone.setTextSize(15.2f);
                 txt_descriptiontwo.setTextSize(15f);
                 txt_descriptionthree.setTextSize(15.1f);
-                txt_descriptionfour.setGravity(Gravity.LEFT);
-                txt_descriptionfour.setPadding((int) getResources().getDimension(R.dimen.margin_20dp),0,0,0);
-                txt_descriptionfour.setTextSize(15.8f);
+                txt_descriptionfour.setTextSize(15.2f);
                 txt_descriptionfive.setTextSize(15.9f);
             }
             else if(introobject.getPosition() == 4)
