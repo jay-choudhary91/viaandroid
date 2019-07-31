@@ -1,33 +1,24 @@
 package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.homeactivity;
-import com.deeptruth.app.android.applicationviavideocomposer;
-import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.intro;
-import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
-import com.suke.widget.SwitchButton;
 
 
 /**
@@ -38,7 +29,7 @@ public class footerpagerfragment extends Fragment {
     View rootview;
     intro introobject=null;
     TextView btnstartrecord;
-    LinearLayout layout_checkbox;
+    LinearLayout layout_checkbox,layout_textview_container;
     CheckBox notifycheckbox;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +43,8 @@ public class footerpagerfragment extends Fragment {
             TextView txt_descriptionthree = (TextView) rootview.findViewById(R.id.txt_descriptionthree);
             TextView txt_descriptionfour = (TextView) rootview.findViewById(R.id.txt_descriptionfour);
             TextView txt_descriptionfive = (TextView) rootview.findViewById(R.id.txt_descriptionfive);
+            layout_textview_container = (LinearLayout) rootview.findViewById(R.id.layout_textview_container);
+
             layout_checkbox = rootview.findViewById(R.id.layout_checkbox);
              notifycheckbox = (CheckBox) rootview.findViewById(R.id.showintroscreen_checkbox);
             notifycheckbox.setText(getResources().getString(R.string.dispaly_startup_screens_again));
@@ -73,6 +66,8 @@ public class footerpagerfragment extends Fragment {
             txt_descriptionfour.setText(introobject.getScreenfourlinefour());
             txt_descriptionfive.setText(introobject.getScreenfivelinefive());
 
+            if(introobject.getPosition() != 1)
+                layout_textview_container.setVisibility(View.VISIBLE);
 
             if(introobject.getPosition() == 1)
             {
@@ -83,6 +78,15 @@ public class footerpagerfragment extends Fragment {
                 txt_descriptionfive.setTextSize(15.2f);
                 /*txt_betaversion.setText(getActivity().getResources().getString(R.string.betaversion)
                         + " " + common.betaversion_dateformat());*/
+                if(introobject.isShouldslidescreen())
+                {
+                    introobject.setShouldslidescreen(false);
+                    loadheaderimageanimation(true);
+                }
+                else
+                {
+                    loadheaderimageanimation(false);
+                }
             }
             else if(introobject.getPosition() == 2)
             {
@@ -149,6 +153,20 @@ public class footerpagerfragment extends Fragment {
         }
 
         return rootview;
+    }
+
+    public void loadheaderimageanimation(boolean shoulddelay)
+    {
+        if(shoulddelay)
+        {
+            layout_textview_container.setVisibility(View.VISIBLE);
+            Animation animSlide = AnimationUtils.loadAnimation(getActivity(),R.anim.view_slide_from_right_fast);
+            layout_textview_container.startAnimation(animSlide);
+        }
+        else
+        {
+            layout_textview_container.setVisibility(View.VISIBLE);
+        }
     }
 
 

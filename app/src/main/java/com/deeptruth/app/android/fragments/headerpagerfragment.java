@@ -1,8 +1,6 @@
 package com.deeptruth.app.android.fragments;
 
-import android.animation.ObjectAnimator;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,9 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.GenericTransitionOptions;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.transition.ViewPropertyTransition;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.models.intro;
 
@@ -55,25 +50,15 @@ public class headerpagerfragment extends Fragment {
                 if(introobject.isShouldslidescreen())
                 {
                     introobject.setShouldslidescreen(false);
-                    /*Glide.with(getActivity()).load(introobject.getImage())
-                            .transition(GenericTransitionOptions.with(animationObject))
-                            .into(img_introicon);*/
-
                     loadheaderimageanimation(true,introobject.getImage());
                 }
                 else
                 {
-                    /*Glide.with(this).load(introobject.getImage())
-                            .into(img_introicon);*/
                     loadheaderimageanimation(false,introobject.getImage());
                 }
             }
             else if(introobject.getPosition() == 6)
             {
-                /*Glide.with(this).load(introobject.getImage())
-                        .into(img_logoicon);*/
-                //loadheaderimageanimation(false,introobject.getImage());
-
                 img_introicon.setVisibility(View.INVISIBLE);
                 headerlayouttwo.setVisibility(View.VISIBLE);
                 txt_proofofthetruth.setVisibility(View.VISIBLE);
@@ -91,10 +76,8 @@ public class headerpagerfragment extends Fragment {
         {
             img_introicon.setVisibility(View.VISIBLE);
             img_introicon.setImageResource(image);
-            Animation animFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.fadein);
-            animFadeIn.setDuration(3000);
-            animFadeIn.setRepeatCount(1);
-            img_introicon.startAnimation(animFadeIn);
+            Animation animSlide = AnimationUtils.loadAnimation(getActivity(),R.anim.view_slide_from_right_slow);
+            img_introicon.startAnimation(animSlide);
         }
         else
         {
