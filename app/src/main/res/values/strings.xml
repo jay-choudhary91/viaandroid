@@ -328,7 +328,8 @@
     <string name="intro_screenonelinetwo">videos and audios that make </string>
     <string name="intro_screenonelinethree">people appear to say and do </string>
     <string name="intro_screenonelinefour">things that never happened. </string>
-    <string name="intro_screenonelinefive">This a \"fake news\" is growing. </string>
+    <string name="intro_screenonelinefive"></string>
+    <!--This a \"fake news\" is growing.-->
     <!--Intro screen discription two-->
     <string name="intro_screentwolineone">Deepfakes can quickly spread </string>
     <string name="intro_screentwolinetwo">around the world and cause </string>
@@ -458,7 +459,7 @@
     <string name="btn_maybe_later">Maybe Later</string>
     <string name="btn_next">NEXT</string>
     <string name="welcome_dialog_text">We have included a quick\n45-second video that will\nexplain all the features of\nyour new VideoLock app.\n\nWould you like to watch a\nVideoLock demo video?</string>
-    <string name="betaversion">Beta Version 7.30.19</string>
+    <string name="betaversion">Beta Version 7.31.19</string>
 
     <string name="fetching_user_info">Fetching user information!</string>
     <string name="unable_signin">Unable to sign in!</string>
