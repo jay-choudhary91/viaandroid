@@ -508,7 +508,7 @@
     <string name="send_details1">Many email/text messaging \nsystems will compress your \nfile attachments and cause \nrecordings to be modified. \nUnfortunately, compressed \nfiles will no longer be valid \nVideoLock videos or audios.</string>
     <string name="send_details2">VideoLock has integrated with \nthe most popular file sharing \nservices to help you avoid the \ncompression modification issue.</string>
     <string name="export_details1">Many email/text messaging \nsystems will compress your \nfile attachments and cause \nrecordings to be modified. \nUnfortunately, compressed \nfiles will no longer be valid \nVideoLock videos or audios.</string>
-    <string name="export_details2">We recommend that you \nuse a file sharing service to \nsend your VideoLock files.</string>
+    <string name="export_details2">We recommend that you \nuse a file sharing service \nto send your VideoLock files.</string>
 
 
 </resources>

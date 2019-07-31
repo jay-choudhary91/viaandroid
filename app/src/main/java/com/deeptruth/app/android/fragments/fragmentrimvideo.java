@@ -124,7 +124,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
             case R.id.lyout_send:
 
-                String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+
+                String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.send_details2);
 
 

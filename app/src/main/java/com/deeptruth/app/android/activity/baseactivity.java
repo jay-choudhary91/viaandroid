@@ -1091,7 +1091,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         }
          if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_send))){
-             char[] linecontent = str.toCharArray();
              ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
 
              textsharepopup.add(new sharepopuptextspanning(1.12f,0,25,str));
@@ -1110,20 +1109,21 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
 
         if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
+            char[] linecontent = str.toCharArray();
             ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
 
-          /*  textsharepopup.add(new sharepopuptextspanning(0.97f,0,24,str));
-            textsharepopup.add(new sharepopuptextspanning(1.00f,25,52,str));
-            textsharepopup.add(new sharepopuptextspanning(0.99f,53,80,str));
-            textsharepopup.add(new sharepopuptextspanning(0.99f,81,108,str));
-            textsharepopup.add(new sharepopuptextspanning(0.99f,109,135,str));
-            textsharepopup.add(new sharepopuptextspanning(0.99f,136,166,str));
-            textsharepopup.add(new sharepopuptextspanning(0.95f,167,195,str));
+            textsharepopup.add(new sharepopuptextspanning(1.11f,0,25,str));
+            textsharepopup.add(new sharepopuptextspanning(1.14f,25,53,str));
+            textsharepopup.add(new sharepopuptextspanning(1.14f,53,82,str));
+            textsharepopup.add(new sharepopuptextspanning(1.19f,82,109,str));
+            textsharepopup.add(new sharepopuptextspanning(1.14f,109,136,str));
+            textsharepopup.add(new sharepopuptextspanning(1.19f,136,167,str));
+            textsharepopup.add(new sharepopuptextspanning(1.11f,167,195,str));
 
-            textsharepopup.add(new sharepopuptextspanning(1.00f,199,227,str));//144
-            textsharepopup.add(new sharepopuptextspanning(1.03f,230,258,str));//172
-            textsharepopup.add(new sharepopuptextspanning(1.00f,261,290,str));
-            textsharepopup.add(new sharepopuptextspanning(0.95f,293,str.length(),str));*/
+            textsharepopup.add(new sharepopuptextspanning(1.25f,199,220,str));//144
+            textsharepopup.add(new sharepopuptextspanning(1.21f,222,250,str));//172
+            textsharepopup.add(new sharepopuptextspanning(1.05f,252,str.length(),str));
+
             common.setspanning(textsharepopup,txt_content);
         }
 
