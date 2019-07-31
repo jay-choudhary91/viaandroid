@@ -858,7 +858,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                     {
                         populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                       // drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
                     }
 
                     if(chart_cpuusage!= null){
@@ -877,6 +877,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                     if(isrecodrunning)
                     {
+
                         setvisibility(false);
                         showhideverticalbar(false);
                         {
@@ -975,6 +976,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         updateverticalsliderlocationdata(gpsaccuracy,vertical_slider_gpsaccuracy);
                         updateverticalsliderlocationdata(strconnectionspeed,vertical_slider_connectionspeed);
                         updateverticalsliderlocationdata(connectiontimedelaystr,vertical_slider_connectiondatatimedely);
+
+                        if(lastPulseAnimator != null)
+                            lastPulseAnimator.cancel();
+
+                        if(mappulsatecircle != null && mgooglemap != null)
+                        {
+                            mappulsatecircle.remove();
+                            mappulsatecircle=null;
+                        }
 
                         if(mappathpolyline != null)
                             mappathpolyline.remove();
@@ -2279,10 +2289,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
         mgooglemap.getUiSettings().setZoomGesturesEnabled(true);
 
-        if(lastPulseAnimator == null)
-            addPulsatingEffect();
-        else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
-            addPulsatingEffect();
+        if(isrecodrunning)
+        {
+            if(lastPulseAnimator == null)
+                addPulsatingEffect();
+            else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
+                addPulsatingEffect();
+        }
 
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
