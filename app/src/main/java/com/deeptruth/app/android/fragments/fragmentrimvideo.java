@@ -277,7 +277,8 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
         getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         getDialog().getWindow().setLayout(percentagewidth, percentageheight);
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
-        params.y = 30;
+        double bottommargin = (height / 100) * 3;
+        params.y = (int)bottommargin;
         getDialog().getWindow().setAttributes(params);
 
     }
