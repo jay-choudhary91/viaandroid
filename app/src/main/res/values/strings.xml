@@ -504,7 +504,7 @@
     <string name="vl_share_linenine">are not removed from your phone.)</string>
     <string name="btn_vl_share">Upload &amp; Send</string>
 
-    <string name="publish_details1">Publishing your recordings to \nDeepTruth website allows \nyou to share any validated and \nauthenticated videos/audios.</string>
+    <string name="publish_details1">Publishing your recordings to \nthe DeepTruth website allows \nyou to share any validated and \nauthenticated videos/audios.</string>
     <string name="publish_details2">After a recording is uploaded, \nit can be shared on websites \nand social media platforms.</string>
     <string name="send_details1">Many email/text messaging \nsystems will compress your \nfile attachments and cause \nrecordings to be modified. \nUnfortunately, compressed \nfiles will no longer be valid \nVideoLock videos or audios.</string>
     <string name="send_details2">VideoLock has integrated with \nthe most popular file sharing \nservices to help you avoid the \ncompression modification issue.</string>

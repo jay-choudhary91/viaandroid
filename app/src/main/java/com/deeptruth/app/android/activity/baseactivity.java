@@ -1077,14 +1077,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
             ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
 
-            textsharepopup.add(new sharepopuptextspanning(0.97f,0,28,str));
-            textsharepopup.add(new sharepopuptextspanning(1.04f,29,56,str));
-            textsharepopup.add(new sharepopuptextspanning(0.90f,57,86,str));
-            textsharepopup.add(new sharepopuptextspanning(0.97f,87,114,str));
+            textsharepopup.add(new sharepopuptextspanning(1.05f,0,28,str));
+            textsharepopup.add(new sharepopuptextspanning(1.11f,29,56,str));
+            textsharepopup.add(new sharepopuptextspanning(0.99f,57,86,str));
+            textsharepopup.add(new sharepopuptextspanning(1.11f,87,114,str));
 
-            textsharepopup.add(new sharepopuptextspanning(0.92f,117,144,str));//144
-            textsharepopup.add(new sharepopuptextspanning(0.95f,144,172,str));//172
-            textsharepopup.add(new sharepopuptextspanning(0.98f,175,str.length(),str));
+            textsharepopup.add(new sharepopuptextspanning(1.02f,117,144,str));//144
+            textsharepopup.add(new sharepopuptextspanning(1.08f,144,172,str));//172
+            textsharepopup.add(new sharepopuptextspanning(1.11f,175,str.length(),str));
 
 
             common.setspanning(textsharepopup,txt_content);
@@ -1094,25 +1094,25 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
              char[] linecontent = str.toCharArray();
              ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
 
-             textsharepopup.add(new sharepopuptextspanning(0.97f,0,24,str));
-             textsharepopup.add(new sharepopuptextspanning(0.99f,25,52,str));
-             textsharepopup.add(new sharepopuptextspanning(0.98f,53,80,str));
-             textsharepopup.add(new sharepopuptextspanning(1.03f,81,108,str));
-             textsharepopup.add(new sharepopuptextspanning(0.98f,109,135,str));
-             textsharepopup.add(new sharepopuptextspanning(1.02f,136,166,str));
-             textsharepopup.add(new sharepopuptextspanning(0.96f,167,195,str));
+             textsharepopup.add(new sharepopuptextspanning(1.12f,0,25,str));
+             textsharepopup.add(new sharepopuptextspanning(1.16f,25,53,str));
+             textsharepopup.add(new sharepopuptextspanning(1.14f,53,82,str));
+             textsharepopup.add(new sharepopuptextspanning(1.19f,82,109,str));
+             textsharepopup.add(new sharepopuptextspanning(1.14f,109,136,str));
+             textsharepopup.add(new sharepopuptextspanning(1.19f,136,167,str));
+             textsharepopup.add(new sharepopuptextspanning(1.11f,167,195,str));
 
-             textsharepopup.add(new sharepopuptextspanning(0.92f,199,227,str));//144
-             textsharepopup.add(new sharepopuptextspanning(0.97f,230,258,str));//172
-             textsharepopup.add(new sharepopuptextspanning(0.95f,261,290,str));
-             textsharepopup.add(new sharepopuptextspanning(0.90f,293,str.length(),str));
+             textsharepopup.add(new sharepopuptextspanning(1.10f,199,227,str));//28,29,30
+             textsharepopup.add(new sharepopuptextspanning(1.12f,228,258,str));//172
+             textsharepopup.add(new sharepopuptextspanning(1.10f,259,290,str));
+             textsharepopup.add(new sharepopuptextspanning(1.04f,291,str.length(),str));
              common.setspanning(textsharepopup,txt_content);
         }
 
         if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
             ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
 
-            textsharepopup.add(new sharepopuptextspanning(0.97f,0,24,str));
+          /*  textsharepopup.add(new sharepopuptextspanning(0.97f,0,24,str));
             textsharepopup.add(new sharepopuptextspanning(1.00f,25,52,str));
             textsharepopup.add(new sharepopuptextspanning(0.99f,53,80,str));
             textsharepopup.add(new sharepopuptextspanning(0.99f,81,108,str));
@@ -1123,7 +1123,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             textsharepopup.add(new sharepopuptextspanning(1.00f,199,227,str));//144
             textsharepopup.add(new sharepopuptextspanning(1.03f,230,258,str));//172
             textsharepopup.add(new sharepopuptextspanning(1.00f,261,290,str));
-            textsharepopup.add(new sharepopuptextspanning(0.95f,293,str.length(),str));
+            textsharepopup.add(new sharepopuptextspanning(0.95f,293,str.length(),str));*/
             common.setspanning(textsharepopup,txt_content);
         }
 
@@ -1162,7 +1162,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
 
         dialog.setCanceledOnTouchOutside(false);
-        setscreenwidthheight(dialog,85,63,config.gravitybottom);
+        setscreenwidthheight(dialog,82,63,config.gravitybottom);
         dialog.show();
     }
 
@@ -2028,7 +2028,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         else if(gravity.equalsIgnoreCase(config.gravitybottom)){
             dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            double bottommargin = (height / 100) * 20;
+            double bottommargin = (height / 100) * 18;
             dialog.getWindow().setLayout(percentagewidth, WindowManager.LayoutParams.WRAP_CONTENT);
             params.y = (int)bottommargin;
             dialog.getWindow().setAttributes(params);
