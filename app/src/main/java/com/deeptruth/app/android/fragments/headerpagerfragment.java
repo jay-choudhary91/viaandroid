@@ -1,9 +1,10 @@
 package com.deeptruth.app.android.fragments;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +14,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.transition.ViewPropertyTransition;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.models.intro;
 
-import java.io.IOException;
-
-import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
 
@@ -30,9 +30,10 @@ import pl.droidsonroids.gif.GifImageView;
 public class headerpagerfragment extends Fragment {
     GifImageView imggif;
     View rootview;
-    boolean isgifloaded =false;
+    boolean isanimationloaded =false;
     intro introobject=null;
     TextView txt_proofofthetruth;
+    ImageView img_introicon;
     RelativeLayout headerlayouttwo;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,38 +41,76 @@ public class headerpagerfragment extends Fragment {
         if(rootview == null)
         {
             rootview = inflater.inflate(R.layout.fragment_pager_header, container, false);
-            ImageView img_introicon= (ImageView) rootview.findViewById(R.id.img_introicon) ;
+            img_introicon= (ImageView) rootview.findViewById(R.id.img_introicon) ;
             txt_proofofthetruth = (TextView) rootview.findViewById(R.id.txt_proofofthetruth) ;
             headerlayouttwo = (RelativeLayout)  rootview.findViewById(R.id.headerlayouttwo) ;
             ImageView img_logoicon = (ImageView) rootview.findViewById(R.id.img_logoicon) ;
-
             introobject=(intro)getArguments().getParcelable("object");
 
-            Glide.with(this).load(introobject.getImage()).into(img_introicon);
+            if(introobject.getPosition() != 1)
+                loadheaderimageanimation(false,introobject.getImage());
 
+            if(introobject.getPosition() == 1)
+            {
+                if(introobject.isShouldslidescreen())
+                {
+                    introobject.setShouldslidescreen(false);
+                    /*Glide.with(getActivity()).load(introobject.getImage())
+                            .transition(GenericTransitionOptions.with(animationObject))
+                            .into(img_introicon);*/
 
-            if(introobject.getPosition()== 6){
-                Glide.with(this).load(introobject.getImage()).into(img_logoicon);
+                    loadheaderimageanimation(true,introobject.getImage());
+                }
+                else
+                {
+                    /*Glide.with(this).load(introobject.getImage())
+                            .into(img_introicon);*/
+                    loadheaderimageanimation(false,introobject.getImage());
+                }
+            }
+            else if(introobject.getPosition() == 6)
+            {
+                /*Glide.with(this).load(introobject.getImage())
+                        .into(img_logoicon);*/
+                //loadheaderimageanimation(false,introobject.getImage());
+
                 img_introicon.setVisibility(View.INVISIBLE);
                 headerlayouttwo.setVisibility(View.VISIBLE);
                 txt_proofofthetruth.setVisibility(View.VISIBLE);
+                img_introicon.setVisibility(View.VISIBLE);
+                img_introicon.setImageResource(introobject.getImage());
                 loadAnimation();
             }
         }
-
         return rootview;
     }
 
+    public void loadheaderimageanimation(boolean shoulddelay,int image)
+    {
+        if(shoulddelay)
+        {
+            img_introicon.setVisibility(View.VISIBLE);
+            img_introicon.setImageResource(image);
+            Animation animFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.fadein);
+            animFadeIn.setDuration(3000);
+            animFadeIn.setRepeatCount(1);
+            img_introicon.startAnimation(animFadeIn);
+        }
+        else
+        {
+            img_introicon.setVisibility(View.VISIBLE);
+            img_introicon.setImageResource(image);
+        }
+    }
 
     public void loadAnimation()
     {
         try {
-            isgifloaded =true;
+            isanimationloaded =true;
             Animation animFadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(),R.anim.fadein);
             animFadeIn.setDuration(3000);
             animFadeIn.setRepeatCount(1);
             txt_proofofthetruth.startAnimation(animFadeIn);
-
         }catch (Exception e)
         {
             e.printStackTrace();
