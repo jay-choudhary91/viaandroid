@@ -511,4 +511,14 @@
     <string name="export_details2">We recommend that you \nuse a file sharing service \nto send your VideoLock files.</string>
 
 
+    <!--popup types-->
+    <string name="popup_welcome">welcome</string>
+    <string name="popup_congrats">congrats</string>
+    <string name="popup_send">senditem</string>
+    <string name="popup_videolock">videolock</string>
+    <string name="popup_trim">trim</string>
+    <string name="popup_upgrade">upgrade</string>
+    <string name="popup_publish">publish</string>
+    <string name="popup_upgradecode">upgradecode</string>
+
 </resources>
