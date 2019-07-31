@@ -1603,7 +1603,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
 
         Drawable circleDrawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.ic_blue_location_circle);
-        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable, 25, 25);
+        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(circleDrawable, 30, 30);
 
         mediacreatedpointmarker=mgooglemap.addMarker(new MarkerOptions()
                 .position(latLng)
