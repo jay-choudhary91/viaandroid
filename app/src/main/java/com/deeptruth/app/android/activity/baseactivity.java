@@ -2038,7 +2038,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
             dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            double bottommargin = (height / 100) * 18;
+            double bottommargin = (height / 100) * 19;
             params.y = (int)bottommargin;
             dialog.getWindow().setAttributes(params);
             dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
