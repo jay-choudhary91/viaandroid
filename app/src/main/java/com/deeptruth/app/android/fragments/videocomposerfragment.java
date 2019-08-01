@@ -1726,11 +1726,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         closemediawithtimer();
         showhideactionbaricon(1);
         stopblinkanimation();
+        if(mysoundwavehandler != null && mymysoundwaverunnable != null)
+             mysoundwavehandler.removeCallbacks(mymysoundwaverunnable);
+
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
+
         stop();
-        if(myhandler != null && myrunnable != null)
-            myhandler.removeCallbacks(myrunnable);
-        if(myhandler != null && myrunnable != null)
-            myhandler.removeCallbacks(myrunnable);
+        gethelper().setsoundwaveinformation(0, 0,false);
 
         super.onPause();
     }
@@ -1919,7 +1922,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         double ampletude = 20 * Math.log10(ampletudevalue / 32767.0);
                         int decibelvalue = 50 - Math.abs((int) ampletude);
 
-                        gethelper().setsoundwaveinformation(ampletudevalue, decibelvalue);
+                        gethelper().setsoundwaveinformation(ampletudevalue, decibelvalue,true);
                     }
                     mysoundwavehandler.postDelayed(this, 50);
                 }
@@ -2502,7 +2505,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     double ampletude = 20 * Math.log10(amp / 32767.0);
                     final int decibelvalue = 50 - Math.abs((int) ampletude);
 
-                    gethelper().setsoundwaveinformation(amp, decibelvalue);
+                    gethelper().setsoundwaveinformation(amp, decibelvalue,true);
 
                     mysoundwavehandler.postDelayed(this, 50);
                 }
