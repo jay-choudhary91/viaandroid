@@ -500,7 +500,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 public void run() {
                     showselectedfragment();
                 }
-            },200);
+            },100);
         }
     }
 
