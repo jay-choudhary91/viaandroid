@@ -44,7 +44,7 @@
                 <com.deeptruth.app.android.views.customfonttextview
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/inapppurchasetext"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@android:color/black"/>
