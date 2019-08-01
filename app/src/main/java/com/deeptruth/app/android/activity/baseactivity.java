@@ -1960,11 +1960,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
             int percentageheight = (height / 100) * 75;
             double bottommargin = (height / 100) * 3;
-            dialog.getWindow().setLayout(percentagewidth,percentageheight);
+            dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
             params.y = (int)bottommargin;
             dialog.getWindow().setAttributes(params);
         }
-
 
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
