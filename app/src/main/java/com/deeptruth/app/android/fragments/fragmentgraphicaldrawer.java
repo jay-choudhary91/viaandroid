@@ -1156,6 +1156,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void setsoundinformation(int ampletudevalue,int decibelvalue,boolean issoundwaveshow){
 
+        if(layout_soundiformation == null)
+            return;
+
         if(issoundwaveshow){
             layout_soundiformation.setVisibility(View.VISIBLE);
 
