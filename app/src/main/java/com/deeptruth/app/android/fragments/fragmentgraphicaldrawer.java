@@ -413,7 +413,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ArrayList<Entry> connectiondatadelayvalues = new ArrayList<>();
     ArrayList<Entry> gpsaccuracyvalues = new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    private boolean isdatacomposing=false,isrecodrunning=false,isfromdrawer=true,setdefaultzoomlevel=true;
+    private boolean isdatacomposing=true,isrecodrunning=false,isfromdrawer=true,setdefaultzoomlevel=true;
     String lastsavedangle="";
     private float currentDegree = 0f,lastzoomlevel=0;
     private Orientation mOrientation;
