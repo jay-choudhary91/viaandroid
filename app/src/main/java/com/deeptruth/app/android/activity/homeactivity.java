@@ -721,9 +721,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     }
 
     @Override
-    public void setsoundwaveinformation(int ampletudevalue, int decibelvalue) {
+    public void setsoundwaveinformation(int ampletudevalue, int decibelvalue,boolean issoundwaveshow) {
          if(graphicaldrawerfragment!= null)
-            graphicaldrawerfragment.setsoundinformation(ampletudevalue,decibelvalue);
+            graphicaldrawerfragment.setsoundinformation(ampletudevalue,decibelvalue,issoundwaveshow);
     }
 
     @Override

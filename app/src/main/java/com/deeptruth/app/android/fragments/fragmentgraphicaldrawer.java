@@ -1154,17 +1154,26 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         satellitedata=data;
     }
 
-    public void setsoundinformation(int ampletudevalue,int decibelvalue){
+    public void setsoundinformation(int ampletudevalue,int decibelvalue,boolean issoundwaveshow){
 
-        layout_soundiformation.setVisibility(View.VISIBLE);
+        if(issoundwaveshow){
+            layout_soundiformation.setVisibility(View.VISIBLE);
 
-        //if(myvisualizerview != null){
-            myvisualizerview.addAmplitude(ampletudevalue); // update the VisualizeView
-            myvisualizerview.invalidate();
-        //}
+            if(myvisualizerview != null){
+                myvisualizerview.addAmplitude(ampletudevalue); // update the VisualizeView
+                myvisualizerview.invalidate();
+            }
 
-        if(barvisualizerview!=null)
-            barvisualizerview.receive(decibelvalue);
+            if(barvisualizerview!=null)
+                barvisualizerview.receive(decibelvalue);
+        }else{
+            if(myvisualizerview != null)
+                    myvisualizerview.clear();
+
+            layout_soundiformation.setVisibility(View.GONE);
+
+        }
+
     }
 
     public void updateverticalsliderlocationdata(String value, verticalseekbar seekbar)
