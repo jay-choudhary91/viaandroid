@@ -23,6 +23,8 @@
             android:layout_marginTop="@dimen/margin_10dp"
             android:layout_marginLeft="@dimen/margin_10dp"
             android:layout_marginRight="@dimen/margin_10dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
             android:background="@drawable/round_corner_btn_allow"
             android:textColor="@color/white"/>
 
