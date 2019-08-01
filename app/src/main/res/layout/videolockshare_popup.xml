@@ -45,7 +45,13 @@
             android:layout_marginTop="@dimen/margin_30dp"
             android:gravity="center">
 
-            <include layout="@layout/layout_justifytextsharepopup"/>
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
+                android:id="@+id/videolocksharetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@android:color/black"/>
 
         </LinearLayout>
 
