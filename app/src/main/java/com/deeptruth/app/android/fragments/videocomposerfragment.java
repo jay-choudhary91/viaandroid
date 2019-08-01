@@ -1726,6 +1726,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         closemediawithtimer();
         showhideactionbaricon(1);
         stopblinkanimation();
+        stop();
         if(myhandler != null && myrunnable != null)
             myhandler.removeCallbacks(myrunnable);
         if(myhandler != null && myrunnable != null)
