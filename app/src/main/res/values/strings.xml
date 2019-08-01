@@ -274,9 +274,9 @@
     <string name="view_dummy3">Dummy3</string>
     <string name="view_dummy4">Dummy4</string>
 
-    <string name="phone_time">Phone Time</string>
+    <string name="phone_time">Phone</string>
     <string name="satellite_altitudes_at">Satellite altitudes at:</string>
-    <string name="world_clock_time">World Clock Time</string>
+    <string name="world_clock_time">World Clock </string>
 
     <string name="sun_text">Sun Zenith: </string>
     <string name="sun_direction">8\°28\' North | 143\°14\' West</string>
