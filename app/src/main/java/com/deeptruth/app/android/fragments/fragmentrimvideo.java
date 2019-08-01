@@ -119,7 +119,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                          });
                          return;
                 }
-                baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken,ismediatrimmed);
+                //baseactivity.getinstance().showsharepopupsub(videopath,config.item_video,videotoken,ismediatrimmed);
                 break;
 
             case R.id.lyout_send:
