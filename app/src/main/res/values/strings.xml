@@ -341,7 +341,8 @@
     <string name="intro_screenthreelineone">Solutions that try to identify </string>
     <string name="intro_screenthreelinetwo">and disprove every deepfake </string>
     <string name="intro_screenthreelinethree">are playing a losing game of </string>
-    <string name="intro_screenthreelinefour">defense.</string>
+    <string name="intro_screenthreelinefour">defense. The viral nature of</string>
+    <string name="intro_screenthreelinefive">fake news spreads too fast.</string>
     <!--Intro screen discription four -->
 
     <string name="intro_screenfourlineone">VideoLock\'s patented solution  </string>

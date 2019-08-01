@@ -46,7 +46,7 @@ public class footerpagerfragment extends Fragment {
             layout_textview_container = (LinearLayout) rootview.findViewById(R.id.layout_textview_container);
 
             layout_checkbox = rootview.findViewById(R.id.layout_checkbox);
-             notifycheckbox = (CheckBox) rootview.findViewById(R.id.showintroscreen_checkbox);
+            notifycheckbox = (CheckBox) rootview.findViewById(R.id.showintroscreen_checkbox);
             notifycheckbox.setText(getResources().getString(R.string.dispaly_startup_screens_again));
             notifycheckbox.setTextColor(getResources().getColor(R.color.white));
 
