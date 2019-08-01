@@ -1197,7 +1197,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             metadatametricesjson=new JSONArray();
             mediakey ="";
             startPreview(true);
-            //stop();
+            stop();
             if(mediarecorder != null)
             {
                 // Start recording
@@ -1491,6 +1491,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             startmetaservices();
             stopblinkanimation();
 
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    start();
+                }
+            },500);
+
         } else {
 
             upgradeapptitle=applicationviavideocomposer.getactivity().getResources().getString(R.string.upgrade_app_title);
@@ -1699,7 +1706,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private void doafterallpermissionsgranted() {
 
         setmetriceshashesdata();
-        //start();
+        start();
         if(! camerastatusok)
         {
             camerastatusok=true;
