@@ -139,8 +139,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
         switch (view.getId()){
 
             case R.id.lyout_publish:
-                String publish = "\n"+getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
-                        getActivity().getResources().getString(R.string.publish_details2)+"\n"+"\n";
+                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
+                        getActivity().getResources().getString(R.string.publish_details2);
 
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))

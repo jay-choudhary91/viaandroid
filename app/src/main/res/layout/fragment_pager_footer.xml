@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/white"
                 android:layout_gravity="center"
-                android:textSize="15dp"/>
+                android:textSize="15sp"/>
 
         </LinearLayout>
     </LinearLayout>
