@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,16 +14,35 @@
         android:orientation="vertical"
         android:layout_weight="2"
         >
-        <ImageView
-            android:id="@+id/img_cancel"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="right"
-            android:layout_marginTop="@dimen/margin_10dp"
-            android:layout_marginRight="@dimen/margin_10dp"
-            android:layout_marginBottom="@dimen/margin_5dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/error"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_10dp">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="SHARE"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                app:fontType="bahnschrift_regular"/>
+
+            <ImageView
+                android:id="@+id/img_cancel"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin_5dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/error"/>
+
+        </RelativeLayout>
+
+
 
         <RelativeLayout
             android:layout_width="match_parent"
