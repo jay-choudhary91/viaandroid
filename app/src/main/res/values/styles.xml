@@ -394,9 +394,14 @@
     </style>
 
 
-    <style name="dialog_animation" parent="android:Theme.Dialog">
+    <style name="dialog_zoom_animation" parent="android:Theme.Dialog">
         <item name="android:windowEnterAnimation">@anim/zoom_in</item>
         <item name="android:windowExitAnimation">@anim/zoom_out</item>
+    </style>
+
+    <style name="dialog_slide_animation" parent="android:Theme.Dialog">
+        <item name="android:windowEnterAnimation">@anim/from_right_in</item>
+        <item name="android:windowExitAnimation">@anim/from_left_out</item>
     </style>
 
 </resources>

@@ -76,7 +76,9 @@
                     android:id="@+id/notifycheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15dp"/>
+                    android:buttonTint="@color/black"
+                    android:layout_gravity="center"
+                    android:textSize="15sp"/>
             </LinearLayout>
 
     </LinearLayout>

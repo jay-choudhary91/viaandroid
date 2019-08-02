@@ -145,22 +145,22 @@ public class fragmensharemedia extends DialogFragment implements View.OnClickLis
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))
                 {
-                         baseactivity.getinstance().share_alert_dialog(getActivity(), getActivity().
-                                 getResources().getString(R.string.txt_publish), publish, new adapteritemclick() {
-                             @Override
-                             public void onItemClicked(Object object) {
-                                 //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
-                                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,
-                                         config.item_video,ismediatrimmed);
-                                 getDialog().dismiss();
-                             }
+                    baseactivity.getinstance().share_alert_dialog(getActivity(), getActivity().
+                            getResources().getString(R.string.txt_publish), publish, new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+                            //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
+                            baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                                    config.item_video,ismediatrimmed);
+                            getDialog().dismiss();
+                        }
 
-                             @Override
-                             public void onItemClicked(Object object, int type) {
+                        @Override
+                        public void onItemClicked(Object object, int type) {
 
-                             }
-                         });
-                         return;
+                        }
+                    });
+                    return;
                 }
                 //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                 break;
@@ -173,23 +173,23 @@ public class fragmensharemedia extends DialogFragment implements View.OnClickLis
 
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
-                         baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
-                                 getResources().getString(R.string.txt_send),send ,new adapteritemclick() {
-                             @Override
-                             public void onItemClicked(Object object) {
-                                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,
-                                         config.item_video,ismediatrimmed);
-                                 getDialog().dismiss();
-                             }
+                    baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
+                            getResources().getString(R.string.txt_send),send ,new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+                            baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                                    config.item_video,ismediatrimmed);
+                            getDialog().dismiss();
+                        }
 
-                             @Override
-                             public void onItemClicked(Object object, int type) {
+                        @Override
+                        public void onItemClicked(Object object, int type) {
 
-                             }
-                         });
-                         return;
+                        }
+                    });
+                    return;
                 }
-                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,
+                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                         config.item_video,ismediatrimmed);
                 getDialog().dismiss();
                 break;
@@ -201,19 +201,19 @@ public class fragmensharemedia extends DialogFragment implements View.OnClickLis
 
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
-                        baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
-                                getResources().getString(R.string.txt_export),export ,new adapteritemclick() {
-                            @Override
-                            public void onItemClicked(Object object) {
-                                //baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
-                            }
+                    baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
+                            getResources().getString(R.string.txt_save),export ,new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+                            //baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
+                        }
 
-                            @Override
-                            public void onItemClicked(Object object, int type) {
+                        @Override
+                        public void onItemClicked(Object object, int type) {
 
-                            }
-                        });
-                        return;
+                        }
+                    });
+                    return;
                 }
 
                 break;

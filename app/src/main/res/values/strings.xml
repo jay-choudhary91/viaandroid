@@ -370,7 +370,7 @@
     <string name="intro_titile5">The Result:\nPrivacy &amp; Protection</string>
     <string name="intro_detail5">Recordings are 100% private and \nexist ONLY on your smartphone.\nIf a deepfake is created, you can \nshare your authentic VideoLock \nrecording and spread the truth.</string>
 
-    <string name="checkboxstring">Do not notify again</string>
+    <string name="checkboxstring">Do not notify me again</string>
     <!--publish text details-->
     <string name="publishtext_line1">Publishing your recordings to</string>
     <string name="publishtext_line2">the DeepTruth website allows</string>
@@ -471,7 +471,7 @@
     <string name="txt_upgrade">Would you like to upgrade?</string>
     <string name="txt_upgradecode">Please enter your upgrade code:</string>
 
-    <string name="do_not_notify_again">Do not notify again</string>
+    <string name="do_not_notify_again">Do not notify me again</string>
 
 
     <string name="txt_next">Next</string>
@@ -549,7 +549,7 @@
     <string name="popup_upgrade">upgrade</string>
     <string name="popup_publish">publish</string>
     <string name="popup_upgradecode">upgradecode</string>
-    
+
 
 
 </resources>
