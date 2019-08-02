@@ -43,7 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class fragmensharemedia extends DialogFragment implements View.OnClickListener, ontrimvideolistener, onhglvideolistener {
+public class fragmentsharemedia extends DialogFragment implements View.OnClickListener, ontrimvideolistener, onhglvideolistener {
     @BindView(R.id.trimerview)
     hglvideotrimmer mvideotrimmer;
     @BindView(R.id.rootlayout)
@@ -412,11 +412,11 @@ public class fragmensharemedia extends DialogFragment implements View.OnClickLis
         int percentagewidth = (width / 100) * widthpercentage;
 
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+        getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
         getDialog().getWindow().setLayout(percentagewidth, percentageheight);
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
         double bottommargin = (height / 100) * 3;
-        params.y = (int)bottommargin;
+        params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
         getDialog().getWindow().setAttributes(params);
 
     }

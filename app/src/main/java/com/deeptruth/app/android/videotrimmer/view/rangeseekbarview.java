@@ -345,9 +345,9 @@ public class rangeseekbarview extends View {
         if (!mthumbs.isEmpty()) {
             for (thumb th : mthumbs) {
                 if (th.getindex() == 0) {
-                    canvas.drawBitmap(th.getbitmap(), th.getpos() + getPaddingLeft(), getPaddingTop() , null);
+                   // canvas.drawBitmap(th.getbitmap(), th.getpos() + getPaddingLeft(), getPaddingTop() , null);
                 } else {
-                    canvas.drawBitmap(th.getbitmap(), th.getpos() - (getPaddingRight()), getPaddingTop() , null);
+                   // canvas.drawBitmap(th.getbitmap(), th.getpos() - (getPaddingRight()), getPaddingTop() , null);
                 }
             }
         }

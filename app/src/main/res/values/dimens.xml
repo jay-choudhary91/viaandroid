@@ -14,7 +14,7 @@
     <dimen name="btnElevation">5dp</dimen>
 
     <!-- VIDEO TRIMMER-->
-    <dimen name="progress_video_line_height">1dp</dimen>
+    <dimen name="progress_video_line_height">0dp</dimen>
     <dimen name="frames_video_height">45dip</dimen>
 
     <dimen name="margin_tiny">4dp</dimen>

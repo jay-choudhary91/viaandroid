@@ -110,7 +110,8 @@
             <RelativeLayout
                 android:id="@+id/timeText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <com.deeptruth.app.android.views.customfonttextview
                     app:fontType="OpenSans_Regular"
@@ -122,6 +123,7 @@
                     android:textSize="12sp"
                     android:text="00.00.00"
                     android:padding="@dimen/margin_3dp"
+                    android:visibility="gone"
                     android:background="@drawable/top_round_corner"
                     android:textColor="@android:color/white"/>
 
@@ -135,6 +137,7 @@
                     android:layout_toRightOf="@+id/textSize"
                     android:layout_toStartOf="@+id/textTime"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:textColor="@android:color/white"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
@@ -146,6 +149,7 @@
                     android:layout_alignParentRight="true"
                     android:textSize="12sp"
                     android:text="00.00.00"
+                    android:visibility="gone"
                     android:padding="@dimen/margin_3dp"
                     android:background="@drawable/top_round_corner"
                     android:textColor="@android:color/white"/>
