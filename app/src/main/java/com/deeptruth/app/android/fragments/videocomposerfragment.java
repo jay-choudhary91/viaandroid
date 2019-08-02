@@ -1197,7 +1197,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             metadatametricesjson=new JSONArray();
             mediakey ="";
             startPreview(true);
-            //stop();
+            stop();
             if(mediarecorder != null)
             {
                 // Start recording
@@ -1491,6 +1491,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             startmetaservices();
             stopblinkanimation();
 
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    start();
+                }
+            },500);
+
         } else {
 
             upgradeapptitle=applicationviavideocomposer.getactivity().getResources().getString(R.string.upgrade_app_title);
@@ -1699,7 +1706,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private void doafterallpermissionsgranted() {
 
         setmetriceshashesdata();
-        //start();
+        start();
         if(! camerastatusok)
         {
             camerastatusok=true;
@@ -1719,10 +1726,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         closemediawithtimer();
         showhideactionbaricon(1);
         stopblinkanimation();
+        if(mysoundwavehandler != null && mymysoundwaverunnable != null)
+             mysoundwavehandler.removeCallbacks(mymysoundwaverunnable);
+
         if(myhandler != null && myrunnable != null)
             myhandler.removeCallbacks(myrunnable);
-        if(myhandler != null && myrunnable != null)
-            myhandler.removeCallbacks(myrunnable);
+
+        stop();
+        gethelper().setsoundwaveinformation(0, 0,false);
 
         super.onPause();
     }
@@ -1911,7 +1922,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         double ampletude = 20 * Math.log10(ampletudevalue / 32767.0);
                         int decibelvalue = 50 - Math.abs((int) ampletude);
 
-                        gethelper().setsoundwaveinformation(ampletudevalue, decibelvalue);
+                        gethelper().setsoundwaveinformation(ampletudevalue, decibelvalue,true);
                     }
                     mysoundwavehandler.postDelayed(this, 50);
                 }
@@ -2494,7 +2505,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     double ampletude = 20 * Math.log10(amp / 32767.0);
                     final int decibelvalue = 50 - Math.abs((int) ampletude);
 
-                    gethelper().setsoundwaveinformation(amp, decibelvalue);
+                    gethelper().setsoundwaveinformation(amp, decibelvalue,true);
 
                     mysoundwavehandler.postDelayed(this, 50);
                 }

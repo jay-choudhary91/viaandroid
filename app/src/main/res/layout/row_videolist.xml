@@ -286,6 +286,14 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:orientation="horizontal">
+                                        <com.deeptruth.app.android.views.customfonttextview
+                                            app:fontType="OpenSans_Regular"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textSize="11sp"
+                                            android:visibility="invisible"
+                                            android:background="@drawable/roundshape_validtext"
+                                            />
 
                                         <com.deeptruth.app.android.views.customfonttextview
                                             app:fontType="OpenSans_Regular"

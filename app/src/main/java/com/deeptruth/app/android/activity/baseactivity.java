@@ -1108,7 +1108,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
              common.setspanning(textsharepopup,txt_content);
         }
 
-        if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
+        if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_save))){
             char[] linecontent = str.toCharArray();
             ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
 
@@ -1144,7 +1144,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     else
                         xdata.getinstance().saveSetting(config.enablesendnotification,"0");
                 }
-                if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
+                if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_save))){
                     if(notifycheckbox.isChecked())
                         xdata.getinstance().saveSetting(config.enableexportnotification,"1");
                     else
@@ -1638,55 +1638,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         ImageView imageview = (ImageView) dialog.findViewById(R.id.back);
         TextView txt_upload = (TextView) dialog.findViewById(R.id.btn_upload);
-        TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
+        TextView txt_content = (TextView) dialog.findViewById(R.id.videolocksharetext);
 
-        TextView txt_line_one = (TextView) dialog.findViewById(R.id.txt_lineone);
-        TextView txt_line_two = (TextView) dialog.findViewById(R.id.txt_linetwo);
-        TextView txt_line_three = (TextView) dialog.findViewById(R.id.txt_linethree);
-        TextView txt_line_four = (TextView) dialog.findViewById(R.id.txt_linefour);
-        TextView txt_line_five = (TextView) dialog.findViewById(R.id.txt_linefive);
-        TextView txt_line_six = (TextView) dialog.findViewById(R.id.txt_linesix);
-        TextView txt_line_seven = (TextView) dialog.findViewById(R.id.txt_lineseven);
-        TextView txt_line_eight = (TextView) dialog.findViewById(R.id.txt_lineeight);
-        TextView txt_line_nine = (TextView) dialog.findViewById(R.id.txt_linenine);
+        String str = getResources().getString(R.string.vl_share_lineone) +"\n"+ getResources().getString(R.string.vl_share_linetwo) +"\n\n"+
+                getResources().getString(R.string.vl_share_linefour) +"\n"+ getResources().getString(R.string.vl_share_linefive) +"\n"+
+                getResources().getString(R.string.vl_share_linesix) +"\n"+ getResources().getString(R.string.vl_share_lineseven)+ "\n" +
+                getResources().getString(R.string.vl_share_lineeight) +"\n"+ getResources().getString(R.string.vl_share_linenine);
 
-        txt_line_one.setVisibility(View.VISIBLE);
-        txt_line_two.setVisibility(View.VISIBLE);
-        txt_line_three.setVisibility(View.VISIBLE);
-        txt_line_four.setVisibility(View.VISIBLE);
-        txt_line_five.setVisibility(View.VISIBLE);
-        txt_line_six.setVisibility(View.VISIBLE);
-        txt_line_seven.setVisibility(View.VISIBLE);
-        txt_line_eight.setVisibility(View.VISIBLE);
-        txt_line_nine.setVisibility(View.VISIBLE);
-
-        txt_line_one.setText(R.string.vl_share_lineone);
-        txt_line_two.setText(R.string.vl_share_linetwo);
-        txt_line_three.setText("");
-        txt_line_four.setText(R.string.vl_share_linefour);
-        txt_line_five.setText(R.string.vl_share_linefive);
-        txt_line_six.setText(R.string.vl_share_linesix);
-        txt_line_seven.setText(R.string.vl_share_lineseven);
-        txt_line_eight.setText(R.string.vl_share_lineeight);
-        txt_line_nine.setText(R.string.vl_share_linenine);
-
-        /*txt_line_one.setTextSize(14.8f);
-        txt_line_two.setTextSize(13.9f);
-        txt_line_four.setTextSize(14.1f);
-        txt_line_five.setTextSize(14);
-        txt_line_six.setTextSize(14.99f);
-        txt_line_seven.setTextSize(14.1f);
-        txt_line_eight.setTextSize(13f);
-        txt_line_nine.setTextSize(14.1f);*/
-
-        txt_line_one.setTextSize(15);
-        txt_line_two.setTextSize(14.9f);
-        txt_line_four.setTextSize(14.3f);
-        txt_line_five.setTextSize(14.2f);
-        txt_line_six.setTextSize(15);
-        txt_line_seven.setTextSize(14.3f);
-        txt_line_eight.setTextSize(13.2f);
-        txt_line_nine.setTextSize(14.3f);
+        ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+        textsharepopup.add(new sharepopuptextspanning(1.04f,1,33,str));
+        textsharepopup.add(new sharepopuptextspanning(1.00f,35,71,str));
+        textsharepopup.add(new sharepopuptextspanning(1.01f,73, 108,str));
+        textsharepopup.add(new sharepopuptextspanning(0.98f,110,144,str));
+        textsharepopup.add(new sharepopuptextspanning(1.06f,146,176,str));
+        textsharepopup.add(new sharepopuptextspanning(1.04f,178,213,str));
+        textsharepopup.add(new sharepopuptextspanning(0.95f,215,251,str));
+        textsharepopup.add(new sharepopuptextspanning(1.02f,253,str.length(),str));
+        common.setspanning(textsharepopup,txt_content);
 
 
         imageview.setOnClickListener(new View.OnClickListener() {
@@ -1699,7 +1667,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         txt_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
             }
         });
@@ -1753,7 +1720,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         txt_line_two.setTextSize(15.3f);
         txt_line_four.setTextSize(14.5f);
         txt_line_five.setTextSize(15.5f);
-        txt_line_six.setTextSize(15);
+        txt_line_six.setTextSize(14.05f);
         txt_line_seven.setTextSize(14.6f);
         txt_line_eight.setTextSize(14.5f);
 
@@ -1994,11 +1961,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
             int percentageheight = (height / 100) * 75;
             double bottommargin = (height / 100) * 3;
-            dialog.getWindow().setLayout(percentagewidth,percentageheight);
+            dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
             params.y = (int)bottommargin;
             dialog.getWindow().setAttributes(params);
         }
-
 
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

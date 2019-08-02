@@ -319,7 +319,7 @@
 
     <string name="txt_publish">PUBLISH</string>
     <string name="txt_send">SEND</string>
-    <string name="txt_export">EXPORT</string>
+    <string name="txt_save">SAVE</string>
     <string name="txt_help">HELP</string>
 
 
@@ -348,7 +348,7 @@
     <string name="intro_screenfourlineone">VideoLock\'s patented solution  </string>
     <string name="intro_screenfourlinetwo">creates a cryptographic DNA  </string>
     <string name="intro_screenfourlinethree">fingerprint, 30 times a second, </string>
-    <string name="intro_screenfourlinefour">with 50+ layers of metadata...</string>
+    <string name="intro_screenfourlinefour">with 80+ layers of metadata...</string>
     <string name="intro_screenfourlinefive">and it does it all in real-time.</string>
     <!--Intro screen discription five -->
 
@@ -459,7 +459,7 @@
     <string name="btn_maybe_later">Maybe Later</string>
     <string name="btn_next">NEXT</string>
     <string name="welcome_dialog_text">We have included a quick\n45-second video that will\nexplain all the features of\nyour new VideoLock app.\n\nWould you like to watch a\nVideoLock demo video?</string>
-    <string name="betaversion">Beta Version 7.31.19</string>
+    <string name="betaversion">Beta Version 8.01.19</string>
 
     <string name="fetching_user_info">Fetching user information!</string>
     <string name="unable_signin">Unable to sign in!</string>
@@ -480,7 +480,7 @@
     <string name="cong_linetwo">first certified cryptomedia!</string>
     <string name="cong_linefour">Your recording has already</string>
     <string name="cong_linefive">been registered with over</string>
-    <string name="cong_linesix">50 layers of unchangeable</string>
+    <string name="cong_linesix">80+ layers of unchangeable</string>
     <string name="cong_lineseven">and encrypted digital DNA</string>
     <string name="cong_lineeight">cryptographic fingerprints.</string>
 
@@ -521,5 +521,7 @@
     <string name="popup_upgrade">upgrade</string>
     <string name="popup_publish">publish</string>
     <string name="popup_upgradecode">upgradecode</string>
+
+
 
 </resources>

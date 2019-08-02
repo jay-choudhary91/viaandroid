@@ -159,7 +159,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
                         baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
-                                getResources().getString(R.string.txt_export),export ,new adapteritemclick() {
+                                getResources().getString(R.string.txt_save),export ,new adapteritemclick() {
                             @Override
                             public void onItemClicked(Object object) {
                                 //baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());

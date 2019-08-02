@@ -2800,7 +2800,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
     public void setheadermargin(){
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,(detailviewheight-navigationbarheight)+common.getviewheight(actionbarpercentage));
-        params.setMargins(0,common.getviewheight(actionbarpercentage),0,0);
+        params.setMargins(0,common.getviewheight(actionbarpercentage)+20,0,0);
         layout_videodetails.setPadding(0,0,0,0);
         layout_videodetails.setLayoutParams(params);
         layout_videodetails.requestLayout();

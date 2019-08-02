@@ -966,9 +966,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     }
                     else if(! isrecodrunning)
                     {
-                        myvisualizerview.clear();
+                        //myvisualizerview.clear();
                         setvisibility(true);
-                        layout_soundiformation.setVisibility(View.GONE);
+                        //layout_soundiformation.setVisibility(View.GONE);
                         showhideverticalbar(true);
                         updateverticalsliderlocationdata(speed,vertical_slider_speed);
                         updateverticalsliderlocationdata(altitude,vertical_slider_altitude);
@@ -1154,17 +1154,29 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         satellitedata=data;
     }
 
-    public void setsoundinformation(int ampletudevalue,int decibelvalue){
+    public void setsoundinformation(int ampletudevalue,int decibelvalue,boolean issoundwaveshow){
 
-        layout_soundiformation.setVisibility(View.VISIBLE);
+        if(layout_soundiformation == null)
+            return;
 
-        if(myvisualizerview != null){
-            myvisualizerview.addAmplitude(ampletudevalue); // update the VisualizeView
-            myvisualizerview.invalidate();
+        if(issoundwaveshow){
+            layout_soundiformation.setVisibility(View.VISIBLE);
+
+            if(myvisualizerview != null){
+                myvisualizerview.addAmplitude(ampletudevalue); // update the VisualizeView
+                myvisualizerview.invalidate();
+            }
+
+            if(barvisualizerview!=null)
+                barvisualizerview.receive(decibelvalue);
+        }else{
+            if(myvisualizerview != null)
+                    myvisualizerview.clear();
+
+            layout_soundiformation.setVisibility(View.GONE);
+
         }
 
-        if(barvisualizerview!=null)
-            barvisualizerview.receive(decibelvalue);
     }
 
     public void updateverticalsliderlocationdata(String value, verticalseekbar seekbar)
@@ -1393,7 +1405,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         linechart_speed.clear();
         linechart_traveled.clear();
         linechart_altitude.clear();
-        layout_soundiformation.setVisibility(View.GONE);
+       // layout_soundiformation.setVisibility(View.GONE);
 
         String linecolor="";
         List<coloredpoint> linepoints = new ArrayList<>();

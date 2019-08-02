@@ -500,7 +500,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 public void run() {
                     showselectedfragment();
                 }
-            },200);
+            },100);
         }
     }
 
@@ -522,7 +522,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     {
                         layout_recorder.setEnabled(true);
                     }
-                }, 1000);
+                }, 1200);
 
                 if(currentselectedcomposer == 1 || currentselectedcomposer == 2)
                     startcirclesquareanimation();
