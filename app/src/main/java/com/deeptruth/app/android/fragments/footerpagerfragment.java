@@ -46,7 +46,7 @@ public class footerpagerfragment extends Fragment {
             layout_textview_container = (LinearLayout) rootview.findViewById(R.id.layout_textview_container);
 
             layout_checkbox = rootview.findViewById(R.id.layout_checkbox);
-             notifycheckbox = (CheckBox) rootview.findViewById(R.id.showintroscreen_checkbox);
+            notifycheckbox = (CheckBox) rootview.findViewById(R.id.showintroscreen_checkbox);
             notifycheckbox.setText(getResources().getString(R.string.dispaly_startup_screens_again));
             notifycheckbox.setTextColor(getResources().getColor(R.color.white));
 
@@ -101,7 +101,7 @@ public class footerpagerfragment extends Fragment {
                 txt_descriptionone.setTextSize(15.2f);
                 txt_descriptiontwo.setTextSize(15f);
                 txt_descriptionthree.setTextSize(15.1f);
-                txt_descriptionfour.setTextSize(15.2f);
+                txt_descriptionfour.setTextSize(15.7f);
                 txt_descriptionfive.setTextSize(15.9f);
             }
             else if(introobject.getPosition() == 4)

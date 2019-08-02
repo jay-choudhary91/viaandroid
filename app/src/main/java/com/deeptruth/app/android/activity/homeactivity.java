@@ -251,13 +251,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                             launchcomposerfragment();
                         }
 
-                        if(graphicaldrawerfragment == null)
-                        {
-                            graphicaldrawerfragment =new fragmentgraphicaldrawer();
-                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-                            transaction.commit();
-                        }
                         rootview.post(new Runnable() {
                             @Override
                             public void run() {
@@ -276,6 +269,27 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         detectphonecallservice();
         setdrawerdata();
         getupdatedmetadata();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(graphicaldrawerfragment == null)
+                {
+                        graphicaldrawerfragment =new fragmentgraphicaldrawer();
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
+                        transaction.commit();
+
+                        /*testfragment fragment =new testfragment();
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.add(R.id.fragment_graphic_drawer_container,fragment);
+                        transaction.commit();*/
+
+                        /*fragmentgraphicaldrawer fragment=new fragmentgraphicaldrawer();
+                        replaceFragment(fragment, R.id.fragment_graphic_drawer_container,false, true);*/
+                }
+            }
+        },2000);
     }
 
     public void detectphonecallservice()
@@ -721,9 +735,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     }
 
     @Override
-    public void setsoundwaveinformation(int ampletudevalue, int decibelvalue) {
+    public void setsoundwaveinformation(int ampletudevalue, int decibelvalue,boolean issoundwaveshow) {
          if(graphicaldrawerfragment!= null)
-            graphicaldrawerfragment.setsoundinformation(ampletudevalue,decibelvalue);
+            graphicaldrawerfragment.setsoundinformation(ampletudevalue,decibelvalue,issoundwaveshow);
     }
 
     @Override
@@ -802,8 +816,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else
         {
-            composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
-            replaceFragment(fragbottombar, false, true);
+            composeoptionspagerfragment fragment=new composeoptionspagerfragment();
+            replaceFragment(fragment, false, true);
         }
     }
 

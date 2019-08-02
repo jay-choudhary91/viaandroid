@@ -68,7 +68,7 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
                 @Override
                 public void run() {
                     rootviewheight = rootview.getHeight();
-                    imageviewheight = ((rootviewheight *55)/100);
+                    imageviewheight = ((rootviewheight *50)/100);
                     layout_image.getLayoutParams().height = imageviewheight;
                     layout_image.setVisibility(View.VISIBLE);
                     layout_image.requestLayout();

@@ -223,7 +223,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             }
             else
             {
-                holder.progressmediasync.setVisibility(View.GONE);
+                holder.progressmediasync.setVisibility(View.INVISIBLE);
             }
 
             if((cautioncount > 0 || validcount > 0) && unsentcount > 0){
@@ -270,7 +270,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             {
                 Log.e("else case ","case2");
                 if(validcount == 0 && invalidcount == 0 && cautioncount == 0 && unsentcount == 0)
-                    holder.layout_colorbar.setVisibility(View.GONE);
+                    holder.layout_colorbar.setVisibility(View.INVISIBLE);
             }
 
 
@@ -279,7 +279,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             if(mediaobject.getDuration().trim().isEmpty())
             {
              //   holder.tv_mediaduration.setText("NA");
-                holder.tv_mediaduration.setVisibility(View.GONE);
+                holder.tv_mediaduration.setVisibility(View.INVISIBLE);
             }
             else
             {

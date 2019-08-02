@@ -61,9 +61,9 @@ public class headerpagerfragment extends Fragment {
             {
                 img_introicon.setVisibility(View.INVISIBLE);
                 headerlayouttwo.setVisibility(View.VISIBLE);
+                img_logoicon.setVisibility(View.VISIBLE);
                 txt_proofofthetruth.setVisibility(View.VISIBLE);
-                img_introicon.setVisibility(View.VISIBLE);
-                img_introicon.setImageResource(introobject.getImage());
+                img_logoicon.setImageResource(introobject.getImage());
                 loadAnimation();
             }
         }
