@@ -881,7 +881,86 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         },gravity);
     }
 
-    public void showtrimdialogfragment(String filepath,String mediatoken,String mediatype,String mediathumbnailurl)
+    public void showaboutsharedialog(String filepath,String mediatoken,String mediatype,String mediathumbnailurl)
+    {
+        dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.share_alert_popup);
+
+        TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
+        TextView txt_content = (TextView)dialog.findViewById(R.id.txt_content);
+        txttitle.setText("SHARE");
+
+        txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
+        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
+        notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
+        notifycheckbox.setTextColor(Color.BLACK);
+        notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.NORMAL);
+
+        String strnew = getResources().getString(R.string.sharetext_line1)+"\n"+
+                getResources().getString(R.string.sharetext_line2)+"\n"+
+                getResources().getString(R.string.sharetext_line3)+"\n"+
+                getResources().getString(R.string.sharetext_line4)+"\n"+
+                getResources().getString(R.string.sharetext_line5)+"\n\n"+
+                getResources().getString(R.string.sharetext_line7)+"\n"+
+                getResources().getString(R.string.sharetext_line8)+"\n"+
+                getResources().getString(R.string.sharetext_line9)+"\n"+
+                getResources().getString(R.string.sharetext_line10)+"\n\n"+
+                getResources().getString(R.string.sharetext_line12)+"\n\n"+
+                getResources().getString(R.string.sharetext_line14)+"\n"+
+                getResources().getString(R.string.sharetext_line15)+"\n"+
+                getResources().getString(R.string.sharetext_line16)+"\n"+
+                getResources().getString(R.string.sharetext_line17);
+
+        ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
+
+        textsharepopup.add(new sharepopuptextspanning(1.01f,0,33,strnew));
+        textsharepopup.add(new sharepopuptextspanning(0.99f,35,68,strnew));
+        textsharepopup.add(new sharepopuptextspanning(1.03f,70,102,strnew));
+        textsharepopup.add(new sharepopuptextspanning(1.02f,104,136,strnew));
+        textsharepopup.add(new sharepopuptextspanning(1.04f,138,169,strnew));
+
+        textsharepopup.add(new sharepopuptextspanning(1.02f,171,204,strnew));
+        textsharepopup.add(new sharepopuptextspanning(0.99f,206,239,strnew));
+        textsharepopup.add(new sharepopuptextspanning(1.01f,241,273,strnew));
+        textsharepopup.add(new sharepopuptextspanning(1.04f,275,304,strnew));
+
+
+        textsharepopup.add(new sharepopuptextspanning(1.05f,307,315,strnew));
+
+
+        textsharepopup.add(new sharepopuptextspanning(1.01f,318,348,strnew));
+        textsharepopup.add(new sharepopuptextspanning(1.08f,350,377,strnew));
+        textsharepopup.add(new sharepopuptextspanning(1.08f,379,407,strnew));
+        textsharepopup.add(new sharepopuptextspanning(1.05f,409,strnew.length(),strnew));
+
+
+        common.setspanning(textsharepopup,txt_content);
+
+        TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+                if(notifycheckbox.isChecked())
+                    xdata.getinstance().saveSetting(config.mediasharedialog,"1");
+                else
+                    xdata.getinstance().saveSetting(config.mediasharedialog,"0");
+
+                showsharedialogfragment(filepath, mediatoken, mediatype, mediathumbnailurl);
+            }
+        });
+
+        dialog.setCanceledOnTouchOutside(false);
+        setscreenwidthheight(dialog,96,getResources().getString(R.string.popup_publish));
+        dialog.show();
+    }
+
+    public void showsharedialogfragment(String filepath, String mediatoken, String mediatype, String mediathumbnailurl)
     {
         try
         {
@@ -903,11 +982,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         fragmentsharemedia fragment = new fragmentsharemedia();
                         fragment.setdata(filepath, duration,mediatoken,mediatype,mediathumbnailurl);
                         fragment.show(ft, "dialog");
-
-                               /* int duration = mediaPlayer.getDuration();
-                                fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
-                                fragtrimvideo.setdata(mediapath, duration,mediatoken);
-                                addFragment(fragtrimvideo, false, true);*/
                     }
                 });
             }
@@ -915,7 +989,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         {
             e.printStackTrace();
         }
+    }
 
+
+    public void preparesharedialogfragment(String filepath, String mediatoken, String mediatype, String mediathumbnailurl)
+    {
+        if(xdata.getinstance().getSetting(config.mediasharedialog).trim().isEmpty() ||
+                xdata.getinstance().getSetting(config.mediasharedialog).equalsIgnoreCase("0"))
+            showaboutsharedialog(filepath,mediatoken,mediatype,mediathumbnailurl);
+        else
+            showsharedialogfragment(filepath, mediatoken, mediatype, mediathumbnailurl);
     }
 
     public void callmediashareapi(final String mediatype, final String mediatoken, final String path, String method) {
@@ -1516,7 +1599,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                     dialogfileuploadoptions.dismiss();
 
-                //showtrimdialogfragment(mediafilepath,mediatoken,type);
+                //preparesharedialogfragment(mediafilepath,mediatoken,type);
             }
         });
 
@@ -2018,87 +2101,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-
-
-    public void share_dialog(final Context context,final String title){
-
-        dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.share_alert_popup);
-
-        TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
-        TextView txt_content = (TextView)dialog.findViewById(R.id.txt_content);
-        txttitle.setText(title);
-
-        txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
-        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
-        notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
-        notifycheckbox.setTextColor(Color.BLACK);
-        notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.NORMAL);
-
-        if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_title_share))) {
-
-
-
-            String strnew = getResources().getString(R.string.sharetext_line1)+"\n"+
-                    getResources().getString(R.string.sharetext_line2)+"\n"+
-                    getResources().getString(R.string.sharetext_line3)+"\n"+
-                    getResources().getString(R.string.sharetext_line4)+"\n"+
-                    getResources().getString(R.string.sharetext_line5)+"\n\n"+
-                    getResources().getString(R.string.sharetext_line7)+"\n"+
-                    getResources().getString(R.string.sharetext_line8)+"\n"+
-                    getResources().getString(R.string.sharetext_line9)+"\n"+
-                    getResources().getString(R.string.sharetext_line10)+"\n\n"+
-                    getResources().getString(R.string.sharetext_line12)+"\n\n"+
-                    getResources().getString(R.string.sharetext_line14)+"\n"+
-                    getResources().getString(R.string.sharetext_line15)+"\n"+
-                    getResources().getString(R.string.sharetext_line16)+"\n"+
-                    getResources().getString(R.string.sharetext_line17);
-
-            ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
-
-            textsharepopup.add(new sharepopuptextspanning(1.01f,0,33,strnew));
-            textsharepopup.add(new sharepopuptextspanning(0.99f,35,68,strnew));
-            textsharepopup.add(new sharepopuptextspanning(1.03f,70,102,strnew));
-            textsharepopup.add(new sharepopuptextspanning(1.02f,104,136,strnew));
-            textsharepopup.add(new sharepopuptextspanning(1.04f,138,169,strnew));
-
-            textsharepopup.add(new sharepopuptextspanning(1.02f,171,204,strnew));
-            textsharepopup.add(new sharepopuptextspanning(0.99f,206,239,strnew));
-            textsharepopup.add(new sharepopuptextspanning(1.01f,241,273,strnew));
-            textsharepopup.add(new sharepopuptextspanning(1.04f,275,304,strnew));
-
-
-            textsharepopup.add(new sharepopuptextspanning(1.05f,307,315,strnew));
-
-
-            textsharepopup.add(new sharepopuptextspanning(1.01f,318,348,strnew));
-            textsharepopup.add(new sharepopuptextspanning(1.08f,350,377,strnew));
-            textsharepopup.add(new sharepopuptextspanning(1.08f,379,407,strnew));
-            textsharepopup.add(new sharepopuptextspanning(1.05f,409,strnew.length(),strnew));
-
-
-            common.setspanning(textsharepopup,txt_content);
-
-        }
-
-        TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-
-            }
-        });
-
-        dialog.setCanceledOnTouchOutside(false);
-        setscreenwidthheight(dialog,96,getResources().getString(R.string.popup_publish));
-        dialog.show();
-    }
 }
 
 

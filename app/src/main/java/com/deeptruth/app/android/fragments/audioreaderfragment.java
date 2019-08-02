@@ -714,7 +714,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 }, 1500);
                 if (mediafilepath != null && (!mediafilepath.isEmpty()) && (! thumbnailurl.trim().isEmpty()))
-                    baseactivity.getinstance().showtrimdialogfragment(mediafilepath,mediatoken,config.type_audio,thumbnailurl);
+                    baseactivity.getinstance().preparesharedialogfragment(mediafilepath,mediatoken,config.type_audio,thumbnailurl);
 
                     //gethelper().showsharepopupsub(mediafilepath,"audio",mediatoken,false);
                     //common.shareaudio(getActivity(), mediafilepath);
