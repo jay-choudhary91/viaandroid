@@ -408,6 +408,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     public void redirecttologin() {
         Intent intent=new Intent(locationawareactivity.this,registrationcontaineractivity.class);
         startActivityForResult(intent, config.requestcode_login);
+        overridePendingTransition(R.anim.from_right_in,R.anim.from_left_out);
     }
 
     @Override
