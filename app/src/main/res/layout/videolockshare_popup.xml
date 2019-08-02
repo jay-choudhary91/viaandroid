@@ -58,8 +58,9 @@
         <LinearLayout
             android:id="@+id/tableRow5"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/margin_10dp"
-            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_40dp"
+            android:layout_marginBottom="@dimen/margin_20dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:gravity="center">
 

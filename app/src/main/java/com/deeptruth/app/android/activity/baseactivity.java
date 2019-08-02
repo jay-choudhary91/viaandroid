@@ -1463,7 +1463,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                             dialogfileuploadoptions.dismiss();
 
-                        videolocksharedialog(applicationviavideocomposer.getactivity());
+                        videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath, mediatoken,  type, ismediatrimmed);
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
                     {
@@ -1643,7 +1643,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-    public void videolocksharedialog(final Context context){
+    public void videolocksharedialog(final Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed){
 
         final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1676,6 +1676,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,  type, ismediatrimmed);
             }
         });
 
@@ -1947,6 +1948,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             params.y = (int)topmargin;
             dialog.getWindow().setAttributes(params);
             dialog.getWindow().setLayout(percentagewidth, WindowManager.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_zoom_animation;
 
         }
         else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_welcome)) ||
@@ -1958,32 +1960,34 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             params.y = (int)bottommargin;
             dialog.getWindow().setAttributes(params);
             dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_zoom_animation;
+
         }
         else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_publish))||
                 type.equalsIgnoreCase(getResources().getString(R.string.popup_trim))){
 
-            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            double bottommargin = (height / 100) * 19;
-            params.y = (int)bottommargin;
+            double bottommargin = (height / 100) * 5;
+            params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
             dialog.getWindow().setAttributes(params);
             dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
         }
         else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_send))||
                 type.equalsIgnoreCase(getResources().getString(R.string.popup_videolock))){
 
-            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            int percentageheight = (height / 100) * 75;
-            double bottommargin = (height / 100) * 3;
+          //  double bottommargin = (height / 100) * 3;
             dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
-            params.y = (int)bottommargin;
+            params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
             dialog.getWindow().setAttributes(params);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
         }
 
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation;
     }
 }
 

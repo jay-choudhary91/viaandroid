@@ -186,6 +186,7 @@ public abstract class registrationbaseactivity extends AppCompatActivity impleme
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
             finish();
+            overridePendingTransition(R.anim.from_right_in,R.anim.from_left_out);
             return;
         }else{
             backtolastfragment();
