@@ -1983,6 +1983,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_zoom_animation;
 
         }
+        else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_upgradecode)) ){
+
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER);
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_zoom_animation;
+        }
         else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_publish))||
                 type.equalsIgnoreCase(getResources().getString(R.string.popup_trim))){
 
@@ -2009,6 +2016,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
+
+
+
 
     public void share_dialog(final Context context,final String title){
 
