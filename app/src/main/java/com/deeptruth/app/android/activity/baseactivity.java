@@ -1946,10 +1946,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_publish))||
                 type.equalsIgnoreCase(getResources().getString(R.string.popup_trim))){
 
-            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            double bottommargin = (height / 100) * 19;
-            params.y = (int)bottommargin;
+            double bottommargin = (height / 100) * 5;
+            params.y = (int)bottommargin + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
             dialog.getWindow().setAttributes(params);
             dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
         }

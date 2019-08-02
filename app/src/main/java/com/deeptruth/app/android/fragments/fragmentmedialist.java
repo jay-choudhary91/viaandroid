@@ -110,6 +110,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
+    @BindView(R.id.actionbarcomposer)
+    RelativeLayout actionbarcomposer;
 
     @BindView(R.id.img_dotmenu)
     ImageView img_dotmenu;
@@ -353,6 +355,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 public void afterTextChanged(Editable editable) {
                     if((Boolean) edt_searchitem.getTag())
                         searchmediafromlist(editable.toString());
+                }
+            });
+
+            actionbarcomposer.post(new Runnable() {
+                @Override
+                public void run() {
+                    xdata.getinstance().saveSetting(config.TOPBAR_HEIGHT,"" + actionbarcomposer.getHeight());
                 }
             });
 
