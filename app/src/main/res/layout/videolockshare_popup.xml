@@ -46,12 +46,12 @@
             android:gravity="center">
 
             <com.deeptruth.app.android.views.customfonttextview
-                app:fontType="Comfortaa-Regular"
-                android:id="@+id/videolocksharetext"
+                android:id="@+id/txt_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@android:color/black"/>
+                android:textColor="@color/black"
+                app:fontType="Comfortaa-Regular"/>
 
         </LinearLayout>
 
