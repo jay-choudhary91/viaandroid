@@ -1637,7 +1637,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         ImageView imageview = (ImageView) dialog.findViewById(R.id.back);
         TextView txt_upload = (TextView) dialog.findViewById(R.id.btn_upload);
-        TextView txt_content = (TextView) dialog.findViewById(R.id.videolocksharetext);
+        TextView txt_content = (TextView) dialog.findViewById(R.id.txt_content);
 
         String str = getResources().getString(R.string.vl_share_lineone) +"\n"+ getResources().getString(R.string.vl_share_linetwo) +"\n\n"+
                 getResources().getString(R.string.vl_share_linefour) +"\n"+ getResources().getString(R.string.vl_share_linefive) +"\n"+
