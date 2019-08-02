@@ -1719,7 +1719,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         txt_line_two.setTextSize(15.3f);
         txt_line_four.setTextSize(14.5f);
         txt_line_five.setTextSize(15.5f);
-        txt_line_six.setTextSize(15);
+        txt_line_six.setTextSize(14.05f);
         txt_line_seven.setTextSize(14.6f);
         txt_line_eight.setTextSize(14.5f);
 
