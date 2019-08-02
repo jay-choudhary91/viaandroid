@@ -3076,8 +3076,8 @@ public class common {
         return date;
     }
 
-    public static String mediaplaytimeformatter(int timeMs) {
-        int totalseconds = timeMs / 1000;
+    public static String mediaplaytimeformatter(int millis) {
+        /*int totalseconds = timeMs / 1000;
         int seconds = totalseconds % 60;
         int minutes = (totalseconds / 60) % 60;
         int hours = totalseconds / 3600;
@@ -3087,7 +3087,24 @@ public class common {
             return mformatter.format("%02d:%02d:%02d", hours, minutes, seconds).toString();
         } else {
             return mformatter.format("%02d:%02d:%02d",hours, minutes, seconds).toString();
-        }
+        }*/
+
+        int hours = (int) (millis / (1000 * 60 * 60));
+        int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
+        int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
+        //   convent into milisec and then minus from millis
+        int milisec = (int) (seconds * 1000);
+        int milisecond = (int) (millis - milisec);
+        String milliseconds = "00";
+        char[] chararray = String.valueOf(milisecond).toCharArray();
+        if (chararray != null && chararray.length > 1)
+            milliseconds = "" + chararray[0]+""+chararray[1];
+
+        int milise = Integer.parseInt(milliseconds);
+
+        String timeduration = (common.appendzero(minutes) + ":" + common.appendzero(seconds) + "." + milise);
+        return timeduration;
+
     }
 
     public static void setspanning(ArrayList<sharepopuptextspanning> spanarraylist, TextView txtview){
