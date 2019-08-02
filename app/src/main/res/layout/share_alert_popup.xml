@@ -22,10 +22,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="PUBLISH"
+                android:text="SHARE"
                 android:textColor="@android:color/black"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 app:fontType="bahnschrift_regular"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -76,7 +77,6 @@
                     android:id="@+id/notifycheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="@color/black"
                     android:layout_gravity="center"
                     android:textSize="15sp"/>
             </LinearLayout>
