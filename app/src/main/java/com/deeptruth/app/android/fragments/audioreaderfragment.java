@@ -48,6 +48,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.adapter.encryptiondataadapter;
 import com.deeptruth.app.android.adapter.folderdirectoryspinneradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -713,7 +714,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 }, 1500);
                 if (mediafilepath != null && (!mediafilepath.isEmpty()))
-                    gethelper().showsharepopupsub(mediafilepath,"audio",mediatoken,false);
+                    baseactivity.getinstance().showtrimdialogfragment(mediafilepath,mediatoken,config.type_audio,thumbnailurl);
+
+                    //gethelper().showsharepopupsub(mediafilepath,"audio",mediatoken,false);
                     //common.shareaudio(getActivity(), mediafilepath);
                 break;
 

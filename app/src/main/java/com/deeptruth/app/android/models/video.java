@@ -19,6 +19,7 @@ public class video
     public String duration="";
     public String md5="";
     public String mimetype="";
+    public String mediatype="";
     public String extension="";
     public String localkey="";
     public long lastmodifiedtime=0;
@@ -188,6 +189,21 @@ public class video
 
     public void setLastmodifiedtime(long lastmodifiedtime) {
         this.lastmodifiedtime = lastmodifiedtime;
+    }
+
+    public String getMediatype() {
+        if(mimetype.startsWith("image"))
+            mediatype="image";
+        else if(mimetype.startsWith("audio"))
+            mediatype="audio";
+        else if(mimetype.startsWith("video"))
+            mediatype="video";
+
+        return mediatype;
+    }
+
+    public void setMediatype(String mediatype) {
+        this.mediatype = mediatype;
     }
 
     public String getmimetype() {

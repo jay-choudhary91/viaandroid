@@ -58,6 +58,7 @@ import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
+import com.deeptruth.app.android.fragments.fragmensharemedia;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.fragmentrimvideo;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
@@ -882,7 +883,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         },gravity);
     }
 
-    public void showtrimdialogfragment(String filepath,String mediatoken)
+    public void showtrimdialogfragment(String filepath,String mediatoken,String mediatype,String mediathumbnailurl)
     {
         try
         {
@@ -901,9 +902,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             ft.remove(prev);
                         }
                         ft.addToBackStack(null);
-                        fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
-                        fragtrimvideo.setdata(filepath, duration,mediatoken);
-                        fragtrimvideo.show(ft, "dialog");
+                        fragmensharemedia fragment = new fragmensharemedia();
+                        fragment.setdata(filepath, duration,mediatoken,mediatype,mediathumbnailurl);
+                        fragment.show(ft, "dialog");
 
                                /* int duration = mediaPlayer.getDuration();
                                 fragmentrimvideo fragtrimvideo = new fragmentrimvideo();
@@ -1480,7 +1481,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                     dialogfileuploadoptions.dismiss();
 
-                showtrimdialogfragment(mediafilepath,mediatoken);
+                //showtrimdialogfragment(mediafilepath,mediatoken,type);
             }
         });
 
