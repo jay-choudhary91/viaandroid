@@ -370,4 +370,6 @@ public class config {
     public static final String TEXT_DATA= "Data: ";
     public static final String TEXT_TIME = "Time: ";
 
+    public static final String TOPBAR_HEIGHT = "topbarheight";
+
 }
