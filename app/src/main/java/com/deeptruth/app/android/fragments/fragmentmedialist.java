@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -56,7 +55,6 @@ import com.deeptruth.app.android.adapter.adaptermediagrid;
 import com.deeptruth.app.android.adapter.adaptermedialist;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
-import com.deeptruth.app.android.enumclasses.cryptomediatypepagerenum;
 import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
@@ -67,9 +65,6 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.xdata;
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
@@ -1443,7 +1438,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share photo"));*/
             }else if(videoobj.getmimetype().startsWith("audio")){
 
-                baseactivity.getinstance().showtrimdialogfragment(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),
+                baseactivity.getinstance().preparesharedialogfragment(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),
                         videoobj.getThumbnailpath());
 
                 //gethelper().showsharepopupsub(videoobj.getPath(),"audio",videoobj.getVideotoken(),false);
@@ -1459,7 +1454,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                 //gethelper().showsharepopupsub(videoobj.getPath(),"video",videoobj.getVideotoken());
 
-                baseactivity.getinstance().showtrimdialogfragment(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),
+                baseactivity.getinstance().preparesharedialogfragment(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),
                         videoobj.getThumbnailpath());
 
                /* Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
