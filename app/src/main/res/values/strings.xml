@@ -371,28 +371,6 @@
     <string name="intro_detail5">Recordings are 100% private and \nexist ONLY on your smartphone.\nIf a deepfake is created, you can \nshare your authentic VideoLock \nrecording and spread the truth.</string>
 
     <string name="checkboxstring">Do not notify again</string>
-    <!--publish text details-->
-    <string name="publishtext_line1">Publishing your recordings to</string>
-    <string name="publishtext_line2">the DeepTruth website allows</string>
-    <string name="publishtext_line3">you to share any validated and</string>
-    <string name="publishtext_line4">authenticated videos/audios.</string>
-    <string name="publishtext_line5">After a recording is uploaded,</string>
-    <string name="publishtext_line6">it can be shared on websites</string>
-    <string name="publishtext_line7">and social media platforms.</string>
-
-    <!--sendtext details-->
-    <string name="sendtext_line1">Many email/text messaging</string>
-    <string name="sendtext_line2">systems will compress your</string>
-    <string name="sendtext_line3">file attachments and cause</string>
-    <string name="sendtext_line4">recordings to be modified.</string>
-    <string name="sendtext_line5">Unfortunately, compressed </string>
-    <string name="sendtext_line6">files will no longer be valid</string>
-    <string name="sendtext_line7">VideoLock videos or audios.</string>
-    <string name="sendtext_line8">VideoLock has integrated with</string>
-    <string name="sendtext_line9">the most popular file sharing</string>
-    <string name="sendtext_line10">services to help you avoid the </string>
-    <string name="sendtext_line11">compression modification issue.</string>
-
 
     <!--export_details-->
     <string name="exporttext_line1">Many email/text messaging</string>
@@ -459,7 +437,7 @@
     <string name="btn_maybe_later">Maybe Later</string>
     <string name="btn_next">NEXT</string>
     <string name="welcome_dialog_text">We have included a quick\n45-second video that will\nexplain all the features of\nyour new VideoLock app.\n\nWould you like to watch a\nVideoLock demo video?</string>
-    <string name="betaversion">Beta Version 8.01.19</string>
+    <string name="betaversion">Beta Version 8.02.19</string>
 
     <string name="fetching_user_info">Fetching user information!</string>
     <string name="unable_signin">Unable to sign in!</string>
@@ -504,11 +482,13 @@
     <string name="vl_share_linenine">are not removed from your phone.)</string>
     <string name="btn_vl_share">Upload &amp; Send</string>
 
-    <string name="publish_details1">Publishing your recordings to \nthe DeepTruth website allows \nyou to share any validated and \nauthenticated videos/audios.</string>
-    <string name="publish_details2">After a recording is uploaded, \nit can be shared on websites \nand social media platforms.</string>
-    <string name="send_details1">Many email/text messaging \nsystems will compress your \nfile attachments and cause \nrecordings to be modified. \nUnfortunately, compressed \nfiles will no longer be valid \nVideoLock videos or audios.</string>
-    <string name="send_details2">VideoLock has integrated with \nthe most popular file sharing \nservices to help you avoid the \ncompression modification issue.</string>
-    <string name="export_details1">Many email/text messaging \nsystems will compress your \nfile attachments and cause \nrecordings to be modified. \nUnfortunately, compressed \nfiles will no longer be valid \nVideoLock videos or audios.</string>
+    <string name="publish_details1">The "\"PUBLISH\" feature of your\nVideoLock app helps you share\nyour certified recordings on the\nVideoLock.com media website.\n\nAll of your recordings exist only\non your phone, however if you\nwant to share your recordings\nwith the world, the "\"PUBLISH\"\nfeature is the method to do it.</string>
+    <string name="publish_details2">After uploading your recording, \nyou will be able to use any web \nbrowser to manage your media \non the VideoLock.com website.\n\nAre you ready to register your \naccount &amp; upload your media?</string>
+
+    <string name="send_details1">The "\"SEND\" VideoLock feature \nhelps you email/message your \ncertified recording to others. \n\nMany email/messaging systems\ncompress file attachments. If a\nVideoLock file is compressed, it\nwill be modified and it can\'t be\nidentified as a certified original.</string>
+    <string name="send_details2">VideoLock avoids compression\nproblems by using your favorite\nfile sharing service to help you\nsend your certified recordings.\n\nAre you ready to safely send a\ncertified VideoLock recording?</string>
+
+    <string name="export_details1">Many email/text messaging \nsystems will compress your \nfile sharing service to help you \nrecordings to be modified. \nUnfortunately, compressed \nfiles will no longer be valid \nVideoLock videos or audios.</string>
     <string name="export_details2">We recommend that you \nuse a file sharing service \nto send your VideoLock files.</string>
 
 
@@ -522,6 +502,22 @@
     <string name="popup_publish">publish</string>
     <string name="popup_upgradecode">upgradecode</string>
 
+
+    <!--sendtext details-->
+    <string name="sendtext_line1">The "\"SEND\" VideoLock feature</string>
+    <string name="sendtext_line2">helps you email/message your</string>
+    <string name="sendtext_line3">certified recording to others.</string>
+    <string name="sendtext_line4">Many email/messaging systems</string>
+    <string name="sendtext_line5">compress file attachments. If a</string>
+    <string name="sendtext_line6">VideoLock file is compressed, it</string>
+    <string name="sendtext_line7">will be modified and it can\'t be</string>
+    <string name="sendtext_line8">identified as a certified original.</string>
+    <string name="sendtext_line9">VideoLock avoids compression</string>
+    <string name="sendtext_line10">problems by using your favorite</string>
+    <string name="sendtext_line11">file sharing service to help you</string>
+    <string name="sendtext_line12">send your certified recordings.</string>
+    <string name="sendtext_line13">Are you ready to safely send a</string>
+    <string name="sendtext_line14">certified VideoLock recording?</string>
 
 
 </resources>
