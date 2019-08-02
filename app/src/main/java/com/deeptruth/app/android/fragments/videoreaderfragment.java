@@ -283,7 +283,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
 
     public boolean islastdragarrow = false;
-    String medianame = "",medianotes = "",mediaduration="",mediafolder = "",localkey = "",mediaid = "",mediatoken="",sync_date="";
+    String medianame = "",medianotes = "",mediaduration="",mediafolder = "",localkey = "",thumbnailurl="",mediaid = "",mediatoken="",sync_date="";
     int targetheight=0,previousheight=0,targetwidth=0,previouswidth=0, previouswidthpercentage=0,scrubberviewwidth=0;
     private Handler hdlr = new Handler();
     StringBuilder mFormatBuilder;
@@ -1231,7 +1231,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }, 1500);
                     if (mediafilepath != null && (!mediafilepath.isEmpty())){
                         //gethelper().showsharepopupsub(mediafilepath,"video",mediatoken);
-                        baseactivity.getinstance().showtrimdialogfragment(mediafilepath,mediatoken);
+                        baseactivity.getinstance().showtrimdialogfragment(mediafilepath,mediatoken,config.type_video,thumbnailurl);
                     }
                    // common.sharevideo(getActivity(), mediafilepath);
                     break;
@@ -1639,6 +1639,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
                             mediaduration =  "" + cur.getString(cur.getColumnIndex("mediaduration"));
                             localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
+                            thumbnailurl = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
                             sync_date = "" + cur.getString(cur.getColumnIndex("sync_date"));
                             mediaid = "" + cur.getString(cur.getColumnIndex("videoid"));
 

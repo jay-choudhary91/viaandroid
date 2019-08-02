@@ -1420,6 +1420,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 gethelper().redirecttologin();
                 return;
             }*/
+
             if(videoobj.getmimetype().startsWith("image")){
                 String imagepath = videoobj.getPath();
 
@@ -1433,7 +1434,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share photo"));*/
             }else if(videoobj.getmimetype().startsWith("audio")){
 
-                gethelper().showsharepopupsub(videoobj.getPath(),"audio",videoobj.getVideotoken(),false);
+                baseactivity.getinstance().showtrimdialogfragment(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),
+                        videoobj.getThumbnailpath());
+
+                //gethelper().showsharepopupsub(videoobj.getPath(),"audio",videoobj.getVideotoken(),false);
                 /*Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
@@ -1446,7 +1450,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                 //gethelper().showsharepopupsub(videoobj.getPath(),"video",videoobj.getVideotoken());
 
-                baseactivity.getinstance().showtrimdialogfragment(videoobj.getPath(),videoobj.getVideotoken());
+                baseactivity.getinstance().showtrimdialogfragment(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),
+                        videoobj.getThumbnailpath());
 
                /* Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/trim_popup_background">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="2"
+        >
+        <ImageView
+            android:id="@+id/img_cancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="@dimen/margin_10dp"
+            android:layout_marginRight="@dimen/margin_10dp"
+            android:layout_marginBottom="@dimen/margin_5dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/error"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.6"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <LinearLayout
+                    android:id="@+id/layout_colorsection"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@color/green"
+                    android:orientation="horizontal"
+                    />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/red"
+                android:weightSum="1"
+                android:layout_marginBottom="20dp">
+
+                <LinearLayout
+                    android:id="@+id/layout_video_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.0"
+                    android:orientation="vertical">
+
+                    <com.deeptruth.app.android.videotrimmer.hglvideotrimmer
+                        android:id="@+id/trimerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_audio_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.6"
+                    android:visibility="gone"
+                    android:orientation="vertical"
+                    android:background="@color/black">
+
+                    <ImageView
+                        android:id="@+id/img_audiothumbnail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_media_starttime"
+                style="@style/txt_normalview"
+                android:text="00:00"
+                android:layout_alignParentLeft="true"
+                card_view:fontType="Comfortaa-Regular" />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_media_endtime"
+                style="@style/txt_normalview"
+                android:text="00:23:00"
+                android:gravity="right"
+                card_view:fontType="Comfortaa-Regular" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".4"
+            android:background="@color/transparent">
+
+            <LinearLayout
+                android:id="@+id/lyout_publish"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="bottom"
+
+                    android:layout_height="0dp">
+
+                    <ImageView
+                        android:id="@+id/img_publish"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/publilsh"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="0dp">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        style="@style/layout_sharepopup"
+                        android:layout_below="@id/img_publish"
+                        android:text="@string/txt_publish"
+                        card_view:fontType="Comfortaa-Regular" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:id="@+id/lyout_send"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="bottom"
+
+                    android:layout_height="0dp">
+
+                    <ImageView
+                        android:id="@+id/img_send"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/send"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+
+                    android:layout_height="0dp">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        style="@style/layout_sharepopup"
+                        android:layout_below="@id/img_send"
+                        android:text="@string/txt_send"
+                        card_view:fontType="Comfortaa-Bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lyout_export"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="bottom"
+                    android:layout_height="0dp">
+
+                    <ImageView
+                        android:id="@+id/img_expoet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/export" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="0dp">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        style="@style/layout_sharepopup"
+                        android:layout_below="@id/img_expoet"
+                        android:text="@string/txt_export"
+                        card_view:fontType="Comfortaa-Bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lyout_help"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="bottom"
+                    android:layout_height="0dp">
+
+                    <ImageView
+                        android:id="@+id/img_help"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/help"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_height="0dp">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        style="@style/layout_sharepopup"
+                        android:layout_below="@id/img_help"
+                        android:text="@string/txt_help"
+                        card_view:fontType="Comfortaa-Bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

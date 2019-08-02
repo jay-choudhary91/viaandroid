@@ -3076,6 +3076,20 @@ public class common {
         return date;
     }
 
+    public static String mediaplaytimeformatter(int timeMs) {
+        int totalseconds = timeMs / 1000;
+        int seconds = totalseconds % 60;
+        int minutes = (totalseconds / 60) % 60;
+        int hours = totalseconds / 3600;
+
+        java.util.Formatter mformatter = new java.util.Formatter();
+        if (hours > 0) {
+            return mformatter.format("%02d:%02d:%02d", hours, minutes, seconds).toString();
+        } else {
+            return mformatter.format("%02d:%02d:%02d",hours, minutes, seconds).toString();
+        }
+    }
+
     public static void setspanning(ArrayList<sharepopuptextspanning> spanarraylist, TextView txtview){
         String line = spanarraylist.get(0).getLinecontent();
         // char[] linecontent = line.toCharArray();
