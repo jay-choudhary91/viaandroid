@@ -1107,7 +1107,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
              common.setspanning(textsharepopup,txt_content);
         }
 
-        if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
+        if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_save))){
             char[] linecontent = str.toCharArray();
             ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
 
@@ -1143,7 +1143,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     else
                         xdata.getinstance().saveSetting(config.enablesendnotification,"0");
                 }
-                if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_export))){
+                if(title.equalsIgnoreCase(context.getResources().getString(R.string.txt_save))){
                     if(notifycheckbox.isChecked())
                         xdata.getinstance().saveSetting(config.enableexportnotification,"1");
                     else
