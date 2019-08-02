@@ -348,7 +348,7 @@
     <string name="intro_screenfourlineone">VideoLock\'s patented solution  </string>
     <string name="intro_screenfourlinetwo">creates a cryptographic DNA  </string>
     <string name="intro_screenfourlinethree">fingerprint, 30 times a second, </string>
-    <string name="intro_screenfourlinefour">with 50+ layers of metadata...</string>
+    <string name="intro_screenfourlinefour">with 80+ layers of metadata...</string>
     <string name="intro_screenfourlinefive">and it does it all in real-time.</string>
     <!--Intro screen discription five -->
 
@@ -480,7 +480,7 @@
     <string name="cong_linetwo">first certified cryptomedia!</string>
     <string name="cong_linefour">Your recording has already</string>
     <string name="cong_linefive">been registered with over</string>
-    <string name="cong_linesix">50 layers of unchangeable</string>
+    <string name="cong_linesix">80+ layers of unchangeable</string>
     <string name="cong_lineseven">and encrypted digital DNA</string>
     <string name="cong_lineeight">cryptographic fingerprints.</string>
 
@@ -521,5 +521,7 @@
     <string name="popup_upgrade">upgrade</string>
     <string name="popup_publish">publish</string>
     <string name="popup_upgradecode">upgradecode</string>
+
+
 
 </resources>
