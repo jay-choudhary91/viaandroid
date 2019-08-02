@@ -883,6 +883,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void showtrimdialogfragment(String filepath,String mediatoken,String mediatype,String mediathumbnailurl)
     {
+        if(xdata.getinstance().getSetting(config.mediasharedialog).trim().isEmpty() ||
+                xdata.getinstance().getSetting(config.mediasharedialog).equalsIgnoreCase("0"))
+        {
+            return;
+        }
+
         try
         {
             Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
