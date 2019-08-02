@@ -520,6 +520,7 @@
     <string name="priv_lineseven">on the VideoLock website.</string>
 
     <string name="txt_vl_share_title">VIDEOlOCK \nSHARE</string>
+    <string name="txt_title_share">SHARE</string>
     <string name="vl_share_lineone">The VideoLock share tool provides</string>
     <string name="vl_share_linetwo">a way to temporarily send your files.</string>
     <string name="vl_share_linefour">Your uploaded files will be saved on</string>
