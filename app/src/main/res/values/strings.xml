@@ -393,6 +393,45 @@
     <string name="sendtext_line10">services to help you avoid the </string>
     <string name="sendtext_line11">compression modification issue.</string>
 
+    <!--savetext details-->
+    <string name="savetext_line1">The \"SAVE\" option will make a</string>
+    <string name="savetext_line2">copy of your recording directly</string>
+    <string name="savetext_line3">on to your phone\'s camera roll.</string>
+    <string name="savetext_line5">Warning: Sending your file in</string>
+    <string name="savetext_line6">an email or a text message as</string>
+    <string name="savetext_line7">an attachment will cause your</string>
+    <string name="savetext_line8">recordings to be compressed.</string>
+    <string name="savetext_line9">Compression will change your</string>
+    <string name="savetext_line10">VideoLock file and cause it to</string>
+    <string name="savetext_line11">lose its certified original status.</string>
+    <string name="savetext_line13">Your VideoLock files can all be</string>
+    <string name="savetext_line14">played by other media players.</string>
+    <string name="savetext_line15">However, we recommend that</string>
+    <string name="savetext_line16">you keep a copy of all certified</string>
+    <string name="savetext_line17">original recordings in this app.</string>
+
+    <!--sharetext_details-->
+
+    <string name="sharetext_line1">Sharing your certified recordings</string>
+    <string name="sharetext_line2">is a feature of the VideoLock app.</string>
+    <string name="sharetext_line3">Your recorded files only exist on</string>
+    <string name="sharetext_line4">your phone--until you\'re ready to</string>
+    <string name="sharetext_line5">share with others and the world.</string>
+
+
+    <string name="sharetext_line7">You have the ability to send your</string>
+    <string name="sharetext_line8">VideoLock files securely to others</string>
+    <string name="sharetext_line9">so they can verify your recording</string>
+    <string name="sharetext_line10">with the VideoLock Reader app.</string>
+
+
+    <string name="sharetext_line12">...AND...</string>
+
+
+    <string name="sharetext_line14">You can publish your recordings</string>
+    <string name="sharetext_line15">on the VideoLock.com website</string>
+    <string name="sharetext_line16">and share VideoLock certified</string>
+    <string name="sharetext_line17">original content with the world.</string>
 
     <!--export_details-->
     <string name="exporttext_line1">Many email/text messaging</string>
