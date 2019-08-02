@@ -47,7 +47,6 @@ import android.widget.Toast;
 
 import com.android.billingclient.api.Purchase;
 import com.android.vending.billing.IInAppBillingService;
-import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -58,7 +57,7 @@ import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
-import com.deeptruth.app.android.fragments.fragmensharemedia;
+import com.deeptruth.app.android.fragments.fragmentsharemedia;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
@@ -901,7 +900,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             ft.remove(prev);
                         }
                         ft.addToBackStack(null);
-                        fragmensharemedia fragment = new fragmensharemedia();
+                        fragmentsharemedia fragment = new fragmentsharemedia();
                         fragment.setdata(filepath, duration,mediatoken,mediatype,mediathumbnailurl);
                         fragment.show(ft, "dialog");
 
