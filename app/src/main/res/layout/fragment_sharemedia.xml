@@ -57,10 +57,17 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true">
 
+                <ProgressBar
+                    android:id="@+id/progressmediasync"
+                    style="@style/CustomProgressBar"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="@dimen/animationbarheight"/>
+
                 <LinearLayout
                     android:id="@+id/layout_colorsection"
                     android:layout_width="match_parent"
-                    android:layout_height="20dp"
+                    android:layout_height="@dimen/animationbarheight"
                     android:orientation="horizontal"
                     />
 
