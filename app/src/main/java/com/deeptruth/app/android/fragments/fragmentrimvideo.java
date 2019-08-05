@@ -239,6 +239,11 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
     }
 
     @Override
+    public int getwidth() {
+        return 0;
+    }
+
+    @Override
     public void onvideoprepared() {
 
     }

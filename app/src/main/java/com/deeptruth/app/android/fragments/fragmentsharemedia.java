@@ -376,6 +376,11 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     }
 
     @Override
+    public int getwidth() {
+        return common.getScreenWidth(getActivity());
+    }
+
+    @Override
     public void onvideoprepared() {
 
     }
