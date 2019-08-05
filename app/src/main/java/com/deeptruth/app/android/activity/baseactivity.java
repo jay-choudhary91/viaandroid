@@ -964,27 +964,43 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     {
         try
         {
-            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                    BuildConfig.APPLICATION_ID + ".provider", new File(filepath));
-
-            final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), uri);
-            if (mp != null) {
-                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        int duration = mediaPlayer.getDuration();
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-                        if (prev != null) {
-                            ft.remove(prev);
-                        }
-                        ft.addToBackStack(null);
-                        fragmentsharemedia fragment = new fragmentsharemedia();
-                        fragment.setdata(filepath, duration,mediatoken,mediatype,mediathumbnailurl);
-                        fragment.show(ft, "dialog");
-                    }
-                });
+            if(mediatype.equalsIgnoreCase(config.type_image))
+            {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                fragmentsharemedia fragment = new fragmentsharemedia();
+                fragment.setdata(filepath, 0,mediatoken,mediatype,mediathumbnailurl);
+                fragment.show(ft, "dialog");
             }
+            else
+            {
+                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                        BuildConfig.APPLICATION_ID + ".provider", new File(filepath));
+
+                final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), uri);
+                if (mp != null) {
+                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            int duration = mediaPlayer.getDuration();
+                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                            Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                            if (prev != null) {
+                                ft.remove(prev);
+                            }
+                            ft.addToBackStack(null);
+                            fragmentsharemedia fragment = new fragmentsharemedia();
+                            fragment.setdata(filepath, duration,mediatoken,mediatype,mediathumbnailurl);
+                            fragment.show(ft, "dialog");
+                        }
+                    });
+                }
+            }
+
         }catch (Exception e)
         {
             e.printStackTrace();

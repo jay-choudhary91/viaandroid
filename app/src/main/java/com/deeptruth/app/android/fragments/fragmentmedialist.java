@@ -1419,53 +1419,21 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     {
         if(type == 1)   // Media shairing
         {
-            /*if(! gethelper().isuserlogin())
+            if(videoobj.getmimetype().startsWith(config.type_image))
             {
-                gethelper().redirecttologin();
-                return;
-            }*/
-
-            if(videoobj.getmimetype().startsWith("image")){
-                String imagepath = videoobj.getPath();
-
-                gethelper().showsharepopupsub(videoobj.getPath(),"image",videoobj.getVideotoken(),false);
-                /*Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                        BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.putExtra(Intent.EXTRA_STREAM, uri);
-                share.setType("image/*");
-                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share photo"));*/
-            }else if(videoobj.getmimetype().startsWith("audio")){
-
                 baseactivity.getinstance().preparesharedialogfragment(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),
                         videoobj.getThumbnailpath());
-
-                //gethelper().showsharepopupsub(videoobj.getPath(),"audio",videoobj.getVideotoken(),false);
-                /*Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                        BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.putExtra(Intent.EXTRA_STREAM, uri);
-                share.setType("audio/*");
-                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share audio"));*/
-
-            }else if(videoobj.getmimetype().startsWith("video")){
-
-                //gethelper().showsharepopupsub(videoobj.getPath(),"video",videoobj.getVideotoken());
-
-                baseactivity.getinstance().preparesharedialogfragment(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),
-                        videoobj.getThumbnailpath());
-
-               /* Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                        BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.putExtra(Intent.EXTRA_STREAM, uri);
-                share.setType("video/*");
-                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share video"));*/
             }
-
+            else if(videoobj.getmimetype().startsWith(config.type_audio))
+            {
+                baseactivity.getinstance().preparesharedialogfragment(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),
+                        videoobj.getThumbnailpath());
+            }
+            else if(videoobj.getmimetype().startsWith(config.type_video))
+            {
+                baseactivity.getinstance().preparesharedialogfragment(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),
+                        videoobj.getThumbnailpath());
+            }
         }
         else if(type == 2)   // Delete prompt
         {

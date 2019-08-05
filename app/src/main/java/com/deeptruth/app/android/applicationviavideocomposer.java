@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.multidex.MultiDex;
 import android.util.Log;
@@ -106,8 +107,11 @@ public class applicationviavideocomposer extends Application implements Lifecycl
                         // Start service for grab frames and insert frame data into database.
                         if (! common.isservicerunning(getApplicationContext(),insertmediadataservice.class))
                         {
-                            Intent intent = new Intent(getApplicationContext(), insertmediadataservice.class);
-                            startService(intent);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                startForegroundService(new Intent(getApplicationContext(), insertmediadataservice.class));
+                            } else {
+                                startService(new Intent(getApplicationContext(), insertmediadataservice.class));
+                            }
                         }
                     }
                 }
