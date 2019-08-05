@@ -106,13 +106,7 @@ public class applicationviavideocomposer extends Application implements Lifecycl
                     {
                         // Start service for grab frames and insert frame data into database.
                         if (! common.isservicerunning(getApplicationContext(),insertmediadataservice.class))
-                        {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                startForegroundService(new Intent(getApplicationContext(), insertmediadataservice.class));
-                            } else {
-                                startService(new Intent(getApplicationContext(), insertmediadataservice.class));
-                            }
-                        }
+                            startService(new Intent(getApplicationContext(), insertmediadataservice.class));
                     }
                 }
             });
