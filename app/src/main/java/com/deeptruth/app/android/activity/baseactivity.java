@@ -964,27 +964,43 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     {
         try
         {
-            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                    BuildConfig.APPLICATION_ID + ".provider", new File(filepath));
-
-            final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), uri);
-            if (mp != null) {
-                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        int duration = mediaPlayer.getDuration();
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-                        if (prev != null) {
-                            ft.remove(prev);
-                        }
-                        ft.addToBackStack(null);
-                        fragmentsharemedia fragment = new fragmentsharemedia();
-                        fragment.setdata(filepath, duration,mediatoken,mediatype,mediathumbnailurl);
-                        fragment.show(ft, "dialog");
-                    }
-                });
+            if(mediatype.equalsIgnoreCase(config.type_image))
+            {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                if (prev != null) {
+                    ft.remove(prev);
+                }
+                ft.addToBackStack(null);
+                fragmentsharemedia fragment = new fragmentsharemedia();
+                fragment.setdata(filepath, 0,mediatoken,mediatype,mediathumbnailurl);
+                fragment.show(ft, "dialog");
             }
+            else
+            {
+                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                        BuildConfig.APPLICATION_ID + ".provider", new File(filepath));
+
+                final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), uri);
+                if (mp != null) {
+                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            int duration = mediaPlayer.getDuration();
+                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                            Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                            if (prev != null) {
+                                ft.remove(prev);
+                            }
+                            ft.addToBackStack(null);
+                            fragmentsharemedia fragment = new fragmentsharemedia();
+                            fragment.setdata(filepath, duration,mediatoken,mediatype,mediathumbnailurl);
+                            fragment.show(ft, "dialog");
+                        }
+                    });
+                }
+            }
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -1516,7 +1532,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialogupgradecode.show();
     }
 
-    public void senditemsdialog(Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed){
+    public void senditemsdialog(Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed,String mediathumbnailurl){
 
         if(!isuserlogin()){
             redirecttologin();
@@ -1566,7 +1582,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                             dialogfileuploadoptions.dismiss();
 
-                        videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath, mediatoken,  type, ismediatrimmed);
+                        videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath, mediatoken,  type, ismediatrimmed,mediathumbnailurl);
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
                     {
@@ -1596,6 +1612,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         img_backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                showsharedialogfragment(mediafilepath, mediatoken, type, mediathumbnailurl);
+
                 if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                     dialogfileuploadoptions.dismiss();
 
@@ -1746,7 +1765,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-    public void videolocksharedialog(final Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed){
+    public void videolocksharedialog(final Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed,String mediathumbnailurl){
 
         final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1779,7 +1798,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,  type, ismediatrimmed);
+                senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,  type, ismediatrimmed,mediathumbnailurl);
             }
         });
 

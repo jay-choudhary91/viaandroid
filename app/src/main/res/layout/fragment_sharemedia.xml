@@ -5,7 +5,7 @@
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/trim_popup_background">
+    android:background="@drawable/popup_background">
 
 
     <LinearLayout
@@ -88,7 +88,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layout_audio_section"
+                    android:id="@+id/layout_imageaudio_section"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.8"
@@ -97,7 +97,7 @@
                     >
 
                     <ImageView
-                        android:id="@+id/img_audiothumbnail"
+                        android:id="@+id/img_thumbnail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:scaleType="centerCrop"

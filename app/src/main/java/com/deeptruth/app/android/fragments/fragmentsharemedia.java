@@ -34,7 +34,6 @@ import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.videotrimmer.hglvideotrimmer;
 import com.deeptruth.app.android.videotrimmer.interfaces.onhglvideolistener;
 import com.deeptruth.app.android.videotrimmer.interfaces.ontrimvideolistener;
-import com.google.android.gms.common.internal.service.Common;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,10 +61,10 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     LinearLayout layout_colorsection;
     @BindView(R.id.layout_video_section)
     LinearLayout layout_video_section;
-    @BindView(R.id.layout_audio_section)
-    LinearLayout layout_audio_section;
-    @BindView(R.id.img_audiothumbnail)
-    ImageView img_audiothumbnail;
+    @BindView(R.id.layout_imageaudio_section)
+    LinearLayout layout_imageaudio_section;
+    @BindView(R.id.img_thumbnail)
+    ImageView img_thumbnail;
     @BindView(R.id.txt_media_starttime)
     TextView txt_media_starttime;
     @BindView(R.id.txt_media_endtime)
@@ -103,7 +102,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             if(mediatype.equalsIgnoreCase(config.type_video))
             {
                 layout_video_section.setVisibility(View.VISIBLE);
-                layout_audio_section.setVisibility(View.GONE);
+                layout_imageaudio_section.setVisibility(View.GONE);
                 if (mvideotrimmer != null) {
                     mvideotrimmer.setMaxDuration(mediaduration);
                     mvideotrimmer.setOnTrimVideoListener(this);
@@ -112,10 +111,13 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     mvideotrimmer.setVideoInformationVisibility(true);
                 }
             }
-            else if(mediatype.equalsIgnoreCase(config.type_audio))
+            else if(mediatype.equalsIgnoreCase(config.type_image))
             {
+                txt_media_starttime.setVisibility(View.GONE);
+                txt_media_endtime.setVisibility(View.GONE);
+                layout_colorsection.setVisibility(View.GONE);
                 layout_video_section.setVisibility(View.GONE);
-                layout_audio_section.setVisibility(View.VISIBLE);
+                layout_imageaudio_section.setVisibility(View.VISIBLE);
 
                 if(! mediathumbnailurl.trim().isEmpty() && new File(mediathumbnailurl).exists())
                 {
@@ -124,7 +126,22 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     Glide.with(applicationviavideocomposer.getactivity()).
                             load(uri).
                             thumbnail(0.1f).
-                            into(img_audiothumbnail);
+                            into(img_thumbnail);
+                }
+            }
+            else if(mediatype.equalsIgnoreCase(config.type_audio))
+            {
+                layout_video_section.setVisibility(View.GONE);
+                layout_imageaudio_section.setVisibility(View.VISIBLE);
+
+                if(! mediathumbnailurl.trim().isEmpty() && new File(mediathumbnailurl).exists())
+                {
+                    Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                            BuildConfig.APPLICATION_ID + ".provider", new File(mediathumbnailurl));
+                    Glide.with(applicationviavideocomposer.getactivity()).
+                            load(uri).
+                            thumbnail(0.1f).
+                            into(img_thumbnail);
                 }
             }
 
@@ -142,6 +159,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.publish_details2);
 
+                getDialog().dismiss();
+
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))
                 {
@@ -151,8 +170,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         public void onItemClicked(Object object) {
                             //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    config.item_video,ismediatrimmed);
-                            getDialog().dismiss();
+                                    config.item_video,ismediatrimmed,mediathumbnailurl);
+
                         }
 
                         @Override
@@ -170,7 +189,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.send_details2);
 
-
+                getDialog().dismiss();
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
                     baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
@@ -178,8 +197,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         @Override
                         public void onItemClicked(Object object) {
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    config.item_video,ismediatrimmed);
-                            getDialog().dismiss();
+                                    config.item_video,ismediatrimmed,mediathumbnailurl);
+
                         }
 
                         @Override
@@ -190,7 +209,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     return;
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                        config.item_video,ismediatrimmed);
+                        config.item_video,ismediatrimmed,mediathumbnailurl);
                 getDialog().dismiss();
                 break;
 
@@ -198,7 +217,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.export_details2);
 
-
+                getDialog().dismiss();
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
                     baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
@@ -373,6 +392,11 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     public void onclik() {
 
         getDialog().dismiss();
+    }
+
+    @Override
+    public int getwidth() {
+        return common.getScreenWidth(getActivity());
     }
 
     @Override

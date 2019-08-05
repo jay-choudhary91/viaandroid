@@ -410,7 +410,7 @@ public class insertmediadataservice extends Service {
     {
         String duration = "";
         if(!videourl.isEmpty())
-            duration = common.getvideotimefromurl(applicationviavideocomposer.getactivity(),videourl);
+            duration = common.getvideotimefromurl(getApplicationContext(),videourl);
 
         String medianame = common.getfilename(videourl);
         String[] split=medianame.split("\\.");
@@ -461,7 +461,7 @@ public class insertmediadataservice extends Service {
     {
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper = new databasemanager(getApplicationContext());
             mdbhelper.createDatabase();
         }
 
@@ -490,6 +490,6 @@ public class insertmediadataservice extends Service {
     public void medialistitemaddbroadcast()
     {
         Intent intent = new Intent(config.broadcast_medialistnewitem);
-        applicationviavideocomposer.getactivity().sendBroadcast(intent);
+        getApplicationContext().sendBroadcast(intent);
     }
 }

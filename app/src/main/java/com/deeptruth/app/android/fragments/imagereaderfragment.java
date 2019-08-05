@@ -43,6 +43,7 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.adapter.encryptiondataadapter;
 import com.deeptruth.app.android.adapter.folderdirectoryspinneradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -610,11 +611,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
                 }, 1500);
                 if (mediafilepath != null && (!mediafilepath.isEmpty()))
-                    gethelper().showsharepopupsub(mediafilepath,"image",mediatoken,false);
-                    //common.shareimage(getActivity(), mediafilepath);
+                        baseactivity.getinstance().preparesharedialogfragment(mediafilepath,mediatoken,config.type_image,mediafilepath);
 
                 break;
-
             case R.id.img_dotmenu:
                 settingfragment settingfrag=new settingfragment();
                 gethelper().addFragment(settingfrag, false, true);
