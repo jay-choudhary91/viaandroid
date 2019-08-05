@@ -38,4 +38,6 @@ public interface ontrimvideolistener {
     void onerror(final String message);
 
     void onclik();
+
+    int getwidth();
 }

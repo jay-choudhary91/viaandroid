@@ -99,6 +99,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
     private ImageView img_share_icon;
     private timelineview mtimelineview;
     RelativeLayout rl_playpausebtn;
+    int devicewidth = 0;
 
     private progressbarview mvideoprogressindicator,mvideoprogressindicatorbottom;
     private Uri msrc;
@@ -468,11 +469,17 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         float screenProportion = (float) screenWidth / (float) screenHeight;
         ViewGroup.LayoutParams lp = mvideoview.getLayoutParams();
 
+        if (montrimvideolistener != null)
+            devicewidth =   montrimvideolistener.getwidth();
+
+        int percentagewidth = (devicewidth / 100) * 15;
+
+
         if (videoProportion > screenProportion) {
             lp.width = screenWidth;
             lp.height = (int) ((float) screenWidth / videoProportion);
         } else {
-            lp.width = (int) (videoProportion * (float) screenHeight);
+            lp.width = (int) (videoProportion * (float) screenHeight)-percentagewidth;
             lp.height = screenHeight;
         }
         mvideoview.setLayoutParams(lp);
