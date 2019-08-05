@@ -138,15 +138,20 @@ public class synclogfragment extends basefragment implements View.OnClickListene
                                 synclogmodel model=new synclogmodel(token,mediakey,localkey,videostarttransactionid,sync_date,type,
                                         videocompleteddevicedate,videostartdevicedate);
                                 if(sync_date.trim().length() == 0 || sync_date.equalsIgnoreCase("0"))
-                                    asynclist.add(model);
+                                {
+                                    Cursor cursor1=mdbhelper.fetchunsyncedmetaframe(localkey);
+                                    if(cursor1 == null || cursor1.getCount() == 0)
+                                        synclist.add(model);
+                                    else
+                                        asynclist.add(model);
+                                }
                                 else
+                                {
                                     synclist.add(model);
+                                }
                             } while (cursor.moveToNext());
                         }
                     }
-
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

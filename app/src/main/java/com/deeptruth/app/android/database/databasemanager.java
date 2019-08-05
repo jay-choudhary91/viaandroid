@@ -331,13 +331,13 @@ public class databasemanager {
         return  mCur;
     }
 
-    public Cursor fetchunsyncedmetaframe() {
+    public Cursor fetchunsyncedmetaframe(String localkey) {
 
         Cursor mCur=null;
         try {
             lock.lock();
 
-            String sql = "SELECT sequenceid FROM tblmetadata WHERE sequenceid IS NULL OR sequenceid = '' LIMIT 1" ;
+            String sql = "SELECT * FROM tblmetadata where sequenceid IS NULL OR sequenceid = '' AND localkey = '"+localkey+"'" ;
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
             mCur = mDb.rawQuery(sql, null);

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -69,12 +71,17 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     TextView txt_media_starttime;
     @BindView(R.id.txt_media_endtime)
     TextView txt_media_endtime;
+    @BindView(R.id.progressmediasync)
+    ProgressBar progressmediasync;
 
     private progressdialog mprogressdialog;
     View rootview = null;
     String mediafilepath ="", mediatoken ="",mediatype="",mediathumbnailurl="";
     int mediaduration = 0;
     int navigationbarheight = 0;
+
+    private Handler myHandler;
+    private Runnable myRunnable;
 
     IabHelper mHelper;
     // Debug tag, for logging
@@ -145,10 +152,42 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 }
             }
 
-            drawmediainformation(mediafilepath);
+            if(! mediatype.equalsIgnoreCase(config.type_image))
+                setcolorbardata();
         }
         txt_media_endtime.setText(common.mediaplaytimeformatter(mediaduration));
         return rootview;
+    }
+
+    public void setcolorbardata()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        myHandler=new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run()
+            {
+                drawmediainformation(mediafilepath);
+                myHandler.postDelayed(this, 10000);
+            }
+        };
+        myHandler.post(myRunnable);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
     }
 
     @Override
@@ -267,7 +306,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
 
             if(mitemlist.size() > 0)
             {
-                int sectioncount=0;
+                int sectioncount=0,invalidcount=0;
                 String lastcolor="";
                 ArrayList<String> colorsectioncount=new ArrayList<>();
                 for (int i = 0; i < mitemlist.size(); i++)
@@ -276,9 +315,13 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     if(! strsequence.trim().isEmpty() && (! strsequence.equalsIgnoreCase("NA")) &&
                             (! strsequence.equalsIgnoreCase("null")))
                     {
+
+                        if(mitemlist.get(i).getColor().trim().isEmpty())
+                            invalidcount++;
+
                         sectioncount++;
                         if(mitemlist.get(i).getColor().trim().isEmpty())
-                            mitemlist.get(i).setColor(config.color_gray);
+                            mitemlist.get(i).setColor(config.color_transparent);
 
                         if(! lastcolor.equalsIgnoreCase(mitemlist.get(i).getColor()))
                         {
@@ -293,6 +336,11 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         lastcolor=mitemlist.get(i).getColor();
                     }
                 }
+
+                if(invalidcount > 0)
+                    progressmediasync.setVisibility(View.VISIBLE);
+                else
+                    progressmediasync.setVisibility(View.INVISIBLE);
 
                 try {
                     layout_colorsection.removeAllViews();
