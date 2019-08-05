@@ -916,18 +916,24 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void callserviceforinsertintodb()
     {
-        insertstartmediainfo();
+        try {
 
-        Gson gson = new Gson();
-        String list1 = gson.toJson(dbstartitemcontainer);
-        String list2 = gson.toJson(dbmiddleitemcontainer);
-        xdata.getinstance().saveSetting(config.servicedata_liststart,list1);
-        xdata.getinstance().saveSetting(config.servicedata_listmiddle,list2);
-        xdata.getinstance().saveSetting(config.servicedata_mediapath,recordedmediafile);
-        xdata.getinstance().saveSetting(config.servicedata_keytype,keytype);
+            insertstartmediainfo();
+            Gson gson = new Gson();
+            String list1 = gson.toJson(dbstartitemcontainer);
+            String list2 = gson.toJson(dbmiddleitemcontainer);
+            xdata.getinstance().saveSetting(config.servicedata_liststart,list1);
+            xdata.getinstance().saveSetting(config.servicedata_listmiddle,list2);
+            xdata.getinstance().saveSetting(config.servicedata_mediapath,recordedmediafile);
+            xdata.getinstance().saveSetting(config.servicedata_keytype,keytype);
 
-        Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
-        applicationviavideocomposer.getactivity().startService(intent);
+            Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
+            applicationviavideocomposer.getactivity().startService(intent);
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     // Initilize when get 1st frame from recorder

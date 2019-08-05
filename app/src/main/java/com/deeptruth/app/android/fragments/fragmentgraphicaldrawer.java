@@ -859,8 +859,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                     {
                         populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                       // drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
                     }
+
 
                     if(chart_cpuusage!= null){
                         String cpuusagevalue = common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage));
@@ -977,21 +978,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         updateverticalsliderlocationdata(gpsaccuracy,vertical_slider_gpsaccuracy);
                         updateverticalsliderlocationdata(strconnectionspeed,vertical_slider_connectionspeed);
                         updateverticalsliderlocationdata(connectiontimedelaystr,vertical_slider_connectiondatatimedely);
-
-                        if(lastPulseAnimator != null)
-                            lastPulseAnimator.cancel();
-
-                        if(mappulsatecircle != null && mgooglemap != null)
-                        {
-                            mappulsatecircle.remove();
-                            mappulsatecircle=null;
-                        }
-
-                        if(userlocationcircle != null && mgooglemap != null)
-                        {
-                            userlocationcircle.remove();
-                            userlocationcircle=null;
-                        }
 
                         if(mappathpolyline != null)
                             mappathpolyline.remove();
@@ -2304,27 +2290,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         zoomgooglemap(location.latitude,location.longitude);
 
+        if(lastPulseAnimator == null)
+            addPulsatingEffect();
+        else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
+            addPulsatingEffect();
+
         mgooglemap.getUiSettings().setZoomControlsEnabled(true);
         mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
         mgooglemap.getUiSettings().setZoomGesturesEnabled(true);
-
-        if(isrecodrunning)
-        {
-            if(lastPulseAnimator == null)
-                addPulsatingEffect();
-            else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
-                addPulsatingEffect();
-
-            if(mediacreatedpointmarker != null)
-            {
-                mediacreatedpointmarker.remove();
-                mediacreatedpointmarker=null;
-            }
-        }
-        else
-        {
-            addmediacreatedpointmarker(usercurrentlocation);
-        }
 
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -2376,6 +2349,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             if(usercurrentlocation == null)
                 return;
+
+            if(! isdatacomposing)
+            {
+                addmediacreatedpointmarker(usercurrentlocation);
+                return;
+            }
+            else
+            {
+                if(mediacreatedpointmarker != null)
+                {
+                    mediacreatedpointmarker.remove();
+                    mediacreatedpointmarker=null;
+                }
+            }
+
 
             lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
                     new ValueAnimator.AnimatorUpdateListener() {

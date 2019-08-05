@@ -1207,54 +1207,56 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     @Override
                     public void run() {
 
-                        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                            getconnectionspeed();
+                        try
+                        {
+                            if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                                getconnectionspeed();
 
-                        if (timercounterhandler == -1 || timercounterhandler >= 3) {
-                            timercounterhandler = 0;
-                            if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer) && (! isappinbackground)) {
-                                try {
-                                    xdata.getinstance().saveSetting("gpsenabled", "1");
-                                    if (!locationawareactivity.checkLocationEnable(locationawareactivity.this)){
-                                        xdata.getinstance().saveSetting("gpsenabled", "0");
+                            if (timercounterhandler == -1 || timercounterhandler >= 3) {
+                                timercounterhandler = 0;
+                                if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer) && (! isappinbackground)) {
+                                    try {
+                                        xdata.getinstance().saveSetting("gpsenabled", "1");
+                                        if (!locationawareactivity.checkLocationEnable(locationawareactivity.this)){
+                                            xdata.getinstance().saveSetting("gpsenabled", "0");
+                                        }
+
+                                        if (getcurrentfragment() != null)
+                                            getcurrentfragment().updatewifigpsstatus();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
 
-                                    if (getcurrentfragment() != null)
-                                        getcurrentfragment().updatewifigpsstatus();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                                    towerinfolist = gettowerinfo();
+                                    for (int i = 0; i < metricitemarraylist.size(); i++) {
+                                        if (metricitemarraylist.get(i).isSelected()) {
+                                            String value = metric_read(metricitemarraylist.get(i).getMetricTrackKeyName());
+                                            metricitemarraylist.get(i).setMetricTrackValue(metricitemarraylist.get(i).getMetricTrackValue());
 
-                                towerinfolist = gettowerinfo();
-                                for (int i = 0; i < metricitemarraylist.size(); i++) {
-                                    if (metricitemarraylist.get(i).isSelected()) {
-                                        String value = metric_read(metricitemarraylist.get(i).getMetricTrackKeyName());
-                                        metricitemarraylist.get(i).setMetricTrackValue(metricitemarraylist.get(i).getMetricTrackValue());
-
-                                        if (!value.trim().isEmpty())
-                                            metricitemarraylist.get(i).setMetricTrackValue(value);
+                                            if (!value.trim().isEmpty())
+                                                metricitemarraylist.get(i).setMetricTrackValue(value);
+                                        }
                                     }
                                 }
-                            }
 
-                            if(! isappinbackground)
-                            {
-                                servermetricsgetupdatecounter++;
-
-                                if ((servermetricsgetupdatecounter >= 10 && common.isnetworkconnected(locationawareactivity.this)) ||
-                                        (xdata.getinstance().getSetting(config.item_satellitesdate).trim().isEmpty())) {
-                                    servermetricsgetupdatecounter = 0;
-                                    currentsatellitecounter++;
-                                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                                        getsistermetric();
-                                }
-
-                                currenttowercounter++;
-                                if(currenttowercounter >= 10)
+                                if(! isappinbackground)
                                 {
-                                    currenttowercounter=0;
-                                    loadcellinfo();
-                                }
+                                    servermetricsgetupdatecounter++;
+
+                                    if ((servermetricsgetupdatecounter >= 10 && common.isnetworkconnected(locationawareactivity.this)) ||
+                                            (xdata.getinstance().getSetting(config.item_satellitesdate).trim().isEmpty())) {
+                                        servermetricsgetupdatecounter = 0;
+                                        currentsatellitecounter++;
+                                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                                            getsistermetric();
+                                    }
+
+                                    currenttowercounter++;
+                                    if(currenttowercounter >= 10)
+                                    {
+                                        currenttowercounter=0;
+                                        loadcellinfo();
+                                    }
 
                                 /*if ((currentsatellitecounter == -1 || (common.isnetworkconnected(locationawareactivity.this) &&
                                         currentsatellitecounter >= 5)))
@@ -1262,8 +1264,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     currentsatellitecounter = 0;
                                     getcurrentsatellitesget();
                                 }*/
+                                }
                             }
-                        }
 
                         /*if((xdata.getinstance().getSetting(config.selectedsyncsetting).trim().isEmpty()) ||
                                 (! xdata.getinstance().getSetting(config.selectedsyncsetting).
@@ -1273,15 +1275,20 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                         }*/
 
-                        // Process for sync database with server for composer as well as reader app.
-                        dbtoxapiupdatecounter++;
-                        if (dbtoxapiupdatecounter > sidecarupdatorinterval)
+                            // Process for sync database with server for composer as well as reader app.
+                            dbtoxapiupdatecounter++;
+                            if (dbtoxapiupdatecounter > sidecarupdatorinterval)
+                            {
+                                dbtoxapiupdatecounter = 0;
+                                syncmediadatabase();
+                            }
+
+                            timercounterhandler++;
+                        }catch (Exception e)
                         {
-                            dbtoxapiupdatecounter = 0;
-                            syncmediadatabase();
+                            e.printStackTrace();
                         }
 
-                        timercounterhandler++;
                     }
                 }).start();
                 myHandler.postDelayed(this, 1000);
