@@ -2087,9 +2087,10 @@ public class common {
 
     public static String getvideotimefromurl(Context context, String url) {
 
-        MediaPlayer mpl = null;
-        mpl = MediaPlayer.create(context, Uri.parse(url));
-        int millis = mpl.getDuration();
+        MediaPlayer mpl = MediaPlayer.create(context, Uri.parse(url));
+        int millis=0;
+        if(mpl != null)
+            millis = mpl.getDuration();
 
         int hours = (int) (millis / (1000 * 60 * 60));
         int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));

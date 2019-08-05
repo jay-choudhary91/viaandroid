@@ -55,7 +55,7 @@ public class appbackgroundactionservice extends Service
 
                 try
                 {
-                    Cursor cursor1=mdbhelper.fetchcurrentlyprocessmedias();
+                    /*Cursor cursor1=mdbhelper.fetchcurrentlyprocessmedias();
                     if(cursor1 != null && cursor1.getCount() > 0)
                         xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");   // 1 = syncing, 0 = not syncing
                     else
@@ -68,12 +68,7 @@ public class appbackgroundactionservice extends Service
                             xdata.getinstance().saveSetting(config.sidecar_syncstatus,"1");   // 1 = syncing, 0 = not syncing
                         else
                             xdata.getinstance().saveSetting(config.sidecar_syncstatus,"0");   // 1 = syncing, 0 = not syncing
-                    }
-
-                    /*if(xdata.getinstance().getSetting(config.sidecar_syncstatus).trim().equalsIgnoreCase("1"))
-                        Toast.makeText(getApplicationContext(),"Popup Yes",Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(getApplicationContext(),"Popup No",Toast.LENGTH_SHORT).show();*/
+                    }*/
 
                 }catch (Exception e)
                 {

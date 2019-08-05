@@ -853,7 +853,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         "compand=gain=-20,showwavespic=s=640x120:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
 */
                 final String[] command = { "-ss", starttime,"-i", recordedmediafile, "-to",endtime, "-filter_complex",
-                        "compand=gain=-10,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
+                        "compand=gain=-10,showwavespic=s=400x400:colors=#0EAE3E", "-frames:v","1",destinationfilepath.getAbsolutePath()};
 
                 applicationviavideocomposer.ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                     @Override
