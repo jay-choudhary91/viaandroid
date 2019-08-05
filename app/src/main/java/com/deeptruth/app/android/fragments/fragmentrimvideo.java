@@ -108,7 +108,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                              public void onItemClicked(Object object) {
                                  //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                                  baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken,
-                                         config.item_video,ismediatrimmed);
+                                         config.item_video,ismediatrimmed,"");
                                  getDialog().dismiss();
                              }
 
@@ -135,7 +135,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                              @Override
                              public void onItemClicked(Object object) {
                                  baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken,
-                                         config.item_video,ismediatrimmed);
+                                         config.item_video,ismediatrimmed,"");
                                  getDialog().dismiss();
                              }
 
@@ -147,7 +147,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                          return;
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken,
-                        config.item_video,ismediatrimmed);
+                        config.item_video,ismediatrimmed,"");
                 getDialog().dismiss();
                 break;
 

@@ -142,6 +142,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.publish_details2);
 
+                getDialog().dismiss();
+
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))
                 {
@@ -151,8 +153,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         public void onItemClicked(Object object) {
                             //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    config.item_video,ismediatrimmed);
-                            getDialog().dismiss();
+                                    config.item_video,ismediatrimmed,mediathumbnailurl);
+
                         }
 
                         @Override
@@ -170,7 +172,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.send_details2);
 
-
+                getDialog().dismiss();
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
                     baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
@@ -178,8 +180,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         @Override
                         public void onItemClicked(Object object) {
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    config.item_video,ismediatrimmed);
-                            getDialog().dismiss();
+                                    config.item_video,ismediatrimmed,mediathumbnailurl);
+
                         }
 
                         @Override
@@ -190,7 +192,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     return;
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                        config.item_video,ismediatrimmed);
+                        config.item_video,ismediatrimmed,mediathumbnailurl);
                 getDialog().dismiss();
                 break;
 
@@ -198,7 +200,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.export_details2);
 
-
+                getDialog().dismiss();
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
                     baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
