@@ -53,6 +53,7 @@ import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
+import com.deeptruth.app.android.models.thumbnailholder;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -121,9 +122,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     private Runnable doafterallpermissionsgranted;
     private static final int request_permissions = 1;
-    ArrayList<String> imagearraylist =new ArrayList<>();
-    ArrayList<String> videoarraylist =new ArrayList<>();
-    ArrayList<String> audioarraylist =new ArrayList<>();
+    ArrayList<thumbnailholder> imagearraylist =new ArrayList<>();
+    ArrayList<thumbnailholder> videoarraylist =new ArrayList<>();
+    ArrayList<thumbnailholder> audioarraylist =new ArrayList<>();
     private Orientation mOrientation;
     int navigationbarheight = 0;
     int parentviewwidth=0;
@@ -884,11 +885,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
 
                 if(mediafilepath.contains(".mp4"))
-                    videoarraylist.add(mediafilepath);
+                    videoarraylist.add(new thumbnailholder(mediafilepath,mediafilepath));
                 else if(mediafilepath.contains(".jpg") || mediafilepath.contains(".png") || mediafilepath.contains(".jpeg"))
-                    imagearraylist.add(mediafilepath);
+                    imagearraylist.add(new thumbnailholder(mediafilepath,mediafilepath));
                 else if(mediafilepath.contains(".m4a"))
-                    audioarraylist.add(thumbnailurl);
+                    audioarraylist.add(new thumbnailholder(mediafilepath,thumbnailurl));
 
                 if(videoarraylist.size() > 0 && imagearraylist.size() > 0 && audioarraylist.size() > 0)
                     break;
@@ -921,14 +922,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(currentselectedcomposer == 0)
         {
             if(imagearraylist.size() > 0)
-                setthumbnailimage(imagearraylist.get(0),zoominoutimage,config.type_image);
+                setthumbnailimage(imagearraylist.get(0).getMediafilepath(),imagearraylist.get(0).getMediafilepath()
+                        ,zoominoutimage,config.type_image);
             else
                 img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
         }
         else if(currentselectedcomposer == 1)
         {
             if(videoarraylist.size() > 0)
-                setthumbnailimage(videoarraylist.get(0),zoominoutimage,config.type_video);
+                setthumbnailimage(videoarraylist.get(0).getMediafilepath(),videoarraylist.get(0).getMediafilepath()
+                        ,zoominoutimage,config.type_video);
             else
                 img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
         }
@@ -936,7 +939,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             if(audioarraylist.size() > 0)
             {
-                setthumbnailimage(audioarraylist.get(0),zoominoutimage,config.type_audio);
+                setthumbnailimage(audioarraylist.get(0).getMediafilepath(),audioarraylist.get(0).getThumbnailurl(),
+                        zoominoutimage,config.type_audio);
                 img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
             }
             else
@@ -946,10 +950,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    public void setthumbnailimage(String mediapath,boolean zoominoutimage,String mediatype)
+    public void setthumbnailimage(String mediafilepath,String thumbnailurl,boolean zoominoutimage,String mediatype)
     {
         final Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
+                BuildConfig.APPLICATION_ID + ".provider", new File(thumbnailurl));
         if(! zoominoutimage)
         {
             Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
