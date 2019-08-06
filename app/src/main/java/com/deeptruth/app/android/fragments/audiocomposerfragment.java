@@ -1133,7 +1133,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         selectedmetrices="";
                     }
 
-                    if(handlerupdatorcounter >= 900)
+                    if(handlerupdatorcounter >= 200)
                     {
                         handlerupdatorcounter=0;
 

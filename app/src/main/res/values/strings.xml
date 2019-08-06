@@ -514,8 +514,8 @@
     <string name="priv_lineone">Your VideoLock recordings</string>
     <string name="priv_linetwo">are 100% private. The only</string>
     <string name="priv_linethree">copy of the recording is on</string>
-    <string name="priv_linefour">your phone.You can share it</string>
-    <string name="priv_linefive">it with ohters by sending it</string>
+    <string name="priv_linefour">your phone. You can share it</string>
+    <string name="priv_linefive">it with others by sending it</string>
     <string name="priv_linesix">or by publishing it directly</string>
     <string name="priv_lineseven">on the VideoLock website.</string>
 
