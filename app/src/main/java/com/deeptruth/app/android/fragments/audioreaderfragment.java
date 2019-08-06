@@ -1858,18 +1858,19 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             {
                                 Toast.makeText(getActivity(), applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.metadata_updated), Toast.LENGTH_SHORT).show();
-                                medianame=edt_medianame.getText().toString().trim();
-                                medianotes=edt_medianotes.getText().toString().trim();
-                                if(! localkey.isEmpty())
-                                    updatemediainfo(localkey,edt_medianame.getText().toString().trim(),
-                                            edt_medianotes.getText().toString().trim().trim());
                             }
                         }
                         if(object.has("error"))
                         {
                             Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
-                            resetmedianamenotes();
+                            //resetmedianamenotes();
                         }
+
+                        medianame=edt_medianame.getText().toString().trim();
+                        medianotes=edt_medianotes.getText().toString().trim();
+                        if(! localkey.isEmpty())
+                            updatemediainfo(localkey,edt_medianame.getText().toString().trim(),
+                                    edt_medianotes.getText().toString().trim().trim());
 
                     }catch (Exception e)
                     {

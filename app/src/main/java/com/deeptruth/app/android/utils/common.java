@@ -1566,7 +1566,7 @@ public class common {
         nMgr.cancel(0);
     }
 
-    public static String converttimeformate(long milliSeconds) {
+    public static String converttimeformat(long milliSeconds) {
         // Create a DateFormatter object for displaying date in specified format.
         Date date = new Date(milliSeconds);
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");

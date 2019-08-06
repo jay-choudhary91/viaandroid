@@ -819,8 +819,8 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
             dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
         }
 
-        String starttime = common.converttimeformate(startMs);
-        String endtime = common.converttimeformate((endMs - startMs));
+        String starttime = common.converttimeformat(startMs);
+        String endtime = common.converttimeformat((endMs - startMs));
 
         String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + starttime, "-t", "" + endtime, "-c","copy", filePath};
         execFFmpegBinary(complexCommand,dest);

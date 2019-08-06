@@ -95,13 +95,11 @@ public class sharedextensionactivity extends AppCompatActivity {
                                 new MediaScannerConnection.OnScanCompletedListener() {
                                     public void onScanCompleted(String path, Uri uri)
                                     {
-                                        Log.i("ExternalStorage", "Scanned " + path + ":");
-                                        Log.i("ExternalStorage", "-> uri=" + uri);
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
                                                 progressdialog.dismisswaitdialog();
-                                                Toast.makeText(sharedextensionactivity.this,"Media exported successfully!",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(sharedextensionactivity.this,"Media saved successfully!",Toast.LENGTH_SHORT).show();
                                                 finish();
                                             }
                                         });
@@ -128,7 +126,7 @@ public class sharedextensionactivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             progressdialog.dismisswaitdialog();
-                            Toast.makeText(sharedextensionactivity.this,"Media exporting failed!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(sharedextensionactivity.this,"Failed to save media!",Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     });

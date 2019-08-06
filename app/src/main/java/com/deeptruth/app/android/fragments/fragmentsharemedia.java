@@ -29,6 +29,7 @@ import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.inapputils.IabHelper;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.metadatahash;
+import com.deeptruth.app.android.rangeseekbar.RangeSeekbar;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
@@ -73,6 +74,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     TextView txt_media_endtime;
     @BindView(R.id.progressmediasync)
     ProgressBar progressmediasync;
+    @BindView(R.id.layout_rangeseekbar)
+    RangeSeekbar layout_rangeseekbar;
 
     private progressdialog mprogressdialog;
     View rootview = null;
@@ -124,10 +127,13 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 txt_media_endtime.setVisibility(View.GONE);
                 layout_colorsection.setVisibility(View.GONE);
                 layout_video_section.setVisibility(View.GONE);
+                layout_rangeseekbar.setVisibility(View.GONE);
                 layout_imageaudio_section.setVisibility(View.VISIBLE);
 
                 if(! mediathumbnailurl.trim().isEmpty() && new File(mediathumbnailurl).exists())
                 {
+                    img_thumbnail.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    img_thumbnail.setBackgroundColor(getResources().getColor(R.color.transparent));
                     Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                             BuildConfig.APPLICATION_ID + ".provider", new File(mediathumbnailurl));
                     Glide.with(applicationviavideocomposer.getactivity()).
@@ -138,6 +144,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             }
             else if(mediatype.equalsIgnoreCase(config.type_audio))
             {
+                img_thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                img_thumbnail.setBackgroundColor(getResources().getColor(R.color.black));
                 layout_video_section.setVisibility(View.GONE);
                 layout_imageaudio_section.setVisibility(View.VISIBLE);
 
@@ -226,7 +234,6 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 break;
 
             case R.id.lyout_send:
-
                 String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.send_details2);
 
@@ -239,9 +246,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         public void onItemClicked(Object object) {
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                                     mediatype,ismediatrimmed,mediathumbnailurl);
-
                         }
-
                         @Override
                         public void onItemClicked(Object object, int type) {
 
@@ -265,8 +270,13 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         @Override
                         public void onItemClicked(Object object) {
                             //baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
+                            if(mediatype.equalsIgnoreCase(config.type_image))
+                                common.shareimage(applicationviavideocomposer.getactivity(),mediafilepath);
+                            else if(mediatype.equalsIgnoreCase(config.type_video))
+                                common.sharevideo(applicationviavideocomposer.getactivity(),mediafilepath);
+                            else if(mediatype.equalsIgnoreCase(config.type_audio))
+                                common.shareaudio(applicationviavideocomposer.getactivity(),mediafilepath);
                         }
-
                         @Override
                         public void onItemClicked(Object object, int type) {
 
@@ -274,6 +284,13 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     });
                     return;
                 }
+
+                if(mediatype.equalsIgnoreCase(config.type_image))
+                    common.shareimage(applicationviavideocomposer.getactivity(),mediafilepath);
+                else if(mediatype.equalsIgnoreCase(config.type_video))
+                    common.sharevideo(applicationviavideocomposer.getactivity(),mediafilepath);
+                else if(mediatype.equalsIgnoreCase(config.type_audio))
+                    common.shareaudio(applicationviavideocomposer.getactivity(),mediafilepath);
 
                 break;
 
