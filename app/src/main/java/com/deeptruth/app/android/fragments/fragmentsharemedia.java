@@ -133,6 +133,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 if(! mediathumbnailurl.trim().isEmpty() && new File(mediathumbnailurl).exists())
                 {
                     img_thumbnail.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    img_thumbnail.setBackgroundColor(getResources().getColor(R.color.transparent));
                     Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                             BuildConfig.APPLICATION_ID + ".provider", new File(mediathumbnailurl));
                     Glide.with(applicationviavideocomposer.getactivity()).
@@ -144,6 +145,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             else if(mediatype.equalsIgnoreCase(config.type_audio))
             {
                 img_thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                img_thumbnail.setBackgroundColor(getResources().getColor(R.color.black));
                 layout_video_section.setVisibility(View.GONE);
                 layout_imageaudio_section.setVisibility(View.VISIBLE);
 
