@@ -232,7 +232,6 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 break;
 
             case R.id.lyout_send:
-
                 String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.send_details2);
 
@@ -245,9 +244,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         public void onItemClicked(Object object) {
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                                     mediatype,ismediatrimmed,mediathumbnailurl);
-
                         }
-
                         @Override
                         public void onItemClicked(Object object, int type) {
 
@@ -271,8 +268,13 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         @Override
                         public void onItemClicked(Object object) {
                             //baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
+                            if(mediatype.equalsIgnoreCase(config.type_image))
+                                common.shareimage(applicationviavideocomposer.getactivity(),mediafilepath);
+                            else if(mediatype.equalsIgnoreCase(config.type_video))
+                                common.sharevideo(applicationviavideocomposer.getactivity(),mediafilepath);
+                            else if(mediatype.equalsIgnoreCase(config.type_audio))
+                                common.shareaudio(applicationviavideocomposer.getactivity(),mediafilepath);
                         }
-
                         @Override
                         public void onItemClicked(Object object, int type) {
 
@@ -280,6 +282,13 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     });
                     return;
                 }
+
+                if(mediatype.equalsIgnoreCase(config.type_image))
+                    common.shareimage(applicationviavideocomposer.getactivity(),mediafilepath);
+                else if(mediatype.equalsIgnoreCase(config.type_video))
+                    common.sharevideo(applicationviavideocomposer.getactivity(),mediafilepath);
+                else if(mediatype.equalsIgnoreCase(config.type_audio))
+                    common.shareaudio(applicationviavideocomposer.getactivity(),mediafilepath);
 
                 break;
 
