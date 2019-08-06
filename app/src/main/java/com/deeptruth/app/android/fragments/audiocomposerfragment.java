@@ -54,7 +54,6 @@ import com.deeptruth.app.android.utils.sha;
 import com.deeptruth.app.android.utils.visualizeraudiorecorder;
 import com.deeptruth.app.android.utils.xdata;
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.gson.Gson;
 
@@ -145,24 +144,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     int hours, seconds, minutes, milliseconds;
     private String keytype =config.prefs_md5,mediakey="";
     JSONArray metadatametricesjson=new JSONArray();
-    private long currentframenumber =0,mframetorecordcount=0,frameduration =15;
+    private long currentframenumber =0,frameduration =15;
     private ArrayList<videomodel> mvideoframes =new ArrayList<>();
     StringBuilder sb = new StringBuilder();
     String hashvalue = "",metrichashvalue = "";
     private static final int RECORDER_SAMPLERATE = 8000;
     private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
     private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
-    private AudioRecord audiorecorder = null;
-    private Thread recordingthread = null;
-    int bufferelements2rec = 1024; // want to play 2048 (2K) since 2 bytes we use only 1024
-    int bytesperelement = 2; // 2 bytes in 16bit format
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     ArrayList<dbitemcontainer> dbstartitemcontainer =new ArrayList<>();
     ArrayList<dbitemcontainer> dbmiddleitemcontainer =new ArrayList<>();
     ArrayList<frameinfo> uploadframelist =new ArrayList<>();
-    FragmentManager fragmentmanager;
-    adapteritemclick popupclickmain;
-    adapteritemclick popupclicksub;
     int layoutmediatypeheight = 0,handlerupdatorcounter=0;
     RelativeLayout layoutbottom;
     @BindView(R.id.img_roundblink)
@@ -358,18 +350,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     public void onPause() {
         if(mediarecorder != null)
         {
-            if (audiorecorder != null && isaudiorecording)
+            if (isaudiorecording)
             {
                 try
                 {
                     isaudiorecording = false;
                     gethelper().setrecordingrunning(false);
-                    audiorecorder.stop();
-                    audiorecorder.release();
                     mediarecorder.stop();
                     mediarecorder.release();
-                    audiorecorder = null;
-                    recordingthread = null;
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -588,7 +576,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         metricsitems.clear();
         hashesitems.clear();
         currentframenumber =0;
-        mframetorecordcount =0;
         currentframenumber = currentframenumber + frameduration;
 
         mediarecorder = new MediaRecorder();
@@ -609,21 +596,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             mediarecorder.prepare();
             mediarecorder.start();
 
-            audiorecorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
-                    RECORDER_SAMPLERATE, RECORDER_CHANNELS,
-                    RECORDER_AUDIO_ENCODING, bufferelements2rec * bytesperelement);
-
-            if (audiorecorder.getState() != AudioRecord.STATE_INITIALIZED) {
-                Log.e("AudioRecord","AudioRecord init failed");
-                return;
-            }
-            audiorecorder.startRecording();
-            recordingthread = new Thread(new Runnable() {
-                public void run() {
-                    writeAudioDataToFile();
-                }
-            }, "AudioRecorder Thread");
-            recordingthread.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -654,88 +626,25 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
     };
 
-    //Conversion of short to byte
-    private byte[] short2byte(short[] sData) {
-        int shortArrsize = sData.length;
-        byte[] bytes = new byte[shortArrsize * 2];
-
-        for (int i = 0; i < shortArrsize; i++) {
-            bytes[i * 2] = (byte) (sData[i] & 0x00FF);
-            bytes[(i * 2) + 1] = (byte) (sData[i] >> 8);
-            sData[i] = 0;
-        }
-        return bytes;
-    }
-
     private void writeAudioDataToFile() {
-        // Write the output audio in byte
-        String filePath = gettempfile().getAbsolutePath();
-        final short sData[] = new short[bufferelements2rec];
 
-
-        FileOutputStream os = null;
-        try {
-            os = new FileOutputStream(filePath);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
 
         final int[] framegap = {0};
         while (isaudiorecording) {
             // gets the voice output from microphone to byte format
-            audiorecorder.read(sData, 0, bufferelements2rec);
-            System.out.println("Short writing to file" + sData.toString());
             try {
 
-                final FileOutputStream finalOs = os;
                 new Thread(new Runnable() {
                     @Override
                     public void run()
                     {
-                        // writes the data to file from buffer stores the voice buffer
-                        final byte data[] = short2byte(sData);
 
-                        try {
-                            finalOs.write(data, 0, bufferelements2rec * bytesperelement);
-                            if(isaudiorecording)
-                            {
-                                if(framegap[0] == frameduration || (mediakey.trim().isEmpty()))
-                                {
-                                    if(mediakey.trim().isEmpty())
-                                    {
-                                        sequencestarttime = Calendar.getInstance();
-                                        String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                                        mediakey=currenttimestamp;
-                                        String keyvalue= getkeyvalue(data);
-                                        savestartmediainfo();
-                                    }
-                                    else
-                                    {
-                                        sequenceendtime = Calendar.getInstance();
-                                    }
 
-                                    framegap[0] =0;
-                                    updatelistitemnotify(data,currentframenumber,"Frame");
-                                    currentframenumber = currentframenumber + frameduration;
-                                    sequencestarttime = Calendar.getInstance();
-                                }
-                                framegap[0]++;
-                                mframetorecordcount++;
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
                     }
                 }).start();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-
-        try {
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -756,42 +665,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         return file;
     }
 
-    private File getaudiodir() {
-
-        String storagedirectory=config.dirallmedia;
-        String fileName = "audiotemp";
-        File file=new File(storagedirectory, fileName+".m4a");
-        File destinationDir=new File(storagedirectory);
-        try {
-
-            if (! destinationDir.exists())
-                destinationDir.mkdirs();
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return file;
-    }
-
-    private File gettempfile() {
-        String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
-        String fileName = config.audiotempfile;
-        File file=new File(storagedirectory, fileName);
-
-        File destinationDir=new File(storagedirectory);
-        try {
-
-            if (!destinationDir.exists())
-                destinationDir.mkdirs();
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return file;
-    }
-
     private void stoprecording() {
 
         try{
@@ -799,22 +672,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             mediarecorder.release();
         }catch (Exception e){
             e.printStackTrace();
-        }
-
-        if (audiorecorder != null)
-        {
-            try
-            {
-                isaudiorecording = false;
-                gethelper().setrecordingrunning(false);
-                audiorecorder.stop();
-                audiorecorder.release();
-                audiorecorder = null;
-                recordingthread = null;
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
         }
 
         mediarecorder = null;
@@ -846,8 +703,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 mediaMetadataRetriever.setDataSource(applicationviavideocomposer.getactivity(),uri);
                 long mediatotalduration = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
 
-                String starttime = common.converttimeformate(0);
-                String endtime = common.converttimeformate(mediatotalduration);
+                if(mediatotalduration > 10000)
+                    mediatotalduration=10000;
+
+                String starttime = common.converttimeformat(0);
+                String endtime = common.converttimeformat(mediatotalduration);
 
                 /*final String[] command = { "-ss", starttime,"-i", recordedmediafile, "-to",endtime, "-filter_complex",
                         "compand=gain=-20,showwavespic=s=640x120:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
@@ -880,9 +740,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                             {
                                 e.printStackTrace();
                             }
+
+                            img_dotmenu.setVisibility(View.VISIBLE);
+
                             if(madapterclick != null)
                                 madapterclick.onItemClicked(recordedmediafile,2);
-                            img_dotmenu.setVisibility(View.VISIBLE);
 
                             if(madapterclick != null)
                                 madapterclick.onItemClicked(null,4);
@@ -1023,15 +885,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     }
 
-    public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
+    public void updatelistitemnotify(final byte[] arraybytes, final long framenumber, final String message)
     {
-
-        if(array == null || array.length == 0)
-            return;
 
         try
         {
-            final String keyvalue= getkeyvalue(array);
+            final String keyvalue= "";
             mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
             hashvalue = keyvalue;
 
@@ -1274,13 +1133,33 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         selectedmetrices="";
                     }
 
-                    if(handlerupdatorcounter >= 500)
+                    if(handlerupdatorcounter >= 900)
                     {
                         handlerupdatorcounter=0;
-                        ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                        getselectedmetrics(mlocalarraylist);
-                    }
 
+                        try {
+                            if(isaudiorecording)
+                            {
+                                if(mediakey.trim().isEmpty())
+                                {
+                                    sequencestarttime = Calendar.getInstance();
+                                    String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                                    mediakey=currenttimestamp;
+                                    savestartmediainfo();
+                                }
+                                else
+                                {
+                                    sequenceendtime = Calendar.getInstance();
+                                }
+
+                                updatelistitemnotify(new byte[2],currentframenumber,"Frame");
+                                currentframenumber = currentframenumber + frameduration;
+                                sequencestarttime = Calendar.getInstance();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 else
                 {
@@ -1303,53 +1182,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 visibleconnection();
                 setactionbarbackgroundcolor();
-
                 myHandler.postDelayed(this, 10);
             }
         };
         myHandler.post(myRunnable);
     }
-
-    public void visiblewarningcontrollers(){
-
-        if(isaudiorecording)
-        {
-            if(layout_no_gps_wifi != null)
-                layout_no_gps_wifi.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            layout_no_gps_wifi.setVisibility(View.GONE);
-        }
-    }
-
-
-    public void validatingcontrollers(){
-
-        if(isaudiorecording)
-        {
-            hidewarningsection();
-            layout_no_gps_wifi.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            hidewarningsection();
-            layout_no_gps_wifi.setVisibility(View.GONE);
-        }
-
-    }
-
-    public void hidewarningsection()
-    {
-        if(layout_no_gps_wifi != null)
-            layout_no_gps_wifi.setVisibility(View.GONE);
-    }
-
-    public void launchmedialist()
-    {
-        gethelper().onBack();
-    }
-
 
     @Override
     public void onHeaderBtnClick(int btnid) {
@@ -1411,10 +1248,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     }
 
-    public static Fragment newInstance() {
-        return new audiocomposerfragment();
-    }
-
     @Override
     public void showhideviewondrawer(boolean isshow) {
         super.showhideviewondrawer(isshow);
@@ -1433,7 +1266,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
     }
     public void visibleconnection(){
-        String value = "";
 
         if(xdata.getinstance().getSetting(config.worldclocktime).isEmpty() && xdata.getinstance().getSetting(config.worldclocktime) == null)
         {
@@ -1552,32 +1384,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         rlvisulizerview.setLayoutParams(params);
         rlvisulizerview.requestLayout();
     }
-
-    private void runRecording(final byte buf[]) {
-        //final byte buf[] = new byte[bufferSize];
-                // stop recording
-                if (!isaudiorecording) {
-                    return;
-                }
-                //audiorecorder.read(buf, 0, bufferelements2rec);
-                Log.e("dataArray", Arrays.toString(buf));
-                final int decibel = calculateDecibel(buf);
-
-                Log.e("dataArray", Arrays.toString(buf));
-
-                int mVisualizerViewssize = mVisualizerviews.size();
-                if (mVisualizerviews != null && !mVisualizerviews.isEmpty()) {
-                    for (int i = 0; i < mVisualizerviews.size(); i++) {
-                        final int finalI = i;
-                        getActivity().runOnUiThread(new Runnable() {
-                         @Override
-                         public void run() {
-                             mVisualizerviews.get(finalI).receive(decibel);
-                         }
-                     });
-                    }
-                }
-            }
 
     private int calculateDecibel(byte[] buf) {
         int sum = 0;

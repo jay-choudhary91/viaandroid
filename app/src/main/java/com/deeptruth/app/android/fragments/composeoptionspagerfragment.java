@@ -921,31 +921,22 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(currentselectedcomposer == 0)
         {
             if(imagearraylist.size() > 0)
-            {
-                setthumbnailimage(imagearraylist.get(0),zoominoutimage);
-            }
+                setthumbnailimage(imagearraylist.get(0),zoominoutimage,config.type_image);
             else
-            {
                 img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
-            }
         }
         else if(currentselectedcomposer == 1)
         {
-
             if(videoarraylist.size() > 0)
-            {
-                setthumbnailimage(videoarraylist.get(0),zoominoutimage);
-            }
+                setthumbnailimage(videoarraylist.get(0),zoominoutimage,config.type_video);
             else
-            {
                 img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
-            }
         }
         else if(currentselectedcomposer == 2)
         {
             if(audioarraylist.size() > 0)
             {
-                setthumbnailimage(audioarraylist.get(0),zoominoutimage);
+                setthumbnailimage(audioarraylist.get(0),zoominoutimage,config.type_audio);
                 img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
             }
             else
@@ -955,14 +946,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    public void setthumbnailimage(String mediapath,boolean zoominoutimage)
+    public void setthumbnailimage(String mediapath,boolean zoominoutimage,String mediatype)
     {
         final Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                 BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
-        if(! zoominoutimage){
-          Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
-                .transition(GenericTransitionOptions.with(R.anim.fadein)).
-                into(img_mediathumbnail);
+        if(! zoominoutimage)
+        {
+            Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
+                    .transition(GenericTransitionOptions.with(R.anim.fadein)).
+                    into(img_mediathumbnail);
         }else{
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -972,6 +964,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }
             },50);
         }
+        /*if(mediapath.trim().isEmpty() && mediatype.equalsIgnoreCase(config.type_audio))
+        {
+
+        }
+        else
+        {
+
+        }*/
     }
 
     public void showhideactionbottombaricon(int i){
