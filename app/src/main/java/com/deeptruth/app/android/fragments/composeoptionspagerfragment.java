@@ -884,18 +884,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
 
                 if(mediafilepath.contains(".mp4"))
-                {
                     videoarraylist.add(mediafilepath);
-                }
-                else if(mediafilepath.contains(".jpg") || mediafilepath.contains(".png") ||
-                        mediafilepath.contains(".jpeg"))
-                {
+                else if(mediafilepath.contains(".jpg") || mediafilepath.contains(".png") || mediafilepath.contains(".jpeg"))
                     imagearraylist.add(mediafilepath);
-                }
                 else if(mediafilepath.contains(".m4a"))
-                {
                     audioarraylist.add(thumbnailurl);
-                }
 
                 if(videoarraylist.size() > 0 && imagearraylist.size() > 0 && audioarraylist.size() > 0)
                     break;

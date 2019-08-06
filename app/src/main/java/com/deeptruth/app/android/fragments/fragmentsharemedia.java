@@ -220,6 +220,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     });
                     return;
                 }
+                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                        mediatype,ismediatrimmed,mediathumbnailurl);
                 //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                 break;
 
@@ -249,7 +251,6 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                         mediatype,ismediatrimmed,mediathumbnailurl);
-                getDialog().dismiss();
                 break;
 
             case R.id.lyout_export:
