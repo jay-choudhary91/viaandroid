@@ -1202,7 +1202,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
              textsharepopup.add(new sharepopuptextspanning(1.09f,0,28,str));
              textsharepopup.add(new sharepopuptextspanning(1.07f,29,58,str));
-             textsharepopup.add(new sharepopuptextspanning(1.12f,58,89,str));
+             textsharepopup.add(new sharepopuptextspanning(1.11f,58,89,str));
 
              textsharepopup.add(new sharepopuptextspanning(1.01f,93,122,str));
              textsharepopup.add(new sharepopuptextspanning(1.05f,122,153,str));

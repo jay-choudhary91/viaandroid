@@ -534,7 +534,7 @@
     <string name="publish_details1">The "\"PUBLISH\" feature of your\nVideoLock app helps you share\nyour certified recordings on the\nVideoLock.com media website.\n\nAll of your recordings exist only\non your phone, however if you\nwant to share your recordings\nwith the world, the "\"PUBLISH\"\nfeature is the method to do it.</string>
     <string name="publish_details2">After uploading your recording, \nyou will be able to use any web \nbrowser to manage your media \non the VideoLock.com website.\n\nAre you ready to register your \naccount &amp; upload your media?</string>
 
-    <string name="send_details1">The "\"SEND\" VideoLock feature \nhelps you email/message your \ncertified recording to others. \n\nMany email/messaging systems\ncompress file attachments. If a\nVideoLock file is compressed, it\nwill be modified and it can\'t be\nidentified as a certified original.</string>
+    <string name="send_details1">The "\"SEND\" VideoLock feature \nhelps you email/message your \ncertified recordings to others. \n\nMany email/messaging systems\ncompress file attachments. If a\nVideoLock file is compressed, it\nwill be modified and it can\'t be\nidentified as a certified original.</string>
     <string name="send_details2">VideoLock avoids compression\nproblems by using your favorite\nfile sharing service to help you\nsend your certified recordings.\n\nAre you ready to safely send a\ncertified VideoLock recording?</string>
 
     <string name="export_details1">Many email/text messaging \nsystems will compress your \nfile sharing service to help you \nrecordings to be modified. \nUnfortunately, compressed \nfiles will no longer be valid \nVideoLock videos or audios.</string>

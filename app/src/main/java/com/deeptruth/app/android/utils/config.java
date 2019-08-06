@@ -20,7 +20,7 @@ public class config {
     public static String item_box="Box";
     public static String item_dropbox="Dropbox";
     public static String item_googledrive="Google Drive";
-    public static String item_microsoft_onedrive="Microsoft onedrive";
+    public static String item_microsoft_onedrive="Microsoft OneDrive";
     public static String item_videoLock_share="VideoLock Share";
 
     public static String txtyear="Upgrade for $10/year";
