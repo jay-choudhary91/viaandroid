@@ -217,7 +217,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         public void onItemClicked(Object object) {
                             //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    config.item_video,ismediatrimmed,mediathumbnailurl);
+                                    mediatype,ismediatrimmed,mediathumbnailurl);
 
                         }
 
@@ -228,6 +228,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     });
                     return;
                 }
+                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                        mediatype,ismediatrimmed,mediathumbnailurl);
                 //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                 break;
 
@@ -244,7 +246,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         @Override
                         public void onItemClicked(Object object) {
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    config.item_video,ismediatrimmed,mediathumbnailurl);
+                                    mediatype,ismediatrimmed,mediathumbnailurl);
 
                         }
 
@@ -256,8 +258,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     return;
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                        config.item_video,ismediatrimmed,mediathumbnailurl);
-                getDialog().dismiss();
+                        mediatype,ismediatrimmed,mediathumbnailurl);
                 break;
 
             case R.id.lyout_export:
