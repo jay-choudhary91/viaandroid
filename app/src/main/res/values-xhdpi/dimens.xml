@@ -2,6 +2,8 @@
 <resources>
     <dimen name="play_screen_bar_height">43dp</dimen>
     <dimen name="progressbar_line_height">42dp</dimen>
+    <dimen name="margin_25">25dp</dimen>
+    <dimen name="margin_35">35dp</dimen>
 
     <dimen name="margin_50">54dp</dimen>
     <dimen name="top_margin_30">25dp</dimen>

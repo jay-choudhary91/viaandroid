@@ -5,7 +5,8 @@
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/popup_background">
+    android:background="@drawable/popup_background"
+    app:ignore="NamespaceTypo">
 
 
     <LinearLayout
@@ -57,24 +58,34 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true">
 
+                <ImageView
+                    android:id="@+id/img_audiothumb_timeline"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_35"
+                    android:visibility="gone"
+                    android:scaleType="centerCrop"/>
+
                 <ProgressBar
                     android:id="@+id/progressmediasync"
                     style="@style/CustomProgressBar"
                     android:layout_width="match_parent"
                     android:visibility="gone"
-                    android:layout_height="@dimen/animationbarheight"/>
+                    android:layout_below="@id/img_audiothumb_timeline"
+                    android:layout_height="@dimen/margin_25"/>
 
                 <LinearLayout
                     android:id="@+id/layout_colorsection"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/animationbarheight"
+                    android:layout_height="@dimen/margin_25"
+                    android:layout_below="@id/img_audiothumb_timeline"
                     android:orientation="horizontal"
                     />
 
                 <com.deeptruth.app.android.rangeseekbar.RangeSeekbar
                     android:id="@+id/layout_rangeseekbar"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/animationbarheight"
+                    android:layout_height="@dimen/margin_25"
+                    android:layout_below="@id/img_audiothumb_timeline"
                     android:orientation="horizontal">
 
                 </com.deeptruth.app.android.rangeseekbar.RangeSeekbar>
@@ -151,6 +162,7 @@
             android:layout_weight=".4"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/transparent">
 
 

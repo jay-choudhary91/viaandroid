@@ -82,6 +82,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     ProgressBar progressmediasync;
     @BindView(R.id.layout_rangeseekbar)
     RangeSeekbar layout_rangeseekbar;
+    @BindView(R.id.img_audiothumb_timeline)
+    ImageView img_audiothumb_timeline;
 
     private progressdialog mprogressdialog;
     View rootview = null;
@@ -151,7 +153,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             else if(mediatype.equalsIgnoreCase(config.type_audio))
             {
                 img_thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                img_thumbnail.setBackgroundColor(getResources().getColor(R.color.black));
+                img_thumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+                img_audiothumb_timeline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
                 layout_video_section.setVisibility(View.GONE);
                 layout_imageaudio_section.setVisibility(View.VISIBLE);
 
@@ -163,6 +166,13 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                             load(uri).
                             thumbnail(0.1f).
                             into(img_thumbnail);
+
+                    Glide.with(applicationviavideocomposer.getactivity()).
+                            load(uri).
+                            thumbnail(0.1f).
+                            into(img_audiothumb_timeline);
+
+                    img_audiothumb_timeline.setVisibility(View.VISIBLE);
                 }
             }
 
