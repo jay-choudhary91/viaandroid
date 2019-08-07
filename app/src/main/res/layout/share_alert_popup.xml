@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/popup_background"
     >
 
     <LinearLayout
+        android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -15,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_gravity="top"
             android:gravity="center">
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -28,59 +30,63 @@
                 app:fontType="bahnschrift_regular"/>
 
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_10dp"
+        android:layout_below="@id/layout_top"
+        android:layout_above="@id/tableRow5"
+        android:gravity="center" >
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/black"
+            app:fontType="Comfortaa-Regular"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tableRow5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/margin_5dp"
+        android:layout_marginTop="@dimen/margin_20dp"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/btn_ok"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:text="OK"
+            android:background="@drawable/round_corner_btn_allow"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            app:fontType="Comfortaa-Regular"
+            android:layout_marginTop="@dimen/margin_20dp"
+            android:textSize="20dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:gravity="center"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/margin_10dp"
-            android:gravity="center" >
+            android:orientation="horizontal">
 
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_content"
+            <CheckBox
+                android:id="@+id/notifycheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/black"
-                app:fontType="Comfortaa-Regular"/>
+                android:layout_gravity="center"
+                android:textSize="15sp"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/tableRow5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/margin_5dp"
-            android:layout_marginTop="@dimen/margin_20dp"
-            android:visibility="visible"
-            android:orientation="vertical">
-
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/btn_ok"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:text="OK"
-                android:background="@drawable/round_corner_btn_allow"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:textColor="@color/white"
-                app:fontType="Comfortaa-Regular"
-                android:textSize="20dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/notifycheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textSize="15sp"/>
-            </LinearLayout>
-
-    </LinearLayout>
     </LinearLayout>
     </RelativeLayout>

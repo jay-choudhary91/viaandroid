@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
@@ -27,6 +28,8 @@ public class sharedextensionactivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shared_extension);
+
+      //  sharedextensionactivity.this.overridePendingTransition(R.anim.fadein,R.anim.fadeout);
 
         Intent closeDialog = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         sendBroadcast(closeDialog);
@@ -101,6 +104,7 @@ public class sharedextensionactivity extends AppCompatActivity {
                                                 progressdialog.dismisswaitdialog();
                                                 Toast.makeText(sharedextensionactivity.this,"Media saved successfully!",Toast.LENGTH_SHORT).show();
                                                 finish();
+                                                sharedextensionactivity.this.overridePendingTransition(R.anim.fadein,R.anim.fadeout);
                                             }
                                         });
 
@@ -114,6 +118,7 @@ public class sharedextensionactivity extends AppCompatActivity {
                             public void run() {
                                 progressdialog.dismisswaitdialog();
                                 finish();
+                                sharedextensionactivity.this.overridePendingTransition(R.anim.fadein,R.anim.fadeout);
                             }
                         });
                     }
@@ -128,6 +133,7 @@ public class sharedextensionactivity extends AppCompatActivity {
                             progressdialog.dismisswaitdialog();
                             Toast.makeText(sharedextensionactivity.this,"Failed to save media!",Toast.LENGTH_SHORT).show();
                             finish();
+                            sharedextensionactivity.this.overridePendingTransition(R.anim.fadein,R.anim.fadeout);
                         }
                     });
                     e.printStackTrace();
