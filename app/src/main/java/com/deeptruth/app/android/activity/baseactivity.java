@@ -385,6 +385,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     String authtoken= Auth.getOAuth2Token();
                     xdata.getinstance().saveSetting(config.dropboxauthtoken,authtoken);
                     DropboxClientFactory.init(xdata.getinstance().getSetting(config.dropboxauthtoken));
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(getreadytouploadfile() != null)
+                                dropboxuploadfile(getreadytouploadfile().getAbsolutePath());
+                        }
+                    },1000);
                 }
             }
         }catch (Exception e)
