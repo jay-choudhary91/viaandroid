@@ -1818,8 +1818,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             mediaMetadataRetriever.setDataSource(applicationviavideocomposer.getactivity(),uri);
                             long mediatotalduration = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
 
-                            String starttime = common.converttimeformate(0);
-                            String endtime = common.converttimeformate(mediatotalduration);
+                            if(mediatotalduration > 10000)
+                                mediatotalduration=10000;
+
+                            String starttime = common.converttimeformat(0);
+                            String endtime = common.converttimeformat(mediatotalduration);
 
                             String[] command = { "-ss", starttime,"-i", destinationFile.getAbsolutePath(), "-to",endtime, "-filter_complex",
                                     "compand=gain=-10,showwavespic=s=400x400:colors=#0EAE3E", "-frames:v","1",destinationfilepath.getAbsolutePath()};

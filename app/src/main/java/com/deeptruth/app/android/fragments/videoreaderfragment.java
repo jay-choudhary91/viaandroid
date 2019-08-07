@@ -2216,18 +2216,19 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 Toast.makeText(getActivity(), applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.metadata_updated), Toast.LENGTH_SHORT).show();
-                                medianame=edt_medianame.getText().toString().trim();
-                                medianotes=edt_medianotes.getText().toString().trim();
-                                if(! localkey.isEmpty())
-                                    updatemediainfo(localkey,edt_medianame.getText().toString().trim(),
-                                            edt_medianotes.getText().toString().trim().trim());
                             }
                         }
                         if(object.has("error"))
                         {
                             Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
-                            resetmedianamenotes();
+                            //resetmedianamenotes();
                         }
+
+                        medianame=edt_medianame.getText().toString().trim();
+                        medianotes=edt_medianotes.getText().toString().trim();
+                        if(! localkey.isEmpty())
+                            updatemediainfo(localkey,edt_medianame.getText().toString().trim(),
+                                    edt_medianotes.getText().toString().trim().trim());
 
                     }catch (Exception e)
                     {
@@ -2424,8 +2425,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         int surfaceView_Width = videotextureview.getWidth();
         int surfaceView_Height = videotextureview.getHeight();
-        float video_Width = player.getVideoWidth();
-        float video_Height = player.getVideoHeight();
+
+        float video_Width=0,video_Height=0;
+        if(player != null)
+        {
+            video_Width = player.getVideoWidth();
+            video_Height = player.getVideoHeight();
+        }
+
         float ratio_width = surfaceView_Width/video_Width;
         float ratio_height = surfaceView_Height/video_Height;
         float aspectratio = video_Width/video_Height;
