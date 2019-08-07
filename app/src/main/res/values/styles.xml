@@ -361,6 +361,7 @@
         <item name="android:indeterminateDrawable">@drawable/indeterminate_animation_progress</item>
     </style>
 
+
     <style name="layout_togglebutton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -389,7 +390,7 @@
     <style name="transparent_dialog_borderless" parent="android:Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:windowIsTranslucent">true</item>
+        <!--<item name="android:windowIsTranslucent">true</item>-->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowEnterAnimation">@anim/zoom_in</item>
         <item name="android:windowExitAnimation">@anim/zoom_out</item>
