@@ -1,4 +1,4 @@
-package com.deeptruth.app.android.enumclasses;
+package com.deeptruth.app.android.utils;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
