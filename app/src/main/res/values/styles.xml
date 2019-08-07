@@ -9,6 +9,8 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:statusBarColor">@color/dark_blue_solid_a</item>
         <item name="android:windowDisablePreview">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsFloating">false</item>   <!--This and above line are added to fix Android O issue related to portrait mode.-->
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="28">never</item>
     </style>
 
