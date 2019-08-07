@@ -413,7 +413,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ArrayList<Entry> connectiondatadelayvalues = new ArrayList<>();
     ArrayList<Entry> gpsaccuracyvalues = new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    private boolean isdatacomposing=true,isrecodrunning=false,isfromdrawer=true,setdefaultzoomlevel=true;
+    private boolean isdatacomposing=true,isrecodrunning=false,isfromdrawer=true,setdefaultzoomlevel=true,clearmapneeded=false;
     String lastsavedangle="";
     private float currentDegree = 0f,lastzoomlevel=0;
     private Orientation mOrientation;
@@ -1221,13 +1221,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     {
         this.isrecodrunning=isrecodrunning;
         vlauetraveled = 100;valuespeed = 80;valuealtitude = 20000;valuegpsaccuracy = 25;valuedatatimedelay = 10;valueconnectionspeed=100;
+        clearmapneeded=true;
     }
 
     public void setdraweropen(boolean isdraweropen)
     {
 
     }
-
 
     public void cleargooglemap()
     {
@@ -1236,7 +1236,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             mgooglemap.clear();
 
             if(lastPulseAnimator != null)
+            {
                 lastPulseAnimator.cancel();
+                lastPulseAnimator=null;
+            }
 
             if(mappulsatecircle != null && mgooglemap != null)
             {
@@ -1309,7 +1312,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void resetmediainformation()
     {
-
         try
         {
             txt_videoaudio_validframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
@@ -2290,7 +2292,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         zoomgooglemap(location.latitude,location.longitude);
 
-        if(lastPulseAnimator == null)
+        if(lastPulseAnimator == null || clearmapneeded)
             addPulsatingEffect();
         else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
             addPulsatingEffect();
@@ -2314,8 +2316,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 mgooglemap.setMyLocationEnabled(false);
             else
                 mgooglemap.setMyLocationEnabled(false);
-
-
 
             mgooglemap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                 @Override
@@ -2350,8 +2350,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             if(usercurrentlocation == null)
                 return;
 
-            if(! isdatacomposing)
+            if(! isdatacomposing || (! isrecodrunning))
             {
+                if(clearmapneeded)
+                {
+                    clearmapneeded=false;
+                    cleargooglemap();
+                }
                 addmediacreatedpointmarker(usercurrentlocation);
                 return;
             }
@@ -2363,7 +2368,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     mediacreatedpointmarker=null;
                 }
             }
-
 
             lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
                     new ValueAnimator.AnimatorUpdateListener() {

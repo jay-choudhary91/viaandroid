@@ -1028,9 +1028,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     protected void onDestroy() {
         super.onDestroy();
 
-        if (myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
-
         if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
             try {
                 if (isservicebound)
@@ -2545,6 +2542,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }catch (Exception e){
                 e.printStackTrace();
             }
+        }
+        else
+        {
+            if (myHandler != null && myRunnable != null)
+                myHandler.removeCallbacks(myRunnable);
         }
 
         if (mOrientation != null)

@@ -1,12 +1,17 @@
 package com.deeptruth.app.android.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.view.Gravity;
@@ -19,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.BuildConfig;
@@ -82,7 +88,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     String mediafilepath ="", mediatoken ="",mediatype="",mediathumbnailurl="";
     int mediaduration = 0;
     int navigationbarheight = 0;
-
+    private final int request_permissions = 1;
     private Handler myHandler;
     private Runnable myRunnable;
 
@@ -269,36 +275,62 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                             getResources().getString(R.string.txt_save),export ,new adapteritemclick() {
                         @Override
                         public void onItemClicked(Object object) {
-                            //baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity());
-                            if(mediatype.equalsIgnoreCase(config.type_image))
-                                common.shareimage(applicationviavideocomposer.getactivity(),mediafilepath);
-                            else if(mediatype.equalsIgnoreCase(config.type_video))
-                                common.sharevideo(applicationviavideocomposer.getactivity(),mediafilepath);
-                            else if(mediatype.equalsIgnoreCase(config.type_audio))
-                                common.shareaudio(applicationviavideocomposer.getactivity(),mediafilepath);
+                            checkwritepermission();
                         }
                         @Override
                         public void onItemClicked(Object object, int type) {
-
                         }
                     });
                     return;
                 }
-
-                if(mediatype.equalsIgnoreCase(config.type_image))
-                    common.shareimage(applicationviavideocomposer.getactivity(),mediafilepath);
-                else if(mediatype.equalsIgnoreCase(config.type_video))
-                    common.sharevideo(applicationviavideocomposer.getactivity(),mediafilepath);
-                else if(mediatype.equalsIgnoreCase(config.type_audio))
-                    common.shareaudio(applicationviavideocomposer.getactivity(),mediafilepath);
-
+                checkwritepermission();
                 break;
 
             case R.id.img_cancel:
                 getDialog().dismiss();
                 break;
-
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == request_permissions) {
+            boolean permissionsallgranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    permissionsallgranted = false;
+                    break;
+                }
+            }
+            if (permissionsallgranted)
+                showmediashareoptions();
+            else
+                Toast.makeText(applicationviavideocomposer.getactivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void checkwritepermission()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if (common.getstoragedeniedpermissions().isEmpty())
+                showmediashareoptions();
+        }
+        else
+        {
+            showmediashareoptions();
+        }
+    }
+
+    public void showmediashareoptions()
+    {
+        if(mediatype.equalsIgnoreCase(config.type_image))
+            common.shareimage(applicationviavideocomposer.getactivity(),mediafilepath);
+        else if(mediatype.equalsIgnoreCase(config.type_video))
+            common.sharevideo(applicationviavideocomposer.getactivity(),mediafilepath);
+        else if(mediatype.equalsIgnoreCase(config.type_audio))
+            common.shareaudio(applicationviavideocomposer.getactivity(),mediafilepath);
     }
 
     public void drawmediainformation(String mediafilepath)
