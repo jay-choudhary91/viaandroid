@@ -604,7 +604,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.MATCH_PARENT);
 
-                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                         setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,
                                 0,0,0,null,headercontainer,null,90);
 
@@ -627,7 +627,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.MATCH_PARENT);
-                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         //lp.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
                         setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,
                                 0,0,0,null,headercontainer,null,270);
