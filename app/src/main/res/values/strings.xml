@@ -551,6 +551,8 @@
     <string name="popup_publish">publish</string>
     <string name="popup_upgradecode">upgradecode</string>
 
+    <string name="send_content">Select your file sharing service:</string>
+
 
 
 </resources>

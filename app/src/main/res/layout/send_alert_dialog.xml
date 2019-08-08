@@ -39,6 +39,19 @@
                 android:textColor="@android:color/black"
                 android:textSize="30dp" />
 
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:gravity="center_horizontal"
+                android:text="@string/send_content"
+                android:layout_below="@id/textView1"
+                app:fontType="Comfortaa-Regular"
+                android:textColor="@android:color/black"
+                android:textSize="17sp"
+                android:layout_marginBottom="@dimen/margin_5dp"/>
+
         </RelativeLayout>
 
         <RelativeLayout
