@@ -1540,7 +1540,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialogupgradecode.show();
     }
 
-    public void senditemsdialog(Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed,String mediathumbnailurl){
+    public void senditemsdialog(Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed,String mediathumbnailurl,String title){
 
         if(!isuserlogin()){
             redirecttologin();
@@ -1564,6 +1564,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialogfileuploadoptions.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         RecyclerView recyclerView = (RecyclerView) dialogfileuploadoptions.findViewById(R.id.ryclr_send_items);
         ImageView img_backbutton = (ImageView) dialogfileuploadoptions.findViewById(R.id.img_backbutton);
+        TextView txt_title = (TextView) dialogfileuploadoptions.findViewById(R.id.txt_title);
+
+        txt_title.setText(title);
+
         adaptersenddialog adaptersend = new adaptersenddialog(context, sharemedia, new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
@@ -1590,7 +1594,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                             dialogfileuploadoptions.dismiss();
 
-                        videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath, mediatoken,  type, ismediatrimmed,mediathumbnailurl);
+                        videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath, mediatoken,  type, ismediatrimmed,mediathumbnailurl,title);
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
                     {
@@ -1773,7 +1777,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-    public void videolocksharedialog(final Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed,String mediathumbnailurl){
+    public void videolocksharedialog(final Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed,String mediathumbnailurl,String title){
 
         final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1806,7 +1810,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,  type, ismediatrimmed,mediathumbnailurl);
+                senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,  type, ismediatrimmed,mediathumbnailurl,title);
             }
         });
 

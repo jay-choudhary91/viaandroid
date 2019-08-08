@@ -569,7 +569,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         float progress=seekParams.progress;
                         progress=progress/100;
-                        googlemap.setAlpha(progress);
+
+                        Log.e("progress=",""+progress);
+
+                        if(progress>=0.2)
+                            googlemap.setAlpha(progress);
                     }
                 }
 
@@ -589,7 +593,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 seekbartransparency.setProgress(Float.parseFloat(xdata.getinstance().getSetting(config.drawer_transparency)));
                 float progress=Float.parseFloat(xdata.getinstance().getSetting(config.drawer_transparency));
                 progress=progress/100;
-                googlemap.setAlpha(progress);
+                if(progress<=0.2){
+                    googlemap.setAlpha(0.2f);
+                }else{
+                    googlemap.setAlpha(progress);
+                }
+
             }
             else
             {
@@ -781,12 +790,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.network),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)), tvnetwork);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.version),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.OSversion)), tvversion);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_barometer),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.barometer)), tvbarometer);
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_orientation),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.screenorientatioin)), tvorientations);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_orientation),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.deviceorientation)), tvorientations);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_airplane_mode),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.airplanemode)), tvairoplan_mode);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_currency),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.devicecurrency)), tvcurrency);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)), tvwifi);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_gps),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.gpsonoff)), tvgps);
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_jailbroken),"\n"+common.getxdatavalue("NA"), tvjailbroken);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_jailbroken),"\n"+common.getxdatavalue("No"), tvjailbroken);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_connection),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.deviceconnection)), tvdeviceconnection);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_picture_quality),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.picturequality)), tvpicture_qty);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_camera),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.camera)), tvcamera);

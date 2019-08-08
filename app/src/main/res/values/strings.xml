@@ -245,10 +245,10 @@
     <string name="gpsaccuracy">GPS Accuracy</string>
     <string name="screen">Screen Size</string>
     <string name="country">Country</string>
-    <string name="cpuusage">CPU Usage</string>
+    <string name="cpuusage">CPU</string>
     <string name="brightness">Brightness</string>
     <string name="timezone">Phone Time Zone</string>
-    <string name="memoryusage">Memory Usage</string>
+    <string name="memoryusage">Memory</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="localtime">Phone Time</string>
     <string name="storagefree">Storage </string>
@@ -259,7 +259,7 @@
     <string name="data_connection">Connection</string>
     <string name="data_orientation">Orientation</string>
     <string name="data_camera">Camera</string>
-    <string name="data_picture_quality">Picture Quality</string>
+    <string name="data_picture_quality">Picture</string>
     <string name="data_barometer">Barometer</string>
     <string name="data_currency">Currency</string>
     <string name="data_airplane_mode">Airplane Mode</string>
@@ -552,7 +552,7 @@
     <string name="popup_upgradecode">upgradecode</string>
 
     <string name="send_content">Select your file sharing service:</string>
-
+    <string name="timeheading"><![CDATA[TIME \& DATE]]></string>
 
 
 </resources>
