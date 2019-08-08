@@ -1235,6 +1235,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         {
             mgooglemap.clear();
 
+            if(mediacreatedpointmarker != null)
+            {
+                mediacreatedpointmarker.remove();
+                mediacreatedpointmarker=null;
+            }
+
             if(lastPulseAnimator != null)
             {
                 lastPulseAnimator.cancel();
@@ -1245,6 +1251,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             {
                 mappulsatecircle.remove();
                 mappulsatecircle=null;
+                Log.e("PulsateRemove"," PulsateRemove");
             }
 
             if(userlocationcircle != null && mgooglemap != null)
@@ -2312,10 +2319,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             // for ActivityCompat#requestPermissions for more details.
         } else {
 
-            if(isdatacomposing)
-                mgooglemap.setMyLocationEnabled(false);
-            else
-                mgooglemap.setMyLocationEnabled(false);
+            mgooglemap.setMyLocationEnabled(false);
 
             mgooglemap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
                 @Override
@@ -2350,7 +2354,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             if(usercurrentlocation == null)
                 return;
 
-            if(! isdatacomposing || (! isrecodrunning))
+            if(clearmapneeded)
+            {
+                clearmapneeded=false;
+                cleargooglemap();
+            }
+            addmediacreatedpointmarker(usercurrentlocation);
+            return;
+
+            /*if(! isdatacomposing || (! isrecodrunning))
             {
                 if(clearmapneeded)
                 {
@@ -2367,9 +2379,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     mediacreatedpointmarker.remove();
                     mediacreatedpointmarker=null;
                 }
-            }
+            }*/
 
-            lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
+            /*lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
                     new ValueAnimator.AnimatorUpdateListener() {
                         @Override
                         public void onAnimationUpdate(ValueAnimator animation) {
@@ -2381,6 +2393,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                         .radius((Float) animation.getAnimatedValue())
                                         .strokeWidth(0)
                                         .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
+
+                                Log.e("PulsateAdded"," PulsateAdded");
 
                                 userlocationcircle= mgooglemap.addCircle(new CircleOptions()
                                         .center(usercurrentlocation)
@@ -2394,7 +2408,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             if(userlocationcircle != null)
                                 userlocationcircle.setCenter(usercurrentlocation);
                         }
-                    });
+                    });*/
         }catch (Exception e)
         {
             e.printStackTrace();

@@ -3,6 +3,10 @@ package com.deeptruth.app.android.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaMetadataRetriever;
@@ -679,101 +683,112 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         resettimer();
         isaudiorecording=false;
 
+        if(barvisualizer != null)
+            barvisualizer.setVisibility(View.INVISIBLE);
+
+        try
+        {
+            final File destinationfilepath = common.gettempfileforaudiowave();
+            Bitmap bitmap=getbitmapfromview(myvisualizerview);
+            if(bitmap == null)
+                return;
+
+            if (destinationfilepath.exists())
+                    destinationfilepath.delete ();
+
+            try {
+                FileOutputStream out = new FileOutputStream(destinationfilepath);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                out.flush();
+                out.close();
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(dbstartitemcontainer != null && dbstartitemcontainer.size() > 0 &&
+                        dbstartitemcontainer.get(0).getItem2().equalsIgnoreCase("audio"))
+                {
+
+                    if(dbstartitemcontainer.size() > 0)
+                    {
+                        dbstartitemcontainer.get(0).setItem15(destinationfilepath.getAbsolutePath());
+                        callserviceforinsertintodb();
+
+                        try {
+                            String selecteddir=xdata.getinstance().getSetting(config.selected_folder);
+                            String selectedfile=selecteddir+File.separator+config.audiotempfile;
+                            if(new File(selectedfile).exists())
+                                common.delete(new File(selectedfile));
+
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+
+                        img_dotmenu.setVisibility(View.VISIBLE);
+
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(recordedmediafile,2);
+
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(null,4);
+
+                        resetaudioreder();
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         if(myvisualizerview != null)
         {
             myvisualizerview.clear();
             myvisualizerview.setVisibility(View.INVISIBLE);
         }
 
-        if(barvisualizer != null)
-            barvisualizer.setVisibility(View.INVISIBLE);
+        /**/
+    }
 
+    public Bitmap getbitmapfromview(View view) {
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bm = view.getDrawingCache();
+        return bm;
+    }
 
-        try {
+    protected Bitmap getbitmapfromview1(LinearLayout view) {
+        Bitmap map;
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        return map=view.getDrawingCache();
+    }
 
-            if(dbstartitemcontainer != null && dbstartitemcontainer.size() > 0 &&
-                    dbstartitemcontainer.get(0).getItem2().equalsIgnoreCase("audio"))
-            {
-
-                final File destinationfilepath = common.gettempfileforaudiowave();
-                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                        BuildConfig.APPLICATION_ID + ".provider", new File(recordedmediafile));
-
-                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-                mediaMetadataRetriever.setDataSource(applicationviavideocomposer.getactivity(),uri);
-                long mediatotalduration = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-
-                if(mediatotalduration > 10000)
-                    mediatotalduration=10000;
-
-                String starttime = common.converttimeformat(0);
-                String endtime = common.converttimeformat(mediatotalduration);
-
-                /*final String[] command = { "-ss", starttime,"-i", recordedmediafile, "-to",endtime, "-filter_complex",
-                        "compand=gain=-20,showwavespic=s=640x120:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
-*/
-                final String[] command = { "-ss", starttime,"-i", recordedmediafile, "-to",endtime, "-filter_complex",
-                        "compand=gain=-10,showwavespic=s=400x400:colors=#0EAE3E", "-frames:v","1",destinationfilepath.getAbsolutePath()};
-
-                applicationviavideocomposer.ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
-                    @Override
-                    public void onFailure(String s) {
-                        Log.e("Failure with output : ","IN onFailure");
-                        callserviceforinsertintodb();
-                    }
-
-                    @Override
-                    public void onSuccess(String s) {
-                        Log.e("SUCCESS with output : ","onSuccess");
-                        if(dbstartitemcontainer.size() > 0)
-                        {
-                            dbstartitemcontainer.get(0).setItem15(destinationfilepath.getAbsolutePath());
-                            callserviceforinsertintodb();
-
-                            try {
-                                String selecteddir=xdata.getinstance().getSetting(config.selected_folder);
-                                String selectedfile=selecteddir+File.separator+config.audiotempfile;
-                                if(new File(selectedfile).exists())
-                                    common.delete(new File(selectedfile));
-
-                            }catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-
-                            img_dotmenu.setVisibility(View.VISIBLE);
-
-                            if(madapterclick != null)
-                                madapterclick.onItemClicked(recordedmediafile,2);
-
-                            if(madapterclick != null)
-                                madapterclick.onItemClicked(null,4);
-
-                            resetaudioreder();
-                        }
-                    }
-
-                    @Override
-                    public void onProgress(String s) {
-                        Log.e( "audiothumbnail : " , "audiothumbnail onProgress");
-
-                    }
-
-                    @Override
-                    public void onStart() {
-                        Log.e("Start with output : ","IN onStart");
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        Log.e("Start with output : ","IN onFinish");
-                    }
-                });
-            }
-
-        } catch (Exception e) {
-            // do nothing for now
-        }
+    public static Bitmap getbitmapfromview1(View view) {
+        //Define a bitmap with the same size as the view
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        //Bind a canvas to it
+        Canvas canvas = new Canvas(returnedBitmap);
+        //Get the view's background
+        Drawable bgDrawable =view.getBackground();
+        if (bgDrawable!=null)
+            //has background drawable, then draw it on the canvas
+            bgDrawable.draw(canvas);
+        else
+            //does not have background drawable, then draw white background on the canvas
+            canvas.drawColor(Color.RED);
+        // draw the view on the canvas
+        view.draw(canvas);
+        //return the bitmap
+        return returnedBitmap;
     }
 
     public void callserviceforinsertintodb()
