@@ -219,6 +219,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
         switch (view.getId()){
 
             case R.id.lyout_publish:
+
                 String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.publish_details2);
 
@@ -233,7 +234,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         public void onItemClicked(Object object) {
                             //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    mediatype,ismediatrimmed,mediathumbnailurl);
+                                    mediatype,ismediatrimmed,mediathumbnailurl,getActivity().
+                                            getResources().getString(R.string.txt_publish));
 
                         }
 
@@ -245,7 +247,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     return;
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                        mediatype,ismediatrimmed,mediathumbnailurl);
+                        mediatype,ismediatrimmed,mediathumbnailurl,getActivity().
+                                getResources().getString(R.string.txt_publish));
                 //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                 break;
 
@@ -261,7 +264,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         @Override
                         public void onItemClicked(Object object) {
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    mediatype,ismediatrimmed,mediathumbnailurl);
+                                    mediatype,ismediatrimmed,mediathumbnailurl,getActivity().
+                                            getResources().getString(R.string.txt_send));
                         }
                         @Override
                         public void onItemClicked(Object object, int type) {
@@ -271,7 +275,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     return;
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                        mediatype,ismediatrimmed,mediathumbnailurl);
+                        mediatype,ismediatrimmed,mediathumbnailurl,getActivity().
+                                getResources().getString(R.string.txt_send));
                 break;
 
             case R.id.lyout_export:
