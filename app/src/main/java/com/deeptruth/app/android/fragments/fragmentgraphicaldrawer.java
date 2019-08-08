@@ -569,7 +569,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         float progress=seekParams.progress;
                         progress=progress/100;
-                        googlemap.setAlpha(progress);
+
+                         googlemap.setAlpha(100);
                     }
                 }
 
