@@ -1091,18 +1091,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
      }else{
          if(rotateangle == 90){
-             xdata.getinstance().saveSetting(config.screenorientatioin,"Landscape Left");
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Landscape");
          }else if(rotateangle == -90){
-             xdata.getinstance().saveSetting(config.screenorientatioin,"Landscape Right");
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Landscape ");
          }else if(rotateangle ==0){
              xdata.getinstance().saveSetting(config.screenorientatioin,"Portrait");
          }else if(rotateangle == 180){
-             xdata.getinstance().saveSetting(config.screenorientatioin,"Portrait Up side Down");
+             xdata.getinstance().saveSetting(config.screenorientatioin,"Portrait");
          }
      }
  }
-
-
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
