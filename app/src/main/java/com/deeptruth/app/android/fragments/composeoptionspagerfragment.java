@@ -1,7 +1,6 @@
 package com.deeptruth.app.android.fragments;
 
 import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
@@ -23,7 +22,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -55,6 +53,7 @@ import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.thumbnailholder;
 import com.deeptruth.app.android.sensor.Orientation;
+import com.deeptruth.app.android.utils.circletosquare_animation;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
@@ -93,8 +92,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     RelativeLayout parentview;
     @BindView(R.id.txt_encrypting)
     TextView txt_encrypting;
-    @BindView(R.id.base_view)
-    ViewGroup mParent;
+   /* @BindView(R.id.base_view)
+    ViewGroup mParent;*/
     @BindView(R.id.layout_seekbarzoom)
     RelativeLayout layout_seekbarzoom;
     @BindView(R.id.txt_zoomlevel)
@@ -105,6 +104,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ImageView expandedImageView;
     @BindView(R.id.container)
     FrameLayout framecontainer;
+    @BindView(R.id.img_recordbutton)
+    circletosquare_animation recordbutton;
 
     @BindView(R.id.layout_encryption)
     RelativeLayout layout_encryption;
@@ -132,7 +133,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private Date initialdate;
     private String[] transparentarray=common.gettransparencyvalues();
     GradientDrawable gradientDrawablebutton;
-    private volatile boolean iscircle = true;
+    private volatile boolean isrecording = false;
     private Animator currentAnimator;
     private int shortAnimationDuration;
     private static final int  RC_OVERLAY=21;
@@ -158,11 +159,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             ButterKnife.bind(this, rootview);
             initialdate =new Date();
             txt_zoomlevel.setOnClickListener(this);
-            layout_recorder.setOnClickListener(this);
+            recordbutton.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
             layoutbottom.setOnTouchListener(this);
 
+            recordbutton.initdefaulticon();
             gethelper().drawerenabledisable(false);
 
             navigationbarheight =  common.getnavigationbarheight();
@@ -191,10 +193,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             });
 
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
-            gradientDrawablebutton = new GradientDrawable();
+            /*gradientDrawablebutton = new GradientDrawable();
             gradientDrawablebutton.setCornerRadius(360.0f);
             gradientDrawablebutton.setShape(GradientDrawable.RECTANGLE);
-            mParent.setBackground(gradientDrawablebutton);
+            mParent.setBackground(gradientDrawablebutton);*/
 
             pagermediatype.setAdapter(new CustomPagerAdapter(applicationviavideocomposer.getactivity()));
             pagermediatype.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -207,7 +209,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 public void onPageSelected(int position) {
 
                     currentselectedcomposer=position;
-                    layout_recorder.setClickable(false);
+                    recordbutton.setClickable(false);
                     int currentpagerpos=position;
                     isfragmentload = false;
                     if(currentpagerpos == 0){
@@ -338,8 +340,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     @Override
     public void onStop() {
         super.onStop();
-        if(! iscircle)
-            makecircle();
 
         if(mOrientation != null)
             mOrientation.stopListening();
@@ -515,18 +515,23 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 else if(currentselectedcomposer == 1  && fragimgcapture != null)
                     fragimgcapture.adjustzoom();
                 break;
-            case R.id.layout_recorder:
-                layout_recorder.setEnabled(false);
+            case R.id.img_recordbutton:
+                recordbutton.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                 {
                     public void run()
                     {
-                        layout_recorder.setEnabled(true);
+                        recordbutton.setEnabled(true);
                     }
                 }, 1200);
 
-                if(currentselectedcomposer == 1 || currentselectedcomposer == 2)
-                    startcirclesquareanimation();
+                if(! isrecording && currentselectedcomposer!=0)
+                {
+                    isrecording=true;
+                    if(currentselectedcomposer == 1 || currentselectedcomposer == 2)
+                        startstopcirclesquareanimation();
+                }
+
 
                 if(currentselectedcomposer == 0)
                 {
@@ -626,12 +631,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    public void startcirclesquareanimation()
+    public void startstopcirclesquareanimation()
     {
-        if (iscircle)
-            makesquare();
+        if(isrecording)
+            recordbutton.startrecordanimation();
         else
-            makecircle();
+            recordbutton.stoprecordanimation();
     }
 
     public void enableDisableView(View view, boolean enabled) {
@@ -719,8 +724,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void showselectedfragment()
     {
-        if (! iscircle)
-            makecircle();
+        ///isrecording=false;
+        //startstopcirclesquareanimation();
 
         gethelper().setisrecordrunning(false);
         xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
@@ -734,7 +739,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
 
-                fragimgcapture.setData(mitemclick,layoutbottom,layout_seekbarzoom,framecontainer,layout_recorder);
+                fragimgcapture.setData(mitemclick,layoutbottom,layout_seekbarzoom,framecontainer,recordbutton);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
                 isfragmentload = true;
 
@@ -747,7 +752,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
 
-                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_mediatype,layout_seekbarzoom,framecontainer,layout_recorder);
+                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_mediatype,layout_seekbarzoom,framecontainer,recordbutton);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
                 isfragmentload = true;
             break;
@@ -759,7 +764,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
 
-                fragaudiocomposer.setData(mitemclick,layoutbottom,(layoutbottomheight-layoutmediatypeheight),framecontainer,layout_recorder);
+                fragaudiocomposer.setData(mitemclick,layoutbottom,(layoutbottomheight-layoutmediatypeheight),framecontainer,recordbutton);
                 gethelper().replacetabfragment(fragaudiocomposer,false,true);
                 isfragmentload = true;
             break;
@@ -784,6 +789,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     };
 
+
     public void composecallback(Object object,int type)
     {
         if(type == startrecorder) // for video record start,audio record start and image capture button click
@@ -802,8 +808,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(type == stoprecorder) // for video record stop,audio record stop and image captured button click
         {
-            if(! iscircle)
-                makecircle();
+            if(isrecording)
+            {
+                isrecording=false;
+                startstopcirclesquareanimation();
+            }
 
             gethelper().setisrecordrunning(false);
             if(currentselectedcomposer == 1)
@@ -1147,7 +1156,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     }
 
-    private void makecircle()
+    /*private void makecircle()
     {
         ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius", 30.0f, 200.0f);
         Animator shiftAnimation = AnimatorInflater.loadAnimator(applicationviavideocomposer.getactivity(), R.animator.slide_right_down);
@@ -1156,9 +1165,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         animatorSet.setDuration(90);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
-        iscircle = !iscircle;
-    }
-    private void makesquare()
+        isrecording = !isrecording;
+    }*/
+    /*private void makesquare()
     {
         ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius",100f,10.0f);
         Animator shiftAnimation = AnimatorInflater.loadAnimator(applicationviavideocomposer.getactivity(), R.animator.slide_left_up);
@@ -1167,8 +1176,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         animatorSet.setDuration(90);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
-        iscircle = !iscircle;
-    }
+        isrecording = !isrecording;
+    }*/
 
     private void zoomImageFromThumb(final ImageView thumbView, final Uri uri) {
         // If there's an animation in progress, cancel it
@@ -1329,6 +1338,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         set.start();
         currentAnimator = set;
     }
-    }
+ }
 
 

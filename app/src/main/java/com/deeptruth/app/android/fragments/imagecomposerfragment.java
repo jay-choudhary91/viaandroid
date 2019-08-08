@@ -361,7 +361,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     ArrayList<dbitemcontainer> dbstartitemcontainer =new ArrayList<>();
     ArrayList<dbitemcontainer> dbmiddleitemcontainer =new ArrayList<>();
     String hashvalue = "",metrichashvalue = "";
-    RelativeLayout layoutbottom,layout_seekbarzoom,layout_recorder;
+    RelativeLayout layoutbottom,layout_seekbarzoom;
+    ImageView recordbutton;
     boolean isexpandview =false;
 
 
@@ -1554,8 +1555,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 xdata.getinstance().saveSetting(config.camera, devicecamera);
                 xdata.getinstance().saveSetting(config.picturequality, selectedmediaquality);
 
-                if(layout_recorder != null)
-                    layout_recorder.setClickable(true);
+                if(recordbutton != null)
+                    recordbutton.setClickable(true);
 
                 actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
                 layoutbottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));
@@ -1808,12 +1809,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public void setData(adapteritemclick madapterclick, RelativeLayout layoutbottom, RelativeLayout layout_seekbarzoom, FrameLayout framecontainer,RelativeLayout layout_recorder) {
+    public void setData(adapteritemclick madapterclick, RelativeLayout layoutbottom, RelativeLayout layout_seekbarzoom, FrameLayout framecontainer,ImageView recordbutton) {
         this.madapterclick = madapterclick;
         this.layoutbottom = layoutbottom;
         this.layout_seekbarzoom = layout_seekbarzoom;
         this.framecontainer = framecontainer;
-        this.layout_recorder = layout_recorder;
+        this.recordbutton = recordbutton;
     }
 
     @Override

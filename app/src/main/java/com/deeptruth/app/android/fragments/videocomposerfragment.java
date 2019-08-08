@@ -22,6 +22,7 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.location.Location;
 import android.media.CamcorderProfile;
+import android.media.Image;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -394,7 +395,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     Animation blinkanimation;
     List<String> qualityitemslist=new ArrayList<>();
-    RelativeLayout layout_recorder;
+    ImageView recordbutton;
 
     @Override
     public int getlayoutid() {
@@ -1531,14 +1532,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom,RelativeLayout layout_mediatype, RelativeLayout layout_seekbarzoom, FrameLayout framecontainer,RelativeLayout layout_recorder) {
+    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom,RelativeLayout layout_mediatype, RelativeLayout layout_seekbarzoom, FrameLayout framecontainer,ImageView recordbutton) {
         this.autostartvideo = autostartvideo;
         this.madapterclick = madapterclick;
         this.layout_bottom = layout_bottom;
         this.layout_seekbarzoom = layout_seekbarzoom;
         this.framecontainer = framecontainer;
         this.layout_mediatype = layout_mediatype;
-        this.layout_recorder = layout_recorder;
+        this.recordbutton = recordbutton;
 
     }
 
@@ -1962,8 +1963,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                     //layout_no_gps_wifi.setVisibility(View.VISIBLE);
 
-                    if(layout_recorder != null)
-                        layout_recorder.setClickable(true);
+                    if(recordbutton != null)
+                        recordbutton.setClickable(true);
 
                     layout_wifi_gps_data.setVisibility(View.VISIBLE);
                     actionbar.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellowtransparent));

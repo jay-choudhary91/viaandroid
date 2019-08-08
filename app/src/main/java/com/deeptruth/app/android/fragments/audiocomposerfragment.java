@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
+import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -169,7 +170,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private List<visualizerview> mVisualizerviews = new ArrayList<>();
     visualizerview barvisualizer;
     FrameLayout framecontainer;
-    RelativeLayout layout_recorder;
+    ImageView recordbutton;
 
     @Override
     public int getlayoutid() {
@@ -1167,8 +1168,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     getselectedmetrics(mlocalarraylist);
                 }
 
-                if(layout_recorder != null)
-                    layout_recorder.setClickable(true);
+                if(recordbutton != null)
+                    recordbutton.setClickable(true);
 
                 common.setgraphicalblockchainvalue(config.blockchainid,"",true);
                 common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
@@ -1223,12 +1224,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
 
-    public void setData(adapteritemclick madapterclick,RelativeLayout layoutbottom, int layoutbottomheight ,FrameLayout framecontainer,RelativeLayout layout_recorder) {
+    public void setData(adapteritemclick madapterclick,RelativeLayout layoutbottom, int layoutbottomheight ,FrameLayout framecontainer,ImageView recordbutton) {
         this.madapterclick = madapterclick;
         this.layoutbottom = layoutbottom;
         this.layoutmediatypeheight = layoutbottomheight;
         this.framecontainer = framecontainer;
-        this.layout_recorder = layout_recorder;
+        this.recordbutton = recordbutton;
     }
 
     @Override

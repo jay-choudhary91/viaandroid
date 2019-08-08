@@ -117,14 +117,23 @@
             android:layout_centerInParent="true"
             >
             <ImageView
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:background="@drawable/circle_record_btn_bg"
                 />
 
-            <com.deeptruth.app.android.utils.AnimatableCardView
+            <com.deeptruth.app.android.utils.circletosquare_animation
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:id="@+id/img_recordbutton"
+                android:background="@color/transparent"
+                />
+
+            <!--<com.deeptruth.app.android.utils.AnimatableCardView
                 android:id="@+id/base_view"
                 android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_centerVertical="true"
@@ -133,17 +142,10 @@
                 android:layout_centerInParent="true"
                 app:cardElevation="0dp">
 
-                <ImageView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center"
-                    android:id="@+id/img_video_capture"
-                    android:background="@drawable/circle_record_btn"
-                    />
+
 
             </com.deeptruth.app.android.utils.AnimatableCardView>
-
+-->
         </RelativeLayout>
 
         <ImageView
