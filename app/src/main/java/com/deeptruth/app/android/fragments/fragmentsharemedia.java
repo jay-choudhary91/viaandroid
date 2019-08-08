@@ -152,7 +152,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             }
             else if(mediatype.equalsIgnoreCase(config.type_audio))
             {
-                img_thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                img_thumbnail.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 img_thumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
                 img_audiothumb_timeline.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
                 layout_video_section.setVisibility(View.GONE);
