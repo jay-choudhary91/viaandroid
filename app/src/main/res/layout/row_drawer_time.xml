@@ -219,37 +219,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
 
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_satellite_altitude"
-                style="@style/txt_normalview"
-                android:layout_width="wrap_content"
-                android:gravity="center"
-                android:text="@string/satellite_altitudes_at"
-                android:textColor="@color/white"
-                app:fontType="OpenSans_Regular" />
-
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_satellite_altitudes_at"
-                style="@style/txt_normalview"
-                android:layout_width="wrap_content"
-                android:gravity="center"
-                android:text="@string/satellite_altitudes_at"
-                android:textColor="@color/white"
-                app:fontType="OpenSans_Semibold" />
-
-        </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_satellite_itemlist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
 
         </LinearLayout>
