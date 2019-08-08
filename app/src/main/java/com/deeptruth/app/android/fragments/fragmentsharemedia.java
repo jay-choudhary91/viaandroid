@@ -227,13 +227,13 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))
                 {
-                    baseactivity.getinstance().share_alert_dialog(getActivity(), getActivity().
+                    baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(), applicationviavideocomposer.getactivity().
                             getResources().getString(R.string.txt_publish), publish, new adapteritemclick() {
                         @Override
                         public void onItemClicked(Object object) {
                             //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    mediatype,ismediatrimmed,mediathumbnailurl);
+                                    mediatype,ismediatrimmed,mediathumbnailurl,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish));
 
                         }
 
@@ -245,7 +245,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     return;
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                        mediatype,ismediatrimmed,mediathumbnailurl);
+                        mediatype,ismediatrimmed,mediathumbnailurl,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish));
                 //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                 break;
 
@@ -256,12 +256,12 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 getDialog().dismiss();
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
-                    baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
+                    baseactivity.getinstance().share_alert_dialog(getActivity(),applicationviavideocomposer.getactivity().
                             getResources().getString(R.string.txt_send),send ,new adapteritemclick() {
                         @Override
                         public void onItemClicked(Object object) {
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    mediatype,ismediatrimmed,mediathumbnailurl);
+                                    mediatype,ismediatrimmed,mediathumbnailurl,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send));
                         }
                         @Override
                         public void onItemClicked(Object object, int type) {
@@ -271,7 +271,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     return;
                 }
                 baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                        mediatype,ismediatrimmed,mediathumbnailurl);
+                        mediatype,ismediatrimmed,mediathumbnailurl,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send));
                 break;
 
             case R.id.lyout_export:
@@ -281,7 +281,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 getDialog().dismiss();
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
-                    baseactivity.getinstance().share_alert_dialog(getActivity(),getActivity().
+                    baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity().
                             getResources().getString(R.string.txt_save),export ,new adapteritemclick() {
                         @Override
                         public void onItemClicked(Object object) {
