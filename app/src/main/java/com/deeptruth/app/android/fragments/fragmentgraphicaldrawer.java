@@ -568,8 +568,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(seekParams.progress > 10)
                     {
                         float progress=seekParams.progress;
-                        progress=100/100;
-                        googlemap.setAlpha(progress);
+                        progress=progress/100;
+
+                        Log.e("progress=",""+progress);
+
+                        if(progress>=0.2)
+                            googlemap.setAlpha(progress);
                     }
                 }
 
@@ -589,7 +593,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 seekbartransparency.setProgress(Float.parseFloat(xdata.getinstance().getSetting(config.drawer_transparency)));
                 float progress=Float.parseFloat(xdata.getinstance().getSetting(config.drawer_transparency));
                 progress=progress/100;
-                googlemap.setAlpha(progress);
+                if(progress<=0.2){
+                    googlemap.setAlpha(0.2f);
+                }else{
+                    googlemap.setAlpha(progress);
+                }
+
             }
             else
             {
