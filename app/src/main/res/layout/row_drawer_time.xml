@@ -19,7 +19,7 @@
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_timeinformation"
                 style="@style/txt_drawer_graphical_title_big"
-                android:text="TIME"
+                android:text="@string/timeheading"
                 app:fontType="bahnschrift_light" />
 
             <ImageView
@@ -69,7 +69,7 @@
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_phone_time"
-                    style="@style/txt_normalview"
+                    style="@style/txt_timedate"
                     android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:text=""
@@ -79,7 +79,7 @@
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_phone_date"
-                    style="@style/txt_normalview"
+                    style="@style/txt_timedate"
                     android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:text=""
@@ -124,7 +124,7 @@
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_world_time"
-                    style="@style/txt_normalview"
+                    style="@style/txt_timedate"
                     android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:text=""
@@ -134,7 +134,7 @@
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_world_date"
-                    style="@style/txt_normalview"
+                    style="@style/txt_timedate"
                     android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:text=""
@@ -153,7 +153,6 @@
         android:id="@+id/layout_satellite_informations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -168,7 +167,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="0dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -186,11 +185,12 @@
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_sun"
-                    style="@style/txt_normalview"
+                    style="@style/txt_timedate"
                     android:layout_width="wrap_content"
                     android:gravity="left"
                     android:textColor="@color/white"
                     android:layout_marginLeft="10dp"
+                    android:paddingLeft="5dp"
                     android:textSize="12sp"
                     app:fontType="OpenSans_Regular" />
 
@@ -210,9 +210,10 @@
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_moon"
-                style="@style/txt_normalview"
+                style="@style/txt_timedate"
                 android:layout_width="wrap_content"
                 android:textColor="@color/white"
+                android:paddingLeft="5dp"
                 android:layout_marginLeft="10dp"
                 android:textSize="12sp"
                 app:fontType="OpenSans_Regular" />
