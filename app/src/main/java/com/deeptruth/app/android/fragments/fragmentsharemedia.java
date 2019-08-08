@@ -219,6 +219,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
         switch (view.getId()){
 
             case R.id.lyout_publish:
+
                 String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
                         getActivity().getResources().getString(R.string.publish_details2);
 
@@ -234,6 +235,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                             //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                             baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                                     mediatype,ismediatrimmed,mediathumbnailurl,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish));
+                                    mediatype,ismediatrimmed,mediathumbnailurl,applicationviavideocomposer.getactivity().
+                                            getResources().getString(R.string.txt_publish));
 
                         }
 

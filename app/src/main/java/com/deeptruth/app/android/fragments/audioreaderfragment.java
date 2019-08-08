@@ -1819,13 +1819,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void callupdatemetaapi(String mediaid,String title,String description)
     {
-        if(!gethelper().isuserlogin()){
+        /*if(!gethelper().isuserlogin()){
             Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
                     .getResources().getString(R.string.login_here),Toast.LENGTH_SHORT).show();
             resetmedianamenotes();
             gethelper().redirecttologin();
             return;
-        }
+        }*/
 
         //mediaid="460123";
 
@@ -1840,7 +1840,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         requestparams.put("type",config.type_audio);
         requestparams.put("action","updatemeta");
         requestparams.put("id",mediaid);
-        requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
+        //requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
         requestparams.put("title",title);
         requestparams.put("description",description);
         progressdialog.showwaitingdialog(getActivity());

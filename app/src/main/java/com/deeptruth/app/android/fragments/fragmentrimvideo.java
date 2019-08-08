@@ -93,7 +93,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        /*switch (view.getId()){
 
             case R.id.lyout_publish:
                 String publish =getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+
@@ -106,7 +106,6 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                                  getResources().getString(R.string.txt_publish), publish, new adapteritemclick() {
                              @Override
                              public void onItemClicked(Object object) {
-                                 //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                                  baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),videopath,videotoken,
                                          config.item_video,ismediatrimmed,"",applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send));
                                  getDialog().dismiss();
@@ -119,7 +118,6 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                          });
                          return;
                 }
-                //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
                 break;
 
             case R.id.lyout_send:
@@ -179,7 +177,7 @@ public class fragmentrimvideo extends DialogFragment implements View.OnClickList
                 getDialog().dismiss();
                 break;
 
-        }
+        }*/
     }
 
 
