@@ -1155,13 +1155,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void callupdatemetaapi(String mediaid,String title,String description)
     {
-        /*if(!gethelper().isuserlogin()){
+        if(!gethelper().isuserlogin()){
             Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
                     .getResources().getString(R.string.login_here),Toast.LENGTH_SHORT).show();
             resetmedianamenotes();
             gethelper().redirecttologin();
             return;
-        }*/
+        }
 
         //mediaid="460123";
 
@@ -1176,7 +1176,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         requestparams.put("type",config.type_image);
         requestparams.put("action","updatemeta");
         requestparams.put("id",mediaid);
-        //requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
+        requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
         requestparams.put("title",title);
         requestparams.put("description",description);
         progressdialog.showwaitingdialog(getActivity());

@@ -2179,13 +2179,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     public void callupdatemetaapi(String mediaid,String title,String description)
     {
-        /*if(!gethelper().isuserlogin()){
+        if(!gethelper().isuserlogin()){
             Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
                     .getResources().getString(R.string.login_here),Toast.LENGTH_SHORT).show();
             resetmedianamenotes();
             gethelper().redirecttologin();
             return;
-        }*/
+        }
 
         if(mediaid.trim().isEmpty() || mediaid.equalsIgnoreCase("0")){
             Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
@@ -2198,7 +2198,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         requestparams.put("type",config.type_video);
         requestparams.put("action","updatemeta");
         requestparams.put("id",mediaid);
-        //requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
+        requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
         requestparams.put("title",title);
         requestparams.put("description",description);
         progressdialog.showwaitingdialog(getActivity());
