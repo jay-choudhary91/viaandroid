@@ -1542,7 +1542,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void senditemsdialog(Context context,String mediafilepath,String mediatoken,final String type,
                                 boolean ismediatrimmed,String mediathumbnailurl,String popupcontenttype){
-    public void senditemsdialog(Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed,String mediathumbnailurl,String title){
 
         if(popupcontenttype.equalsIgnoreCase(getResources().getString(R.string.txt_publish)))
         {
@@ -1572,7 +1571,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         ImageView img_backbutton = (ImageView) dialogfileuploadoptions.findViewById(R.id.img_backbutton);
         TextView txt_title = (TextView) dialogfileuploadoptions.findViewById(R.id.txt_title);
 
-        txt_title.setText(title);
+        txt_title.setText(popupcontenttype);
 
         adaptersenddialog adaptersend = new adaptersenddialog(context, sharemedia, new adapteritemclick() {
             @Override
@@ -1602,7 +1601,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                         videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath, mediatoken,  type,
                                 ismediatrimmed,mediathumbnailurl,popupcontenttype);
-                        videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath, mediatoken,  type, ismediatrimmed,mediathumbnailurl,title);
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
                     {
@@ -1787,7 +1785,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void videolocksharedialog(final Context context,String mediafilepath,String mediatoken,final String type,
                                      boolean ismediatrimmed,String mediathumbnailurl,String popupcontenttype){
-    public void videolocksharedialog(final Context context,String mediafilepath,String mediatoken,final String type,boolean ismediatrimmed,String mediathumbnailurl,String title){
 
         final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1822,7 +1819,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 dialog.dismiss();
                 senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,
                         type, ismediatrimmed,mediathumbnailurl,popupcontenttype);
-                senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,  type, ismediatrimmed,mediathumbnailurl,title);
             }
         });
 
