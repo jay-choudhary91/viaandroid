@@ -19,7 +19,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_10dp">
+            android:paddingTop="@dimen/margin_5dp">
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_title"
@@ -34,10 +34,10 @@
 
             <ImageView
                 android:id="@+id/img_cancel"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/margin_5dp"
+                android:layout_marginRight="@dimen/margin_15dp"
                 android:layout_alignParentRight="true"
                 android:background="@drawable/error"/>
 
@@ -55,6 +55,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:paddingRight="@dimen/margin_10dp"
+                android:paddingLeft="@dimen/margin_10dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true">
 
@@ -138,19 +140,23 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:paddingLeft="@dimen/margin_5dp"
+            android:paddingRight="@dimen/margin_5dp"
             android:layout_height="wrap_content">
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_media_starttime"
-                style="@style/txt_normalview"
+                style="@style/timeview"
                 android:text="00:00"
+                android:layout_marginLeft="@dimen/margin_5dp"
                 android:layout_alignParentLeft="true"
                 card_view:fontType="Comfortaa-Regular" />
 
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_media_endtime"
-                style="@style/txt_normalview"
+                style="@style/timeview"
                 android:text=""
+                android:layout_marginRight="@dimen/margin_5dp"
                 android:gravity="right"
                 card_view:fontType="Comfortaa-Regular" />
 
@@ -160,9 +166,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight=".4"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="25dp"
             android:background="@color/transparent">
 
 
@@ -184,7 +190,7 @@
                     <ImageView
                         android:id="@+id/img_send"
                         android:layout_width="60dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="45dp"
                         android:gravity="bottom"
                         android:scaleType="fitEnd"
                         android:src="@drawable/img_send"/>
