@@ -5,7 +5,7 @@
 
     <dimen name="top_margin_30">25dp</dimen>
     <dimen name="top_margin_50">40dp</dimen>
-    <dimen name="margin_50">40dp</dimen>
+    <dimen name="margin_50">50dp</dimen>
     <dimen name="margin_6dp">6dp</dimen>
     <dimen name="margin_5dp">5dp</dimen>
     <dimen name="margin_4dp">4dp</dimen>

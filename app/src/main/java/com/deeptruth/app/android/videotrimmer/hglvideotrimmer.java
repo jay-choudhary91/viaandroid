@@ -476,7 +476,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
 
 
         if (videoProportion > screenProportion) { // set landscape height width
-            lp.width =  (screenWidth -((int) applicationviavideocomposer.getactivity().getResources().getDimension(R.dimen.margin_50)));
+            lp.width =  (screenWidth -50);
             lp.height = (int) ((float) screenWidth / videoProportion);
         } else {
             lp.width = (int) (videoProportion * (float) screenHeight)-(percentagewidth);
