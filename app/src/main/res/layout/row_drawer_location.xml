@@ -186,7 +186,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:lines="2"
                     android:text="Speed"/>
 
@@ -257,7 +257,7 @@
                     app:fontType="OpenSans_Regular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:lines="2"
                     android:gravity="center"
                     android:text="Traveled"/>
@@ -328,7 +328,7 @@
                     app:fontType="OpenSans_Regular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:gravity="center"
                     android:lines="2"
                     android:text="Altitude"/>

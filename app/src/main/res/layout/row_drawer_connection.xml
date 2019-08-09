@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:lines="2"
                 android:text=""/>
 
@@ -67,7 +67,7 @@
             app:fontType="OpenSans_Regular"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textColor="@color/white"
             android:text=""/>
 
@@ -170,7 +170,7 @@
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textColor="@color/white"
             android:text=""/>
 
