@@ -16,14 +16,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/layout"
-            android:padding="@dimen/margin_5dp"
+            android:paddingRight="@dimen/margin_5dp"
+            android:paddingLeft="@dimen/margin_5dp"
             android:layout_centerHorizontal="true">
 
             <VideoView
                 android:id="@+id/video_loader"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:gravity="center"
                 android:layout_gravity="center" />
         </FrameLayout>
@@ -33,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:gravity="top"
             >
 
             <RelativeLayout
@@ -160,7 +161,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_5dp"
+                android:paddingLeft="@dimen/margin_10dp"
+                android:paddingRight="@dimen/margin_10dp"
                 android:layout_below="@id/timeText"
                 android:id="@+id/rl_trimerview">
 
@@ -179,7 +181,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:visibility="visible"
-                    android:layout_marginTop="4dp"
                     />
 
                 <com.deeptruth.app.android.videotrimmer.view.progressbarview
