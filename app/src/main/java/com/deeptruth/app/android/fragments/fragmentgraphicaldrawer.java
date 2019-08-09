@@ -565,16 +565,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 @Override
                 public void onSeeking(SeekParams seekParams) {
                     setlayouttransparency(seekParams.progress);
-                    if(seekParams.progress > 10)
-                    {
-                        float progress=seekParams.progress;
-                        progress=progress/100;
-
-                        Log.e("progress=",""+progress);
-
-                        if(progress>=0.2)
-                            googlemap.setAlpha(progress);
-                    }
+                    float progress=seekParams.progress;
+                    progress=progress/100;
+                    if(progress <= 0.2)
+                        googlemap.setAlpha(0.2f);
+                    else
+                        googlemap.setAlpha(progress);
                 }
 
                 @Override
@@ -593,11 +589,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 seekbartransparency.setProgress(Float.parseFloat(xdata.getinstance().getSetting(config.drawer_transparency)));
                 float progress=Float.parseFloat(xdata.getinstance().getSetting(config.drawer_transparency));
                 progress=progress/100;
-                if(progress<=0.2){
+                if(progress <= 0.2)
                     googlemap.setAlpha(0.2f);
-                }else{
+                else
                     googlemap.setAlpha(progress);
-                }
 
             }
             else
@@ -814,8 +809,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             "\n"+ common.speedformatter(common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)))
                             , tvspeed);
 
+                    if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
+                        gpsaccuracy="0";
+
                     if((! gpsaccuracy.trim().isEmpty()) && (! gpsaccuracy.equalsIgnoreCase("NA"))
-                            && (! gpsaccuracy.equalsIgnoreCase("null")))
+                            && (! gpsaccuracy.equalsIgnoreCase("null")) && xdata.getinstance().getSetting("gpsenabled")
+                            .equalsIgnoreCase("1"))
                     {
                         common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
                                 "\n"+gpsaccuracy+" feet", tvgpsaccuracy);
@@ -823,7 +822,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     else
                     {
                         common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                                "\n"+ gpsaccuracy , tvgpsaccuracy);
+                                "\n"+ "NA" , tvgpsaccuracy);
                     }
 
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),

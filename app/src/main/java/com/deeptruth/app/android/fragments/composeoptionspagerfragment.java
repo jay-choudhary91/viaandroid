@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -43,6 +45,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
@@ -56,6 +62,7 @@ import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.circletosquare_animation;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.xdata;
 
 import java.io.File;
@@ -972,8 +979,29 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    zoomImageFromThumb(img_mediathumbnail,uri);
-                    shortAnimationDuration = 10; //zoomed up ....animation speed
+                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                    // Load the high-resolution "zoomed-in" image.
+                    Glide.with(applicationviavideocomposer.getactivity()).load(uri).addListener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource)
+                        {
+                            progressdialog.dismisswaitdialog();
+                            zoomImageFromThumb(img_mediathumbnail,uri);
+                            shortAnimationDuration = 10; //zoomed up ....animation speed
+                            return false;
+                        }
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource,
+                                                       boolean isFirstResource)
+                        {
+                            progressdialog.dismisswaitdialog();
+                            zoomImageFromThumb(img_mediathumbnail,uri);
+                            shortAnimationDuration = 10; //zoomed up ....animation speed
+                            return false;
+                        }
+                    }).thumbnail(0.1f)
+                    .transition(GenericTransitionOptions.with(R.anim.fadein)).
+                    into(expandedImageView);
                 }
             },50);
         }
@@ -1183,11 +1211,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if (currentAnimator != null) {
             currentAnimator.cancel();
         }
-
-        // Load the high-resolution "zoomed-in" image.
-        Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
-               .transition(GenericTransitionOptions.with(R.anim.fadein)).
-                into(expandedImageView);
 
         // Calculate the starting and ending bounds for the zoomed-in image.
         // This step involves lots of math. Yay, math.

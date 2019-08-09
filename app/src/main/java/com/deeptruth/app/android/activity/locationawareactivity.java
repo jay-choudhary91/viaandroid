@@ -1213,10 +1213,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 timercounterhandler = 0;
                                 if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer) && (! isappinbackground)) {
                                     try {
-                                        xdata.getinstance().saveSetting("gpsenabled", "1");
-                                        if (!locationawareactivity.checkLocationEnable(locationawareactivity.this)){
+                                        if (!locationawareactivity.checkLocationEnable(locationawareactivity.this))
                                             xdata.getinstance().saveSetting("gpsenabled", "0");
-                                        }
+                                        else
+                                            xdata.getinstance().saveSetting("gpsenabled", "1");
 
                                         if (getcurrentfragment() != null)
                                             getcurrentfragment().updatewifigpsstatus();

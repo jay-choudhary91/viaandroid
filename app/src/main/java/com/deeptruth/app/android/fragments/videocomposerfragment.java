@@ -614,7 +614,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
 
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),
-                                (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
+                                (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,
+                                0,0,0,imgflashon,null,null,0);
 
                     }else{
                         setbottommargin(headercontainer);
@@ -701,10 +702,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
             }
         }
-
-    public boolean isvideorecording() {
-        return isvideorecording;
-    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -2296,9 +2293,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
 
-    public void setdynamiclayout(RelativeLayout.LayoutParams relativelayoutparams,LinearLayout.LayoutParams linearLayoutParams,int marginleft,int margintop,int marginright,int marginbottom,
-                                 int paddingleft,int paddingtop,int paddingright,int paddingbottom,ImageView imageView,RotateLayout rotationheadercontainer,RotateLayout rotationwifilayout,
-                                 int rotationangle){
+    public void setdynamiclayout(RelativeLayout.LayoutParams relativelayoutparams,LinearLayout.LayoutParams linearLayoutParams,
+                                 int marginleft,int margintop,int marginright,int marginbottom,int paddingleft,int paddingtop,
+                                 int paddingright,int paddingbottom,ImageView imageView,RotateLayout rotationheadercontainer,
+                                 RotateLayout rotationwifilayout,int rotationangle){
 
 
         if(relativelayoutparams!= null){

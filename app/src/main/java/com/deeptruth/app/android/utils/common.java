@@ -3056,7 +3056,7 @@ public class common {
 
         int count=0;
         if(xdata.getinstance().getSetting(xdatakey).trim().isEmpty())
-            xdata.getinstance().saveSetting(xdatakey,"0");
+            xdata.getinstance().saveSetting(xdatakey,"1");
         else
             count=Integer.parseInt(xdata.getinstance().getSetting(xdatakey).trim());
 
@@ -3064,32 +3064,13 @@ public class common {
         xdata.getinstance().saveSetting(xdatakey,""+count);
         Log.e(xdatakey,""+xdata.getinstance().getSetting(xdatakey).trim());
 
-        if(count > Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_media_record_trim_count)))
+        if(count >= Integer.parseInt(xdata.getinstance().getSetting(xdata.unpaid_media_record_trim_count)))
             return true;
 
         return false;
     }
 
-    public static String betaversion_dateformat(){
-        Calendar calander = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(config.betaversion_dateformat);
-        String date = simpleDateFormat.format(calander.getTime());
-        return date;
-    }
-
     public static String mediaplaytimeformatter(int millis) {
-        /*int totalseconds = timeMs / 1000;
-        int seconds = totalseconds % 60;
-        int minutes = (totalseconds / 60) % 60;
-        int hours = totalseconds / 3600;
-
-        java.util.Formatter mformatter = new java.util.Formatter();
-        if (hours > 0) {
-            return mformatter.format("%02d:%02d:%02d", hours, minutes, seconds).toString();
-        } else {
-            return mformatter.format("%02d:%02d:%02d",hours, minutes, seconds).toString();
-        }*/
-
         int hours = (int) (millis / (1000 * 60 * 60));
         int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
         int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);

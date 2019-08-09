@@ -140,10 +140,17 @@ public class synclogfragment extends basefragment implements View.OnClickListene
                                 if(sync_date.trim().length() == 0 || sync_date.equalsIgnoreCase("0"))
                                 {
                                     Cursor cursor1=mdbhelper.fetchunsyncedmetaframe(localkey);
-                                    if(cursor1 == null || cursor1.getCount() == 0)
-                                        synclist.add(model);
-                                    else
+                                    if(videostarttransactionid.trim().isEmpty())
+                                    {
                                         asynclist.add(model);
+                                    }
+                                    else
+                                    {
+                                        if(cursor1 == null || cursor1.getCount() == 0)
+                                            synclist.add(model);
+                                        else
+                                            asynclist.add(model);
+                                    }
                                 }
                                 else
                                 {
