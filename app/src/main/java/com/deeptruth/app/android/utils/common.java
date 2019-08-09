@@ -636,6 +636,8 @@ public class common {
             xdata.getinstance().saveSetting(config.screenorientatioin, ((ismetricsselected) ? value : "NA"));
         }else if(keyname.equalsIgnoreCase(config.picturequality)){
             xdata.getinstance().saveSetting(config.picturequality, ((ismetricsselected) ? value : "NA"));
+        }else if(keyname.equalsIgnoreCase(config.jailbroken)) {
+            xdata.getinstance().saveSetting(config.jailbroken, ((ismetricsselected) ? value : "NO"));
         }
     }
 
@@ -1760,7 +1762,7 @@ public class common {
                 config.cpuusageirq, config.compass, config.decibel, config.barometer, config.acceleration_x, config.acceleration_y,
                 config.acceleration_z, config.distancetravelled, config.currentcallinprogress, config.currentcalldurationseconds,
                 config.currentcallremotenumber, config.currentcalldecibel, config.airplanemode,
-                "camera",config.picturequality,"jailbroken","screenorientatioin",
+                "camera",config.picturequality,config.jailbroken,"screenorientatioin",
                 "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country","jailbroken",
                 "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid","deviceconnection", "numberoftowers",
                 "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,
