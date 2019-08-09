@@ -48,7 +48,7 @@
                     android:gravity="center"
                     android:text="@string/phone_time"
                     android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     app:fontType="OpenSans_Regular" />
 
                 <com.deeptruth.app.android.utils.AnalogClock
@@ -74,7 +74,7 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     app:fontType="OpenSans_Semibold" />
 
                 <com.deeptruth.app.android.views.customfonttextview
@@ -84,7 +84,7 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     app:fontType="OpenSans_Semibold" />
 
             </LinearLayout>
@@ -103,7 +103,7 @@
                     android:gravity="center"
                     android:text="@string/world_clock_time"
                     android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     app:fontType="OpenSans_Regular" />
 
                 <com.deeptruth.app.android.utils.AnalogClock
@@ -129,7 +129,7 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     app:fontType="OpenSans_Semibold" />
 
                 <com.deeptruth.app.android.views.customfonttextview
@@ -139,7 +139,7 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     app:fontType="OpenSans_Semibold" />
 
             </LinearLayout>
@@ -191,7 +191,6 @@
                     android:textColor="@color/white"
                     android:layout_marginLeft="10dp"
                     android:paddingLeft="5dp"
-                    android:textSize="14sp"
                     app:fontType="OpenSans_Regular" />
 
         </LinearLayout>
@@ -215,7 +214,6 @@
                 android:textColor="@color/white"
                 android:paddingLeft="5dp"
                 android:layout_marginLeft="10dp"
-                android:textSize="14sp"
                 app:fontType="OpenSans_Regular" />
 
         </LinearLayout>

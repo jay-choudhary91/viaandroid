@@ -9,7 +9,7 @@
         app:fontType="OpenSans_Regular"
         style="@style/txt_satellite_items"
         android:gravity="center"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:id="@+id/txt_satellite_number"
         android:layout_width="wrap_content"
         android:text=""/>
@@ -18,7 +18,7 @@
         app:fontType="OpenSans_Semibold"
         style="@style/txt_satellite_items"
         android:gravity="center"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:padding="3dp"
         android:id="@+id/txt_satellite_altitude"
         android:layout_width="wrap_content"

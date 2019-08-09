@@ -1761,7 +1761,7 @@ public class common {
                 config.acceleration_z, config.distancetravelled, config.currentcallinprogress, config.currentcalldurationseconds,
                 config.currentcallremotenumber, config.currentcalldecibel, config.airplanemode,
                 "camera",config.picturequality,"jailbroken","screenorientatioin",
-                "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country","jailbroken",
+                "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country",
                 "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid","deviceconnection", "numberoftowers",
                 "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,
                 "phoneclocktime", "worldclocktime", config.connectiondatadelay,config.satellitedate,config.satellitesdata,config.remoteip,config.worldclockdate,config.phoneclockdate};
@@ -2049,12 +2049,12 @@ public class common {
             SpannableStringBuilder encryptionstring = new SpannableStringBuilder(encryptionstr);
             encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.regularfonttype.getStyle()), 0, keyname.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.semiboldfonttype.getStyle()), keyname.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            encryptionstring.setSpan(new RelativeSizeSpan(0.9f), keyname.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            encryptionstring.setSpan(new RelativeSizeSpan(1.1f), keyname.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_encryption.setText(encryptionstring);
         } else {
             SpannableStringBuilder encryptionstring = new SpannableStringBuilder(keyvalue);
             encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.semiboldfonttype.getStyle()), 0, keyvalue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            encryptionstring.setSpan(new RelativeSizeSpan(0.9f), 0, keyvalue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            encryptionstring.setSpan(new RelativeSizeSpan(1.1f), 0, keyvalue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_encryption.setText(encryptionstring);
         }
     }
