@@ -137,7 +137,7 @@
     <item>
         <shape>
             <solid android:color="#E6ffffff" />
-            <corners android:radius="8dp" />
+            <corners android:radius="20dp" />
         </shape>
     </item>
 </layer-list>
