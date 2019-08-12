@@ -1544,7 +1544,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        setscreenwidthheight(dialogupgradecode,85,58,getResources().getString(R.string.popup_upgradecode));
+        setscreenwidthheight(dialogupgradecode,85,60,getResources().getString(R.string.popup_upgradecode));
         dialogupgradecode.show();
     }
 
