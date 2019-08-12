@@ -482,7 +482,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if (addToBackstack) {
             transaction.addToBackStack(null);
         }
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
 
         mcurrentfragment = f;
         mfragments.push(f);
@@ -513,7 +513,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             transaction.addToBackStack(null);
         }
 
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
 
         mcurrentfragment = f;
         mfragments.push(f);
@@ -541,7 +541,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         // Placed after crash on 2018-11-16
         if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
             // Do fragment's transaction commit
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
         }
 
         mcurrentfragment = f;

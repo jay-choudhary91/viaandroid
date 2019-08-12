@@ -424,7 +424,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     ValueAnimator lastPulseAnimator=null;
     Circle mappulsatecircle =null;
-    Circle userlocationcircle =null;
     Marker locationmarker=null;
     LatLng usercurrentlocation=null;
     private Polyline mappathpolyline=null;
@@ -1265,12 +1264,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 mappulsatecircle.remove();
                 mappulsatecircle=null;
                 Log.e("PulsateRemove"," PulsateRemove");
-            }
-
-            if(userlocationcircle != null && mgooglemap != null)
-            {
-                userlocationcircle.remove();
-                userlocationcircle=null;
             }
         }
     }
@@ -2312,10 +2305,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         zoomgooglemap(location.latitude,location.longitude);
 
-        if(lastPulseAnimator == null || clearmapneeded)
-            addPulsatingEffect();
-        else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
-            addPulsatingEffect();
+        if(clearmapneeded)
+        {
+            clearmapneeded=false;
+            cleargooglemap();
+        }
+
+        addPulsatingEffect();
 
         mgooglemap.getUiSettings().setZoomControlsEnabled(true);
         mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -2342,15 +2338,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(isrecodrunning)
                     {
                         if(lastzoomlevel != currentzoomlevel)
-                        {
-                            if(lastPulseAnimator == null)
-                                addPulsatingEffect();
-                            else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
-                                addPulsatingEffect();
-
-                            if(userlocationcircle != null)
-                                userlocationcircle.setRadius(common.getlocationcircleradius(currentzoomlevel));
-                        }
+                            addPulsatingEffect();
                     }
                     lastzoomlevel=currentzoomlevel;
                 }
@@ -2358,70 +2346,47 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
-    private void addPulsatingEffect(){
-
-        try {
-            if(lastPulseAnimator != null)
-                lastPulseAnimator.cancel();
-
-            if(usercurrentlocation == null)
-                return;
-
-            if(clearmapneeded)
-            {
-                clearmapneeded=false;
-                cleargooglemap();
-            }
+    private void addPulsatingEffect()
+    {
+        try
+        {
             addmediacreatedpointmarker(usercurrentlocation);
-            return;
 
-            /*if(! isdatacomposing || (! isrecodrunning))
+            if((lastPulseAnimator == null || (! lastPulseAnimator.isRunning())) && isdatacomposing)
             {
-                if(clearmapneeded)
-                {
-                    clearmapneeded=false;
-                    cleargooglemap();
-                }
-                addmediacreatedpointmarker(usercurrentlocation);
-                return;
+                if(lastPulseAnimator != null)
+                    lastPulseAnimator.cancel();
+
+                if(usercurrentlocation == null)
+                    return;
+
+                lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
+                        new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                if(mappulsatecircle != null)
+                                    mappulsatecircle.setRadius((Float) animation.getAnimatedValue());
+                                else {
+                                    mappulsatecircle = mgooglemap.addCircle(new CircleOptions()
+                                            .center(usercurrentlocation)
+                                            .radius((Float) animation.getAnimatedValue())
+                                            .strokeWidth(0)
+                                            .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
+                                }
+                                if(mappulsatecircle != null)
+                                    mappulsatecircle.setCenter(usercurrentlocation);
+                            }
+                        });
+
             }
             else
             {
-                if(mediacreatedpointmarker != null)
+                if(lastPulseAnimator != null && (! isrecodrunning))
                 {
-                    mediacreatedpointmarker.remove();
-                    mediacreatedpointmarker=null;
+                    lastPulseAnimator.cancel();
+                    lastPulseAnimator=null;
                 }
-            }*/
-
-            /*lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
-                    new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator animation) {
-                            if(mappulsatecircle != null)
-                                mappulsatecircle.setRadius((Float) animation.getAnimatedValue());
-                            else {
-                                mappulsatecircle = mgooglemap.addCircle(new CircleOptions()
-                                        .center(usercurrentlocation)
-                                        .radius((Float) animation.getAnimatedValue())
-                                        .strokeWidth(0)
-                                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
-
-                                Log.e("PulsateAdded"," PulsateAdded");
-
-                                userlocationcircle= mgooglemap.addCircle(new CircleOptions()
-                                        .center(usercurrentlocation)
-                                        .radius(common.getlocationcircleradius(mgooglemap.getCameraPosition().zoom))
-                                        .strokeWidth(0)
-                                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.selectedimagehash)));
-                            }
-                            if(mappulsatecircle != null)
-                                mappulsatecircle.setCenter(usercurrentlocation);
-
-                            if(userlocationcircle != null)
-                                userlocationcircle.setCenter(usercurrentlocation);
-                        }
-                    });*/
+            }
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -2683,11 +2648,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
 
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,getActivity().getResources().getDimension(R.dimen.margin_50dp),getActivity().getResources().getDimension(R.dimen.margin_6dp));
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,
+                        getActivity().getResources().getDimension(R.dimen.margin_50dp),
+                        //getActivity().getResources().getDimension(R.dimen.margin_6dp));
+                        0);
             }
             else
             {
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
+                        getActivity().getResources().getDimension(R.dimen.margin_8dp),
+                        //14);
+                        0);
             }
 
             set1.notifyDataSetChanged();
@@ -2735,12 +2706,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             if(value == -1 && valuesarray.size()>80){
                 chart.invalidate();
                 chart.setVisibleXRange(0, 80);
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
+                        getActivity().getResources().getDimension(R.dimen.margin_8dp),
+                        //14);
+                        0);
 
             }else{
                 chart.invalidate();
                 chart.setVisibleXRange(0, valuesarray.size());
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,0,14);
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,0,
+                        //14);
+                        0);
 
             }
 
@@ -2789,17 +2765,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 public void run() {
                                     /*Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
                                     chart.highlightValue(high, false);*/
-
-                                    if(finalSelectedchartposition <=39){
-                                        chart.moveViewToX(set1.getEntryForIndex(0).getX());
-                                    }else{
-                                        chart.moveViewToX(set1.getEntryForIndex(finalSelectedchartposition -39).getX());
+                                    if(finalSelectedchartposition < set1.getEntryCount())
+                                    {
+                                        if(finalSelectedchartposition <=39 && set1.getEntryCount() > 0){
+                                            chart.moveViewToX(set1.getEntryForIndex(0).getX());
+                                        }else{
+                                            chart.moveViewToX(set1.getEntryForIndex(finalSelectedchartposition -39).getX());
+                                        }
                                     }
                                 }
                             });
-
-
-
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
                                     R.drawable.blue_black_ball));
                         }
@@ -2816,10 +2791,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                     vertical_seekbar.setVisibility(View.GONE);
                             }else{
                                 vertical_seekbar.setVisibility(View.VISIBLE);
-                                float sizey = set1.getEntryForIndex(finalSelectedchartposition1).getY();
-                                updateverticalsliderlocationdata(Float.toString(sizey),vertical_seekbar);
+                                if(finalSelectedchartposition1 < set1.getEntryCount())
+                                {
+                                    float sizey = set1.getEntryForIndex(finalSelectedchartposition1).getY();
+                                    updateverticalsliderlocationdata(Float.toString(sizey),vertical_seekbar);
+                                }
                             }
-
                         }
                     });
                 }
