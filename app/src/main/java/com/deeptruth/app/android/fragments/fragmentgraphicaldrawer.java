@@ -424,7 +424,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     ValueAnimator lastPulseAnimator=null;
     Circle mappulsatecircle =null;
-    Circle userlocationcircle =null;
     Marker locationmarker=null;
     LatLng usercurrentlocation=null;
     private Polyline mappathpolyline=null;
@@ -1265,12 +1264,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 mappulsatecircle.remove();
                 mappulsatecircle=null;
                 Log.e("PulsateRemove"," PulsateRemove");
-            }
-
-            if(userlocationcircle != null && mgooglemap != null)
-            {
-                userlocationcircle.remove();
-                userlocationcircle=null;
             }
         }
     }
@@ -2312,10 +2305,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         zoomgooglemap(location.latitude,location.longitude);
 
-        if(lastPulseAnimator == null || clearmapneeded)
-            addPulsatingEffect();
-        else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
-            addPulsatingEffect();
+        if(clearmapneeded)
+        {
+            clearmapneeded=false;
+            cleargooglemap();
+        }
+
+        addPulsatingEffect();
 
         mgooglemap.getUiSettings().setZoomControlsEnabled(true);
         mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -2342,15 +2338,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(isrecodrunning)
                     {
                         if(lastzoomlevel != currentzoomlevel)
-                        {
-                            if(lastPulseAnimator == null)
-                                addPulsatingEffect();
-                            else if(lastPulseAnimator != null && (! lastPulseAnimator.isRunning()))
-                                addPulsatingEffect();
-
-                            if(userlocationcircle != null)
-                                userlocationcircle.setRadius(common.getlocationcircleradius(currentzoomlevel));
-                        }
+                            addPulsatingEffect();
                     }
                     lastzoomlevel=currentzoomlevel;
                 }
@@ -2358,70 +2346,47 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
-    private void addPulsatingEffect(){
-
-        try {
-            if(lastPulseAnimator != null)
-                lastPulseAnimator.cancel();
-
-            if(usercurrentlocation == null)
-                return;
-
-            if(clearmapneeded)
-            {
-                clearmapneeded=false;
-                cleargooglemap();
-            }
+    private void addPulsatingEffect()
+    {
+        try
+        {
             addmediacreatedpointmarker(usercurrentlocation);
-            return;
 
-            /*if(! isdatacomposing || (! isrecodrunning))
+            if((lastPulseAnimator == null || (! lastPulseAnimator.isRunning())) && isdatacomposing)
             {
-                if(clearmapneeded)
-                {
-                    clearmapneeded=false;
-                    cleargooglemap();
-                }
-                addmediacreatedpointmarker(usercurrentlocation);
-                return;
+                if(lastPulseAnimator != null)
+                    lastPulseAnimator.cancel();
+
+                if(usercurrentlocation == null)
+                    return;
+
+                lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
+                        new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                if(mappulsatecircle != null)
+                                    mappulsatecircle.setRadius((Float) animation.getAnimatedValue());
+                                else {
+                                    mappulsatecircle = mgooglemap.addCircle(new CircleOptions()
+                                            .center(usercurrentlocation)
+                                            .radius((Float) animation.getAnimatedValue())
+                                            .strokeWidth(0)
+                                            .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
+                                }
+                                if(mappulsatecircle != null)
+                                    mappulsatecircle.setCenter(usercurrentlocation);
+                            }
+                        });
+
             }
             else
             {
-                if(mediacreatedpointmarker != null)
+                if(lastPulseAnimator != null && (! isrecodrunning))
                 {
-                    mediacreatedpointmarker.remove();
-                    mediacreatedpointmarker=null;
+                    lastPulseAnimator.cancel();
+                    lastPulseAnimator=null;
                 }
-            }*/
-
-            /*lastPulseAnimator = valueAnimate(getdisplaypulseradius(), 3500,
-                    new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator animation) {
-                            if(mappulsatecircle != null)
-                                mappulsatecircle.setRadius((Float) animation.getAnimatedValue());
-                            else {
-                                mappulsatecircle = mgooglemap.addCircle(new CircleOptions()
-                                        .center(usercurrentlocation)
-                                        .radius((Float) animation.getAnimatedValue())
-                                        .strokeWidth(0)
-                                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.map_radius_color)));
-
-                                Log.e("PulsateAdded"," PulsateAdded");
-
-                                userlocationcircle= mgooglemap.addCircle(new CircleOptions()
-                                        .center(usercurrentlocation)
-                                        .radius(common.getlocationcircleradius(mgooglemap.getCameraPosition().zoom))
-                                        .strokeWidth(0)
-                                        .fillColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.selectedimagehash)));
-                            }
-                            if(mappulsatecircle != null)
-                                mappulsatecircle.setCenter(usercurrentlocation);
-
-                            if(userlocationcircle != null)
-                                userlocationcircle.setCenter(usercurrentlocation);
-                        }
-                    });*/
+            }
         }catch (Exception e)
         {
             e.printStackTrace();
