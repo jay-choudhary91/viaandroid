@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -16,18 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
-import com.deeptruth.app.android.utils.gifdrawableimagetarget;
 import com.deeptruth.app.android.utils.xdata;
-
-import pl.droidsonroids.gif.GifDrawable;
 
 import static android.widget.RelativeLayout.TRUE;
 
@@ -59,7 +53,7 @@ public class splashactivity extends Activity {
         img_logotext.post(new Runnable() {
             @Override
             public void run() {
-                imagesetmargine();
+                imagesetmargins();
             }
         });
 
@@ -175,17 +169,9 @@ public class splashactivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        },2000);
     }
 
-    public void imagesetmargine(){
+    public void imagesetmargins(){
 
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)getResources().getDimension(R.dimen.logimage_width),(int)getResources().getDimension(R.dimen.logoimage_height));
         layoutParams.setMargins(0,getscreenwidthheight(30),0,0);
