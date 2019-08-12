@@ -2789,17 +2789,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 public void run() {
                                     /*Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
                                     chart.highlightValue(high, false);*/
-
-                                    if(finalSelectedchartposition <=39){
-                                        chart.moveViewToX(set1.getEntryForIndex(0).getX());
-                                    }else{
-                                        chart.moveViewToX(set1.getEntryForIndex(finalSelectedchartposition -39).getX());
+                                    if(finalSelectedchartposition < set1.getEntryCount())
+                                    {
+                                        if(finalSelectedchartposition <=39 && set1.getEntryCount() > 0){
+                                            chart.moveViewToX(set1.getEntryForIndex(0).getX());
+                                        }else{
+                                            chart.moveViewToX(set1.getEntryForIndex(finalSelectedchartposition -39).getX());
+                                        }
                                     }
                                 }
                             });
-
-
-
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
                                     R.drawable.blue_black_ball));
                         }
@@ -2816,10 +2815,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                     vertical_seekbar.setVisibility(View.GONE);
                             }else{
                                 vertical_seekbar.setVisibility(View.VISIBLE);
-                                float sizey = set1.getEntryForIndex(finalSelectedchartposition1).getY();
-                                updateverticalsliderlocationdata(Float.toString(sizey),vertical_seekbar);
+                                if(finalSelectedchartposition1 < set1.getEntryCount())
+                                {
+                                    float sizey = set1.getEntryForIndex(finalSelectedchartposition1).getY();
+                                    updateverticalsliderlocationdata(Float.toString(sizey),vertical_seekbar);
+                                }
                             }
-
                         }
                     });
                 }
