@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/popup_background"
     >
@@ -11,7 +11,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:gravity="center" >
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -29,7 +29,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_30dp"
+            android:layout_marginTop="@dimen/margin_40dp"
             android:padding="@dimen/margin_10dp"
             android:orientation="vertical"
             android:gravity="center" >
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textColor="@color/black"
                 app:fontType="Comfortaa-Regular"/>
 
@@ -55,19 +55,19 @@
                 app:password="false"
                 app:splitWidth="10dp"
                 app:pinBackground="@drawable/roundcorner_payment_option_btn"
-                app:pinHeight="30dp"
+                app:pinHeight="35dp"
                 app:pinLength="6"
-                app:pinWidth="30dp" />
+                app:pinWidth="35dp" />
 
         </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="@dimen/margin_10dp"
-        android:layout_marginTop="@dimen/margin_50dp"
         android:orientation="vertical"
-        android:gravity="center" >
+        android:layout_gravity="bottom"
+        android:gravity="bottom" >
 
         <com.deeptruth.app.android.views.customfonttextview
             app:fontType="Comfortaa-Regular"
@@ -87,13 +87,11 @@
             android:textColor="@color/white"
            />
 
-    </LinearLayout>
-
-         <LinearLayout
+        <LinearLayout
             android:id="@+id/tableRow5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-             android:layout_marginBottom="@dimen/margin_15dp"
+            android:layout_marginBottom="@dimen/margin_12dp"
             android:orientation="vertical">
 
             <com.deeptruth.app.android.views.customfonttextview
@@ -101,13 +99,17 @@
                 android:id="@+id/btn_nothanks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/margin_5dp"
+                android:paddingTop="@dimen/margin_10dp"
                 android:text="Cancel"
                 android:gravity="center"
                 android:textColor="@color/grey_xx"
                 android:layout_marginBottom="@dimen/margin_5dp"
                 android:textSize="12sp"/>
         </LinearLayout>
+
+
+    </LinearLayout>
+
 
 </LinearLayout>
 
