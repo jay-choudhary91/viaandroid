@@ -276,15 +276,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                         graphicaldrawerfragment =new fragmentgraphicaldrawer();
                         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                         transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-                        transaction.commit();
-
-                        /*testfragment fragment =new testfragment();
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.add(R.id.fragment_graphic_drawer_container,fragment);
-                        transaction.commit();*/
-
-                        /*fragmentgraphicaldrawer fragment=new fragmentgraphicaldrawer();
-                        replaceFragment(fragment, R.id.fragment_graphic_drawer_container,false, true);*/
+                        transaction.commitAllowingStateLoss();
                 }
             }
         },2000);
