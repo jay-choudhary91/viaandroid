@@ -40,10 +40,7 @@
                 android:layout_marginRight="@dimen/margin_15dp"
                 android:layout_alignParentRight="true"
                 android:background="@drawable/error"/>
-
         </RelativeLayout>
-
-
 
         <RelativeLayout
             android:layout_width="match_parent"

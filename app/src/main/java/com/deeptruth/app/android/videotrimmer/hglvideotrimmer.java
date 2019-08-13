@@ -468,23 +468,23 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         int screenHeight = mlinearvideo.getHeight();
         float screenProportion = (float) screenWidth / (float) screenHeight;
         ViewGroup.LayoutParams lp = mvideoview.getLayoutParams();
+        int videovieWidth = mvideoview.getHeight();
+        int percentagewidth = (screenWidth / 100) * 15; // set potrait height width
 
         if (montrimvideolistener != null)
             devicewidth =   montrimvideolistener.getwidth();
 
-        int percentagewidth = (devicewidth / 100) * 18; // set potrait height width
-
-
         if (videoProportion > screenProportion) { // set landscape height width
             lp.width =  (screenWidth -50);
-            lp.height = (int) ((float) screenWidth / videoProportion);
+            lp.height = (int) ((float) screenWidth / videoProportion)+percentagewidth;
         } else {
-            lp.width = (int) (videoProportion * (float) screenHeight)-(percentagewidth);
-            lp.height = screenHeight;
+            lp.width = (int) (videoProportion * ((float) screenHeight)-percentagewidth);
+            lp.height = videovieWidth * screenHeight/screenWidth;
         }
+
         mvideoview.setLayoutParams(lp);
 
-        mplayview.setBackgroundResource(R.drawable.ic_white_play);
+        mplayview.setBackgroundResource(R.color.black);
         mplayview.setVisibility(View.VISIBLE);
 
         mduration = mvideoview.getDuration();
