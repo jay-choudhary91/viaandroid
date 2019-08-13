@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <dimen name="size_1">3dp</dimen>
+    <dimen name="size_2">6dp</dimen>
+    <dimen name="size_3">9dp</dimen>
+    <dimen name="size_4">12dp</dimen>
+    <dimen name="size_5">15dp</dimen>
+    <dimen name="size_6">18dp</dimen>
+    <dimen name="size_7">21dp</dimen>
+    <dimen name="size_8">24dp</dimen>
+    <dimen name="size_9">27dp</dimen>
+    <dimen name="size_10">30dp</dimen>
+    <dimen name="size_11">33dp</dimen>
+    <dimen name="size_12">36dp</dimen>
+    <dimen name="size_13">39dp</dimen>
+    <dimen name="size_14">42dp</dimen>
+    <dimen name="size_15">45dp</dimen>
+    <dimen name="size_16">48dp</dimen>
+    <dimen name="size_17">51dp</dimen>
+    <dimen name="size_18">54dp</dimen>
+    <dimen name="size_19">57dp</dimen>
+    <dimen name="size_20">60dp</dimen>
+
+    <dimen name="textsize_12">36sp</dimen>
+    <dimen name="textsize_4">12sp</dimen>
+
     <dimen name="play_screen_bar_height">43dp</dimen>
     <dimen name="progressbar_line_height">42dp</dimen>
     <dimen name="margin_25">25dp</dimen>
