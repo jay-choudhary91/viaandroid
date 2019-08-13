@@ -165,43 +165,6 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     mvideotrimmer.setVideoURI(Uri.parse(mediafilepath));
                     mvideotrimmer.setVideoInformationVisibility(true);
                 }
-
-                rangeSeekbar.setCornerRadius(10f)
-                        .setBarColor(Color.TRANSPARENT)
-                        .setBarHighlightColor(Color.BLACK)
-                        .setMinValue(1000)
-                        .setMaxValue(4000)
-                        .setSteps(1000)
-                        .setLeftThumbDrawable(drawableleftarrow)
-                        .setLeftThumbHighlightDrawable(drawableleftarrow)
-                        .setRightThumbDrawable(drawablerightarrow)
-                        .setRightThumbHighlightDrawable(drawablerightarrow)
-                        .setDataType(crystalrangeseekbar.DataType.INTEGER)
-                        .apply();
-
-                rangeSeekbar.setOnRangeSeekbarChangeListener(new onrangeseekbarchangelistener() {
-                    @Override
-                    public void valueChanged(Number minValue, Number maxValue) {
-                        updateleftrightthumbs();
-                    }
-                });
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        rangeSeekbar.setMinValue(100).setMaxValue(4000).setMinStartValue(1000).setMaxStartValue(2500).apply();
-                    }
-                }, 500);
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        layout_progresslineleft.setVisibility(View.VISIBLE);
-                        layout_progresslineright.setVisibility(View.VISIBLE);
-                        updateleftrightthumbs();
-                    }
-                }, 1000);
-
             }
             else if(mediatype.equalsIgnoreCase(config.type_image))
             {
@@ -250,7 +213,46 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             }
 
             if(! mediatype.equalsIgnoreCase(config.type_image))
+            {
                 setcolorbardata();
+                rangeSeekbar.setVisibility(View.VISIBLE);
+                rangeSeekbar.setCornerRadius(10f)
+                        .setBarColor(Color.TRANSPARENT)
+                        .setBarHighlightColor(Color.BLACK)
+                        .setMinValue(1000)
+                        .setMaxValue(4000)
+                        .setSteps(1000)
+                        .setLeftThumbDrawable(drawableleftarrow)
+                        .setLeftThumbHighlightDrawable(drawableleftarrow)
+                        .setRightThumbDrawable(drawablerightarrow)
+                        .setRightThumbHighlightDrawable(drawablerightarrow)
+                        .setDataType(crystalrangeseekbar.DataType.INTEGER)
+                        .apply();
+
+                rangeSeekbar.setOnRangeSeekbarChangeListener(new onrangeseekbarchangelistener() {
+                    @Override
+                    public void valueChanged(Number minValue, Number maxValue) {
+                        updateleftrightthumbs();
+                    }
+                });
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rangeSeekbar.setMinValue(100).setMaxValue(4000).setMinStartValue(1000).setMaxStartValue(2500).apply();
+                    }
+                }, 500);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        layout_progresslineleft.setVisibility(View.VISIBLE);
+                        layout_progresslineright.setVisibility(View.VISIBLE);
+                        updateleftrightthumbs();
+                    }
+                }, 1000);
+            }
+
         }
         txt_media_endtime.setText(common.mediaplaytimeformatter(mediaduration));
         return rootview;
