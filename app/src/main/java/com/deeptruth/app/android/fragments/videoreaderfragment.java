@@ -681,7 +681,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                            RelativeLayout.LayoutParams.WRAP_CONTENT);
                    p.addRule(RelativeLayout.ABOVE, seekBar.getId());
                    Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                   p.setMargins((int) (thumbRect.centerX() - dpToPx(getActivity(), 19)), 0, -50, 0);
+                   p.setMargins((int) (thumbRect.centerX() - common.dpToPx(getActivity(), 19)), 0, -50, 0);
                    layout_progressline.setLayoutParams(p);
                    txt_mediatimethumb.setText(common.gettimestring(seekBar.getProgress()));
                    txt_mediatimethumb.setVisibility(View.VISIBLE);
@@ -2598,13 +2598,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         params.setMargins(0,0,0,(int) -getResources().getDimension(R.dimen.margin_15dp));
         img_fullscreen.setLayoutParams(params);
     }
-
-    public static float dpToPx(Context context, float valueInDp) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,valueInDp, context.getResources().getDisplayMetrics());
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
-    }
-
 
     private void setseekbarlayoutcolor(){
         try

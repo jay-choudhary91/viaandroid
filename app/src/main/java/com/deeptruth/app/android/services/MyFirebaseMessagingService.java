@@ -14,8 +14,6 @@ import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.splashactivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 /**
  * Created by ${matraex} on 27/6/19.

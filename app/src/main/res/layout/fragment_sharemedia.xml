@@ -50,47 +50,6 @@
             android:layout_marginRight="10dp"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:paddingRight="@dimen/margin_10dp"
-                android:paddingLeft="@dimen/margin_10dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true">
-
-                <ImageView
-                    android:id="@+id/img_audiothumb_timeline"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_35"
-                    android:visibility="gone"
-                    android:scaleType="centerCrop"/>
-
-                <ProgressBar
-                    android:id="@+id/progressmediasync"
-                    style="@style/CustomProgressBar"
-                    android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_below="@id/img_audiothumb_timeline"
-                    android:layout_height="@dimen/margin_25"/>
-
-                <LinearLayout
-                    android:id="@+id/layout_colorsection"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_25"
-                    android:layout_below="@id/img_audiothumb_timeline"
-                    android:orientation="horizontal"
-                    />
-
-                <com.deeptruth.app.android.rangeseekbar.RangeSeekbar
-                    android:id="@+id/layout_rangeseekbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_25"
-                    android:layout_below="@id/img_audiothumb_timeline"
-                    android:orientation="horizontal">
-
-                </com.deeptruth.app.android.rangeseekbar.RangeSeekbar>
-
-            </RelativeLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -131,6 +90,153 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:paddingRight="@dimen/margin_10dp"
+                android:paddingLeft="@dimen/margin_10dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <ImageView
+                    android:id="@+id/img_audiothumb_timeline"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_35"
+                    android:visibility="gone"
+                    android:scaleType="centerCrop"/>
+
+                <ProgressBar
+                    android:id="@+id/progressmediasync"
+                    style="@style/CustomProgressBar"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_below="@id/img_audiothumb_timeline"
+                    android:layout_height="@dimen/margin_25"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_colorsection"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_25"
+                    android:layout_below="@id/img_audiothumb_timeline"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal"
+                    />
+
+                <com.deeptruth.app.android.rangeseekbar.widgets.crystalrangeseekbar
+                    android:id="@+id/rangeseekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_25"
+                    android:layout_alignParentBottom="true"
+                    app:min_value="10"
+                    app:max_value="50"/>
+
+                <RelativeLayout
+                    android:id="@+id/layout_progresslineleft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:visibility="gone"
+                    android:layout_above="@id/rangeseekbar">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_mediatimethumbleft"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:background="@drawable/round_corner_black"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:ellipsize="none"
+                        android:text="00:00:00"
+                        android:singleLine="true"
+                        app:fontType="OpenSans_Regular" />
+
+                    <RelativeLayout
+                        android:layout_width="4dp"
+                        android:layout_height="@dimen/margin_35"
+                        android:layout_below="@id/txt_mediatimethumbleft"
+                        android:layout_centerHorizontal="true"
+                        android:background="@color/white"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <View
+                            android:layout_width="2dp"
+                            android:layout_height="@dimen/margin_35"
+                            android:layout_centerHorizontal="true"
+                            android:background="@color/blacktransparent"
+                            android:visibility="visible"></View>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layout_progresslineright"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:visibility="gone"
+                    android:layout_above="@id/rangeseekbar">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_mediatimethumbright"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:background="@drawable/round_corner_black"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:ellipsize="none"
+                        android:text="00:00:00"
+                        android:singleLine="true"
+                        app:fontType="OpenSans_Regular" />
+
+                    <RelativeLayout
+                        android:layout_width="4dp"
+                        android:layout_height="@dimen/margin_35"
+                        android:layout_below="@id/txt_mediatimethumbright"
+                        android:layout_centerHorizontal="true"
+                        android:background="@color/white"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <View
+                            android:layout_width="2dp"
+                            android:layout_height="@dimen/margin_35"
+                            android:layout_centerHorizontal="true"
+                            android:background="@color/blacktransparent"
+                            android:visibility="visible"></View>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                    <!--app:left_thumb_image="@drawable/thumb"
+                    app:left_thumb_image_pressed="@drawable/thumb_pressed"-->
+
+
+                <!--<com.deeptruth.app.android.rangeseekbar.RangeSeekbar
+                    android:id="@+id/layout_rangeseekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/margin_25"
+                    android:visibility="gone"
+                    android:layout_below="@id/img_audiothumb_timeline"
+                    android:orientation="horizontal"/>-->
+
+            </RelativeLayout>
+
+
 
         </RelativeLayout>
 

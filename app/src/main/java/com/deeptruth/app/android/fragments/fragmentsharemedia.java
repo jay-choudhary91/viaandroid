@@ -1,10 +1,12 @@
 package com.deeptruth.app.android.fragments;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +38,8 @@ import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.inapputils.IabHelper;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.metadatahash;
-import com.deeptruth.app.android.rangeseekbar.RangeSeekbar;
+import com.deeptruth.app.android.rangeseekbar.interfaces.onrangeseekbarchangelistener;
+import com.deeptruth.app.android.rangeseekbar.widgets.crystalrangeseekbar;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
@@ -80,10 +84,14 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     TextView txt_media_endtime;
     @BindView(R.id.progressmediasync)
     ProgressBar progressmediasync;
-    @BindView(R.id.layout_rangeseekbar)
-    RangeSeekbar layout_rangeseekbar;
     @BindView(R.id.img_audiothumb_timeline)
     ImageView img_audiothumb_timeline;
+    @BindView(R.id.rangeseekbar)
+    crystalrangeseekbar rangeSeekbar;
+    @BindView(R.id.layout_progresslineleft)
+    RelativeLayout layout_progresslineleft;
+    @BindView(R.id.layout_progresslineright)
+    RelativeLayout layout_progresslineright;
 
     private progressdialog mprogressdialog;
     View rootview = null;
@@ -117,6 +125,35 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             lyouthelp.setOnClickListener(this);
             img_cancel.setOnClickListener(this);
 
+            Drawable drawableleftarrow=null,drawablerightarrow=null;
+            {
+                // Read your drawable from somewhere
+                Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.rightarrow);
+                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                drawableleftarrow = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap,
+                        (int)common.convertDpToPixel(15,applicationviavideocomposer.getactivity()
+                        ), (int)common.convertDpToPixel(25,applicationviavideocomposer.getactivity()
+                        ), true));
+            }
+
+            {
+                // Read your drawable from somewhere
+                Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),R.drawable.leftarrow);
+                Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                drawablerightarrow = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap,
+                        (int)common.convertDpToPixel(15,applicationviavideocomposer.getactivity()
+                        ), (int)common.convertDpToPixel(25,applicationviavideocomposer.getactivity()
+                        ), true));
+            }
+
+            /*rangeSeekbar.setOnRangeSeekbarChangeListener(
+                    new com.deeptruth.app.android.rangeseekbar.interfaces.onrangeseekbarchangelistener() {
+                @Override
+                public void valueChanged(Number minValue, Number maxValue) {
+
+                }
+            });*/
+
             if(mediatype.equalsIgnoreCase(config.type_video))
             {
                 layout_video_section.setVisibility(View.VISIBLE);
@@ -128,6 +165,43 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     mvideotrimmer.setVideoURI(Uri.parse(mediafilepath));
                     mvideotrimmer.setVideoInformationVisibility(true);
                 }
+
+                rangeSeekbar.setCornerRadius(10f)
+                        .setBarColor(Color.TRANSPARENT)
+                        .setBarHighlightColor(Color.BLACK)
+                        .setMinValue(1000)
+                        .setMaxValue(4000)
+                        .setSteps(1000)
+                        .setLeftThumbDrawable(drawableleftarrow)
+                        .setLeftThumbHighlightDrawable(drawableleftarrow)
+                        .setRightThumbDrawable(drawablerightarrow)
+                        .setRightThumbHighlightDrawable(drawablerightarrow)
+                        .setDataType(crystalrangeseekbar.DataType.INTEGER)
+                        .apply();
+
+                rangeSeekbar.setOnRangeSeekbarChangeListener(new onrangeseekbarchangelistener() {
+                    @Override
+                    public void valueChanged(Number minValue, Number maxValue) {
+                        updateleftrightthumbs();
+                    }
+                });
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rangeSeekbar.setMinValue(100).setMaxValue(4000).setMinStartValue(1000).setMaxStartValue(2500).apply();
+                    }
+                }, 500);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        layout_progresslineleft.setVisibility(View.VISIBLE);
+                        layout_progresslineright.setVisibility(View.VISIBLE);
+                        updateleftrightthumbs();
+                    }
+                }, 1000);
+
             }
             else if(mediatype.equalsIgnoreCase(config.type_image))
             {
@@ -135,7 +209,6 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 txt_media_endtime.setVisibility(View.GONE);
                 layout_colorsection.setVisibility(View.GONE);
                 layout_video_section.setVisibility(View.GONE);
-                layout_rangeseekbar.setVisibility(View.GONE);
                 layout_imageaudio_section.setVisibility(View.VISIBLE);
 
                 if(! mediathumbnailurl.trim().isEmpty() && new File(mediathumbnailurl).exists())
@@ -181,6 +254,35 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
         }
         txt_media_endtime.setText(common.mediaplaytimeformatter(mediaduration));
         return rootview;
+    }
+
+    public void updateleftrightthumbs()
+    {
+        RelativeLayout.LayoutParams paramsleft = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        paramsleft.addRule(RelativeLayout.ABOVE, rangeSeekbar.getId());
+
+        RelativeLayout.LayoutParams paramsright = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        paramsright.addRule(RelativeLayout.ABOVE, rangeSeekbar.getId());
+
+                        /*float a=rangeSeekbar.getLeftThumbRect().left;
+                        float b=rangeSeekbar.getLeftThumbRect().right;
+                        float c=rangeSeekbar.getRightThumbRect().left;
+                        float d=rangeSeekbar.getRightThumbRect().right;
+                        Log.e("LeftLeft"," "+a+" "+b);
+                        Log.e("RightRight"," "+c+" "+d);
+                        Log.e("CenterCenter"," "+centerLeftX+" "+centerRightX);*/
+
+        float centerLeftX=rangeSeekbar.getLeftThumbRect().centerX();
+        float centerRightX=rangeSeekbar.getRightThumbRect().centerX();
+
+        paramsleft.setMargins((int) (centerLeftX - common.dpToPx(getActivity(), 25)), 0, 0, 0);
+        paramsright.setMargins((int) (centerRightX - common.dpToPx(getActivity(), 25)), 0, 0, 0);
+        layout_progresslineleft.setLayoutParams(paramsleft);
+        layout_progresslineright.setLayoutParams(paramsright);
     }
 
     public void setcolorbardata()
