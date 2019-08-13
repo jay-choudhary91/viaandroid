@@ -2481,7 +2481,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
            if (uri != null) {
                try {
                    MediaMetadataRetriever mediametadataretriever = new MediaMetadataRetriever();
-                   mediametadataretriever.setDataSource(getContext(), uri);
+                   mediametadataretriever.setDataSource(applicationviavideocomposer.getactivity(), uri);
 
                    // Retrieve media data
                    long videoLengthInMs = Integer.parseInt(mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
