@@ -2629,7 +2629,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             value=1.0f;
 
         if(value != -1)  // It means chart is preparing on recording time
+        {
+            if(valuesarray.size() >= 190)
+                valuesarray.remove(valuesarray.get(valuesarray.size()-1));
+
             valuesarray.add(new Entry(valuesarray.size(), value, 0));
+        }
+
 
         LineDataSet set1;
 
@@ -2824,8 +2830,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         if(value != -1)
         {
-           /* if(arrayitems.size() == 0)
-                arrayitems.add(new Entry(0, 1, 0));*/
+            if(arrayitems.size() >= 190)
+                arrayitems.remove(arrayitems.get(arrayitems.size()-1));
+
             arrayitems.add(new Entry(arrayitems.size(), value, 0));
         }
         LineDataSet set1;
