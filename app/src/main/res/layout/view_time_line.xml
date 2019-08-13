@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/layout"
+            android:layout_marginTop="@dimen/margin_3dp"
             android:paddingRight="@dimen/margin_5dp"
             android:paddingLeft="@dimen/margin_5dp"
             android:layout_centerHorizontal="true">
@@ -24,8 +25,10 @@
                 android:id="@+id/video_loader"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_gravity="center" />
+                android:gravity="top"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/margin_8dp"
+                 />
         </FrameLayout>
 
         <RelativeLayout
@@ -166,13 +169,11 @@
                 android:layout_below="@id/timeText"
                 android:id="@+id/rl_trimerview">
 
-
-
                 <com.deeptruth.app.android.videotrimmer.view.progressbarview
                     android:id="@+id/timeVideoView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_marginTop="1dp"
                     />
 
@@ -187,7 +188,7 @@
                     android:id="@+id/timeVideoView1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_below="@+id/timeLineView"/>
 
                 <com.deeptruth.app.android.videotrimmer.view.rangeseekbarview
