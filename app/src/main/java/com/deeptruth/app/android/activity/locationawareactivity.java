@@ -760,16 +760,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                 doafterallpermissionsgranted();
 
-                if (isMyServiceRunning(locationservice.class)) {
-                    Log.e("Running ", "Yes");
-                } else {
-                    Log.e("Running ", "No");
-
-                    locationService = new Intent(applicationviavideocomposer.getactivity(), locationservice.class);
-                    applicationviavideocomposer.getactivity().startService(locationService);
-                    isservicebound = applicationviavideocomposer.getactivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
-
-                }
             } else {
                 String[] array = new String[common.getphonelocationdeniedpermissions().size()];
                 array = common.getphonelocationdeniedpermissions().toArray(array);
@@ -785,6 +775,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 return true;
             }
         }
+        Log.e("locationservice","false");
         return false;
     }
 
@@ -797,6 +788,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             // cast its IBinder to a concrete class and directly access it.
             String name = className.getClassName();
 
+            Log.e("serviceconnection","serviceconnection");
+
             if (name.endsWith("LocationService")) {
                 /*locationService = ((LocationService.LocationServiceBinder) service).getService();
                 locationService.startUpdatingLocation();*/
@@ -807,7 +800,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             // This is called when the connection with the service has been
             // unexpectedly disconnected -- that is, its process crashed.
             // Because it is running in our same process, we should never
-            // see this happen.
+            // see this happen./*/*/*/*/*/*/*/*/*/**/*/*/*/*/*/*/*/*/*/
             /*if (className.getClassName().equals("LocationService")) {
                 locationService.stopUpdatingLocation();
                 locationService = null;
@@ -858,6 +851,17 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         startLocationUpdates();
         enableGPS(locationawareactivity.this);
         preparemetricesdata();
+
+        if (isMyServiceRunning(locationservice.class)) {
+            Log.e("ServiceRunning ", "Yes");
+        } else {
+            Log.e("ServiceRunning ", "No");
+
+            locationService = new Intent(applicationviavideocomposer.getactivity(), locationservice.class);
+            applicationviavideocomposer.getactivity().startService(locationService);
+            isservicebound = applicationviavideocomposer.getactivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        }
 
         if (mOrientation != null)
             mOrientation.startListening(this);

@@ -1348,7 +1348,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                     else if(trimbuttontext.get(position).getButtontext().equalsIgnoreCase(config.txtupgrade))
                     {
-                        showupgradecodepopup(applicationviavideocomposer.getactivity());
+                        if(dialoginapppurchase != null && dialoginapppurchase.isShowing())
+                            dialoginapppurchase.dismiss();
+
+                        showupgradecodepopup(applicationviavideocomposer.getactivity(), title, message, mitemclick, gravity);
                     }
                 }
             }
@@ -1452,7 +1455,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialoginapppurchase.show();
     }
 
-    public void showupgradecodepopup(final Context activity)
+    public void showupgradecodepopup(final Context activity,String title,String message, final adapteritemclick mitemclick,String  gravity)
     {
         if(dialogupgradecode != null && dialogupgradecode.isShowing())
             dialogupgradecode.dismiss();
@@ -1471,7 +1474,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         final pinviewtext pinview = (pinviewtext) dialogupgradecode.findViewById(R.id.pinview);
 
         String content = applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_upgradecode);
-        txt_content.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
+        txt_content.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.NORMAL);
         tvcancel.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
         tv_upgrade.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
         txt_title.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
@@ -1534,10 +1537,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View view) {
                 if(dialogupgradecode != null && dialogupgradecode.isShowing())
                     dialogupgradecode.dismiss();
+
+                if(dialoginapppurchase != null)
+                    showinapppurchasepopup(applicationviavideocomposer.getactivity(), title, message,  mitemclick, gravity);
+
             }
         });
 
-        setscreenwidthheight(dialogupgradecode,85,0,getResources().getString(R.string.popup_upgradecode));
+        setscreenwidthheight(dialogupgradecode,85,60,getResources().getString(R.string.popup_upgradecode));
         dialogupgradecode.show();
     }
 
@@ -2115,9 +2122,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_upgradecode)) ){
 
-            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setLayout(percentagewidth,percentageheight);
             dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_zoom_animation;
 
         }

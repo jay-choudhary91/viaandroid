@@ -12,17 +12,17 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/margin_10dp"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/img_backbutton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:scaleType="fitXY"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
@@ -32,10 +32,9 @@
                 android:id="@+id/txt_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
                 android:gravity="center_horizontal"
                 android:text="SEND"
-                app:fontType="Comfortaa-Regular"
+                app:fontType="Comfortaa-Bold"
                 android:textColor="@android:color/black"
                 android:textSize="30dp" />
 
@@ -49,26 +48,27 @@
                 android:layout_below="@id/txt_title"
                 app:fontType="Comfortaa-Regular"
                 android:textColor="@android:color/black"
-                android:textSize="17sp"
+                android:textSize="15sp"
                 android:layout_marginBottom="@dimen/margin_5dp"/>
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:layout_marginTop="@dimen/margin_10dp"
+            android:layout_marginRight="@dimen/margin_30dp"
+            android:layout_marginLeft="@dimen/margin_30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content">
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/ryclr_send_items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+
                 android:scrollbars="vertical"
-                android:layout_centerVertical="true"
-                app:spanCount="2"
-                android:layout_marginTop="@dimen/margin_10dp"
-                android:layout_marginBottom="@dimen/margin_10dp"/>
+                app:spanCount="2" />
 
         </RelativeLayout>
     </LinearLayout>

@@ -87,4 +87,7 @@
     <dimen name="bottom_nav_title_txt_size_14">14dp</dimen>
 
     <dimen name="txt_size">13sp</dimen>
+
+    <dimen name="iconheight">28dp</dimen>
+    <dimen name="iconwidth">28dp</dimen>
 </resources>
