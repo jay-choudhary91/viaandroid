@@ -537,12 +537,12 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             vertical_slider_altitude.setMax(2000);
             vertical_slider_traveled.setMax(100);
 
-            initlinechart(linechart_connectionspeed,100f);
-            initlinechart(linechart_datatimedelay,50f);
-            initlinechart(linechart_gpsaccuracy,300f);
-            vertical_slider_connectionspeed.setMax(25);
-            vertical_slider_connectiondatatimedely.setMax(10);
-            vertical_slider_gpsaccuracy.setMax(100);
+            initlinechart(linechart_connectionspeed,50f,true);
+            initlinechart(linechart_datatimedelay,50f,true);
+            initlinechart(linechart_gpsaccuracy,300f,false);
+            vertical_slider_connectionspeed.setMax(50);
+            vertical_slider_connectiondatatimedely.setMax(50);
+            vertical_slider_gpsaccuracy.setMax(300);
 
             ViewTreeObserver observer = barvisualizerview.getViewTreeObserver();
             observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -1540,11 +1540,17 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
 
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,getActivity().getResources().getDimension(R.dimen.margin_50dp),getActivity().getResources().getDimension(R.dimen.margin_6dp));
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,
+                        getActivity().getResources().getDimension(R.dimen.margin_50dp),
+                        //getActivity().getResources().getDimension(R.dimen.margin_6dp));
+                        0);
             }
             else
             {
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
+                        getActivity().getResources().getDimension(R.dimen.margin_8dp),
+                        //14);
+                        0);
             }
 
             set1.notifyDataSetChanged();
@@ -1592,12 +1598,17 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             if(value == -1 && valuesarray.size()>80){
                 chart.invalidate();
                 chart.setVisibleXRange(0, 80);
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
+                        getActivity().getResources().getDimension(R.dimen.margin_8dp),
+                        //14);
+                        0);
 
             }else{
                 chart.invalidate();
                 chart.setVisibleXRange(0, valuesarray.size());
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,0,14);
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,0,
+                        //14);
+                        0);
 
             }
 
@@ -2052,7 +2063,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         linechart.setPinchZoom(false);
 
     }
-    public  void initlinechart(LineChart chart,Float maxrange)
+    public  void initlinechart(LineChart chart,Float maxrange,boolean shouldusemaxrange)
     {
 
         chart.setNoDataText("");
@@ -2065,7 +2076,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         YAxis yAxis;
         yAxis = chart.getAxisLeft();
         chart.getAxisRight().setEnabled(false);
-        //yAxis.setAxisMaximum(maxrange);
+        if(shouldusemaxrange)
+            yAxis.setAxisMaximum(maxrange);
+
         yAxis.setAxisMinimum(0f);
 
         // // Create Limit Lines // //
@@ -2100,6 +2113,11 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         chart.setDragEnabled(false);
         chart.setScaleEnabled(false);
         chart.setPinchZoom(false);
+
+        //MarkerView
+      /*  IMarker marker = new chartcustommarkerview(applicationviavideocomposer.getactivity(),
+                R.layout.row_chartcustommarkerview);
+        chart.setMarker(marker);*/
     }
 
     private void loadmap() {
