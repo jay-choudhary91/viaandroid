@@ -34,8 +34,8 @@
 
             <ImageView
                 android:id="@+id/img_cancel"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="@dimen/iconwidth"
+                android:layout_height="@dimen/iconheight"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/margin_15dp"
                 android:layout_alignParentRight="true"
