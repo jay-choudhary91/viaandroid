@@ -902,7 +902,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         TextView txt_content = (TextView)dialog.findViewById(R.id.txt_content);
         txttitle.setText("SHARE");
 
-        txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
+        txttitle.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
         final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
         notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
         notifycheckbox.setTextColor(Color.BLACK);
@@ -1172,7 +1172,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         txttitle.setText(title);
         String str = content;
 
-        txttitle.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
+        txttitle.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
         final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
         notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
         notifycheckbox.setTextColor(Color.BLACK);
@@ -1477,7 +1477,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         txt_content.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.NORMAL);
         tvcancel.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
         tv_upgrade.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.BOLD);
-        txt_title.setTypeface(applicationviavideocomposer.bahnschriftregular, Typeface.BOLD);
+        txt_title.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
         txt_content.setText(content);
 
         pinview.setTextColor(Color.WHITE);
@@ -1811,7 +1811,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         ArrayList<sharepopuptextspanning> textsharepopup = new ArrayList<>();
         textsharepopup.add(new sharepopuptextspanning(1.04f,1,33,str));
-        textsharepopup.add(new sharepopuptextspanning(1.00f,35,71,str));
+        textsharepopup.add(new sharepopuptextspanning(0.99f,35,71,str));
         textsharepopup.add(new sharepopuptextspanning(1.01f,73, 108,str));
         textsharepopup.add(new sharepopuptextspanning(0.98f,110,144,str));
         textsharepopup.add(new sharepopuptextspanning(1.06f,146,176,str));

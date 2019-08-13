@@ -10,63 +10,71 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="10dp"
         android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:gravity="center" >
-
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="@dimen/margin_5dp"
-                android:src="@drawable/ic_reply"/>
-
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/margin_10dp"
-                android:text="@string/txt_vl_share_title"
-                android:textColor="@android:color/black"
-                android:textSize="30sp"
-                app:fontType="Comfortaa-Regular"/>
-
-        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_30dp"
-            android:gravity="center">
-
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_content"
-                android:layout_width="wrap_content"
+            android:layout_weight="0.7"
+            android:orientation="vertical"
+            android:layout_height="0dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/black"
-                app:fontType="Comfortaa-Regular"/>
+                android:layout_gravity="top"
+                android:gravity="center" >
 
+                <ImageView
+                    android:id="@+id/back"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
+                    android:layout_marginLeft="@dimen/margin_15dp"
+                    android:src="@drawable/ic_reply"/>
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/margin_15dp"
+                    android:text="@string/txt_vl_share_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="30sp"
+                    app:fontType="Comfortaa-Regular"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20dp"
+                android:gravity="center">
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    app:fontType="Comfortaa-Regular"/>
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/tableRow5"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/margin_40dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
+            android:layout_height="0dp"
+
+            android:layout_weight="0.3"
+            android:layout_marginBottom="@dimen/margin_15dp"
             android:gravity="center">
 
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:elevation="2dp"
                 android:background="@drawable/back">
 
                 <com.deeptruth.app.android.views.customfonttextview
@@ -76,7 +84,7 @@
                     android:text="@string/btn_vl_share"
                     android:gravity="center"
                     android:padding="@dimen/margin_10dp"
-                    android:textColor="@color/soundwavecolor"
+                    android:textColor="@color/bluecolor"
                     android:textStyle="bold"
                     app:fontType="Comfortaa-Bold"
                     android:textSize="20sp"/>

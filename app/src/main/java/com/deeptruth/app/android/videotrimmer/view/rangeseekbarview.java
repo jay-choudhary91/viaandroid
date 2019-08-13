@@ -83,7 +83,7 @@ public class rangeseekbarview extends View {
 
         mfirstrun = true;
 
-        int shadowcolor = ContextCompat.getColor(getContext(), R.color.shadow_color);
+        int shadowcolor = ContextCompat.getColor(getContext(), R.color.scanover_red);
         mshadow.setAntiAlias(true);
         mshadow.setColor(shadowcolor);
         //mshadow.setAlpha(177);
@@ -327,13 +327,13 @@ public class rangeseekbarview extends View {
                     final float x = th.getpos() + getPaddingLeft();
                     if (x > mpixelrangemin) {
                         Rect mRect = new Rect((int) mthumbwidth, 0, (int) (x + mthumbwidth), (mheighttimeline-8));
-                        canvas.drawRect(mRect, mshadow);
+                        //canvas.drawRect(mRect, mshadow);
                     }
                 } else {
                     final float x = th.getpos() - getPaddingRight();
                     if (x < mpixelrangemax) {
                         Rect mRect = new Rect((int) x, 0, (int) (mviewwidth - mthumbwidth), (mheighttimeline-8));
-                        canvas.drawRect(mRect, mshadow);
+                        //canvas.drawRect(mRect, mshadow);
                     }
                 }
             }

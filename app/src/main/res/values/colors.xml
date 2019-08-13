@@ -75,6 +75,7 @@
     <color name="yellow_radar_end">#12FDD012</color>
     <color name="blue_radar_startend">#24004860</color>
     <color name="blue_radar_middle">#004860</color>
+    <color name="bluecolor">#007AFF</color>
 
     <color name="translucent_dark_blue_solid">#50004860</color>
 
