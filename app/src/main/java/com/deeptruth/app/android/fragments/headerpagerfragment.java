@@ -15,15 +15,12 @@ import android.widget.TextView;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.models.intro;
 
-import pl.droidsonroids.gif.GifImageView;
-
 
 /**
  * Created by root on 26/7/18.
  */
 
 public class headerpagerfragment extends Fragment {
-    GifImageView imggif;
     View rootview;
     boolean isanimationloaded =false;
     intro introobject=null;

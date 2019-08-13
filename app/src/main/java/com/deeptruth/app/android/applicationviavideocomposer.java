@@ -2,10 +2,10 @@ package com.deeptruth.app.android;
 
 import android.app.Activity;
 import android.app.Application;
-import android.arch.lifecycle.Lifecycle;
+/*import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
-import android.arch.lifecycle.ProcessLifecycleOwner;
+import android.arch.lifecycle.ProcessLifecycleOwner;*/
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -41,7 +41,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.fabric.sdk.android.Fabric;
 
-public class applicationviavideocomposer extends Application implements LifecycleObserver {
+//public class applicationviavideocomposer extends Application implements LifecycleObserver {
+public class applicationviavideocomposer extends Application
+{
     public static Context mcontext;
     public static Activity mactvitiy;
 
@@ -83,7 +85,7 @@ public class applicationviavideocomposer extends Application implements Lifecycl
         boldfonttype = Typeface.createFromAsset(mcontext.getAssets(), "fonts/Comfortaa-Bold.ttf");
         comfortaaregular = Typeface.createFromAsset(mcontext.getAssets(), "fonts/Comfortaa-Regular.ttf");
         bahnschriftregular = Typeface.createFromAsset(mcontext.getAssets(), "fonts/BAHNSCHRIFT-11.TTF");
-        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+        //ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         try {
             if (ffmpeg == null) {
@@ -143,10 +145,10 @@ public class applicationviavideocomposer extends Application implements Lifecycl
     }
 
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    /*@OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void onAppBackgrounded()
     {
-        /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
         {
             if(! isactivitybecomefinish)
             {
@@ -155,13 +157,13 @@ public class applicationviavideocomposer extends Application implements Lifecycl
 
                 startService(new Intent(getBaseContext(), appbackgroundactionservice.class));
             }
-        }*/
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     private void onAppForegrounded() {
 
-    }
+    }*/
 
     /**
      * Create the client configuration
