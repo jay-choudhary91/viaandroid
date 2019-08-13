@@ -469,8 +469,7 @@ public class hglvideotrimmer extends FrameLayout implements View.OnClickListener
         float screenProportion = (float) screenWidth / (float) screenHeight;
         ViewGroup.LayoutParams lp = mvideoview.getLayoutParams();
         int videovieWidth = mvideoview.getHeight();
-
-        int percentagewidth = (screenWidth / 100) * (int)context.getResources().getDimension(R.dimen.margin_15dp); // set potrait height width
+        int percentagewidth = (screenWidth / 100) * 15; // set potrait height width
 
         if (montrimvideolistener != null)
             devicewidth =   montrimvideolistener.getwidth();
