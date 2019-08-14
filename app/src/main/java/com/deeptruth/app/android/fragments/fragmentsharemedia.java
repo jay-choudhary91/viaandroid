@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -47,9 +48,14 @@ import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.videotrimmer.hglvideotrimmer;
 import com.deeptruth.app.android.videotrimmer.interfaces.onhglvideolistener;
 import com.deeptruth.app.android.videotrimmer.interfaces.ontrimvideolistener;
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,22 +98,24 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     RelativeLayout layout_progresslineleft;
     @BindView(R.id.layout_progresslineright)
     RelativeLayout layout_progresslineright;
+    @BindView(R.id.txt_mediatimemin)
+    TextView txt_mediatimemin;
+    @BindView(R.id.txt_mediatimemax)
+    TextView txt_mediatimemax;
+    @BindView(R.id.view_seekbarleftnavigation)
+    View view_seekbarleftnavigation;
+    @BindView(R.id.view_seekbarrightnavigation)
+    View view_seekbarrightnavigation;
 
-    private progressdialog mprogressdialog;
     View rootview = null;
-    String mediafilepath ="", mediatoken ="",mediatype="",mediathumbnailurl="";
+    String mediafilepath ="", trimmedmediapath="",mediatoken ="",mediatype="",mediathumbnailurl="";
     int mediaduration = 0;
+    float rangeseekbarwidth= 0;
     int navigationbarheight = 0;
-    private final int request_permissions = 1;
+    private int request_permissions = 1, selecteditemclick= 0;
     private Handler myHandler;
     private Runnable myRunnable;
-
-    IabHelper mHelper;
-    // Debug tag, for logging
-    final String TAG = "TestInApp";
-    String SelectedSku = "";
-    Dialog dialoginapppurchase =null,dialogupgradecode=null;
-    private static final int REQUEST_CODE_SIGN_IN = 102;
+    private long starttrimlength=0,endtrimlength=0;
     private boolean ismediatrimmed=false;
     private ArrayList<metadatahash> mitemlist = new ArrayList<>();
     @Override
@@ -145,14 +153,6 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         ), (int)common.convertDpToPixel(25,applicationviavideocomposer.getactivity()
                         ), true));
             }
-
-            /*rangeSeekbar.setOnRangeSeekbarChangeListener(
-                    new com.deeptruth.app.android.rangeseekbar.interfaces.onrangeseekbarchangelistener() {
-                @Override
-                public void valueChanged(Number minValue, Number maxValue) {
-
-                }
-            });*/
 
             if(mediatype.equalsIgnoreCase(config.type_video))
             {
@@ -219,27 +219,39 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 rangeSeekbar.setCornerRadius(10f)
                         .setBarColor(Color.TRANSPARENT)
                         .setBarHighlightColor(Color.BLACK)
-                        .setMinValue(1000)
-                        .setMaxValue(4000)
-                        .setSteps(1000)
+                        .setMinValue(0)
+                        .setMaxValue(mediaduration)
+                        .setSteps(500)
                         .setLeftThumbDrawable(drawableleftarrow)
                         .setLeftThumbHighlightDrawable(drawableleftarrow)
                         .setRightThumbDrawable(drawablerightarrow)
                         .setRightThumbHighlightDrawable(drawablerightarrow)
-                        .setDataType(crystalrangeseekbar.DataType.INTEGER)
+                        .setDataType(crystalrangeseekbar.DataType.LONG)
                         .apply();
+
+                rangeSeekbar.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        rangeseekbarwidth=rangeSeekbar.getWidth();
+                    }
+                });
 
                 rangeSeekbar.setOnRangeSeekbarChangeListener(new onrangeseekbarchangelistener() {
                     @Override
                     public void valueChanged(Number minValue, Number maxValue) {
-                        updateleftrightthumbs();
+                        updateleftrightthumbs(minValue.longValue(),maxValue.longValue());
                     }
                 });
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        rangeSeekbar.setMinValue(100).setMaxValue(4000).setMinStartValue(1000).setMaxStartValue(2500).apply();
+                        long gapebetween=1000;
+                        if(mediaduration > 2000)
+                            gapebetween=2000;
+
+                        rangeSeekbar.setMinValue(0).setMaxValue(mediaduration).setMinStartValue(0).setMaxStartValue(mediaduration).
+                                setSteps(500).setGap(gapebetween).apply();
                     }
                 }, 500);
 
@@ -248,7 +260,9 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                     public void run() {
                         layout_progresslineleft.setVisibility(View.VISIBLE);
                         layout_progresslineright.setVisibility(View.VISIBLE);
-                        updateleftrightthumbs();
+                        updateleftrightthumbs(0,mediaduration);
+                        view_seekbarleftnavigation.setVisibility(View.VISIBLE);
+                        view_seekbarrightnavigation.setVisibility(View.VISIBLE);
                     }
                 }, 1000);
             }
@@ -258,8 +272,12 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
         return rootview;
     }
 
-    public void updateleftrightthumbs()
+    public void updateleftrightthumbs(long mintimemillis,long maxtimemillis)
     {
+        ismediatrimmed=false;
+        starttrimlength=mintimemillis;
+        endtrimlength=maxtimemillis;
+
         RelativeLayout.LayoutParams paramsleft = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -270,21 +288,42 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         paramsright.addRule(RelativeLayout.ABOVE, rangeSeekbar.getId());
 
-                        /*float a=rangeSeekbar.getLeftThumbRect().left;
-                        float b=rangeSeekbar.getLeftThumbRect().right;
-                        float c=rangeSeekbar.getRightThumbRect().left;
-                        float d=rangeSeekbar.getRightThumbRect().right;
-                        Log.e("LeftLeft"," "+a+" "+b);
-                        Log.e("RightRight"," "+c+" "+d);
-                        Log.e("CenterCenter"," "+centerLeftX+" "+centerRightX);*/
+        /*float a=rangeSeekbar.getLeftThumbRect().left;
+        float b=rangeSeekbar.getLeftThumbRect().right;
+        float c=rangeSeekbar.getRightThumbRect().left;
+        float d=rangeSeekbar.getRightThumbRect().right;
+        Log.e("LeftLeft"," "+a+" "+b);
+        Log.e("RightRight"," "+c+" "+d);
+        Log.e("CenterCenter"," "+centerLeftX+" "+centerRightX);*/
 
         float centerLeftX=rangeSeekbar.getLeftThumbRect().centerX();
         float centerRightX=rangeSeekbar.getRightThumbRect().centerX();
 
-        paramsleft.setMargins((int) (centerLeftX - common.dpToPx(getActivity(), 25)), 0, 0, 0);
-        paramsright.setMargins((int) (centerRightX - common.dpToPx(getActivity(), 25)), 0, 0, 0);
+        paramsleft.setMargins((int) (centerLeftX - common.dpToPx(applicationviavideocomposer.getactivity(), 25)), 0, 0, 0);
+        paramsright.setMargins((int) (centerRightX - common.dpToPx(applicationviavideocomposer.getactivity(), 25)), 0, 0, 0);
         layout_progresslineleft.setLayoutParams(paramsleft);
         layout_progresslineright.setLayoutParams(paramsright);
+
+        {
+            RelativeLayout.LayoutParams paramsseekbarleft = new RelativeLayout.LayoutParams(
+                    (int)centerLeftX,
+                    (int)common.dpToPx(applicationviavideocomposer.getactivity(), 25));
+            paramsseekbarleft.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            paramsseekbarleft.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            view_seekbarleftnavigation.setLayoutParams(paramsseekbarleft);
+        }
+
+        {
+            RelativeLayout.LayoutParams paramsseekbarleft = new RelativeLayout.LayoutParams(
+                    (int)(rangeseekbarwidth - centerRightX),
+                    (int)common.dpToPx(applicationviavideocomposer.getactivity(), 25));
+            paramsseekbarleft.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            paramsseekbarleft.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            view_seekbarrightnavigation.setLayoutParams(paramsseekbarleft);
+        }
+
+        txt_mediatimemin.setText(common.gettimestring(mintimemillis));
+        txt_mediatimemax.setText(common.gettimestring(maxtimemillis));
     }
 
     public void setcolorbardata()
@@ -318,93 +357,151 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             myHandler.removeCallbacks(myRunnable);
     }
 
+    public boolean isneedtotrimmedia()
+    {
+        if(! ismediatrimmed)
+        {
+            if(starttrimlength != 0 && endtrimlength != mediaduration)
+                return true;
+            else
+                ismediatrimmed=false;
+        }
+        return false;
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
 
             case R.id.lyout_publish:
-
-                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
-                        getActivity().getResources().getString(R.string.publish_details2);
-
-                getDialog().dismiss();
-
-                if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
-                        xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))
-                {
-                    baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(), applicationviavideocomposer.getactivity().
-                            getResources().getString(R.string.txt_publish), publish, new adapteritemclick() {
-                        @Override
-                        public void onItemClicked(Object object) {
-                            //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
-                            baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    mediatype,ismediatrimmed,mediathumbnailurl,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish));
-
-                        }
-
-                        @Override
-                        public void onItemClicked(Object object, int type) {
-
-                        }
-                    });
-                    return;
-                }
-                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                        mediatype,ismediatrimmed,mediathumbnailurl,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish));
-                //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
+                selecteditemclick=1;
+                publishitem();
                 break;
 
             case R.id.lyout_send:
-                String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+
-                        getActivity().getResources().getString(R.string.send_details2);
-
-                getDialog().dismiss();
-                if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
-                        xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
-                    baseactivity.getinstance().share_alert_dialog(getActivity(),applicationviavideocomposer.getactivity().
-                            getResources().getString(R.string.txt_send),send ,new adapteritemclick() {
-                        @Override
-                        public void onItemClicked(Object object) {
-                            baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                                    mediatype,ismediatrimmed,mediathumbnailurl,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send));
-                        }
-                        @Override
-                        public void onItemClicked(Object object, int type) {
-
-                        }
-                    });
-                    return;
-                }
-                baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                        mediatype,ismediatrimmed,mediathumbnailurl,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send));
+                selecteditemclick=2;
+                senditem();
                 break;
 
             case R.id.lyout_export:
-                String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
-                        getActivity().getResources().getString(R.string.export_details2);
-
-                getDialog().dismiss();
-                if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
-                        xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
-                    baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity().
-                            getResources().getString(R.string.txt_save),export ,new adapteritemclick() {
-                        @Override
-                        public void onItemClicked(Object object) {
-                            checkwritepermission();
-                        }
-                        @Override
-                        public void onItemClicked(Object object, int type) {
-                        }
-                    });
-                    return;
-                }
-                checkwritepermission();
+                selecteditemclick=3;
+                exportitem();
                 break;
 
             case R.id.img_cancel:
                 getDialog().dismiss();
                 break;
         }
+    }
+
+
+    public void publishitem()
+    {
+        if(isneedtotrimmedia())
+        {
+            executecutmediacommand(starttrimlength,endtrimlength);
+            return;
+        }
+
+        if(trimmedmediapath.trim().isEmpty())
+            trimmedmediapath=mediafilepath;
+
+        String publish = applicationviavideocomposer.getactivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.publish_details2);
+
+        getDialog().dismiss();
+
+        if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
+                xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))
+        {
+            baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(),
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish), publish, new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+
+                    baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                            mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,
+                            applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish));
+
+                }
+                @Override
+                public void onItemClicked(Object object, int type) {
+
+                }
+            });
+            return;
+        }
+        baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish));
+        //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
+    }
+
+    public void senditem()
+    {
+        if(isneedtotrimmedia())
+        {
+            executecutmediacommand(starttrimlength,endtrimlength);
+            return;
+        }
+
+        if(trimmedmediapath.trim().isEmpty())
+            trimmedmediapath=mediafilepath;
+
+        String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+
+                getActivity().getResources().getString(R.string.send_details2);
+
+        getDialog().dismiss();
+        if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
+                xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
+            baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity().
+                    getResources().getString(R.string.txt_send),send ,new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+                    baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                            mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send));
+                }
+                @Override
+                public void onItemClicked(Object object, int type) {
+
+                }
+            });
+            return;
+        }
+        baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send));
+    }
+
+    public void exportitem()
+    {
+        if(isneedtotrimmedia())
+        {
+            executecutmediacommand(starttrimlength,endtrimlength);
+            return;
+        }
+
+        if(trimmedmediapath.trim().isEmpty())
+            trimmedmediapath=mediafilepath;
+
+        String export = applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details2);
+
+        getDialog().dismiss();
+        if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
+                xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
+            baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity().
+                    getResources().getString(R.string.txt_save),export ,new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+                    checkwritepermission();
+                }
+                @Override
+                public void onItemClicked(Object object, int type) {
+                }
+            });
+            return;
+        }
+        checkwritepermission();
     }
 
     @Override
@@ -568,32 +665,16 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     @Override
     public void getresult(final String filePath) {
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                progressdialog.dismisswaitdialog();
-                if(filePath != null){
-                    //progressdialog.showwaitingdialog(getActivity());
-                    String selectedvideopath = filePath;
-                    getDialog().dismiss();
-                    //baseactivity.getinstance().showsharepopupsub(selectedvideopath,"video",mediatoken,ismediatrimmed);
-                    //common.sharevideo(getActivity(),selectedvideopath);
-                }
-            }
-        });
     }
 
 
     @Override
     public void onPause() {
         super.onPause();
-        progressdialog.dismisswaitdialog();
     }
 
     @Override
     public void cancelaction() {
-        //mvideotrimmer.destroy();
     }
 
     @Override
@@ -609,7 +690,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
 
     @Override
     public int getwidth() {
-        return common.getScreenWidth(getActivity());
+        return common.getScreenWidth(applicationviavideocomposer.getactivity());
     }
 
     @Override
@@ -642,8 +723,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
 
     public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
 
-        int width = common.getScreenWidth(getActivity());
-        int height = common.getScreenHeight(getActivity());
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
 
         int percentageheight = (height / 100) * heightpercentage;
         int percentagewidth = (width / 100) * widthpercentage;
@@ -655,6 +736,102 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
         double bottommargin = (height / 100) * 3;
         params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
         getDialog().getWindow().setAttributes(params);
+    }
 
+    private void executecutmediacommand(long startMs, long endMs)
+    {
+        File destinationDir = null;
+        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String fileName = "";
+        String fileExtn = "";
+        String filePrefix = "via_media";
+        if(mediatype.equalsIgnoreCase(config.type_video))
+        {
+            fileName = "MEDIA_" + timeStamp + ".mp4";
+            fileExtn = ".mp4";
+            destinationDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+        }
+        else if(mediatype.equalsIgnoreCase(config.type_audio))
+        {
+            fileName = "MEDIA_" + timeStamp + ".m4a";
+            fileExtn = ".m4a";
+            destinationDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+        }
+        String filePath = getDestinationPath() + fileName;
+        File dest = new File(filePath);
+        int fileNo = 0;
+        while (dest.exists()) {
+            fileNo++;
+            dest = new File(destinationDir, filePrefix + fileNo + fileExtn);
+        }
+        String starttime = common.converttimeformat(startMs);
+        String endtime = common.converttimeformat((endMs - startMs));
+        String[] complexCommand = { "-y", "-i", mediafilepath,"-ss", "" + starttime, "-t", "" + endtime, "-c","copy", filePath};
+        execffmpegbinary(complexCommand,dest);
+    }
+
+    private String getDestinationPath() {
+        File folder = null;
+        if(mediatype.equalsIgnoreCase(config.type_video))
+            folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+        else if(mediatype.equalsIgnoreCase(config.type_audio))
+            folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+
+        if (!folder.exists())
+            folder.mkdirs();
+
+        String mfinalpath = folder.getPath() + File.separator;
+        return mfinalpath;
+    }
+
+    private void execffmpegbinary(final String[] command, final File dest) {
+        try {
+            try {
+                applicationviavideocomposer.ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                    @Override
+                    public void onFailure(String s) {
+                        Log.e("Failure with output : ","IN onFailure");
+                        Toast.makeText(applicationviavideocomposer.getactivity(),"Failed to trim media. Please retry!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.e("SUCCESS with output : ","SUCCESS");
+                        ismediatrimmed=true;
+                        trimmedmediapath=dest.toString();
+                        progressdialog.dismisswaitdialog();
+
+                        if(selecteditemclick == 1)
+                            publishitem();
+                        else if(selecteditemclick == 2)
+                            senditem();
+                        else if(selecteditemclick == 3)
+                            exportitem();
+
+                    }
+
+                    @Override
+                    public void onProgress(String s) {
+                        Log.e( "Progress bar : " , "In Progress");
+                    }
+
+                    @Override
+                    public void onStart() {
+                        Log.e("Start with output : ","IN START");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        progressdialog.dismisswaitdialog();
+                    }
+                });
+            } catch (FFmpegCommandAlreadyRunningException e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e) {
+            // do nothing for now
+        }
     }
 }

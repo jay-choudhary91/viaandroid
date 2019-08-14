@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight="2"
         >
 
         <RelativeLayout
@@ -34,6 +33,7 @@
 
             <ImageView
                 android:id="@+id/img_cancel"
+                android:contentDescription="@string/content_description"
                 android:layout_width="@dimen/iconwidth"
                 android:layout_height="@dimen/iconheight"
                 android:layout_centerVertical="true"
@@ -82,6 +82,7 @@
 
                     <ImageView
                         android:id="@+id/img_thumbnail"
+                        android:contentDescription="@string/content_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_20dp"
@@ -114,8 +115,27 @@
                     android:orientation="horizontal"
                     />
 
+                <View
+                    android:id="@+id/view_seekbarleftnavigation"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/margin_25"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:visibility="gone"
+                    android:background="@color/lightgrayheader"/>
+
+                <View
+                    android:id="@+id/view_seekbarrightnavigation"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/margin_25"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:background="@color/lightgrayheader"/>
+
                 <ImageView
                     android:id="@+id/img_audiothumb_timeline"
+                    android:contentDescription="@string/content_description"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/margin_35"
                     android:visibility="gone"
@@ -140,7 +160,7 @@
                     android:layout_above="@id/rangeseekbar">
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_mediatimethumbleft"
+                        android:id="@+id/txt_mediatimemin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -160,7 +180,7 @@
                     <RelativeLayout
                         android:layout_width="4dp"
                         android:layout_height="@dimen/margin_35"
-                        android:layout_below="@id/txt_mediatimethumbleft"
+                        android:layout_below="@id/txt_mediatimemin"
                         android:layout_centerHorizontal="true"
                         android:background="@color/white"
                         android:gravity="center_horizontal"
@@ -171,7 +191,7 @@
                             android:layout_height="@dimen/margin_35"
                             android:layout_centerHorizontal="true"
                             android:background="@color/blacktransparent"
-                            android:visibility="visible"></View>
+                            android:visibility="visible"/>
 
                     </RelativeLayout>
 
@@ -186,7 +206,7 @@
                     android:layout_above="@id/rangeseekbar">
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_mediatimethumbright"
+                        android:id="@+id/txt_mediatimemax"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -206,7 +226,7 @@
                     <RelativeLayout
                         android:layout_width="4dp"
                         android:layout_height="@dimen/margin_35"
-                        android:layout_below="@id/txt_mediatimethumbright"
+                        android:layout_below="@id/txt_mediatimemax"
                         android:layout_centerHorizontal="true"
                         android:background="@color/white"
                         android:gravity="center_horizontal"
@@ -217,27 +237,13 @@
                             android:layout_height="@dimen/margin_35"
                             android:layout_centerHorizontal="true"
                             android:background="@color/blacktransparent"
-                            android:visibility="visible"></View>
+                            android:visibility="visible"/>
 
                     </RelativeLayout>
 
                 </RelativeLayout>
 
-                    <!--app:left_thumb_image="@drawable/thumb"
-                    app:left_thumb_image_pressed="@drawable/thumb_pressed"-->
-
-
-                <!--<com.deeptruth.app.android.rangeseekbar.RangeSeekbar
-                    android:id="@+id/layout_rangeseekbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/margin_25"
-                    android:visibility="gone"
-                    android:layout_below="@id/img_audiothumb_timeline"
-                    android:orientation="horizontal"/>-->
-
             </RelativeLayout>
-
-
 
         </RelativeLayout>
 
@@ -293,6 +299,7 @@
 
                     <ImageView
                         android:id="@+id/img_send"
+                        android:contentDescription="@string/content_description"
                         android:layout_width="60dp"
                         android:layout_height="45dp"
                         android:gravity="bottom"
@@ -326,14 +333,13 @@
                     android:layout_width="wrap_content"
                     android:layout_weight="0.5"
                     android:gravity="bottom"
-
                     android:layout_height="0dp">
 
                     <ImageView
                         android:id="@+id/img_publish"
+                        android:contentDescription="@string/content_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
                         android:scaleType="fitEnd"
                         android:src="@drawable/img_publish"/>
                 </LinearLayout>
@@ -371,6 +377,7 @@
 
                     <ImageView
                         android:id="@+id/img_expoet"
+                        android:contentDescription="@string/content_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="bottom"
@@ -411,6 +418,7 @@
 
                     <ImageView
                         android:id="@+id/img_help"
+                        android:contentDescription="@string/content_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="bottom"
