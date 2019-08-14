@@ -604,18 +604,21 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.MATCH_PARENT);
-
                         lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        setdynamiclayout(lp,null,0,0,0,bottomlayoutheight,0,
+                        //lp.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
+                        setdynamiclayout(lp,null,0,1,0,bottomlayoutheight,0,
                                 0,0,0,null,headercontainer,null,90);
 
                         img_dotmenu.setVisibility(View.GONE);
+
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
-
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),
-                                (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,
-                                0,0,0,imgflashon,null,null,0);
+                                (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,
+                                imgflashon,null,null,0);
+
+                        Log.e("leftheaderheight",""+headercontainer.getHeight());
+
 
                     }else{
                         setbottommargin(headercontainer);
@@ -638,7 +641,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),
-                                (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
+                                (int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,
+                                 imgflashon,null,null,0);
+
+                        Log.e("rightheaderheight",""+headercontainer.getHeight());
+
 
                     }else{
                         setbottommargin(headercontainer);
