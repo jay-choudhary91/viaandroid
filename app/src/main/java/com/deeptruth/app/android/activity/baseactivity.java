@@ -800,7 +800,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     return;
                 }
 
-                if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
+                /*if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
                 {
                     common.shouldshowupgradepopup(config.mediatrimcount);
                     if(common.ismediatrimcountexceed(config.mediatrimcount))
@@ -808,7 +808,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         checkinapppurchasestatus(config.gravitycenter);
                         return;
                     }
-                }
+                }*/
 
                 callmediashareapi(type, mediatoken, path, mediamethod);
             }
@@ -824,7 +824,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     return;
                 }
 
-                if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
+                /*if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
                 {
                     common.shouldshowupgradepopup(config.mediatrimcount);
                     if(common.ismediatrimcountexceed(config.mediatrimcount))
@@ -832,7 +832,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         checkinapppurchasestatus(config.gravitycenter);
                         return;
                     }
-                }
+                }*/
 
                 callmediashareapi(type , mediatoken, path, mediamethod);
             }
@@ -843,7 +843,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v) {
                 mediamethod = config.type_linkinvite;
 
-                if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
+                /*if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
                 {
                     common.shouldshowupgradepopup(config.mediatrimcount);
                     if(common.ismediatrimcountexceed(config.mediatrimcount))
@@ -851,7 +851,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         checkinapppurchasestatus(config.gravitycenter);
                         return;
                     }
-                }
+                }*/
 
                 if(!isuserlogin()){
                     redirecttologin();
@@ -1549,16 +1549,15 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     public void senditemsdialog(Context context,String mediafilepath,String mediatoken,final String type,
-                                boolean ismediatrimmed,String mediathumbnailurl,String popupcontenttype){
+                                boolean ismediatrimmed,String mediathumbnailurl,String trimmedmediapath,String popupcontenttype){
 
-        if(popupcontenttype.equalsIgnoreCase(getResources().getString(R.string.txt_publish)))
+        /*if(popupcontenttype.equalsIgnoreCase(getResources().getString(R.string.txt_publish)))
         {
             if(!isuserlogin()){
                 redirecttologin();
                 return;
             }
-        }
-
+        }*/
 
         ArrayList<sharemedia> sharemedia=new ArrayList<>();
         sharemedia.add(new sharemedia(R.drawable.box,config.item_box));
@@ -1586,7 +1585,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onItemClicked(Object object) {
                 if(object != null)
                 {
-                    setreadytouploadfile(new File(mediafilepath));
+                    setreadytouploadfile(new File(trimmedmediapath));
                     if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
                     {
                         if(common.ismediatrimcountexceed(config.mediatrimcount))
@@ -1608,11 +1607,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             dialogfileuploadoptions.dismiss();
 
                         videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath, mediatoken,  type,
-                                ismediatrimmed,mediathumbnailurl,popupcontenttype);
+                                ismediatrimmed,mediathumbnailurl,trimmedmediapath,popupcontenttype);
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
                     {
-                        loginwithonedrive(mediafilepath);
+                        loginwithonedrive(trimmedmediapath);
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_dropbox))
                     {
@@ -1623,7 +1622,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         }
                         else
                         {
-                            dropboxuploadfile(mediafilepath);
+                            dropboxuploadfile(trimmedmediapath);
                         }
                     }
                 }
@@ -1792,7 +1791,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
 
     public void videolocksharedialog(final Context context,String mediafilepath,String mediatoken,final String type,
-                                     boolean ismediatrimmed,String mediathumbnailurl,String popupcontenttype){
+                                     boolean ismediatrimmed,String mediathumbnailurl,String trimmedmediapath,String popupcontenttype){
 
         final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1820,23 +1819,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         textsharepopup.add(new sharepopuptextspanning(1.02f,253,str.length(),str));
         common.setspanning(textsharepopup,txt_content);
 
-
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
                 senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,
-                        type, ismediatrimmed,mediathumbnailurl,popupcontenttype);
+                        type, ismediatrimmed,mediathumbnailurl,trimmedmediapath,popupcontenttype);
             }
         });
 
         txt_upload.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-
+            public void onClick(View v)
+            {
+                dialog.dismiss();
+                baseactivity.getinstance().showsharepopupsub(trimmedmediapath,type,mediatoken,ismediatrimmed);
             }
         });
-
         setscreenwidthheight(dialog,95,80,context.getResources().getString(R.string.popup_videolock));
         dialog.show();
     }

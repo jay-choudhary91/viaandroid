@@ -114,6 +114,24 @@
                     android:orientation="horizontal"
                     />
 
+                <View
+                    android:id="@+id/view_seekbarleftnavigation"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/margin_25"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:visibility="gone"
+                    android:background="@color/lightgrayheader"></View>
+
+                <View
+                    android:id="@+id/view_seekbarrightnavigation"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/margin_25"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:visibility="gone"
+                    android:background="@color/lightgrayheader"></View>
+
                 <ImageView
                     android:id="@+id/img_audiothumb_timeline"
                     android:layout_width="match_parent"
@@ -140,7 +158,7 @@
                     android:layout_above="@id/rangeseekbar">
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_mediatimethumbleft"
+                        android:id="@+id/txt_mediatimemin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -160,7 +178,7 @@
                     <RelativeLayout
                         android:layout_width="4dp"
                         android:layout_height="@dimen/margin_35"
-                        android:layout_below="@id/txt_mediatimethumbleft"
+                        android:layout_below="@id/txt_mediatimemin"
                         android:layout_centerHorizontal="true"
                         android:background="@color/white"
                         android:gravity="center_horizontal"
@@ -186,7 +204,7 @@
                     android:layout_above="@id/rangeseekbar">
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/txt_mediatimethumbright"
+                        android:id="@+id/txt_mediatimemax"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -206,7 +224,7 @@
                     <RelativeLayout
                         android:layout_width="4dp"
                         android:layout_height="@dimen/margin_35"
-                        android:layout_below="@id/txt_mediatimethumbright"
+                        android:layout_below="@id/txt_mediatimemax"
                         android:layout_centerHorizontal="true"
                         android:background="@color/white"
                         android:gravity="center_horizontal"
