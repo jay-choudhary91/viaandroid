@@ -270,13 +270,13 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         paramsright.addRule(RelativeLayout.ABOVE, rangeSeekbar.getId());
 
-                        /*float a=rangeSeekbar.getLeftThumbRect().left;
-                        float b=rangeSeekbar.getLeftThumbRect().right;
-                        float c=rangeSeekbar.getRightThumbRect().left;
-                        float d=rangeSeekbar.getRightThumbRect().right;
-                        Log.e("LeftLeft"," "+a+" "+b);
-                        Log.e("RightRight"," "+c+" "+d);
-                        Log.e("CenterCenter"," "+centerLeftX+" "+centerRightX);*/
+        /*float a=rangeSeekbar.getLeftThumbRect().left;
+        float b=rangeSeekbar.getLeftThumbRect().right;
+        float c=rangeSeekbar.getRightThumbRect().left;
+        float d=rangeSeekbar.getRightThumbRect().right;
+        Log.e("LeftLeft"," "+a+" "+b);
+        Log.e("RightRight"," "+c+" "+d);
+        Log.e("CenterCenter"," "+centerLeftX+" "+centerRightX);*/
 
         float centerLeftX=rangeSeekbar.getLeftThumbRect().centerX();
         float centerRightX=rangeSeekbar.getRightThumbRect().centerX();
