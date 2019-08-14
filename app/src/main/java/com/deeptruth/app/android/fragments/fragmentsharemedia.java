@@ -281,8 +281,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
         float centerLeftX=rangeSeekbar.getLeftThumbRect().centerX();
         float centerRightX=rangeSeekbar.getRightThumbRect().centerX();
 
-        paramsleft.setMargins((int) (centerLeftX - common.dpToPx(getActivity(), 25)), 0, 0, 0);
-        paramsright.setMargins((int) (centerRightX - common.dpToPx(getActivity(), 25)), 0, 0, 0);
+        paramsleft.setMargins((int) (centerLeftX - common.dpToPx(applicationviavideocomposer.getactivity(), 25)), 0, 0, 0);
+        paramsright.setMargins((int) (centerRightX - common.dpToPx(applicationviavideocomposer.getactivity(), 25)), 0, 0, 0);
         layout_progresslineleft.setLayoutParams(paramsleft);
         layout_progresslineright.setLayoutParams(paramsright);
     }
@@ -324,8 +324,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
 
             case R.id.lyout_publish:
 
-                String publish = getActivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
-                        getActivity().getResources().getString(R.string.publish_details2);
+                String publish = applicationviavideocomposer.getactivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
+                        applicationviavideocomposer.getactivity().getResources().getString(R.string.publish_details2);
 
                 getDialog().dismiss();
 
@@ -361,7 +361,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 getDialog().dismiss();
                 if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
                         xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
-                    baseactivity.getinstance().share_alert_dialog(getActivity(),applicationviavideocomposer.getactivity().
+                    baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity().
                             getResources().getString(R.string.txt_send),send ,new adapteritemclick() {
                         @Override
                         public void onItemClicked(Object object) {
@@ -380,8 +380,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 break;
 
             case R.id.lyout_export:
-                String export = getActivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
-                        getActivity().getResources().getString(R.string.export_details2);
+                String export = applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
+                        applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details2);
 
                 getDialog().dismiss();
                 if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
@@ -568,17 +568,17 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     @Override
     public void getresult(final String filePath) {
 
-        getActivity().runOnUiThread(new Runnable() {
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
                 progressdialog.dismisswaitdialog();
                 if(filePath != null){
-                    //progressdialog.showwaitingdialog(getActivity());
+                    //progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
                     String selectedvideopath = filePath;
                     getDialog().dismiss();
                     //baseactivity.getinstance().showsharepopupsub(selectedvideopath,"video",mediatoken,ismediatrimmed);
-                    //common.sharevideo(getActivity(),selectedvideopath);
+                    //common.sharevideo(applicationviavideocomposer.getactivity(),selectedvideopath);
                 }
             }
         });
@@ -609,7 +609,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
 
     @Override
     public int getwidth() {
-        return common.getScreenWidth(getActivity());
+        return common.getScreenWidth(applicationviavideocomposer.getactivity());
     }
 
     @Override
@@ -642,8 +642,8 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
 
     public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
 
-        int width = common.getScreenWidth(getActivity());
-        int height = common.getScreenHeight(getActivity());
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
 
         int percentageheight = (height / 100) * heightpercentage;
         int percentagewidth = (width / 100) * widthpercentage;
