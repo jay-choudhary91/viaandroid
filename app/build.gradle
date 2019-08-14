@@ -64,7 +64,6 @@ dependencies {
     implementation files('libs/json-simple-1.1.jar')
     implementation files('libs/org.apache.http.legacy.jar')
     implementation files('libs/sun.misc.base64decoder.jar')
-    implementation files('libs/achartengine-1.2.0.jar')
     implementation 'com.android.support:support-compat:27.1.1'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:support-compat:27.1.1'
@@ -126,11 +125,8 @@ dependencies {
     }*/
     // Include the sdk as a dependency
     implementation('com.onedrive.sdk:onedrive-sdk-android:+')
-    // Include the gson dependency
     implementation 'com.google.code.gson:gson:2.3.1'
-    // Include supported authentication methods for your application
     implementation 'com.microsoft.services.msa:msa-auth:0.8.4'
-
 
     configurations {
         all {
