@@ -1288,8 +1288,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                                 layoutpause.setVisibility(View.VISIBLE);
 
-                                if(!isplaypauswebtnshow){
-                                      playpausebutton.setVisibility(View.VISIBLE);
+                                if(!isplaypauswebtnshow && imgpause.getVisibility() == View.GONE ){
+                                         playpausebutton.setVisibility(View.VISIBLE);
 
                                 }else{
                                     getpausebtnheight();
@@ -2570,16 +2570,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
        // common.slidetodown(layout_mediatype); // visible actionbar
         layout_mediatype.setVisibility(View.VISIBLE);
         playpausebutton.setImageResource(R.drawable.play_btn);
-        playpausebutton.setVisibility(View.VISIBLE);
+        playpausebutton.setVisibility(View.GONE);
         img_fullscreen.setVisibility(View.VISIBLE);
-        imgpause.setVisibility(View.GONE);
+        layoutpause.setVisibility(View.VISIBLE);
+        imgpause.setVisibility(View.VISIBLE);
         img_colapseicon.setVisibility(View.GONE);
         gethelper().updateactionbar(1);
         setbottomimgview();
         layoutbackgroundcontroller.setVisibility(View.VISIBLE);
         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-        gethelper().setdrawerheightonfullscreen(0);
-        imgpause.setImageResource(R.drawable.ic_pause);
+        gethelper().setdrawerheightonfullscreen(1);
+        imgpause.setImageResource(R.drawable.ic_play);
     }
 
     public void setbottomimgview(){
@@ -2689,7 +2690,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         layoutpause.setVisibility(View.VISIBLE);
                         getcontrollerheight();
                     }else{
-                        gethelper().setdrawerheightonfullscreen(0);
+                        gethelper().setdrawerheightonfullscreen(1);
                         imgpause.setVisibility(View.GONE);
                         layoutbackgroundcontroller.setVisibility(View.GONE);
                     }
