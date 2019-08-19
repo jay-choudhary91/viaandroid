@@ -1234,6 +1234,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         this.isrecodrunning=isrecodrunning;
         vlauetraveled = 100;valuespeed = 80;valuealtitude = 20000;valuegpsaccuracy = 25;valuedatatimedelay = 10;valueconnectionspeed=100;
         clearmapneeded=true;
+
+        if(isrecodrunning)
+            clearmapneeded=true;
     }
 
     public void setdraweropen(boolean isdraweropen)
