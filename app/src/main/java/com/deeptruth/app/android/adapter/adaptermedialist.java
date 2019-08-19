@@ -218,13 +218,9 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             }
 
             if(unsentcount > 0)
-            {
                 holder.progressmediasync.setVisibility(View.VISIBLE);
-            }
             else
-            {
                 holder.progressmediasync.setVisibility(View.INVISIBLE);
-            }
 
             if((cautioncount > 0 || validcount > 0) && unsentcount > 0){
                 holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
@@ -232,8 +228,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
                 holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
-
-
 
             if(arrayList != null && arrayList.size() > 0)
             {
@@ -271,11 +265,11 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 Log.e("else case ","case2");
                 if(validcount == 0 && invalidcount == 0 && cautioncount == 0 && unsentcount == 0)
                     holder.layout_colorbar.setVisibility(View.INVISIBLE);
+
+                holder.progressmediasync.setVisibility(View.VISIBLE);
             }
 
-
             holder.txt_videoname.setText(mediaobject.getMediatitle());
-
             if(mediaobject.getDuration().trim().isEmpty())
             {
              //   holder.tv_mediaduration.setText("NA");
@@ -288,33 +282,22 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             }
 
             if(mediaobject.getCreatedate().trim().isEmpty())
-            {
-
                 holder.tv_mediadate.setText("NA");
-                // holder.tv_mediatime.setText(mediaobject.getCreatetime());
-            }
             else
-            {
                 holder.tv_mediadate.setText(mediaobject.getCreatedate() +" | "  + mediaobject.getCreatetime());
-            }
 
             holder.tv_medianotes.setText(mediaobject.getMedianotes());
 
-            if(mediaobject.getVideostarttransactionid().isEmpty() ||  mediaobject.getVideostarttransactionid().equalsIgnoreCase("null")){
+            if(mediaobject.getVideostarttransactionid().isEmpty() ||
+                    mediaobject.getVideostarttransactionid().equalsIgnoreCase("null"))
                 holder.tv_localkey.setText("");
-            }else
-            {
+            else
                 holder.tv_localkey.setText(mediaobject.getVideostarttransactionid());
-            }
 
-
-            if(mediaobject.getMediastatus().isEmpty() ||  mediaobject.getMediastatus().equalsIgnoreCase("null")){
-
+            if(mediaobject.getMediastatus().isEmpty() ||  mediaobject.getMediastatus().equalsIgnoreCase("null"))
                 holder.tv_sync_status.setText("Status : pending");
-            }else{
-
+            else
                 holder.tv_sync_status.setText("Status : " + mediaobject.getMediastatus());
-            }
 
             /*holder.edtvideoname.setEnabled(false);
             holder.edtvideoname.setClickable(false);

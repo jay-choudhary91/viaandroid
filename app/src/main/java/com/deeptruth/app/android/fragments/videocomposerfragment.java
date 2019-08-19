@@ -24,6 +24,7 @@ import android.location.Location;
 import android.media.CamcorderProfile;
 import android.media.Image;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -1290,7 +1291,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     xdata.getinstance().saveSetting(config.servicedata_keytype,keytype);
 
                     Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
-                    applicationviavideocomposer.getactivity().startService(intent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        applicationviavideocomposer.getactivity().startForegroundService(intent);
+                    else
+                        applicationviavideocomposer.getactivity().startService(intent);
 
                 }catch (Exception e)
                 {

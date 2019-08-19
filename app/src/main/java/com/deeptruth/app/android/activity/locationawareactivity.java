@@ -858,9 +858,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             Log.e("ServiceRunning ", "No");
 
             locationService = new Intent(applicationviavideocomposer.getactivity(), locationservice.class);
-            applicationviavideocomposer.getactivity().startService(locationService);
-            isservicebound = applicationviavideocomposer.getactivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                startForegroundService(locationService);
+            else
+                startService(locationService);
 
+            isservicebound = applicationviavideocomposer.getactivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
         }
 
         if (mOrientation != null)
@@ -2721,7 +2724,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         initialdate = new Date();
         xdata.getinstance().saveSetting("initialdatereaderapi", "" + initialdate.getTime());
-        applicationviavideocomposer.getactivity().startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            startForegroundService(intent);
+        else
+            startService(intent);
     }
     //** end code of media reader sync process
     //--------------------------------------------------

@@ -807,7 +807,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             xdata.getinstance().saveSetting(config.servicedata_keytype,keytype);
 
             Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
-            applicationviavideocomposer.getactivity().startService(intent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                applicationviavideocomposer.getactivity().startForegroundService(intent);
+            else
+                applicationviavideocomposer.getactivity().startService(intent);
 
         }catch (Exception e)
         {

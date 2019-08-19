@@ -133,6 +133,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 else
                 {
                     holder.linearseekbarcolorview.setVisibility(View.INVISIBLE);
+                    holder.progressmediasync.setVisibility(View.VISIBLE);
                 }
             }
 

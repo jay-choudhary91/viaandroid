@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -286,9 +287,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     {
         phonecallservice = new callservice();
         Intent intent = new Intent(homeactivity.this, callservice.class);
-
         if (!isMyServiceRunning(phonecallservice.getClass()))
-            startService(intent);
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                startForegroundService(intent);
+            else
+                startService(intent);
+        }
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass)
