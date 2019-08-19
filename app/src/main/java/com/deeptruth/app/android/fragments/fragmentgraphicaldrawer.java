@@ -2630,7 +2630,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(value != -1)  // It means chart is preparing on recording time
         {
             if(valuesarray.size() >= 190)
-                valuesarray.remove(valuesarray.get(valuesarray.size()-1));
+                 valuesarray.subList(0, 10).clear();
 
             valuesarray.add(new Entry(valuesarray.size(), value, 0));
         }
@@ -2650,8 +2650,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 /*Highlight   high = new Highlight(set1.getEntryForIndex(set1.getEntryCount()-1).getX(), 0, set1.getEntryCount()-1);
                 chart.highlightValue(high, false);*/
 
+
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
+
+                //chart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
+
 
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,
                         getActivity().getResources().getDimension(R.dimen.margin_50dp),
@@ -2666,14 +2670,24 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         0);
             }
 
+
+            if(set1.getEntryCount() == 190){
+                set1.removeFirst();
+
+                for(Entry entry: set1.getValues())
+                    entry.setX(entry.getX()-1);
+            }
+
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
+            chart.setVisibleXRangeMaximum(80);
             chart.refreshDrawableState();
             setyaxismaxrangegps(chart,chartname,value);
-            chart.setVisibleXRangeMaximum(80);
             chart.moveViewToX(set1.getEntryCount());
-            //chart.invalidate();
+            chart.invalidate();
+            Log.e("EntryCount",""+set1.getEntryCount());
+
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(valuesarray, "");
@@ -2861,6 +2875,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             {
                 linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_6dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
             }
+
+            if(set1.getEntryCount() == 190){
+                set1.removeFirst();
+
+                for(Entry entry: set1.getValues())
+                    entry.setX(entry.getX()-1);
+            }
+
             LineData data = new LineData(set1);
             linechart.setData(data);
             setyaxismaxrange(linechart,chartname,value);
