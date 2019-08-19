@@ -151,7 +151,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             }
             else
             {
-                holder.tv_framecounts.setVisibility(View.GONE);
+                holder.tv_framecounts.setVisibility(View.INVISIBLE);
             }
             try {
 

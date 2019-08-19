@@ -42,7 +42,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="3dp"
+            android:padding="5dp"
             android:layout_gravity="center"
             android:orientation="horizontal">
 
@@ -60,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="3dp"
+            android:padding="5dp"
             android:orientation="vertical">
 
             <ImageView

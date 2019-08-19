@@ -1825,6 +1825,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public void showhideviewondrawer(boolean isshow) {
         super.showhideviewondrawer(isshow);
 
+        if(layoutbottom == null || linearheader == null || framecontainer == null)
+            return;
+
         if(isshow){
             layoutbottom.setVisibility(View.GONE);
             linearheader.setVisibility(View.GONE);

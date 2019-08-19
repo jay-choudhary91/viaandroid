@@ -1243,6 +1243,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         this.isrecodrunning=isrecodrunning;
         vlauetraveled = 100;valuespeed = 80;valuealtitude = 20000;valuegpsaccuracy = 25;valuedatatimedelay = 10;valueconnectionspeed=100;
         clearmapneeded=true;
+
+        if(isrecodrunning)
+            clearmapneeded=true;
     }
 
     public void setdraweropen(boolean isdraweropen)
@@ -2061,38 +2064,37 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         {
                             String value = common.speedformatter(metricItemArraylist.get(j).getMetricTrackValue());
                             updateverticalsliderlocationdata(value,vertical_slider_speed);
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed)
-                                    ,"\n"+ value, tvspeed);
+                            /*common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed)
+                                    ,"\n"+ value, tvspeed);*/
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude))
                         {
                             String value = metricItemArraylist.get(j).getMetricTrackValue();
                             updateverticalsliderlocationdata(value,vertical_slider_altitude);
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+value, tvaltitude);
+                            //common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+value, tvaltitude);
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled))
                         {
                             String value = common.travelleddistanceformatter(metricItemArraylist.get(j).getMetricTrackValue());
                             updateverticalsliderlocationdata(value,vertical_slider_traveled);
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),"\n"+value, tvtraveled);
+                            //common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),"\n"+value, tvtraveled);
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("connectionspeed"))
                         {
                             String value = metricItemArraylist.get(j).getMetricTrackValue();
                             updateverticalsliderlocationdata(value,vertical_slider_connectionspeed);
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),
-                                    "\n"+value , tvconnection);
+                            /*common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),
+                                    "\n"+value , tvconnection);*/
                         }
-
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.connectiondatadelay))
                         {
                             String value=metricItemArraylist.get(j).getMetricTrackValue();
                             updateverticalsliderlocationdata(value,vertical_slider_connectiondatatimedely);
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay),
-                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue() ,txt_datatimedelay);
+                            /*common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay),
+                                    "\n"+metricItemArraylist.get(j).getMetricTrackValue() ,txt_datatimedelay);*/
                         }
 
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.satellitedate))
@@ -2113,7 +2115,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         {
                             String value=metricItemArraylist.get(j).getMetricTrackValue();
                             updateverticalsliderlocationdata(value,vertical_slider_gpsaccuracy);
-                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
+                           /* if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
                                     && (! value.equalsIgnoreCase("null")))
                             {
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
@@ -2123,7 +2125,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             {
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
                                         "\n"+value, tvgpsaccuracy);
-                            }
+                            }*/
                         }
 
                     }
@@ -2142,22 +2144,22 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     int mediarunningpercentage = (currentmediaposition * 100) / metricmainarraylist.size();
 
                     if(linechart_connectionspeed != null)
-                        updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage,vertical_slider_connectionspeed);
+                        updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage,vertical_slider_connectionspeed,tvconnection,"mbps");
 
                     if(linechart_datatimedelay != null)
-                        updatelinegraphwithposition(linechart_datatimedelay,connectiondatadelayvalues,mediarunningpercentage,vertical_slider_connectiondatatimedely);
+                        updatelinegraphwithposition(linechart_datatimedelay,connectiondatadelayvalues,mediarunningpercentage,vertical_slider_connectiondatatimedely,txt_datatimedelay,"second");
 
                     if(linechart_gpsaccuracy != null)
-                        updatelinegraphwithposition(linechart_gpsaccuracy,gpsaccuracyvalues,mediarunningpercentage,vertical_slider_gpsaccuracy);
+                        updatelinegraphwithposition(linechart_gpsaccuracy,gpsaccuracyvalues,mediarunningpercentage,vertical_slider_gpsaccuracy,tvgpsaccuracy,"feet");
 
                     if(linechart_speed != null && speedgraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_speed,speedgraphitems,mediarunningpercentage,vertical_slider_speed);
+                        updatelinegraphwithposition(linechart_speed,speedgraphitems,mediarunningpercentage,vertical_slider_speed,tvspeed,"km/h");
 
                     if(linechart_traveled != null && travelledgraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_traveled,travelledgraphitems,mediarunningpercentage,vertical_slider_traveled);
+                        updatelinegraphwithposition(linechart_traveled,travelledgraphitems,mediarunningpercentage,vertical_slider_traveled,tvtraveled,"km");
 
                     if(linechart_altitude != null && altitudegraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_altitude,altitudegraphitems,mediarunningpercentage,vertical_slider_altitude);
+                        updatelinegraphwithposition(linechart_altitude,altitudegraphitems,mediarunningpercentage,vertical_slider_altitude,tvaltitude,"feet");
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -2736,6 +2738,87 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.animateX(0);
         Legend l = chart.getLegend();
         l.setForm(Legend.LegendForm.LINE);
+    }
+
+    public void updatelinegraphwithposition(final LineChart chart, final ArrayList<Entry> valuesarray, final int mediarunningpercentage, final verticalseekbar vertical_seekbar,TextView tvallgraphvalue,String unitvalue)
+    {
+        if (chart.getData() != null &&  chart.getData().getDataSetCount() > 0)
+        {
+            final LineDataSet set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
+            set1.setValues(valuesarray);
+            set1.notifyDataSetChanged();
+            chart.getData().notifyDataChanged();
+            chart.notifyDataSetChanged();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run()
+                {
+                    int totalsize=set1.getEntryCount();
+                    int selectedchartposition = (mediarunningpercentage * totalsize) / 100;
+                    Log.e("selectedchartposition",""+selectedchartposition);
+
+                    int count = 0;
+
+                    if(selectedchartposition <= set1.getEntryCount())
+                    {
+                        for(int i=0;i<set1.getEntryCount();i++)
+                            set1.getEntryForIndex(i).setIcon(null);
+
+                        count =  set1.getEntryCount();
+                        Log.e("count",""+count);
+                        if (count != 1) {
+                            if(selectedchartposition ==set1.getEntryCount())
+                                selectedchartposition = selectedchartposition-1;
+
+                            final int finalSelectedchartposition = selectedchartposition;
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    /*Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
+                                    chart.highlightValue(high, false);*/
+                                    if(finalSelectedchartposition < set1.getEntryCount())
+                                    {
+                                        if(finalSelectedchartposition <=39 && set1.getEntryCount() > 0){
+                                            chart.moveViewToX(set1.getEntryForIndex(0).getX());
+                                        }else{
+                                            chart.moveViewToX(set1.getEntryForIndex(finalSelectedchartposition -39).getX());
+                                        }
+                                    }
+                                }
+                            });
+
+                            String value = ""+set1.getEntryForIndex(selectedchartposition).getY();
+                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),
+                                    "\n"+value+" "+unitvalue , tvallgraphvalue);
+
+                            set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
+                                    R.drawable.blue_black_ball));
+                        }
+                    }
+                    final int finalCount = count;
+                    final int finalSelectedchartposition1 = selectedchartposition;
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            //chart.invalidate();
+                            if(finalCount != 1){
+                                if(vertical_seekbar.getVisibility() == View.VISIBLE)
+                                    vertical_seekbar.setVisibility(View.GONE);
+                            }else{
+                                vertical_seekbar.setVisibility(View.VISIBLE);
+                                if(finalSelectedchartposition1 < set1.getEntryCount())
+                                {
+                                    float sizey = set1.getEntryForIndex(finalSelectedchartposition1).getY();
+                                    updateverticalsliderlocationdata(Float.toString(sizey),vertical_seekbar);
+                                }
+                            }
+                        }
+                    });
+                }
+            }).start();
+        }
     }
 
     private void setspeedtraveledaltitudechart(final LineChart linechart, Float value, ArrayList<Entry> arrayitems,String chartname) {

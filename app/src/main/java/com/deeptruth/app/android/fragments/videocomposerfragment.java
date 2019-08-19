@@ -2286,6 +2286,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void showhideviewondrawer(boolean isshow) {
         super.showhideviewondrawer(isshow);
 
+        if(layout_bottom == null  || framecontainer == null)
+            return;
+
         if(isshow){
             layout_bottom.setVisibility(View.GONE);
             if(headercontainer!=null)
