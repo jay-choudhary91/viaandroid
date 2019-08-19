@@ -54,7 +54,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         RelativeLayout relative_child ;
         public ImageView img_imageshare,img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public SwipeRevealLayout root_view;
-        LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide,linearseekbarcolorview,layout_colorbar;
+        LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide,linearseekbarcolorview,layout_update_labels;
         ProgressBar progressmediasync;
 
         public myViewHolder(View view) {
@@ -86,7 +86,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             txt_pipesign_unsent = (TextView) view.findViewById(R.id.txt_pipesign_unsent);
             txt_pipesign_invalid = (TextView) view.findViewById(R.id.txt_pipesign_invalid);
             tv_framecounts = (TextView) view.findViewById(R.id.tv_framecounts);
-            layout_colorbar = (LinearLayout) view.findViewById(R.id.layout_colorbar);
+            layout_update_labels = (LinearLayout) view.findViewById(R.id.layout_update_labels);
             progressmediasync = (ProgressBar) view.findViewById(R.id.progressmediasync);
         }
     }
@@ -164,7 +164,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             ArrayList<String> arrayList = mediaobject.getMediabarcolor();
             if (mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
             {
-                holder.layout_colorbar.setVisibility(View.VISIBLE);
+                holder.layout_update_labels.setVisibility(View.VISIBLE);
                 holder.linearseekbarcolorview.setBackgroundColor(Color.RED);
                 invalidcount=1;
                 holder.tv_invalid.setText(config.item_invalid+" 100%");
@@ -231,7 +231,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             if(arrayList != null && arrayList.size() > 0)
             {
-                holder.layout_colorbar.setVisibility(View.VISIBLE);
+                holder.layout_update_labels.setVisibility(View.VISIBLE);
                 holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
                 if(mediaobject.getColorsectionsarray() != null && mediaobject.getColorsectionsarray().size() > 0)
                 {
@@ -263,9 +263,10 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             else
             {
                 Log.e("else case ","case2");
-                if(validcount == 0 && invalidcount == 0 && cautioncount == 0 && unsentcount == 0)
-                    holder.layout_colorbar.setVisibility(View.INVISIBLE);
+                holder.layout_update_labels.setVisibility(View.VISIBLE);
+                holder.tv_unsent.setVisibility(View.VISIBLE);
 
+                holder.tv_unsent.setText(config.item_unsent+" 100%");
                 holder.progressmediasync.setVisibility(View.VISIBLE);
             }
 

@@ -1065,13 +1065,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mediarecorder.setAudioSamplingRate(profile.audioSampleRate);
             mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
             mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            if(common.shouldrestrictmedialimit(config.mediarecordcount))
+            /*if(common.shouldrestrictmedialimit(config.mediarecordcount))
             {
                 int length=common.getunpaidvideorecordlength();
                 int maxduartion=length * 1000;
                 mediarecorder.setMaxDuration(maxduartion);
                 mediarecorder.setOnInfoListener(mediainfolistener);
-            }
+            }*/
 
             // edited
             /*

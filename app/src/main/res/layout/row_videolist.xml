@@ -283,9 +283,12 @@
 
 
                                     <LinearLayout
+                                        android:id="@+id/layout_update_labels"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:visibility="invisible"
                                         android:orientation="horizontal">
+
                                         <com.deeptruth.app.android.views.customfonttextview
                                             app:fontType="OpenSans_Regular"
                                             android:layout_width="wrap_content"

@@ -2686,7 +2686,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
             chart.refreshDrawableState();
-           // setyaxismaxrange(chart,chartname,value);
+            setyaxismaxrange(chart,chartname,value);
             chart.setVisibleXRangeMaximum(80);
             chart.moveViewToX(set1.getEntryCount());
         } else {
@@ -2771,7 +2771,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
             LineData data = new LineData(set1);
             linechart.setData(data);
-            // setyaxismaxrange(linechart,chartname,value);
+            setyaxismaxrange(linechart,chartname,value);
             linechart.setVisibleXRangeMaximum(80);
             linechart.getData().notifyDataChanged();
             linechart.notifyDataSetChanged();
