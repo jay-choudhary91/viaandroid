@@ -2579,7 +2579,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         setbottomimgview();
         layoutbackgroundcontroller.setVisibility(View.VISIBLE);
         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-        gethelper().setdrawerheightonfullscreen(1);
+        gethelper().setdrawerheightonfullscreen(common.getviewheight(controllerheightpercentage));
         imgpause.setImageResource(R.drawable.ic_play);
     }
 
