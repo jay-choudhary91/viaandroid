@@ -89,7 +89,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/setting_icon"
                 android:layout_marginRight="10dp"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:layout_toLeftOf="@id/img_header_search"
                 android:layout_centerVertical="true"/>
 

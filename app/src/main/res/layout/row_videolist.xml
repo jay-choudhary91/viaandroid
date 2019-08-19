@@ -197,7 +197,7 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="3dp"
+                                    android:layout_marginTop="2dp"
                                     android:orientation="horizontal">
 
                                     <com.deeptruth.app.android.views.customfonttextview
@@ -206,9 +206,9 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:gravity="left"
-                                        android:textSize="12sp"
-                                        android:minLines="2"
-                                        android:maxLines="2"
+                                        android:textSize="10sp"
+                                        android:minLines="1"
+                                        android:maxLines="1"
                                         android:textColor="@color/black"
                                         android:text="xx-xx-xxxx"
                                         />
@@ -224,7 +224,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="left"
                                     android:textSize="13sp"
-                                    android:layout_marginTop="3dp"
+                                    android:layout_marginTop="2dp"
                                     android:textColor="@color/black"
                                     android:maxLines="1"
                                     android:visibility="gone"
