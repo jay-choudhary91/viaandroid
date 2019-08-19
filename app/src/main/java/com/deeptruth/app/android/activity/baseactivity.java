@@ -869,6 +869,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
             });
 
+
+            setscreenwidthheight(subdialogshare,80,60,getResources().getString(R.string.popup_share));
+
             subdialogshare.show();
     }
 
@@ -2100,6 +2103,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             params.y = (int)topmargin;
             dialog.getWindow().setAttributes(params);
             dialog.getWindow().setLayout(percentagewidth, WindowManager.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_zoom_animation;
+
+        }else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_share)) ){
+
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER);
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            dialog.getWindow().setLayout(percentagewidth,percentageheight);
             dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_zoom_animation;
 
         }

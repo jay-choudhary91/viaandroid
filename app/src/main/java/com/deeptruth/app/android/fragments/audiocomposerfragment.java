@@ -417,9 +417,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     {
         if(isaudiorecording)
         {
-            upgradeapptitle=applicationviavideocomposer.getactivity().getResources().getString(R.string.upgrade_app_title);
-            upgradeappmessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.thankyou_for_using);
-
             if(common.shouldshowupgradepopup(config.mediarecordcount))
             {
                 if(upgradeapptitle.contains("UPGRADE"))
@@ -442,6 +439,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
         else
         {
+            upgradeapptitle=applicationviavideocomposer.getactivity().getResources().getString(R.string.upgrade_app_title);
+            upgradeappmessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.thankyou_for_using);
+
+
             try {
                 startrecording();
                 startblinkanimation();

@@ -551,6 +551,7 @@
     <string name="popup_upgrade">upgrade</string>
     <string name="popup_publish">publish</string>
     <string name="popup_upgradecode">upgradecode</string>
+    <string name="popup_share">share</string>
 
     <string name="send_content">Select your file sharing service:</string>
     <string name="timeheading"><![CDATA[TIME \& DATE]]></string>
