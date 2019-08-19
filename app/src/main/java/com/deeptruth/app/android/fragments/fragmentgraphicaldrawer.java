@@ -609,16 +609,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             halfpaichartdate(chart_cpuusage);
             halfpaichartdate(chart_battery);
 
-            setchartdata(linechart_speed,200);
-            setchartdata(linechart_altitude,3000);
-            setchartdata(linechart_traveled,300);
+            setchartdata(linechart_speed,-5,200);
+            setchartdata(linechart_altitude,-40,3000);
+            setchartdata(linechart_traveled,-5,300);
             vertical_slider_speed.setMax(80);
             vertical_slider_altitude.setMax(2000);
             vertical_slider_traveled.setMax(100);
 
-            initlinechart(linechart_connectionspeed,50f,true);
-            initlinechart(linechart_datatimedelay,50f,true);
-            initlinechart(linechart_gpsaccuracy,300f,false);
+            initlinechart(linechart_connectionspeed,-3f,50f,true);
+            initlinechart(linechart_datatimedelay,-3f,50f,true);
+            initlinechart(linechart_gpsaccuracy,-18f,300f,true);
             vertical_slider_connectionspeed.setMax(50);
             vertical_slider_connectiondatatimedely.setMax(50);
             vertical_slider_gpsaccuracy.setMax(300);
@@ -897,8 +897,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 String[] array=strconnectionspeed.split(" ");
                                 if(array.length >0)
                                     connectionspeed=Float.parseFloat(array[0]);
-
                             }
+                            if(connectionspeed <= 1)
+                            {
+                                int newvalue=Math.round(connectionspeed);
+                                connectionspeed=(float)newvalue;
+                            }
+
                             setlinechartdata(linechart_connectionspeed,connectionspeed,connectionspeedvalues,"linechart_connectionspeed");
                         }
 
@@ -910,7 +915,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 String[] array=connectiontimedelaystr.split(" ");
                                 if(array.length >0)
                                     connectiondelay=Float.parseFloat(array[0]);
-
+                            }
+                            if(connectiondelay <= 1)
+                            {
+                                int newvalue=Math.round(connectiondelay);
+                                connectiondelay=(float)newvalue;
                             }
                             setlinechartdata(linechart_datatimedelay,connectiondelay,connectiondatadelayvalues,"linechart_datatimedelay");
                         }
@@ -1444,10 +1453,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            if(connectionspeedvalues.size() > 0)
-                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
+                            float value=0f;
+                            if(Float.parseFloat(speedarray[0]) <= 1)
+                            {
+                                int newvalue=Math.round(Float.parseFloat(speedarray[0]));
+                                value=(float) newvalue;
+                            }
                             else
-                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
+                                value=Float.parseFloat(speedarray[0]);
+
+                            if(connectionspeedvalues.size() > 0)
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, 0));
+                            else
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, 0));
                         }
                         catch (Exception e)
                         {
@@ -1465,10 +1483,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            if(connectiondatadelayvalues.size() > 0)
-                                connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), Float.parseFloat(array[0]), 0));
+                            float value=0f;
+                            if(Float.parseFloat(array[0]) <= 1)
+                            {
+                                int newvalue=Math.round(Float.parseFloat(array[0]));
+                                value=(float)newvalue;
+                            }
                             else
-                                connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(array[0]), 0));
+                                value=Float.parseFloat(array[0]);
+
+                            if(connectiondatadelayvalues.size() > 0)
+                                connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), value, 0));
+                            else
+                                connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), value, 0));
                         }
                         catch (Exception e)
                         {
@@ -1487,10 +1514,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            if(gpsaccuracyvalues.size() > 0)
-                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
+                            float value=0f;
+                            if(Float.parseFloat(itemarray[0]) <= 5)
+                            {
+                                int newvalue=Math.round(Float.parseFloat(itemarray[0]));
+                                value=(float) newvalue;
+                            }
                             else
-                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
+                                value=Float.parseFloat(itemarray[0]);
+
+                            if(gpsaccuracyvalues.size() > 0)
+                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), value, 0));
+                            else
+                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), value, 0));
                         }
                         catch (Exception e)
                         {
@@ -2514,7 +2550,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void onNothingSelected() {
 
     }
-    public void setchartdata(LineChart linechart,int maxvalue)
+    public void setchartdata(LineChart linechart,int minvalue,int maxvalue)
     {
         linechart.setNoDataText("");
         LimitLine llXAxis = new LimitLine(10f, "");
@@ -2539,7 +2575,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
-        leftAxis.setAxisMinimum(0);
+        leftAxis.setAxisMinimum(minvalue);
         leftAxis.setAxisMaximum(maxvalue);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
@@ -2559,7 +2595,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     }
 
-    public  void initlinechart(LineChart chart,Float maxrange,boolean shouldusemaxrange)
+    public void initlinechart(LineChart chart,Float minrange,Float maxrange,boolean shouldusemaxrange)
     {
 
         chart.setNoDataText("");
@@ -2575,7 +2611,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(shouldusemaxrange)
             yAxis.setAxisMaximum(maxrange);
 
-        yAxis.setAxisMinimum(0f);
+        yAxis.setAxisMinimum(minrange);
 
         // // Create Limit Lines // //
         LimitLine llXAxis = new LimitLine(10f, "");
@@ -2619,29 +2655,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void setlinechartdata(final LineChart chart, Float value, ArrayList<Entry> valuesarray,String chartname)
     {
         chart.setVisibility(View.VISIBLE);
-       // if(valuegpsaccuracy == 0 || valuedatatimedelay == 0 || valueconnectionspeed==0)
-                 //setyaxisranegpschart(chart,chartname);
-
-       /* if(valuesarray.size() > 0)
-        {
-            if(valuesarray.get(valuesarray.size()-1).getY() == value)
-                return;
-        }*/
-
         if(value == 0)
             value=1.0f;
-
         if(value != -1)  // It means chart is preparing on recording time
         {
             if(valuesarray.size() >= 190)
                 valuesarray.remove(valuesarray.get(valuesarray.size()-1));
-
             valuesarray.add(new Entry(valuesarray.size(), value, 0));
         }
-
-
         LineDataSet set1;
-
         if (chart.getData() != null &&  chart.getData().getDataSetCount() > 0)
         {
             set1 = (LineDataSet) chart.getData().getDataSetByIndex(0);
@@ -2651,33 +2673,25 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 for(int i=0;i<set1.getEntryCount();i++)
                     set1.getEntryForIndex(i).setIcon(null);
 
-                /*Highlight   high = new Highlight(set1.getEntryForIndex(set1.getEntryCount()-1).getX(), 0, set1.getEntryCount()-1);
-                chart.highlightValue(high, false);*/
-
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
-
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,
                         getActivity().getResources().getDimension(R.dimen.margin_50dp),
-                        //getActivity().getResources().getDimension(R.dimen.margin_6dp));
                         0);
             }
             else
             {
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
                         getActivity().getResources().getDimension(R.dimen.margin_8dp),
-                        //14);
                         0);
             }
-
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
             chart.refreshDrawableState();
-            setyaxismaxrangegps(chart,chartname,value);
+            setyaxismaxrange(chart,chartname,value);
             chart.setVisibleXRangeMaximum(80);
             chart.moveViewToX(set1.getEntryCount());
-            //chart.invalidate();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(valuesarray, "");
@@ -2701,39 +2715,119 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     return chart.getAxisLeft().getAxisMinimum();
                 }
             });
-
-
             set1.setFillColor(Color.TRANSPARENT);
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1); // add the data sets
-            // create a data object with the data sets
             LineData data = new LineData(dataSets);
-
-            // set data
             chart.setData(data);
-
-            if(value == -1 && valuesarray.size()>80){
+            if(value == -1 && valuesarray.size() > 80)
+            {
                 chart.invalidate();
                 chart.setVisibleXRange(0, 80);
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
                         getActivity().getResources().getDimension(R.dimen.margin_8dp),
-                        //14);
                         0);
-
-            }else{
+            }
+            else
+            {
                 chart.invalidate();
                 chart.setVisibleXRange(0, valuesarray.size());
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,0,
-                        //14);
                         0);
-
             }
-
-            //chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,getActivity().getResources().getDimension(R.dimen.margin_8dp),14);
         }
-
         chart.animateX(0);
         Legend l = chart.getLegend();
+        l.setForm(Legend.LegendForm.LINE);
+    }
+
+    private void setspeedtraveledaltitudechart(final LineChart linechart, Float value, ArrayList<Entry> arrayitems,String chartname) {
+
+        linechart.setVisibility(View.VISIBLE);
+        if(value == 0)
+            value=0.0f;
+        if(value != -1)
+        {
+            if(arrayitems.size() >= 190)
+                arrayitems.remove(arrayitems.get(arrayitems.size()-1));
+            arrayitems.add(new Entry(arrayitems.size(), value, 0));
+        }
+        LineDataSet set1;
+        if (linechart.getData() != null && linechart.getData().getDataSetCount() > 0 && arrayitems.size() > 0)
+        {
+            set1 = (LineDataSet) linechart.getData().getDataSetByIndex(0);
+            set1.setValues(arrayitems);
+            set1.setHighlightEnabled(true);
+            if(value != -1)
+            {
+                for(int i=0;i<set1.getEntryCount();i++)
+                    set1.getEntryForIndex(i).setIcon(null);
+
+                set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
+                        R.drawable.blue_black_ball));
+                linechart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_7dp));
+            }
+            else
+            {
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_6dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
+            }
+            LineData data = new LineData(set1);
+            linechart.setData(data);
+            setyaxismaxrange(linechart,chartname,value);
+            linechart.setVisibleXRangeMaximum(80);
+            linechart.getData().notifyDataChanged();
+            linechart.notifyDataSetChanged();
+            linechart.refreshDrawableState();
+
+        }
+        else
+        {
+            set1 = new LineDataSet(arrayitems, "");
+            set1.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+            set1.setDrawIcons(true);
+            set1.setColor(Color.WHITE);
+            set1.setCircleColor(Color.GREEN);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(3f);
+            set1.setDrawCircles(false);
+            set1.setDrawCircleHole(false);
+            set1.setValueTextSize(0f);
+            set1.setDrawFilled(true);
+            set1.setHighlightEnabled(false);
+            set1.setDrawHorizontalHighlightIndicator(false);
+            set1.setDrawVerticalHighlightIndicator(false);
+            set1.setFillFormatter(new IFillFormatter() {
+                @Override
+                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                    return linechart.getAxisLeft().getAxisMinimum();
+                }
+            });
+
+            if (Utils.getSDKInt() >= 18) {
+                // fill drawable only supported on api level 18 and above
+                Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
+                set1.setFillDrawable(drawable);
+            }
+
+            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+            dataSets.add(set1); // add the data sets
+            LineData data = new LineData(dataSets);
+            linechart.setData(data);
+
+            if(value == -1 && arrayitems.size() > 80){
+                linechart.invalidate();
+                linechart.setVisibleXRange(0, 80);
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
+
+            }else{
+                linechart.invalidate();
+                linechart.setVisibleXRange(0, arrayitems.size());
+                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_6dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
+            }
+        }
+        linechart.animateX(0);
+        Legend l = linechart.getLegend();
         l.setForm(Legend.LegendForm.LINE);
     }
 
@@ -2746,24 +2840,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
-
             new Thread(new Runnable() {
                 @Override
                 public void run()
                 {
                     int totalsize=set1.getEntryCount();
                     int selectedchartposition = (mediarunningpercentage * totalsize) / 100;
-                    Log.e("selectedchartposition",""+selectedchartposition);
-
                     int count = 0;
-
                     if(selectedchartposition <= set1.getEntryCount())
                     {
                         for(int i=0;i<set1.getEntryCount();i++)
                             set1.getEntryForIndex(i).setIcon(null);
 
                         count =  set1.getEntryCount();
-                        Log.e("count",""+count);
                         if (count != 1) {
                             if(selectedchartposition ==set1.getEntryCount())
                                 selectedchartposition = selectedchartposition-1;
@@ -2811,121 +2900,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 }
             }).start();
         }
-    }
-
-    private void setspeedtraveledaltitudechart(final LineChart linechart, Float value, ArrayList<Entry> arrayitems,String chartname) {
-
-        linechart.setVisibility(View.VISIBLE);
-
-       /* if( vlauetraveled == 0 || valuespeed == 0 || valuealtitude == 0)
-            setyxisrangefirsttime(linechart,chartname);*/
-
-        Log.e("speed value",""+value);
-
-        /*if(arrayitems.size() > 0)
-        {
-            if(arrayitems.get(arrayitems.size()-1).getY() == value)
-                return;
-        }*/
-
-        if(value == 0)
-            value=0.0f;
-
-        if(value != -1)
-        {
-            if(arrayitems.size() >= 190)
-                arrayitems.remove(arrayitems.get(arrayitems.size()-1));
-
-            arrayitems.add(new Entry(arrayitems.size(), value, 0));
-        }
-        LineDataSet set1;
-        if (linechart.getData() != null && linechart.getData().getDataSetCount() > 0 && arrayitems.size() > 0)
-        {
-            set1 = (LineDataSet) linechart.getData().getDataSetByIndex(0);
-            set1.setValues(arrayitems);
-            set1.setHighlightEnabled(true);
-            if(value != -1)
-            {
-                for(int i=0;i<set1.getEntryCount();i++)
-                    set1.getEntryForIndex(i).setIcon(null);
-
-                set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
-                        R.drawable.blue_black_ball));
-
-                linechart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
-
-                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_7dp));
-            }
-            else
-            {
-                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_6dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
-            }
-            LineData data = new LineData(set1);
-            linechart.setData(data);
-            setyaxismaxrange(linechart,chartname,value);
-            linechart.setVisibleXRangeMaximum(80);
-            linechart.getData().notifyDataChanged();
-            linechart.notifyDataSetChanged();
-            linechart.refreshDrawableState();
-
-            /*if(ischart.equalsIgnoreCase("linechart_traveled"))
-                count = count+1;*/
-        } else {
-            // create a dataset and give it a type
-
-            //inislizedtschart(linechart,ischart);
-            set1 = new LineDataSet(arrayitems, "");
-            set1.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-            set1.setDrawIcons(true);
-            set1.setColor(Color.WHITE);
-            set1.setCircleColor(Color.GREEN);
-            set1.setLineWidth(2f);
-            set1.setCircleRadius(3f);
-            set1.setDrawCircles(false);
-            set1.setDrawCircleHole(false);
-            set1.setValueTextSize(0f);
-            set1.setDrawFilled(true);
-            set1.setHighlightEnabled(false);
-            set1.setDrawHorizontalHighlightIndicator(false);
-            set1.setDrawVerticalHighlightIndicator(false);
-            set1.setFillFormatter(new IFillFormatter() {
-                @Override
-                public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-                    return linechart.getAxisLeft().getAxisMinimum();
-                }
-            });
-
-            if (Utils.getSDKInt() >= 18) {
-                // fill drawable only supported on api level 18 and above
-                Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
-                set1.setFillDrawable(drawable);
-            }
-
-            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1); // add the data sets
-            // create a data object with the data sets
-            LineData data = new LineData(dataSets);
-            // set data
-            linechart.setData(data);
-
-            if(value == -1 && arrayitems.size()>80){
-                linechart.invalidate();
-                linechart.setVisibleXRange(0, 80);
-                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
-
-            }else{
-                linechart.invalidate();
-                linechart.setVisibleXRange(0, arrayitems.size());
-                linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_6dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
-
-            }
-
-
-        }
-
-        linechart.animateX(0);
-        Legend l = linechart.getLegend();
-        l.setForm(Legend.LegendForm.LINE);
     }
 
     public void setlayoutmargin(){
@@ -3148,102 +3122,37 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
-    /*public void movedotbytime(final LineDataSet scoreDataSet, final LineChart chart){
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask()
-        {
-            @Override
-            public void run()
-            {
-                if(count<=scoreDataSet.getEntryCount()-1){
-                    if(count != 0)
-                        scoreDataSet.getEntryForIndex(count-1).setIcon(null);;
-
-                    scoreDataSet.getEntryForIndex(count).setIcon(ContextCompat.getDrawable(getActivity(),R.drawable.blue_black_ball));
-                    count ++;
-                    changedate(chart);
-                }
-            }
-        }, 0, 3000);
-    }
-
-    public void changedate(final LineChart chart){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                chart.invalidate();
-            }
-        });
-    }*/
-
-    public void setyaxismaxrange(LineChart chart,String ischart,float value){
-
+    public void setyaxismaxrange(LineChart chart,String ischart,float value)
+    {
         if(value> vlauetraveled && ischart.equalsIgnoreCase("linechart_traveled")){
             chart.invalidate();
             vlauetraveled = value;
             chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
-        }else if(value > valuespeed && ischart.equalsIgnoreCase("linechart_speed")){
+        }
+        else if(value > valuespeed && ischart.equalsIgnoreCase("linechart_speed")){
             chart.invalidate();
             valuespeed = value;
             chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
-
-        }else if(value>valuealtitude && ischart.equalsIgnoreCase("linechart_altitude")){
+        }
+        else if(value>valuealtitude && ischart.equalsIgnoreCase("linechart_altitude")){
             chart.invalidate();
             valuealtitude = value;
             chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
         }
-    }
-
-    public void setyaxismaxrangegps(LineChart chart,String ischart,float value){
-
-        if(value >= valuegpsaccuracy && ischart.equalsIgnoreCase("linechart_gpsaccuracy")){
+        else if(value >= valuegpsaccuracy && ischart.equalsIgnoreCase("linechart_gpsaccuracy")){
             chart.invalidate();
             valuegpsaccuracy = value;
-            chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
-        }else if(value>=valuedatatimedelay && ischart.equalsIgnoreCase("linechart_datatimedelay")){
+            chart.setVisibleYRange(-18f,value+5, YAxis.AxisDependency.LEFT);
+        }
+        else if(value>=valuedatatimedelay && ischart.equalsIgnoreCase("linechart_datatimedelay")){
             chart.invalidate();
             valuedatatimedelay = value;
-            chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
-
-        }else if(value >= valueconnectionspeed && ischart.equalsIgnoreCase("linechart_connectionspeed")){
+            chart.setVisibleYRange(-3f,value+5, YAxis.AxisDependency.LEFT);
+        }
+        else if(value >= valueconnectionspeed && ischart.equalsIgnoreCase("linechart_connectionspeed")){
             chart.invalidate();
             valueconnectionspeed = value;
-            chart.setVisibleYRange(0,value+5, YAxis.AxisDependency.LEFT);
-        }
-    }
-
-    public void setyxisrangefirsttime(LineChart chart,String chartname){
-
-        if(chartname.equalsIgnoreCase("linechart_traveled")){
-            chart.invalidate();
-            vlauetraveled = 100;
-            chart.setVisibleYRange(0,vlauetraveled, YAxis.AxisDependency.LEFT);
-        }else if(chartname.equalsIgnoreCase("linechart_speed")){
-            chart.invalidate();
-            valuespeed = 80;
-            chart.setVisibleYRange(0,valuespeed, YAxis.AxisDependency.LEFT);
-        }else if(chartname.equalsIgnoreCase("linechart_altitude")){
-            chart.invalidate();
-            valuealtitude = 2000;
-            chart.setVisibleYRange(0,valuealtitude, YAxis.AxisDependency.LEFT);
-        }
-    }
-
-    public void setyaxisranegpschart(LineChart chart,String chartname){
-
-        if(chartname.equalsIgnoreCase("linechart_gpsaccuracy")){
-            chart.invalidate();
-            valuegpsaccuracy = 100;
-            chart.setVisibleYRange(0,valuegpsaccuracy, YAxis.AxisDependency.LEFT);
-        }else if(chartname.equalsIgnoreCase("linechart_datatimedelay")){
-            chart.invalidate();
-            valuedatatimedelay = 5;
-            chart.setVisibleYRange(0,valuedatatimedelay, YAxis.AxisDependency.LEFT);
-
-        }else if(chartname.equalsIgnoreCase("linechart_connectionspeed")){
-            chart.invalidate();
-            valueconnectionspeed = 25;
-            chart.setVisibleYRange(0,valueconnectionspeed, YAxis.AxisDependency.LEFT);
+            chart.setVisibleYRange(-3f,value+5, YAxis.AxisDependency.LEFT);
         }
     }
 }
