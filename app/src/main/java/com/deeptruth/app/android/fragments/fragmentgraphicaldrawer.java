@@ -1454,6 +1454,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         try
                         {
                             float value=0f;
+                            String unit = "";
+
+                            if(speedarray.length > 1)
+                                unit =  speedarray[1];
+
                             if(Float.parseFloat(speedarray[0]) <= 1)
                             {
                                 int newvalue=Math.round(Float.parseFloat(speedarray[0]));
@@ -1463,9 +1468,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 value=Float.parseFloat(speedarray[0]);
 
                             if(connectionspeedvalues.size() > 0)
-                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, speedarray[1]));
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, unit));
                             else
-                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, speedarray[1]));
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, unit));
                         }
                         catch (Exception e)
                         {
@@ -1484,6 +1489,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         try
                         {
                             float value=0f;
+                            String unit = "";
+
+                            if(array.length > 1)
+                                 unit =  array[1];
+
                             if(Float.parseFloat(array[0]) <= 1)
                             {
                                 int newvalue=Math.round(Float.parseFloat(array[0]));
@@ -1492,10 +1502,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             else
                                 value=Float.parseFloat(array[0]);
 
+
                             if(connectiondatadelayvalues.size() > 0)
-                                connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), value, array[1]));
+                                connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), value, unit));
                             else
-                                connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), value, array[1]));
+                                connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), value, unit));
                         }
                         catch (Exception e)
                         {
@@ -1515,6 +1526,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         try
                         {
                             float value=0f;
+                            String unit = "";
+
                             if(Float.parseFloat(itemarray[0]) <= 5)
                             {
                                 int newvalue=Math.round(Float.parseFloat(itemarray[0]));
@@ -1545,13 +1558,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         try
                         {
                             float value=1.0f;
+                            String unit = "";
+
+                            if(itemarray.length > 1)
+                                unit =  itemarray[1];
+
+
                             if(Float.parseFloat(itemarray[0]) != 0)
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(speedgraphitems.size() > 0)
-                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, itemarray[1]));
+                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, unit));
                             else
-                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, itemarray[1]));
+                                speedgraphitems.add(new Entry(speedgraphitems.size(), value,unit));
                         }
                         catch (Exception e)
                         {
@@ -1570,13 +1589,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         try
                         {
                             float value=1.0f;
+                            String unit = "";
+
+                            if(itemarray.length > 1)
+                                unit =  itemarray[1];
+
                             if(Float.parseFloat(itemarray[0]) != 0)
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(travelledgraphitems.size() > 0)
-                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, itemarray[1]));
+                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, unit));
                             else
-                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, itemarray[1]));
+                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, unit));
                         }
                         catch (Exception e)
                         {
@@ -1595,13 +1619,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         try
                         {
                             float value=1.0f;
+                            String unit = "";
+
+                            if(itemarray.length > 1)
+                                unit =  itemarray[1];
+
+
                             if(Float.parseFloat(itemarray[0]) != 0)
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(altitudegraphitems.size() > 0)
-                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, itemarray[1]));
+                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, unit));
                             else
-                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, itemarray[1]));
+                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, unit));
                         }
                         catch (Exception e)
                         {
