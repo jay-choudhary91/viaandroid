@@ -1641,6 +1641,8 @@ public class common {
             return "";
 
         long longuptime=Long.parseLong(uptime);
+
+        Log.e("Uptimesystem ",""+longuptime);
         String time = "";
         String wholeUptime = "";
 
@@ -1655,18 +1657,19 @@ public class common {
         longuptime %= 60;
         int seconds = (int) longuptime;
 
-        if (hour <= 24) {
-            wholeUptime = String.format("%02d:%02d:%02d", hour, minutes, seconds);
-            time = wholeUptime;
-
-        } else {
+        if(day >= 1)
+        {
             if (day == 1) {
                 wholeUptime = String.format("%d day %02d:%02d:%02d", day, hour, minutes, seconds);
             } else {
                 wholeUptime = String.format("%d days %02d:%02d:%02d", day, hour, minutes, seconds);
             }
             time = wholeUptime;
-            //   Log.e("systemtime", "" + time);
+        }
+        else
+        {
+            wholeUptime = String.format("%02d:%02d:%02d", hour, minutes, seconds);
+            time = wholeUptime;
         }
         return time;
     }
