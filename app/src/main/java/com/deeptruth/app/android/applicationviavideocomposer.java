@@ -102,7 +102,7 @@ public class applicationviavideocomposer extends Application
 
                 @Override
                 public void onSuccess() {
-                 Log.e("onsucess","onSuccess");
+                 Log.e("ffmpeg","onSuccess");
 
                     if(! xdata.getinstance().getSetting(config.servicedata_liststart).trim().isEmpty())
                     {

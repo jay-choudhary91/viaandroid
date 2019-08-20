@@ -408,7 +408,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             {
                 img_uploadmedia.setVisibility(View.VISIBLE);
                 img_camera.setVisibility(View.GONE);
-                checkoverlaysetting();
             }
             else
             {
@@ -1676,36 +1675,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
                 copymediafromgallery(mediafilepath);
             }
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private void openOverlaySettings() {
-        final Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:" + applicationviavideocomposer.getactivity().getPackageName()));
-        try {
-            startActivityForResult(intent, RC_OVERLAY);
-        } catch (ActivityNotFoundException e) {
-            Log.e(TAG, e.getMessage());
-        }
-    }
-
-    public void checkoverlaysetting()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(applicationviavideocomposer.getactivity()))
-        {
-            common.showalert(applicationviavideocomposer.getactivity(), getResources().getString(R.string.allow_apps_to),
-                new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-                        openOverlaySettings();
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-
-                    }
-                });
         }
     }
 

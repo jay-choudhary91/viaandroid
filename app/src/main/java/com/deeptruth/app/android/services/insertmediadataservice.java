@@ -80,7 +80,7 @@ public class insertmediadataservice extends Service {
 
             try {
 
-                Log.e("ServiceClass","Service "+xdata.getinstance().getSetting(config.servicedata_mediapath));
+                Log.e("insertmediadataservice","insertmediadataservice "+xdata.getinstance().getSetting(config.servicedata_mediapath));
 
                 if(xdata.getinstance().getSetting(config.servicedata_liststart).trim().isEmpty())
                     return;
@@ -90,6 +90,8 @@ public class insertmediadataservice extends Service {
                 final Gson gsonobject = new Gson();
                 final String list1 = xdata.getinstance().getSetting(config.servicedata_liststart);
                 final String list2 = xdata.getinstance().getSetting(config.servicedata_listmiddle);
+
+                Log.e("insertserviceprocsfile",mediapath);
 
                 Type type = new TypeToken<ArrayList<dbitemcontainer>>() {
                 }.getType();
@@ -119,12 +121,12 @@ public class insertmediadataservice extends Service {
                         applicationviavideocomposer.ffmpeg.execute(complexcommand, new ExecuteBinaryResponseHandler() {
                             @Override
                             public void onFailure(String s) {
-                                Log.e("Failure with output : ", "IN onFailure");
+                                Log.e("ffmpeg insertservice : ", "IN onFailure");
                             }
 
                             @Override
                             public void onSuccess(String s) {
-                                Log.e("SUCCESS with output : ", s);
+                                Log.e("ffmpeg insertservice : ", s);
 
                                 ArrayList<String> hasharray = new ArrayList<>();
                                 BufferedReader br = null;
@@ -317,17 +319,17 @@ public class insertmediadataservice extends Service {
 
                             @Override
                             public void onProgress(String s) {
-                                Log.e("Progress bar : ", "In Progress");
+                                Log.e("ffmpeg insertservice : ", "In Progress");
                             }
 
                             @Override
                             public void onStart() {
-                                Log.e("Start with output : ", "IN START");
+                                Log.e("ffmpeg insertservice : ", "In START");
                             }
 
                             @Override
                             public void onFinish() {
-                                Log.e("Start with output : ", "IN Finish");
+                                Log.e("ffmpeg insertservice : ", "In Finish");
                             }
                         });
                     } else if (mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0 && (mdbstartitemcontainer.get(0).

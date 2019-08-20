@@ -747,9 +747,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             Object argvalue = mPairList.get(key);
             api.add(key, argvalue);
         }
-        if(Build.VERSION.SDK_INT >= 11)
+        /*if(Build.VERSION.SDK_INT >= 11)
             api.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        else
+        else*/
             api.execute();
     }
 
