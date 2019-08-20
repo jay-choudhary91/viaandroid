@@ -2659,8 +2659,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(value != -1)  // It means chart is preparing on recording time
         {
             if(valuesarray.size() >= 190)
-                valuesarray.remove(valuesarray.get(valuesarray.size()-1));
-                 valuesarray.subList(0, 10).clear();
+                valuesarray.subList(0, 10).clear();
+                 //valuesarray.remove(valuesarray.get(valuesarray.size()-1));
+
 
             valuesarray.add(new Entry(valuesarray.size(), value, 0));
         }
@@ -2706,9 +2707,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             set1.notifyDataSetChanged();
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
-            chart.setVisibleXRangeMaximum(80);
             chart.refreshDrawableState();
-            setyaxismaxrangegps(chart,chartname,value);
             setyaxismaxrange(chart,chartname,value);
             chart.setVisibleXRangeMaximum(80);
             chart.moveViewToX(set1.getEntryCount());
@@ -2853,7 +2852,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(value != -1)
         {
             if(arrayitems.size() >= 190)
-                arrayitems.remove(arrayitems.get(arrayitems.size()-1));
+                arrayitems.subList(0, 10).clear();
+
+                //arrayitems.remove(arrayitems.get(arrayitems.size()-1));
+
             arrayitems.add(new Entry(arrayitems.size(), value, 0));
         }
         LineDataSet set1;
