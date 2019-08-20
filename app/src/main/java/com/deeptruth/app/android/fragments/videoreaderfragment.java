@@ -31,6 +31,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -1404,6 +1405,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             getpausebtnheight();
                             layout_mediatype.setVisibility(View.VISIBLE);
                             getcontrollerheight();
+
                         }else{
                             start();
                             imgpause.setImageResource(R.drawable.ic_pause);
@@ -1564,9 +1566,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(myHandler != null && myRunnable != null)
+        /*if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
-        destroyvideoplayer();
+        destroyvideoplayer();*/
     }
 
     public void destroyvideoplayer()
@@ -1580,6 +1582,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             player=null;
         }
     }
+
+
 
     @Override
     public void onPause() {
@@ -1942,6 +1946,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         super.onStop();
         if(mOrientation != null)
             mOrientation.stopListening();
+
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        destroyvideoplayer();
 
     }
 
@@ -2863,6 +2872,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void getcontrollerheight(){
+
+        Log.e("mediafragment","mediafragment");
         gethelper().setdrawerheightonfullscreen(common.getviewheight(controllerheightpercentage));
     }
 

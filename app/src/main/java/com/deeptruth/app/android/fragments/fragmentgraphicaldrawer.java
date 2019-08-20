@@ -1467,9 +1467,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 value=Float.parseFloat(speedarray[0]);
 
                             if(connectionspeedvalues.size() > 0)
-                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, 0));
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, speedarray[1]));
                             else
-                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, 0));
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, speedarray[1]));
                         }
                         catch (Exception e)
                         {
@@ -1502,9 +1502,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 value=Float.parseFloat(array[0]);
 
                             if(connectiondatadelayvalues.size() > 0)
-                                connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), value, 0));
+                                connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), value, array[1]));
                             else
-                                connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), value, 0));
+                                connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), value, array[1]));
                         }
                         catch (Exception e)
                         {
@@ -1533,9 +1533,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(gpsaccuracyvalues.size() > 0)
-                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), value, 0));
+                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), value, "feet"));
                             else
-                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), value, 0));
+                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), value, "feet"));
                         }
                         catch (Exception e)
                         {
@@ -1558,9 +1558,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(speedgraphitems.size() > 0)
-                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
+                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, itemarray[1]));
                             else
-                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
+                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, itemarray[1]));
                         }
                         catch (Exception e)
                         {
@@ -1583,9 +1583,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(travelledgraphitems.size() > 0)
-                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
+                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, itemarray[1]));
                             else
-                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
+                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, itemarray[1]));
                         }
                         catch (Exception e)
                         {
@@ -1608,9 +1608,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(altitudegraphitems.size() > 0)
-                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
+                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, itemarray[1]));
                             else
-                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
+                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, itemarray[1]));
                         }
                         catch (Exception e)
                         {
@@ -2153,22 +2153,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     int mediarunningpercentage = (currentmediaposition * 100) / metricmainarraylist.size();
 
                     if(linechart_connectionspeed != null)
-                        updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage,vertical_slider_connectionspeed,tvconnection,"mbps");
+                        updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage,vertical_slider_connectionspeed,tvconnection,applicationviavideocomposer.getactivity().getResources().getString(R.string.connection));
 
                     if(linechart_datatimedelay != null)
-                        updatelinegraphwithposition(linechart_datatimedelay,connectiondatadelayvalues,mediarunningpercentage,vertical_slider_connectiondatatimedely,txt_datatimedelay,"second");
-
+                        updatelinegraphwithposition(linechart_datatimedelay,connectiondatadelayvalues,mediarunningpercentage,vertical_slider_connectiondatatimedely,txt_datatimedelay,applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay));
                     if(linechart_gpsaccuracy != null)
-                        updatelinegraphwithposition(linechart_gpsaccuracy,gpsaccuracyvalues,mediarunningpercentage,vertical_slider_gpsaccuracy,tvgpsaccuracy,"feet");
+                        updatelinegraphwithposition(linechart_gpsaccuracy,gpsaccuracyvalues,mediarunningpercentage,vertical_slider_gpsaccuracy,tvgpsaccuracy,applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy));
 
                     if(linechart_speed != null && speedgraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_speed,speedgraphitems,mediarunningpercentage,vertical_slider_speed,tvspeed,"km/h");
+                        updatelinegraphwithposition(linechart_speed,speedgraphitems,mediarunningpercentage,vertical_slider_speed,tvspeed,applicationviavideocomposer.getactivity().getResources().getString(R.string.speed));
 
                     if(linechart_traveled != null && travelledgraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_traveled,travelledgraphitems,mediarunningpercentage,vertical_slider_traveled,tvtraveled,"km");
+                        updatelinegraphwithposition(linechart_traveled,travelledgraphitems,mediarunningpercentage,vertical_slider_traveled,tvtraveled,applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled));
 
                     if(linechart_altitude != null && altitudegraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_altitude,altitudegraphitems,mediarunningpercentage,vertical_slider_altitude,tvaltitude,"feet");
+                        updatelinegraphwithposition(linechart_altitude,altitudegraphitems,mediarunningpercentage,vertical_slider_altitude,tvaltitude,applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude));
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -2813,8 +2812,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             });
 
                             String value = ""+set1.getEntryForIndex(selectedchartposition).getY();
-                            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),
-                                    "\n"+value+" "+unitvalue , tvallgraphvalue);
+                            String unit = ""+set1.getEntryForIndex(selectedchartposition).getData();
+                            common.setdrawabledata(graphtype,
+                                    "\n"+value+" "+unit , tvallgraphvalue);
 
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
                                     R.drawable.blue_black_ball));
