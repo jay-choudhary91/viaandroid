@@ -75,7 +75,7 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_marginTop="5dp"
-            android:layout_height="120dp">
+            android:layout_height="130dp">
 
 
             <LinearLayout
@@ -84,19 +84,20 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="@dimen/margin_7dp"
                 android:layout_marginBottom="10dp"
+                android:layout_alignParentTop="true"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.77"
+                    android:layout_weight="0.82"
                     android:orientation="vertical"
                     android:background="@color/green_background"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="0.23"
+                    android:layout_weight="0.18"
                     android:orientation="vertical"
                     android:background="@color/yellow_background"/>
 
@@ -106,15 +107,15 @@
                 android:layout_width="20dp"
                 android:gravity="center"
                 android:visibility="visible"
-                android:layout_height="wrap_content">
+                android:layout_alignParentTop="true"
+                android:layout_height="120dp">
 
                 <View
                     android:id="@+id/vertical_connectionline"
                     android:layout_width="4dp"
                     android:layout_height="match_parent"
                     android:background="@color/white"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="15dp"
                     android:layout_alignParentBottom="true"></View>
             </LinearLayout>
 
@@ -142,17 +143,17 @@
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/linechart_connectionspeed"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="130dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginBottom="12dp"
                 android:layout_marginTop="5dp"/>
 
             <com.deeptruth.app.android.views.verticalseekbar
                 android:id="@+id/vertical_slider_connectionspeed"
                 android:layout_width="20dp"
-                android:layout_height="match_parent"
+                android:layout_height="120dp"
                 android:thumb="@drawable/blue_black_ball"
                 android:max="100"
+                android:progress="50"
                 android:layout_marginLeft="@dimen/margin_7dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
@@ -178,7 +179,7 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_marginTop="5dp"
-            android:layout_height="120dp">
+            android:layout_height="130dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -186,6 +187,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="@dimen/margin_7dp"
                 android:layout_marginBottom="10dp"
+                android:layout_alignParentTop="true"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -208,7 +210,8 @@
                 android:layout_width="20dp"
                 android:gravity="center"
                 android:visibility="visible"
-                android:layout_height="wrap_content">
+                android:layout_alignParentTop="true"
+                android:layout_height="120dp">
 
                 <View
                     android:id="@+id/vertical_datatimedelayline"
@@ -216,7 +219,6 @@
                     android:layout_height="match_parent"
                     android:background="@color/white"
                     android:layout_marginLeft="14dp"
-                    android:layout_marginBottom="8dp"
                     android:layout_alignParentBottom="true"></View>
             </LinearLayout>
 
@@ -244,9 +246,8 @@
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/linechart_datatimedelay"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="130dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="5dp"/>
 
 
@@ -256,6 +257,7 @@
                 android:layout_height="match_parent"
                 android:thumb="@drawable/blue_black_ball"
                 android:max="100"
+                android:progress="50"
                 android:layout_marginLeft="@dimen/margin_7dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"

@@ -1186,9 +1186,14 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     longitude=Double.parseDouble(model.getMetricTrackValue());
                 }
 
-                if(model.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed") && (! model.getMetricTrackValue().trim().isEmpty()) && (! model.getMetricTrackValue().equalsIgnoreCase("NA"))
-                        && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
+                if(model.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed"))
                 {
+                    if((model.getMetricTrackValue().trim().isEmpty()) || (model.getMetricTrackValue().equalsIgnoreCase("NA"))
+                            || (model.getMetricTrackValue().equalsIgnoreCase("null")))
+                    {
+                        model.setMetricTrackValue("0");
+                    }
+
                     String connectionspeed=model.getMetricTrackValue();
                     String[] speedarray=connectionspeed.split(" ");
                     if(speedarray.length > 0)
@@ -1207,9 +1212,14 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     }
                 }
 
-                if(model.getMetricTrackKeyName().equalsIgnoreCase(config.connectiondatadelay) && (! model.getMetricTrackValue().trim().isEmpty()) && (! model.getMetricTrackValue().equalsIgnoreCase("NA"))
-                        && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
+                if(model.getMetricTrackKeyName().equalsIgnoreCase(config.connectiondatadelay))
                 {
+                    if((model.getMetricTrackValue().trim().isEmpty()) || (model.getMetricTrackValue().equalsIgnoreCase("NA"))
+                            || (model.getMetricTrackValue().equalsIgnoreCase("null")))
+                    {
+                        model.setMetricTrackValue("0");
+                    }
+
                     String connectiondatadelay=model.getMetricTrackValue();
                     String[] array=connectiondatadelay.split(" ");
                     if(array.length > 0)
