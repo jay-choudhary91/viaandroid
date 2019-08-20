@@ -81,6 +81,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.view.View.VISIBLE;
 import static android.widget.RelativeLayout.TRUE;
 
 /**
@@ -775,6 +776,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.onResume();
         if(validationbaranimation != null)
             img_scanover.startAnimation(validationbaranimation);
+
+        gethelper().setcurrentmediaposition(0);
     }
 
     @Override
