@@ -2101,7 +2101,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
           //  visualizer.setEnabled(false);
            /* playpausebutton.setImageResource(R.drawable.play_btn);
             playpausebutton.setVisibility(View.VISIBLE);*/
-            mediaseekbar.setProgress(player.getCurrentPosition());
+           if(player != null)
+              mediaseekbar.setProgress(player.getCurrentPosition());
+
             img_colapseicon.setVisibility(View.GONE);
 
 

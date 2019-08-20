@@ -176,6 +176,8 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:paddingBottom="2dp"
+                                android:paddingTop="2dp"
                                 android:layout_toLeftOf="@id/img_imageshare"
                                 android:orientation="vertical">
 
@@ -186,7 +188,6 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="left"
                                     android:textSize="13sp"
-                                    android:layout_marginTop="3dp"
                                     android:textColor="@color/black"
                                     android:maxLines="1"
                                     android:visibility="visible"
@@ -206,7 +207,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:gravity="left"
-                                        android:textSize="10sp"
+                                        android:textSize="@dimen/textsize9sp"
                                         android:minLines="1"
                                         android:maxLines="1"
                                         android:textColor="@color/black"
@@ -275,7 +276,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:gravity="left"
-                                        android:textSize="11sp"
+                                        android:textSize="10sp"
                                         android:textColor="@color/black"
                                         android:maxLines="1"
                                         android:text=""
@@ -441,7 +442,7 @@
                 android:layout_below="@id/relative_child"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="1dp"
                 android:background="@color/uvv_light_gray"
                 ></View>
 

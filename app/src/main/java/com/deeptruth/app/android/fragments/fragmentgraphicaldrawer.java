@@ -616,9 +616,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             vertical_slider_altitude.setMax(2000);
             vertical_slider_traveled.setMax(100);
 
-            initlinechart(linechart_connectionspeed,-3f,50f,true);
-            initlinechart(linechart_datatimedelay,-3f,50f,true);
-            initlinechart(linechart_gpsaccuracy,-18f,300f,true);
+            initlinechart(linechart_connectionspeed,-4f,50f,true);
+            initlinechart(linechart_datatimedelay,-4f,50f,true);
+            initlinechart(linechart_gpsaccuracy,-27f,300f,true);
             vertical_slider_connectionspeed.setMax(50);
             vertical_slider_connectiondatatimedely.setMax(50);
             vertical_slider_gpsaccuracy.setMax(300);
@@ -1242,7 +1242,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     {
         this.isrecodrunning=isrecodrunning;
         vlauetraveled = 100;valuespeed = 80;valuealtitude = 20000;valuegpsaccuracy = 25;valuedatatimedelay = 10;valueconnectionspeed=100;
-        clearmapneeded=true;
 
         if(isrecodrunning)
             clearmapneeded=true;
@@ -1444,9 +1443,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     longitude=Double.parseDouble(model.getMetricTrackValue());
                 }
 
-                if(model.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed") && (! model.getMetricTrackValue().trim().isEmpty()) && (! model.getMetricTrackValue().equalsIgnoreCase("NA"))
-                        && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
+                if(model.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed"))
                 {
+                    if((model.getMetricTrackValue().trim().isEmpty()) || (model.getMetricTrackValue().equalsIgnoreCase("NA"))
+                            || (model.getMetricTrackValue().equalsIgnoreCase("null")))
+                    {
+                        model.setMetricTrackValue("0");
+                    }
+
                     String connectionspeed=model.getMetricTrackValue();
                     String[] speedarray=connectionspeed.split(" ");
                     if(speedarray.length > 0)
@@ -1479,9 +1483,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     }
                 }
 
-                if(model.getMetricTrackKeyName().equalsIgnoreCase(config.connectiondatadelay) && (! model.getMetricTrackValue().trim().isEmpty()) && (! model.getMetricTrackValue().equalsIgnoreCase("NA"))
-                        && (! model.getMetricTrackValue().equalsIgnoreCase("null")))
+                if(model.getMetricTrackKeyName().equalsIgnoreCase(config.connectiondatadelay))
                 {
+                    if((model.getMetricTrackValue().trim().isEmpty()) || (model.getMetricTrackValue().equalsIgnoreCase("NA"))
+                            || (model.getMetricTrackValue().equalsIgnoreCase("null")))
+                    {
+                        model.setMetricTrackValue("0");
+                    }
+
                     String connectiondatadelay=model.getMetricTrackValue();
                     String[] array=connectiondatadelay.split(" ");
                     if(array.length > 0)
@@ -2689,8 +2698,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         {
             if(valuesarray.size() >= 190)
                 valuesarray.subList(0, 10).clear();
-                 //valuesarray.remove(valuesarray.get(valuesarray.size()-1));
-
 
             valuesarray.add(new Entry(valuesarray.size(), value, 0));
         }
@@ -2704,17 +2711,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 for(int i=0;i<set1.getEntryCount();i++)
                     set1.getEntryForIndex(i).setIcon(null);
 
-                /*Highlight   high = new Highlight(set1.getEntryForIndex(set1.getEntryCount()-1).getX(), 0, set1.getEntryCount()-1);
-                chart.highlightValue(high, false);*/
-
-
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
 
-                //chart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
-
-
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
                         getActivity().getResources().getDimension(R.dimen.margin_50dp),
                         0);
             }
@@ -2737,7 +2737,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
             chart.refreshDrawableState();
-            setyaxismaxrange(chart,chartname,value);
+            //setyaxismaxrange(chart,chartname,value);
             chart.setVisibleXRangeMaximum(80);
             chart.moveViewToX(set1.getEntryCount());
             chart.invalidate();
@@ -2792,7 +2792,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         l.setForm(Legend.LegendForm.LINE);
     }
 
-    public void updatelinegraphwithposition(final LineChart chart, final ArrayList<Entry> valuesarray, final int mediarunningpercentage, final verticalseekbar vertical_seekbar,TextView tvallgraphvalue,String graphtype)
+    public void updatelinegraphwithposition(final LineChart chart, final ArrayList<Entry> valuesarray, final int mediarunningpercentage,
+                                            final verticalseekbar vertical_seekbar,TextView tvallgraphvalue,String graphtype)
     {
         if (chart.getData() != null &&  chart.getData().getDataSetCount() > 0)
         {
