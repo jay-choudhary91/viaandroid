@@ -2763,7 +2763,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     }
 
     public void updatelinegraphwithposition(final LineChart chart, final ArrayList<Entry> valuesarray, final int mediarunningpercentage,
-                                            final verticalseekbar vertical_seekbar,TextView tvallgraphvalue,String unitvalue)
+                                            final verticalseekbar vertical_seekbar,TextView tvallgraphvalue,String graphtype)
     {
         if (chart.getData() != null &&  chart.getData().getDataSetCount() > 0)
         {
