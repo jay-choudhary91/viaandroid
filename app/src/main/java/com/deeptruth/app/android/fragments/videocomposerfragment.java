@@ -622,7 +622,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
 
                     }else{
-                        setbottommargin(headercontainer);
+                        setbottommargin(headercontainer,1);
                     }
 
                     gethelper().hidedrawerbutton(true);  // hidden
@@ -649,7 +649,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
 
                     }else{
-                        setbottommargin(headercontainer);
+                        setbottommargin(headercontainer,0);
                     }
 
                     if(headercontainer.getAngle() == 90)
@@ -697,7 +697,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 (int) getResources().getDimension(R.dimen.margin_5dp),0,0,0,
                                 0,0,0,imgflashon,null,null,0);
                     }else{
-                        setbottommargin(headercontainer);
+                        setbottommargin(headercontainer,0);
                     }
                     if(headercontainer.getAngle() == 90)
                     {
@@ -2452,7 +2452,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
     }
 
-    public void setbottommargin(RotateLayout headercontainer){
+    public void setbottommargin(RotateLayout headercontainer,int topmargin){
 
         if(headercontainer.getAngle()==0){
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -2463,14 +2463,21 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
 
-            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
 
-            if(headercontainer.getAngle()==90)
-                lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
 
-            setdynamiclayout(lp,null,0,0,0,bottomlayoutheight-layoutmediatypeheight,0,
-                    0,0,0,null,headercontainer,null,headercontainer.getAngle());
-        }
+            if(headercontainer.getAngle()==90){
+                lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                setdynamiclayout(lp,null,0,1,0,bottomlayoutheight-layoutmediatypeheight,0,
+                        0,0,0,null,headercontainer,null,headercontainer.getAngle());
+            }else{
+                lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                setdynamiclayout(lp,null,0,0,0,bottomlayoutheight-layoutmediatypeheight,0,
+                        0,0,0,null,headercontainer,null,headercontainer.getAngle());
+
+            }
+
+
+                   }
     }
 
 
