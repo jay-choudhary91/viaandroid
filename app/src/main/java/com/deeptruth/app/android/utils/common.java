@@ -2544,7 +2544,7 @@ public class common {
             SimpleDateFormat devicetimeformat = new SimpleDateFormat("HH:mm:ss");
             devicetime = devicetimeformat.format(date);
         } else {
-            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss.SS aa");
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss.SS a",Locale.ENGLISH);
             devicetime = devicetimeformat.format(date);
         }
         return devicetime;
