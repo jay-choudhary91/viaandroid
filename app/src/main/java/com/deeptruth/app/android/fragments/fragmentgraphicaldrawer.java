@@ -2257,7 +2257,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 String color = mitemlist.get(i).getColor();
                 String latency = mitemlist.get(i).getLatency();
                 String sequenceno = mitemlist.get(i).getSequenceno();
-                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,latency,sequenceno);
+                String colorreason = mitemlist.get(i).getColorreason();
+                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,latency,sequenceno,colorreason);
             }
         }catch (Exception e)
         {
@@ -2266,7 +2267,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
-                              String color,String latency,String sequenceno) {
+                              String color,String latency,String sequenceno,String colorreason) {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -2285,7 +2286,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     metricItemArraylist.add(model);
                 }
                 metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
-                        color,latency,sequenceno));
+                        color,latency,sequenceno,colorreason));
 
                 Log.e("metrclistsize",""+metricmainarraylist.size());
 
@@ -2306,7 +2307,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         metricItemArraylist.add(model);
                     }
                     metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,
-                            metahash,color,latency,sequenceno));
+                            metahash,color,latency,sequenceno,colorreason));
 
                     Log.e("metrclistsize",""+metricmainarraylist.size());
                 }

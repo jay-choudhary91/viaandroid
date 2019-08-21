@@ -19,10 +19,12 @@ public class arraycontainer implements Serializable {
     String latency ="";
     String sequenceno ="";
 
+    String colorreason ="";
+
 
 
     public arraycontainer(ArrayList<metricmodel> metricItemArraylist, String hashmethod,String videostarttransactionid,
-                          String valuehash,String metahash,String color,String latency,String sequenceno)
+                          String valuehash,String metahash,String color,String latency,String sequenceno,String colorreason)
     {
         setMetricItemArraylist(metricItemArraylist);
         setHashmethod(hashmethod);
@@ -32,10 +34,11 @@ public class arraycontainer implements Serializable {
         setColor(color);
         setLatency(latency);
         setSequenceno(sequenceno);
+        setColorreason(colorreason);
     }
 
     public arraycontainer(ArrayList<metricmodel> metricItemArraylist, String hashmethod,String videostarttransactionid,
-                          String valuehash,String metahash,String color)
+                          String valuehash,String metahash,String color,String colorreason)
     {
         setMetricItemArraylist(metricItemArraylist);
         setHashmethod(hashmethod);
@@ -43,6 +46,7 @@ public class arraycontainer implements Serializable {
         setValuehash(valuehash);
         setMetahash(metahash);
         setColor(color);
+        setColorreason(colorreason);
     }
 
     public arraycontainer()
@@ -50,7 +54,7 @@ public class arraycontainer implements Serializable {
     }
 
     public arraycontainer( String hashmethod,String videostarttransactionid,
-                          String valuehash,String metahash,String color,String latency)
+                          String valuehash,String metahash,String color,String latency,String colorreason)
     {
         setMetricItemArraylist(metricItemArraylist);
         setHashmethod(hashmethod);
@@ -59,10 +63,11 @@ public class arraycontainer implements Serializable {
         setMetahash(metahash);
         setColor(color);
         setLatency(latency);
+        setColorreason(colorreason);
     }
 
     public arraycontainer( String hashmethod,String videostarttransactionid,
-                           String valuehash,String metahash,String color)
+                           String valuehash,String metahash,String color,String colorreason)
     {
         setMetricItemArraylist(metricItemArraylist);
         setHashmethod(hashmethod);
@@ -70,6 +75,7 @@ public class arraycontainer implements Serializable {
         setValuehash(valuehash);
         setMetahash(metahash);
         setColor(color);
+        setColorreason(colorreason);
     }
 
     public ArrayList<metricmodel> getMetricItemArraylist() {
@@ -143,5 +149,13 @@ public class arraycontainer implements Serializable {
 
     public void setMetahash(String metahash) {
         this.metahash = metahash;
+    }
+
+    public String getColorreason() {
+        return colorreason;
+    }
+
+    public void setColorreason(String colorreason) {
+        this.colorreason = colorreason;
     }
 }

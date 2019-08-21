@@ -1810,7 +1810,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     "","","","","",
                     "","",config.sync_pending,"",""
                     ,"","","","",xdata.getinstance().getSetting(config.selected_folder),selectedmediafile,selectedmediafile,"",""
-                    ,"",""));
+                    ,"","",""));
 
             mdbhelper.close();
         }catch (Exception e)

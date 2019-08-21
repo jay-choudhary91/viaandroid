@@ -266,7 +266,7 @@
                             android:ellipsize="none"
                             android:text="@string/gps_low_quality"
                             android:singleLine="true"
-                            android:visibility="visible"
+                            android:visibility="invisible"
                             app:fontType="OpenSans_Regular" />
 
 

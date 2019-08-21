@@ -1263,7 +1263,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
-                              String color,String latency,String sequenceno)  {
+                              String color,String latency,String sequenceno,String colorreason)  {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -1282,7 +1282,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     metricItemArraylist.add(model);
                 }
                 metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
-                        color,latency,sequenceno));
+                        color,latency,sequenceno,colorreason));
             }
             else if(json instanceof JSONArray)
             {
@@ -1300,7 +1300,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         metricItemArraylist.add(model);
                     }
                     metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
-                            color,latency,sequenceno));
+                            color,latency,sequenceno,colorreason));
                 }
             }
         } catch (Exception e) {
@@ -1646,8 +1646,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         String color = mitemlist.get(i).getColor();
                         String latency = mitemlist.get(i).getLatency();
                         String sequenceno = mitemlist.get(i).getSequenceno();
+                        String colorreason = mitemlist.get(i).getColorreason();
                         parsemetadata(metricdata, hashmethod, videostarttransactionid, sequencehash, serverdictionaryhash, color,
-                                latency, sequenceno);
+                                latency, sequenceno,colorreason);
                     }
                     else
                     {
@@ -1658,8 +1659,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         String color = mitemlist.get(i).getColor();
                         String latency = mitemlist.get(i).getLatency();
                         String sequenceno = mitemlist.get(i).getSequenceno();
+                        String colorreason = mitemlist.get(i).getColorreason();
                         metricmainarraylist.set(i, new arraycontainer(hashmethod, videostarttransactionid,
-                                sequencehash, serverdictionaryhash, color, latency));
+                                sequencehash, serverdictionaryhash, color, latency,colorreason));
                     }
 
                 }

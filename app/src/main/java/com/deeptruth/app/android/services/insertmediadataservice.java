@@ -392,7 +392,7 @@ public class insertmediadataservice extends Service {
                 mdbstartitemcontainer.get(i).getItem9(),mdbstartitemcontainer.get(i).getItem10(),mdbstartitemcontainer.get(i).getItem11()
                 ,mdbstartitemcontainer.get(i).getItem12(),mdbstartitemcontainer.get(i).getItem13(),"",mdbstartitemcontainer.get(i).getItem14(),
                 mdbstartitemcontainer.get(i).getItem15(),"0","sync_pending","","","0","inprogress",mdbstartitemcontainer.get(i).getItem3(),"",
-                mdbstartitemcontainer.get(i).getItem16(),"");
+                mdbstartitemcontainer.get(i).getItem16(),"","");
             }
 
             try {
@@ -424,7 +424,7 @@ public class insertmediadataservice extends Service {
                     mdbmiddleitemcontainer.getItem9(),mdbmiddleitemcontainer.getItem10(),mdbmiddleitemcontainer.getItem11()
                     ,mdbmiddleitemcontainer.getItem12(),mdbmiddleitemcontainer.getItem13(),mdbmiddleitemcontainer.getItem14(),
                     mdbmiddleitemcontainer.getItem15(),mdbmiddleitemcontainer.getItem16(),mdbmiddleitemcontainer.getItem17(),
-                    mdbmiddleitemcontainer.getItem18());
+                    mdbmiddleitemcontainer.getItem18(),mdbmiddleitemcontainer.getItem19());
             try {
                 mdbhelper.close();
             } catch (Exception e) {

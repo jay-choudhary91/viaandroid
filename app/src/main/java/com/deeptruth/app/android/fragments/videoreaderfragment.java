@@ -1769,8 +1769,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         String color = mitemlist.get(i).getColor();
                         String latency = mitemlist.get(i).getLatency();
                         String sequenceno = mitemlist.get(i).getSequenceno();
+                        String colorreason = mitemlist.get(i).getColorreason();
+
                         parsemetadata(metricdata, hashmethod, videostarttransactionid, sequencehash, serverdictionaryhash, color,
-                                latency, sequenceno);
+                                latency, sequenceno,colorreason);
                     }
                     else
                     {
@@ -1781,8 +1783,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         String color = mitemlist.get(i).getColor();
                         String latency = mitemlist.get(i).getLatency();
                         String sequenceno = mitemlist.get(i).getSequenceno();
+                        String colorreason = mitemlist.get(i).getColorreason();
                         metricmainarraylist.set(i, new arraycontainer(hashmethod, videostarttransactionid,
-                                sequencehash, serverdictionaryhash, color, latency));
+                                sequencehash, serverdictionaryhash, color, latency,colorreason));
                     }
 
                 }
@@ -1917,7 +1920,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
-                              String color,String latency,String sequenceno) {
+                              String color,String latency,String sequenceno,String colorreason) {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -1936,7 +1939,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     metricItemArraylist.add(model);
                 }
                 metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
-                        color,latency,sequenceno));
+                        color,latency,sequenceno,colorreason));
             }
             else if(json instanceof JSONArray)
             {
@@ -1954,7 +1957,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         metricItemArraylist.add(model);
                     }
                     metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
-                            color,latency,sequenceno));
+                            color,latency,sequenceno,colorreason));
                 }
             }
         } catch (Exception e) {
@@ -2354,8 +2357,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if(arraycontainerformetric != null && layout_halfscrnimg.getVisibility() == View.VISIBLE && (!gethelper().isdraweropened()) && (player.isPlaying()))
                 {
                     String color = "white";
+                    String colorreason="";
                     if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
                         color = arraycontainerformetric.getColor();
+
+                    if (arraycontainerformetric.getColorreason() != null && (!arraycontainerformetric.getColorreason().isEmpty()))
+                        colorreason = arraycontainerformetric.getColorreason();
 
                     layout_gps.setVisibility(View.INVISIBLE);
                     txt_gpsquality.setVisibility(View.INVISIBLE);
@@ -2403,6 +2410,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             layout_gps.setVisibility(View.VISIBLE);
                             layout_validating.setVisibility(View.VISIBLE);
                             txt_gps_low_quality.setText(getResources().getString(R.string.gps_low_quality));
+
+
+                            if(colorreason.contains("GPS"))
+                                txt_gpsquality.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.gps_low_quality));
+
                             txt_gpsquality.setVisibility(View.VISIBLE);
 
                             break;
