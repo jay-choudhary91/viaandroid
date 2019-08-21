@@ -73,7 +73,7 @@ public class databasemanager {
                 "apirequestdevicedate='"+ mediainfo.getApirequestdevicedate() +"',videostartdevicedate = '"+mediainfo.getMediastartdevicedate() +"',devicetimeoffset='"+
                 mediainfo.getDevicetimeoffset() +"',videocompletedevicedate = '"+mediainfo.getMediacompletedevicedate() +"',mediaduration= '" +mediainfo.getMediaduration()+"',"+
                 "videostarttransactionid='"+ mediainfo.getMediastarttransactionid() +"',firsthash = '"+mediainfo.getFirsthash() +"',videoid='"+ mediainfo.getMediaid() +"'," +
-                "status = '"+mediainfo.getStatus() +"',color = '"+mediainfo.getColor() +"',completeddate = '"+mediainfo.getMediacompletedate() +"',media_name= '"+mediainfo.getMedianame()+"',"+
+                "status = '"+mediainfo.getStatus() +"',color = '"+mediainfo.getColor() +"',colorreason = '"+mediainfo.getColorreason() +"',completeddate = '"+mediainfo.getMediacompletedate() +"',media_name= '"+mediainfo.getMedianame()+"',"+
                 "remainingframes='"+ mediainfo.getRemainingframes() +"',lastframe = '"+mediainfo.getLastframe() +"',framecount='"+ mediainfo.getFramecount() +"'," +
                 "media_notes='"+ mediainfo.getMedianotes() +"'," +
                 "sync_status = '"+mediainfo.getSyncstatus() +"' where location='"+mediainfo.getLocation()+"'";
@@ -94,7 +94,7 @@ public class databasemanager {
                                              String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
                                              String videocompletedevicedate,String videostarttransactionid,String firsthash,String thumbnailpath,String videoid,
                                              String status,String remainingframes,String lastframe,String framecount,String sync_status,String medianame,
-                                             String medianotes,String mediafolder,String color)
+                                             String medianotes,String mediafolder,String color,String colorreason)
     {
         try {
             lock.lock();
@@ -113,7 +113,7 @@ public class databasemanager {
                     devicetimeoffset +"',videocompletedevicedate = '"+videocompletedevicedate +"'," +
                     "videostarttransactionid='"+ videostarttransactionid +"',firsthash = '"+firsthash +"',videoid='"+ videoid +"'," +
                     "status = '"+status +"'," +
-                    "color = '"+color +"'," +
+                    "color = '"+color +"'," +"colorreason = '"+colorreason +"'," +
                     "framegrabcompleted = '"+framegrabcompleted +"'," +
                     "media_notes = '"+medianotes +"'," +
                     "thumbnailurl = '"+thumbnailpath +"'," +
@@ -249,7 +249,7 @@ public class databasemanager {
                                         String metricdata,String recordate,String rsequenceno,String sequencehash,
                                         String sequenceno,String serverdate,String sequencedevicedate,String serverdictionaryhash,
                                         String completehashvalue,String sequenceid,String videostarttransactionid,String metahash,
-                                        String color,String latency)
+                                        String color,String latency,String colorreason)
     {
         try {
             lock.lock();
@@ -273,6 +273,7 @@ public class databasemanager {
             values.put("metahash",  metahash);
             values.put("color",  color);
             values.put("latency",  latency);
+            values.put("colorreason",  colorreason);
 
 
             if(mDb == null)
@@ -452,7 +453,7 @@ public class databasemanager {
 
     public Cursor updatevideoupdateapiresponse(String videoid, String sequence, String serverdate, String serverdictionaryhash,
                                                String sequenceid, String videoframetransactionid,String color,String latency,
-                                               String mediahashvalue) {
+                                               String mediahashvalue,String colorreason) {
         Cursor mCur=null;
         try {
             lock.lock();
@@ -461,6 +462,7 @@ public class databasemanager {
             mDb.execSQL("update tblmetadata set rsequenceno = '"+sequence+
                     "',serverdate ='"+serverdate+
                     "',color ='"+color+
+                    "',colorreason ='"+colorreason+
                     "',latency ='"+latency+
                     "', serverdictionaryhash = '"+serverdictionaryhash+
                     "', sequenceid = '"+sequenceid+"' , videostarttransactionid = '"+videoframetransactionid+"' where sequencehash='"+mediahashvalue+"'");
@@ -582,7 +584,7 @@ public class databasemanager {
     }
 
 
-    public Cursor updatevideosyncdate(String localkey,String syncdate,String syncstatus,String color,String mediaid) {
+    public Cursor updatevideosyncdate(String localkey,String syncdate,String syncstatus,String color,String mediaid,String colorreason) {
         Cursor mCur=null;
         try {
             lock.lock();
@@ -591,6 +593,7 @@ public class databasemanager {
             mDb.execSQL("update tblstartmediainfo set sync_date = '"+syncdate+
                     "',sync_status ='"+syncstatus+
                     "',color ='"+color+
+                    "',colorreason ='"+colorreason+
                     "',videoid ='"+mediaid+
                     "' where localkey='"+localkey+"'");
             if (mCur != null)
@@ -716,7 +719,7 @@ public class databasemanager {
                                 cur.getString(cur.getColumnIndex("serverdate")),cur.getString(cur.getColumnIndex("sequencedevicedate")),
                                 cur.getString(cur.getColumnIndex("videostarttransactionid")),cur.getString(cur.getColumnIndex("serverdictionaryhash")),
                                 cur.getString(cur.getColumnIndex("metahash")),cur.getString(cur.getColumnIndex("color")),
-                                cur.getString(cur.getColumnIndex("latency"))));
+                                cur.getString(cur.getColumnIndex("latency")),cur.getString(cur.getColumnIndex("colorreason"))));
 
                     }while(cur.moveToNext());
                 }

@@ -36,6 +36,8 @@ public class mediainfotablefields
     String color;
     String latency;
     String mediacompletedate;
+    String colorreason;
+
 
     public mediainfotablefields()
     {
@@ -48,7 +50,7 @@ public class mediainfotablefields
         String mediacompletedevicedate,String mediastarttransactionid,String firsthash,String mediaid,
         String status,String remainingframes,String lastframe,String framecount,String syncstatus,String medianame,
         String medianotes,String mediafolder,String mediafilepath,String thumbnailurl,String mediaduration,String mediacompletedate
-        ,String color,String latency)
+        ,String color,String latency,String colorreason)
     {
         setHeader(header);
         setType(type);
@@ -80,6 +82,7 @@ public class mediainfotablefields
         setMediacompletedate(mediacompletedate);
         setColor(color);
         setLatency(latency);
+        setColorreason(colorreason);
     }
 
     public String getMediacompletedate() {
@@ -322,4 +325,13 @@ public class mediainfotablefields
     public void setMediafolder(String mediafolder) {
         this.mediafolder = mediafolder;
     }
+
+    public String getColorreason() {
+        return colorreason;
+    }
+
+    public void setColorreason(String colorreason) {
+        this.colorreason = colorreason;
+    }
+
 }
