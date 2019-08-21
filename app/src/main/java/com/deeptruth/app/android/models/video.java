@@ -35,6 +35,7 @@ public class video
     public String frameuploadstatus = "";
     public boolean ischeck = false;
     public boolean doenable = false;
+    public boolean mediapublished = false;
     public int griditemheight = 0;
     public int validcount = 0;
     public int cautioncount = 0;
@@ -189,6 +190,14 @@ public class video
 
     public void setLastmodifiedtime(long lastmodifiedtime) {
         this.lastmodifiedtime = lastmodifiedtime;
+    }
+
+    public boolean ismediapublished() {
+        return mediapublished;
+    }
+
+    public void setmediapublished(boolean mediapublished) {
+        this.mediapublished = mediapublished;
     }
 
     public String getMediatype() {

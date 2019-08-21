@@ -115,304 +115,305 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
         final video mediaobject=arrayvideolist.get(position);
         binderHelper.bind(holder.root_view,""+position);
-        if(mediaobject.isDoenable())
+
+        if( holder.root_view.isOpened())
+            binderHelper.closeLayout(""+position);
+
+        //  binderHelper.bind(holder.root_view,""+position);
+
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
-            if( holder.root_view.isOpened())
-                binderHelper.closeLayout(""+position);
-
-          //  binderHelper.bind(holder.root_view,""+position);
-
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-            {
-                if(mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete) ||
-                        mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
-                {
-                    holder.img_loader.setVisibility(View.GONE);
-                }
-                else
-                {
-                    holder.img_loader.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(R.drawable.media_loader).into(holder.img_loader);
-                }
-            }
-            else
+            if(mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete) ||
+                    mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
             {
                 holder.img_loader.setVisibility(View.GONE);
             }
-
-            int validcount=mediaobject.getValidcount();
-            int cautioncount=mediaobject.getCautioncount();
-            int unsentcount=mediaobject.getUnsentcount();
-            int invalidcount=mediaobject.getInvalidcount();
-            if(common.isdevelopermodeenable())
-            {
-                holder.tv_framecounts.setVisibility(View.VISIBLE);
-                holder.tv_framecounts.setText(mediaobject.getFrameuploadstatus());
-            }
             else
             {
-                holder.tv_framecounts.setVisibility(View.INVISIBLE);
+                holder.img_loader.setVisibility(View.VISIBLE);
+                Glide.with(context).load(R.drawable.media_loader).into(holder.img_loader);
             }
-            try {
+        }
+        else
+        {
+            holder.img_loader.setVisibility(View.GONE);
+        }
 
-                holder.linearseekbarcolorview.removeAllViews();
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+        int validcount=mediaobject.getValidcount();
+        int cautioncount=mediaobject.getCautioncount();
+        int unsentcount=mediaobject.getUnsentcount();
+        int invalidcount=mediaobject.getInvalidcount();
+        if(common.isdevelopermodeenable())
+        {
+            holder.tv_framecounts.setVisibility(View.VISIBLE);
+            holder.tv_framecounts.setText(mediaobject.getFrameuploadstatus());
+        }
+        else
+        {
+            holder.tv_framecounts.setVisibility(View.INVISIBLE);
+        }
+        try {
 
-            ArrayList<String> arrayList = mediaobject.getMediabarcolor();
-            if (mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
-            {
-                holder.layout_update_labels.setVisibility(View.VISIBLE);
-                holder.linearseekbarcolorview.setBackgroundColor(Color.RED);
-                invalidcount=1;
-                holder.tv_invalid.setText(config.item_invalid+" 100%");
-            }
+            holder.linearseekbarcolorview.removeAllViews();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
-            holder.tv_valid.setVisibility(View.VISIBLE);
-            holder.tv_caution.setVisibility(View.VISIBLE);
-            holder.tv_unsent.setVisibility(View.VISIBLE);
-            holder.tv_invalid.setVisibility(View.VISIBLE);
+        ArrayList<String> arrayList = mediaobject.getMediabarcolor();
+        if (mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
+        {
+            holder.layout_update_labels.setVisibility(View.VISIBLE);
+            holder.linearseekbarcolorview.setBackgroundColor(Color.RED);
+            invalidcount=1;
+            holder.tv_invalid.setText(config.item_invalid+" 100%");
+        }
 
+        holder.tv_valid.setVisibility(View.VISIBLE);
+        holder.tv_caution.setVisibility(View.VISIBLE);
+        holder.tv_unsent.setVisibility(View.VISIBLE);
+        holder.tv_invalid.setVisibility(View.VISIBLE);
+
+        holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+        holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+        holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+        holder.tv_invalid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+
+        if(validcount == 0)
+            holder.tv_valid.setVisibility(View.GONE);
+
+        if(cautioncount == 0)
+            holder.tv_caution.setVisibility(View.GONE);
+
+        if(unsentcount == 0)
+            holder.tv_unsent.setVisibility(View.GONE);
+
+        if(invalidcount == 0)
+            holder.tv_invalid.setVisibility(View.GONE);
+
+        holder.txt_pipesign_caution.setVisibility(View.GONE);
+        holder.txt_pipesign_unsent.setVisibility(View.GONE);
+        holder.txt_pipesign_invalid.setVisibility(View.GONE);
+
+        if(validcount > 0 && cautioncount > 0){
             holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
             holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            holder.txt_pipesign_caution.setVisibility(View.VISIBLE);
+        }
+
+        if(cautioncount > 0 && unsentcount > 0){
             holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
-            holder.tv_invalid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+        }
+        if(validcount > 0 && unsentcount > 0){
+            holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+            holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
+        }
 
-            if(validcount == 0)
-                holder.tv_valid.setVisibility(View.GONE);
+        if(validcount >0 && unsentcount > 0 && unsentcount > 0 ){
+            holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
+            holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
+            holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
+        }
 
-            if(cautioncount == 0)
-                holder.tv_caution.setVisibility(View.GONE);
+        if(unsentcount > 0)
+            holder.progressmediasync.setVisibility(View.VISIBLE);
+        else
+            holder.progressmediasync.setVisibility(View.INVISIBLE);
 
-            if(unsentcount == 0)
-                holder.tv_unsent.setVisibility(View.GONE);
+        if((cautioncount > 0 || validcount > 0) && unsentcount > 0){
+            holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
+        }
 
-            if(invalidcount == 0)
-                holder.tv_invalid.setVisibility(View.GONE);
+        if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
+            holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
 
-            holder.txt_pipesign_caution.setVisibility(View.GONE);
-            holder.txt_pipesign_unsent.setVisibility(View.GONE);
-            holder.txt_pipesign_invalid.setVisibility(View.GONE);
-
-            if(validcount > 0 && cautioncount > 0){
-                holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
-                holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
-                holder.txt_pipesign_caution.setVisibility(View.VISIBLE);
-            }
-
-            if(cautioncount > 0 && unsentcount > 0){
-                holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
-                holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
-            }
-            if(validcount > 0 && unsentcount > 0){
-                holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
-                holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
-            }
-
-            if(validcount >0 && unsentcount > 0 && unsentcount > 0 ){
-                holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
-                holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
-                holder.tv_unsent.setTextSize(TypedValue.COMPLEX_UNIT_SP,9);
-            }
-
-            if(unsentcount > 0)
-                holder.progressmediasync.setVisibility(View.VISIBLE);
-            else
-                holder.progressmediasync.setVisibility(View.INVISIBLE);
-
-            if((cautioncount > 0 || validcount > 0) && unsentcount > 0){
-                holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
-            }
-
-            if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
-                holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
-
-            if(arrayList != null && arrayList.size() > 0)
+        if(arrayList != null && arrayList.size() > 0)
+        {
+            holder.layout_update_labels.setVisibility(View.VISIBLE);
+            holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
+            if(mediaobject.getColorsectionsarray() != null && mediaobject.getColorsectionsarray().size() > 0)
             {
-                holder.layout_update_labels.setVisibility(View.VISIBLE);
-                holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
-                if(mediaobject.getColorsectionsarray() != null && mediaobject.getColorsectionsarray().size() > 0)
+                for(int i=0;i<mediaobject.getColorsectionsarray().size();i++)
                 {
-                    for(int i=0;i<mediaobject.getColorsectionsarray().size();i++)
+                    String item=mediaobject.getColorsectionsarray().get(i);
+                    if(! item.trim().isEmpty())
                     {
-                        String item=mediaobject.getColorsectionsarray().get(i);
-                        if(! item.trim().isEmpty())
+                        String[] itemarray=item.split(",");
+                        if(itemarray.length >= 2)
                         {
-                            String[] itemarray=item.split(",");
-                            if(itemarray.length >= 2)
-                            {
-                                String writecolor=itemarray[0];
-                                String weight=itemarray[1];
-                                if(! weight.trim().isEmpty())
-                                    holder.linearseekbarcolorview.addView(getmediaseekbarbackgroundview(weight,writecolor));
-                            }
+                            String writecolor=itemarray[0];
+                            String weight=itemarray[1];
+                            if(! weight.trim().isEmpty())
+                                holder.linearseekbarcolorview.addView(getmediaseekbarbackgroundview(weight,writecolor));
                         }
                     }
                 }
-
-                holder.linearseekbarcolorview.invalidate();
-                holder.linearseekbarcolorview.requestLayout();
-
-                holder.tv_valid.setText(config.item_valid+" "+common.getcolorprogresspercentage(validcount,arrayList.size()));
-                holder.tv_caution.setText(config.item_caution+" "+ common.getcolorprogresspercentage(cautioncount,arrayList.size()));
-                holder.tv_unsent.setText(config.item_unsent+" "+ common.getcolorprogresspercentage(unsentcount,arrayList.size()));
-                holder.tv_invalid.setText(config.item_invalid+" "+ common.getcolorprogresspercentage(invalidcount,arrayList.size()));
-            }
-            else
-            {
-                Log.e("else case ","case2");
-                holder.layout_update_labels.setVisibility(View.VISIBLE);
-                holder.tv_unsent.setVisibility(View.VISIBLE);
-
-                holder.tv_unsent.setText(config.item_unsent+" 100%");
-                holder.progressmediasync.setVisibility(View.VISIBLE);
             }
 
-            holder.txt_videoname.setText(mediaobject.getMediatitle());
-            if(mediaobject.getDuration().trim().isEmpty())
-            {
-             //   holder.tv_mediaduration.setText("NA");
-                holder.tv_mediaduration.setVisibility(View.INVISIBLE);
-            }
-            else
-            {
-                holder.tv_mediaduration.setVisibility(View.VISIBLE);
-                holder.tv_mediaduration.setText(mediaobject.getDuration());
-            }
+            holder.linearseekbarcolorview.invalidate();
+            holder.linearseekbarcolorview.requestLayout();
 
-            if(mediaobject.getCreatedate().trim().isEmpty())
-                holder.tv_mediadate.setText("NA");
-            else
-                holder.tv_mediadate.setText(mediaobject.getCreatedate() +" | "  + mediaobject.getCreatetime());
+            holder.tv_valid.setText(config.item_valid+" "+common.getcolorprogresspercentage(validcount,arrayList.size()));
+            holder.tv_caution.setText(config.item_caution+" "+ common.getcolorprogresspercentage(cautioncount,arrayList.size()));
+            holder.tv_unsent.setText(config.item_unsent+" "+ common.getcolorprogresspercentage(unsentcount,arrayList.size()));
+            holder.tv_invalid.setText(config.item_invalid+" "+ common.getcolorprogresspercentage(invalidcount,arrayList.size()));
+        }
+        else
+        {
+            Log.e("else case ","case2");
+            holder.layout_update_labels.setVisibility(View.VISIBLE);
+            holder.tv_unsent.setVisibility(View.VISIBLE);
 
-            holder.tv_medianotes.setText(mediaobject.getMedianotes());
+            holder.tv_unsent.setText(config.item_unsent+" 100%");
+            holder.progressmediasync.setVisibility(View.VISIBLE);
+        }
 
-            if(mediaobject.getVideostarttransactionid().isEmpty() ||
-                    mediaobject.getVideostarttransactionid().equalsIgnoreCase("null"))
-                holder.tv_localkey.setText("");
-            else
-                holder.tv_localkey.setText(mediaobject.getVideostarttransactionid());
+        holder.txt_videoname.setText(mediaobject.getMediatitle());
+        if(mediaobject.getDuration().trim().isEmpty())
+        {
+            //   holder.tv_mediaduration.setText("NA");
+            holder.tv_mediaduration.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            holder.tv_mediaduration.setVisibility(View.VISIBLE);
+            holder.tv_mediaduration.setText(mediaobject.getDuration());
+        }
 
-            if(mediaobject.getMediastatus().isEmpty() ||  mediaobject.getMediastatus().equalsIgnoreCase("null"))
-                holder.tv_sync_status.setText("Status : pending");
-            else
-                holder.tv_sync_status.setText("Status : " + mediaobject.getMediastatus());
+        if(mediaobject.getCreatedate().trim().isEmpty())
+            holder.tv_mediadate.setText("NA");
+        else
+            holder.tv_mediadate.setText(mediaobject.getCreatedate() +" | "  + mediaobject.getCreatetime());
+
+        holder.tv_medianotes.setText(mediaobject.getMedianotes());
+
+        if(mediaobject.getVideostarttransactionid().isEmpty() ||
+                mediaobject.getVideostarttransactionid().equalsIgnoreCase("null"))
+            holder.tv_localkey.setText("");
+        else
+            holder.tv_localkey.setText(mediaobject.getVideostarttransactionid());
+
+        if(mediaobject.getMediastatus().isEmpty() ||  mediaobject.getMediastatus().equalsIgnoreCase("null"))
+            holder.tv_sync_status.setText("Status : pending");
+        else
+            holder.tv_sync_status.setText("Status : " + mediaobject.getMediastatus());
 
             /*holder.edtvideoname.setEnabled(false);
             holder.edtvideoname.setClickable(false);
             holder.edtvideoname.setFocusable(false);*/
 
-            RequestOptions requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
-            requestOptions.override(200,200);
-            if(! mediaobject.getmimetype().contains("audio"))
-            {
-                Uri uri = Uri.fromFile(new File(mediaobject.getPath()));
-                Glide.with(context).load(uri).apply(requestOptions).thumbnail(0.1f).into(holder.img_videothumbnail);
-            }
-            else
-            {
-                holder.img_videothumbnail.setBackgroundColor(context.getResources().getColor(R.color.black));
-                if(! mediaobject.getThumbnailpath().trim().isEmpty())
-                {
-                    if(new File(mediaobject.getThumbnailpath()).exists())
-                    {
-                        Uri uri = Uri.fromFile(new File(mediaobject.getThumbnailpath()));
-                        Glide.with(context).load(uri).apply(requestOptions).thumbnail(0.1f).into(holder.img_videothumbnail);
-                    }
-
-                }
-                else
-                {
-                    Glide.with(context).load(R.drawable.audiothum).apply(requestOptions).thumbnail(0.1f).into(holder.img_videothumbnail);
-                }
-            }
-            holder.img_imageshare.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    holder.img_imageshare.setEnabled(false);
-                    new Handler().postDelayed(new Runnable()
-                    {
-                        public void run()
-                        {
-                            holder.img_imageshare.setEnabled(true);
-                        }
-                    }, 1000);
-                    binderHelper.bind(holder.root_view,""+position);
-                    binderHelper.closeLayout(""+position);
-                    adapter.onItemClicked(mediaobject,1);
-                }
-            });
-
-            holder.layout_share_slide.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    holder.layout_share_slide.setEnabled(false);
-                    new Handler().postDelayed(new Runnable()
-                    {
-                        public void run()
-                        {
-                            holder.layout_share_slide.setEnabled(true);
-                        }
-                    }, 1000);
-                    binderHelper.bind(holder.root_view,""+position);
-                    binderHelper.closeLayout(""+position);
-                    adapter.onItemClicked(mediaobject,1);
-                }
-            });
-
-            holder.layout_delete_slide.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    holder.layout_delete_slide.setEnabled(false);
-                    new Handler().postDelayed(new Runnable()
-                    {
-                        public void run()
-                        {
-                            holder.layout_delete_slide.setEnabled(true);
-                        }
-                    }, 1000);
-                    binderHelper.bind(holder.root_view,""+position);
-                    binderHelper.closeLayout(""+position);
-                    adapter.onItemClicked(mediaobject,2);
-                }
-            });
-
-            holder.layout_folder_slide.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    binderHelper.bind(holder.root_view,""+position);
-                    binderHelper.closeLayout(""+position);
-                    adapter.onItemClicked(mediaobject,6);
-                }
-            });
-
-
-            holder.relative_child.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-                    {
-                        if (! mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete))
-                            return;
-                    }
-                    adapter.onItemClicked(mediaobject,4);
-                }
-            });
-
-            double parentheight=listviewheight;
-            parentheight=parentheight/4.4;
-            holder.root_view.getLayoutParams().height = (int)parentheight;
+        RequestOptions requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
+        requestOptions.override(200,200);
+        if(! mediaobject.getmimetype().contains("audio"))
+        {
+            Uri uri = Uri.fromFile(new File(mediaobject.getPath()));
+            Glide.with(context).load(uri).apply(requestOptions).thumbnail(0.1f).into(holder.img_videothumbnail);
         }
         else
         {
-         //   binderHelper.closeLayout(""+position);
-          //  binderHelper.bind(holder.root_view,""+position);
+            holder.img_videothumbnail.setBackgroundColor(context.getResources().getColor(R.color.black));
+            if(! mediaobject.getThumbnailpath().trim().isEmpty())
+            {
+                if(new File(mediaobject.getThumbnailpath()).exists())
+                {
+                    Uri uri = Uri.fromFile(new File(mediaobject.getThumbnailpath()));
+                    Glide.with(context).load(uri).apply(requestOptions).thumbnail(0.1f).into(holder.img_videothumbnail);
+                }
+
+            }
+            else
+            {
+                Glide.with(context).load(R.drawable.audiothum).apply(requestOptions).thumbnail(0.1f).into(holder.img_videothumbnail);
+            }
+        }
+        holder.img_imageshare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.img_imageshare.setEnabled(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        holder.img_imageshare.setEnabled(true);
+                    }
+                }, 1000);
+                binderHelper.bind(holder.root_view,""+position);
+                binderHelper.closeLayout(""+position);
+                adapter.onItemClicked(mediaobject,1);
+            }
+        });
+
+        holder.layout_share_slide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.layout_share_slide.setEnabled(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        holder.layout_share_slide.setEnabled(true);
+                    }
+                }, 1000);
+                binderHelper.bind(holder.root_view,""+position);
+                binderHelper.closeLayout(""+position);
+                adapter.onItemClicked(mediaobject,1);
+            }
+        });
+
+        holder.layout_delete_slide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.layout_delete_slide.setEnabled(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        holder.layout_delete_slide.setEnabled(true);
+                    }
+                }, 1000);
+                binderHelper.bind(holder.root_view,""+position);
+                binderHelper.closeLayout(""+position);
+                adapter.onItemClicked(mediaobject,2);
+            }
+        });
+
+        holder.layout_folder_slide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binderHelper.bind(holder.root_view,""+position);
+                binderHelper.closeLayout(""+position);
+                adapter.onItemClicked(mediaobject,6);
+            }
+        });
+
+
+        holder.relative_child.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                {
+                    if (! mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete))
+                        return;
+                }
+                adapter.onItemClicked(mediaobject,4);
+            }
+        });
+
+        double parentheight=listviewheight;
+        parentheight=parentheight/4.4;
+        holder.root_view.getLayoutParams().height = (int)parentheight;
+
+        /*if(mediaobject.isDoenable())
+        {
+
+        }
+        else
+        {
 
             holder.root_view.getLayoutParams().height = 0;
             holder.root_view.setVisibility(View.GONE);
-        }
+        }*/
 
         //binderHelper.bind(holder.root_view,""+position);
 
@@ -448,24 +449,18 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         return view;
     }
 
-    public void notifyitems(ArrayList<video> arrayvideolist)
+    public void notifyitems(ArrayList<video> arrayvideolist,int selectedlisttype)
     {
         ArrayList<video> localarray=new ArrayList<>();
         for(int i=0;i<arrayvideolist.size();i++)
         {
-            if(arrayvideolist.get(i).isDoenable())
-            {
+            if(! arrayvideolist.get(i).ismediapublished() && selectedlisttype == 0)
                 localarray.add(arrayvideolist.get(i));
-            }
+            else if(arrayvideolist.get(i).ismediapublished() && selectedlisttype == 1)
+                localarray.add(arrayvideolist.get(i));
         }
         this.arrayvideolist=localarray;
         notifyDataSetChanged();
-    }
-
-    public void notifysingleitem(int itemposition)
-    {
-        if(itemposition < arrayvideolist.size())
-            notifyItemChanged(itemposition);
     }
 
     public void filterlist(ArrayList<video> arrayvideolist) {
@@ -488,40 +483,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     @Override
     public int getItemCount() {
         return arrayvideolist.size();
-    }
-
-    private void setseekbarlayoutcolor(LinearLayout colorbarlayout,ArrayList<String> arrayList){
-
-        /*if(colorbarlayout != null && colorbarlayout.getChildCount() == 0)
-        {
-
-        }*/
-        try
-        {
-            colorbarlayout.removeAllViews();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        for(int i=0 ; i<arrayList.size();i++)
-        {
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
-            param.leftMargin=0;
-            View view = new View(applicationviavideocomposer.getactivity());
-            view.setLayoutParams(param);
-            if(arrayList.get(i) != null && (! arrayList.get(i).isEmpty()))
-            {
-                view.setBackgroundColor(Color.parseColor(common.getcolorbystring( arrayList.get(i))));
-                colorbarlayout.addView(view);
-            }
-            else
-            {
-                //view.setBackgroundColor(Color.parseColor(config.color_code_gray));
-            }
-
-        }
     }
 
 }

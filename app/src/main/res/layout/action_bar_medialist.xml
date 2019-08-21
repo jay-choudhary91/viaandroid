@@ -78,7 +78,7 @@
                 android:layout_marginRight="@dimen/margin_10dp"
                 android:layout_marginLeft="@dimen/margin_10dp"
                 android:singleLine="true"
-                android:text="bvcbxvxcvbxcvbxcbvxcbvxcnbvxnvbxnvbxcnvbn.,.,.,.,"
+                android:text="My Media"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 app:fontType="Comfortaa-Regular" />
@@ -123,76 +123,6 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="15dp"
             android:background="@color/videolist_background"></View>
-
-    <RelativeLayout
-        android:id="@+id/layout_mediatype"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:orientation="horizontal">
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_height="30dp"
-            />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_mediatype"
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="wrap_content"/>
-
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="OpenSans_Semibold"
-            android:id="@+id/txt_mediatype_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:textSize="15sp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone"
-            android:textColor="@color/white"
-            android:text="VIDEO"
-            />
-
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            android:id="@+id/txt_mediatype_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textSize="14sp"
-            android:padding="10dp"
-            android:visibility="gone"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/txt_mediatype_b"
-            android:textColor="@color/white"
-            android:text="AUDIO"
-            />
-
-
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            android:id="@+id/txt_mediatype_c"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:padding="10dp"
-            android:visibility="gone"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/txt_mediatype_b"
-            android:textSize="13sp"
-            android:textColor="@color/white"
-            android:text="PHOTO"
-            />
-
-
-
-    </RelativeLayout>
 
     </LinearLayout>
 
@@ -260,8 +190,42 @@
 
     </RelativeLayout>
 
-
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_localfiles"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/local_files"
+            app:fontType="Comfortaa-Bold"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:background="@color/blue_item_selected"
+             />
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_publishedfiles"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/published_files"
+            app:fontType="Comfortaa-Bold"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:background="@color/blue_item_deselected"
+             />
+
+    </LinearLayout>
 
 </LinearLayout>
