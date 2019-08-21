@@ -44,10 +44,12 @@ import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.adapter.adaptermedialist;
+import com.deeptruth.app.android.adapter.adaptermediaoptionstype;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
+import com.deeptruth.app.android.models.mediatypeoptions;
 import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
@@ -113,6 +115,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     TextView txt_localfiles;
     @BindView(R.id.txt_publishedfiles)
     TextView txt_publishedfiles;
+    @BindView(R.id.medialistoption)
+    RecyclerView recyclerViewmedialistoption;
 
     int selectedlisttype =0,listviewheight=0,dataupdator=0;
     RelativeLayout listlayout;
@@ -125,6 +129,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     ArrayList<video> arraymediaitemlist = new ArrayList<>();
     adaptermedialist adaptermedialistlocal;
     adaptermedialist adaptermedialistpublished;
+    adaptermediaoptionstype adaptermediaoptions;
     private RecyclerTouchListener onTouchListener;
     private static final int request_read_external_storage = 1;
     private BroadcastReceiver medialistitemaddreceiver;
@@ -135,6 +140,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     long lastTapTimeMs = 0;
     long touchDownMs = 0;
     boolean iskeyboardopen = false,shouldnavigatelist=true;
+    ArrayList<mediatypeoptions> arraylistmediatypeoptions = new ArrayList<>();
 
     @Override
     public int getlayoutid() {
@@ -244,9 +250,21 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 recyclerviewpublishedlist.setLayoutManager(layoutManager);
             }
+            {
+                LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+                layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                recyclerViewmedialistoption.setLayoutManager(layoutManager);
+            }
 
             ((DefaultItemAnimator) recyclerviewlocallist.getItemAnimator()).setSupportsChangeAnimations(false);
             recyclerviewlocallist.getItemAnimator().setChangeDuration(0);
+
+
+            arraylistmediatypeoptions.add(new mediatypeoptions("Date"));
+            arraylistmediatypeoptions.add(new mediatypeoptions("Title"));
+            arraylistmediatypeoptions.add(new mediatypeoptions("Type"));
+            arraylistmediatypeoptions.add(new mediatypeoptions("Size"));
+            arraylistmediatypeoptions.add(new mediatypeoptions("Location"));
 
             txt_localfiles.setOnClickListener(this);
             txt_publishedfiles.setOnClickListener(this);
@@ -962,6 +980,22 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                     },listviewheight);
                     recyclerviewpublishedlist.setAdapter(adaptermedialistpublished);
+                }
+                if(adaptermediaoptions == null)
+                {
+                    Log.e("medialistoptions",""+arraylistmediatypeoptions);
+                    adaptermediaoptions = new adaptermediaoptionstype(getActivity(), arraylistmediatypeoptions, new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+                        }
+                        @Override
+                        public void onItemClicked(Object object, int type) {
+                            video videoobj=(video)object;
+                            setAdapter(videoobj,type);
+                        }
+
+                    });
+                    recyclerViewmedialistoption.setAdapter(adaptermediaoptions);
                 }
 
                 showselectedmediatypeitems(true);
