@@ -230,12 +230,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/blue_item_selected">
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:id="@+id/medialistoption"
+            android:id="@+id/medialistfilteroption"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_height="wrap_content">
 
         </android.support.v7.widget.RecyclerView>

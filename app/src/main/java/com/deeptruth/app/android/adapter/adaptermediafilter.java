@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediatypeoptions;
-import com.deeptruth.app.android.models.video;
 
 import java.util.ArrayList;
 
@@ -22,29 +21,33 @@ import java.util.ArrayList;
  * Created by devesh on 21/8/19.
  */
 
-public class adaptermediaoptionstype extends RecyclerView.Adapter<adaptermediaoptionstype.myViewHolder> {
+public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.myViewHolder> {
     ArrayList<mediatypeoptions> arraymediatypeoption = new ArrayList<>();
     adapteritemclick adapter;
     Context context;
+    int screenwidth=0;
 
 
     public class myViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout linearLayout;
+        LinearLayout linearLayout,root_view;
         TextView txt_options;
         ImageView img_updownarrow;
 
         public myViewHolder(View view) {
             super(view);
+            root_view = (LinearLayout) view.findViewById(R.id.root_view);
             linearLayout = (LinearLayout) view.findViewById(R.id.layout_typeoption);
             txt_options = (TextView) view.findViewById(R.id.txt_optiontype);
             img_updownarrow = (ImageView) view.findViewById(R.id.img_updownarrow);
         }
     }
 
-    public adaptermediaoptionstype(Context context ,ArrayList<mediatypeoptions> arraymediatypeoption,adapteritemclick adapter){
+    public adaptermediafilter(Context context , ArrayList<mediatypeoptions> arraymediatypeoption, adapteritemclick adapter,
+                              int screenwidth){
         this.context = context;
         this.arraymediatypeoption = arraymediatypeoption;
         this.adapter = adapter;
+        this.screenwidth = screenwidth;
     }
     @NonNull
     @Override
@@ -52,16 +55,25 @@ public class adaptermediaoptionstype extends RecyclerView.Adapter<adaptermediaop
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_mediaoptions, parent, false);
 
-        return new adaptermediaoptionstype.myViewHolder(itemView);
+        return new adaptermediafilter.myViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
 
+        LinearLayout.LayoutParams param=null;
+        float width=screenwidth;
+        double newwidth=width/5;
+        param=new LinearLayout.LayoutParams((int)newwidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        holder.root_view.setLayoutParams(param);
 
         final mediatypeoptions mediaobject=arraymediatypeoption.get(position);
-        Log.e("getMediatypename",mediaobject.getMediatypename());
         holder.txt_options.setText(mediaobject.getMediatypename());
+        if(mediaobject.getMediatypename().equalsIgnoreCase("Date"))
+            holder.img_updownarrow.setVisibility(View.VISIBLE);
+        else
+            holder.img_updownarrow.setVisibility(View.GONE);
     }
 
     @Override
