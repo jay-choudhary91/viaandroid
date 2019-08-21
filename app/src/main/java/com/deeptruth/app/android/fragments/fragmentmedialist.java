@@ -44,7 +44,7 @@ import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.adapter.adaptermedialist;
-import com.deeptruth.app.android.adapter.adaptermediaoptionstype;
+import com.deeptruth.app.android.adapter.adaptermediafilter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -115,8 +115,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     TextView txt_localfiles;
     @BindView(R.id.txt_publishedfiles)
     TextView txt_publishedfiles;
-    @BindView(R.id.medialistoption)
-    RecyclerView recyclerViewmedialistoption;
+    @BindView(R.id.medialistfilteroption)
+    RecyclerView recyclerviewfilteroption;
 
     int selectedlisttype =0,listviewheight=0,dataupdator=0;
     RelativeLayout listlayout;
@@ -129,7 +129,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     ArrayList<video> arraymediaitemlist = new ArrayList<>();
     adaptermedialist adaptermedialistlocal;
     adaptermedialist adaptermedialistpublished;
-    adaptermediaoptionstype adaptermediaoptions;
+    adaptermediafilter adaptermediaoptions;
     private RecyclerTouchListener onTouchListener;
     private static final int request_read_external_storage = 1;
     private BroadcastReceiver medialistitemaddreceiver;
@@ -253,7 +253,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             {
                 LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
                 layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                recyclerViewmedialistoption.setLayoutManager(layoutManager);
+                recyclerviewfilteroption.setLayoutManager(layoutManager);
             }
 
             ((DefaultItemAnimator) recyclerviewlocallist.getItemAnimator()).setSupportsChangeAnimations(false);
@@ -719,243 +719,250 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             @Override
             public void run()
             {
-                databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-                mdbhelper.createDatabase();
-
-                try {
-                    mdbhelper.open();
-                }catch (Exception e)
+                try
                 {
-                    e.printStackTrace();
-                }
+                    databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                    mdbhelper.createDatabase();
 
-                Cursor cursor = mdbhelper.getallmediastartdata();
-                if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
-                {
-                    do{
+                    try {
+                        mdbhelper.open();
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
 
-                        String location = "" + cursor.getString(cursor.getColumnIndex("location"));
-                        String id = "" + cursor.getString(cursor.getColumnIndex("id"));
-                        //String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
-                        String mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
-                        String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
-                        String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
-                        String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
-                        String media_name = "" + cursor.getString(cursor.getColumnIndex("media_name"));
-                        String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
-                        String color = "" + cursor.getString(cursor.getColumnIndex("color"));
-                        String type = "" + cursor.getString(cursor.getColumnIndex("type"));
-                        String header = "" + cursor.getString(cursor.getColumnIndex("header"));
-                        String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
-                        String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
-                        String status = "" + cursor.getString(cursor.getColumnIndex("status"));
-                        String token = "" + cursor.getString(cursor.getColumnIndex("token"));
-                        String mediapublished = "" + cursor.getString(cursor.getColumnIndex("mediapublished"));
+                    Cursor cursor = mdbhelper.getallmediastartdata();
+                    if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
+                    {
+                        do{
 
-                        video videoobject=new video();
-                        if(id.trim().isEmpty() || id.equalsIgnoreCase("null"))
-                            id="0";
+                            String location = "" + cursor.getString(cursor.getColumnIndex("location"));
+                            String id = "" + cursor.getString(cursor.getColumnIndex("id"));
+                            //String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
+                            String mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
+                            String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
+                            String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
+                            String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
+                            String media_name = "" + cursor.getString(cursor.getColumnIndex("media_name"));
+                            String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
+                            String color = "" + cursor.getString(cursor.getColumnIndex("color"));
+                            String type = "" + cursor.getString(cursor.getColumnIndex("type"));
+                            String header = "" + cursor.getString(cursor.getColumnIndex("header"));
+                            String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
+                            String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
+                            String status = "" + cursor.getString(cursor.getColumnIndex("status"));
+                            String token = "" + cursor.getString(cursor.getColumnIndex("token"));
+                            String mediapublished = "" + cursor.getString(cursor.getColumnIndex("mediapublished"));
 
-                        if(! isexistinarraay(mediafilepath))
-                        {
-                            String filesize=common.filesize(mediafilepath);
-                            videoobject.setId(Integer.parseInt(id));
-                            videoobject.setPath(mediafilepath);
-                            videoobject.setmimetype(type);
-                            videoobject.setLocalkey(localkey);
-                            videoobject.setVideostarttransactionid(videostarttransactionid);
-                            videoobject.setThumbnailpath(thumbnailurl);
-                            videoobject.setMediatitle((media_name.trim().isEmpty())?config.no_title:media_name);
-                            videoobject.setMedianotes(media_notes);
-                            videoobject.setMediacolor(color);
-                            videoobject.setfilesize(filesize);
-                            videoobject.setExtension(common.getfileextension(location));
-                            videoobject.setName(common.getfilename(location));
-                            videoobject.setMediastatus(status);
-                            videoobject.setmediapublished((mediapublished.equalsIgnoreCase("1")?true:false));
-                            videoobject.setVideotoken(token);
+                            video videoobject=new video();
+                            if(id.trim().isEmpty() || id.equalsIgnoreCase("null"))
+                                id="0";
 
-                            if(mediaduration.trim().isEmpty() && (! type.equalsIgnoreCase("image")))
+                            if(! isexistinarraay(mediafilepath))
                             {
+                                String filesize=common.filesize(mediafilepath);
+                                videoobject.setId(Integer.parseInt(id));
+                                videoobject.setPath(mediafilepath);
+                                videoobject.setmimetype(type);
+                                videoobject.setLocalkey(localkey);
+                                videoobject.setVideostarttransactionid(videostarttransactionid);
+                                videoobject.setThumbnailpath(thumbnailurl);
+                                videoobject.setMediatitle((media_name.trim().isEmpty())?config.no_title:media_name);
+                                videoobject.setMedianotes(media_notes);
+                                videoobject.setMediacolor(color);
+                                videoobject.setfilesize(filesize);
+                                videoobject.setExtension(common.getfileextension(location));
+                                videoobject.setName(common.getfilename(location));
+                                videoobject.setMediastatus(status);
+                                videoobject.setmediapublished((mediapublished.equalsIgnoreCase("1")?true:false));
+                                videoobject.setVideotoken(token);
+
+                                if(mediaduration.trim().isEmpty() && (! type.equalsIgnoreCase("image")))
+                                {
+                                    try {
+                                        String duration = common.getvideotimefromurl(getActivity(),mediafilepath);
+                                        videoobject.setDuration(duration);
+                                    }catch (Exception e)
+                                    {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else
+                                {
+                                    videoobject.setDuration(mediaduration);
+                                }
+
+                                int gridviewwidth=(arraymediaitemlist.size() % 2) * 100 + 300 + (int) (Math.random() * 300);
+                                videoobject.setGriditemheight(gridviewwidth);
+
                                 try {
-                                    String duration = common.getvideotimefromurl(getActivity(),mediafilepath);
-                                    videoobject.setDuration(duration);
+                                    Date mediadatetime;
+                                    if(! mediastartdevicedate.trim().isEmpty())
+                                    {
+                                        if(mediastartdevicedate.contains("T"))
+                                        {
+                                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                            mediadatetime = format.parse(mediastartdevicedate);
+                                        }
+                                        else
+                                        {
+                                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
+                                            mediadatetime = format.parse(mediastartdevicedate);
+                                        }
+                                        DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+                                        String localTime = datee.format(mediadatetime);
+
+                                        final String filecreateddate = new SimpleDateFormat("MM/dd/yyyy",Locale.ENGLISH).format(mediadatetime);
+                                        final String endtime = new SimpleDateFormat("hh:mm:ss.SS aa",Locale.ENGLISH).format(mediadatetime);
+                                        videoobject.setCreatedate(common.parsedateformat(mediadatetime));
+                                        videoobject.setCreatetime(common.parsetimeformat(mediadatetime)+ " "+localTime );
+                                    }
+
                                 }catch (Exception e)
                                 {
                                     e.printStackTrace();
                                 }
-                            }
-                            else
-                            {
-                                videoobject.setDuration(mediaduration);
-                            }
 
-                            int gridviewwidth=(arraymediaitemlist.size() % 2) * 100 + 300 + (int) (Math.random() * 300);
-                            videoobject.setGriditemheight(gridviewwidth);
-
-                            try {
-                                Date mediadatetime;
-                                if(! mediastartdevicedate.trim().isEmpty())
+                                Cursor cursor2 = mdbhelper.getmediacolor(localkey);
+                                if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
                                 {
-                                    if(mediastartdevicedate.contains("T"))
-                                    {
-                                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                        mediadatetime = format.parse(mediastartdevicedate);
-                                    }
-                                    else
-                                    {
-                                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
-                                        mediadatetime = format.parse(mediastartdevicedate);
-                                    }
-                                    DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
-                                    String localTime = datee.format(mediadatetime);
+                                    LayoutInflater inflater = LayoutInflater.from(applicationviavideocomposer.getactivity());
+                                    View viewparent = inflater.inflate(R.layout.row_mediacolor, null, false);
+                                    LinearLayout layout=(LinearLayout)viewparent.findViewById(R.id.linear_seekbarcolorview);
+                                    ArrayList<String> arrayList=new ArrayList<>();
+                                    int validcount=0,cautioncount=0,unsentcount=0,invalidcount=0;
+                                    String medialocation="";
 
-                                    final String filecreateddate = new SimpleDateFormat("MM/dd/yyyy",Locale.ENGLISH).format(mediadatetime);
-                                    final String endtime = new SimpleDateFormat("hh:mm:ss.SS aa",Locale.ENGLISH).format(mediadatetime);
-                                    videoobject.setCreatedate(common.parsedateformat(mediadatetime));
-                                    videoobject.setCreatetime(common.parsetimeformat(mediadatetime)+ " "+localTime );
-                                }
-
-                            }catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-
-                            Cursor cursor2 = mdbhelper.getmediacolor(localkey);
-                            if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
-                            {
-                                LayoutInflater inflater = LayoutInflater.from(applicationviavideocomposer.getactivity());
-                                View viewparent = inflater.inflate(R.layout.row_mediacolor, null, false);
-                                LinearLayout layout=(LinearLayout)viewparent.findViewById(R.id.linear_seekbarcolorview);
-                                ArrayList<String> arrayList=new ArrayList<>();
-                                int validcount=0,cautioncount=0,unsentcount=0,invalidcount=0;
-                                String medialocation="";
-
-                                do{
-                                    String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
-                                    String metricdata=cursor2.getString(cursor2.getColumnIndex("metricdata"));
-                                    if(medialocation.trim().isEmpty())
-                                        medialocation=common.getlocationfrommetricdata(metricdata);
-
-                                    arrayList.add(framecolor);
-                                    if(framecolor.equalsIgnoreCase(config.color_green))
-                                        validcount++;
-
-                                    if(framecolor.equalsIgnoreCase(config.color_yellow))
-                                        cautioncount++;
-
-                                    if(framecolor.equalsIgnoreCase(config.color_red))
-                                        invalidcount++;
-
-                                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                                    {
-                                        if(framecolor.trim().isEmpty())
-                                            unsentcount++;
-                                    }
-
-                                }while (cursor2.moveToNext());
-
-                                int sectioncount=0,lastsequenceno=0,syncedframes=0,totalframes=0;
-                                String lastcolor="",strsequenceno="";
-                                ArrayList<String> colorsectioncount=new ArrayList<>();
-
-                                if(validcount != videoobject.getValidcount() || cautioncount != videoobject.getCautioncount()
-                                        || unsentcount != videoobject.getUnsentcount())
-                                {
-                                    cursor2.moveToFirst();
                                     do{
                                         String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
-                                        strsequenceno=cursor2.getString(cursor2.getColumnIndex("sequenceno"));
+                                        String metricdata=cursor2.getString(cursor2.getColumnIndex("metricdata"));
+                                        if(medialocation.trim().isEmpty())
+                                            medialocation=common.getlocationfrommetricdata(metricdata);
 
-                                        sectioncount++;
-                                        if(framecolor.trim().isEmpty())
-                                            framecolor=config.color_transparent;
+                                        arrayList.add(framecolor);
+                                        if(framecolor.equalsIgnoreCase(config.color_green))
+                                            validcount++;
 
-                                        if(! lastcolor.equalsIgnoreCase(framecolor))
+                                        if(framecolor.equalsIgnoreCase(config.color_yellow))
+                                            cautioncount++;
+
+                                        if(framecolor.equalsIgnoreCase(config.color_red))
+                                            invalidcount++;
+
+                                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
                                         {
-                                            sectioncount=0;
-                                            sectioncount++;
-                                            colorsectioncount.add(framecolor+","+sectioncount);
+                                            if(framecolor.trim().isEmpty())
+                                                unsentcount++;
                                         }
-                                        else
-                                        {
-                                            colorsectioncount.set(colorsectioncount.size()-1,framecolor+","+sectioncount);
-                                        }
-                                        lastcolor=framecolor;
-
-                                        if(! strsequenceno.trim().isEmpty())
-                                        {
-                                            if(! framecolor.equalsIgnoreCase(config.color_transparent))
-                                            {
-                                                int sequenceno=Integer.parseInt(strsequenceno);
-                                                int sequencecount=sequenceno-lastsequenceno;
-
-                                                syncedframes=syncedframes+sequencecount;
-                                                lastsequenceno=sequenceno;
-                                            }
-                                            totalframes=Integer.parseInt(strsequenceno);
-                                        }
-
 
                                     }while (cursor2.moveToNext());
+
+                                    int sectioncount=0,lastsequenceno=0,syncedframes=0,totalframes=0;
+                                    String lastcolor="",strsequenceno="";
+                                    ArrayList<String> colorsectioncount=new ArrayList<>();
+
+                                    if(validcount != videoobject.getValidcount() || cautioncount != videoobject.getCautioncount()
+                                            || unsentcount != videoobject.getUnsentcount())
+                                    {
+                                        cursor2.moveToFirst();
+                                        do{
+                                            String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
+                                            strsequenceno=cursor2.getString(cursor2.getColumnIndex("sequenceno"));
+
+                                            sectioncount++;
+                                            if(framecolor.trim().isEmpty())
+                                                framecolor=config.color_transparent;
+
+                                            if(! lastcolor.equalsIgnoreCase(framecolor))
+                                            {
+                                                sectioncount=0;
+                                                sectioncount++;
+                                                colorsectioncount.add(framecolor+","+sectioncount);
+                                            }
+                                            else
+                                            {
+                                                colorsectioncount.set(colorsectioncount.size()-1,framecolor+","+sectioncount);
+                                            }
+                                            lastcolor=framecolor;
+
+                                            if(! strsequenceno.trim().isEmpty())
+                                            {
+                                                if(! framecolor.equalsIgnoreCase(config.color_transparent))
+                                                {
+                                                    int sequenceno=Integer.parseInt(strsequenceno);
+                                                    int sequencecount=sequenceno-lastsequenceno;
+
+                                                    syncedframes=syncedframes+sequencecount;
+                                                    lastsequenceno=sequenceno;
+                                                }
+                                                totalframes=Integer.parseInt(strsequenceno);
+                                            }
+
+
+                                        }while (cursor2.moveToNext());
+                                    }
+
+                                    videoobject.setFrameuploadstatus("");
+                                    if(totalframes > 0)
+                                        videoobject.setFrameuploadstatus("Frames : "+syncedframes+"/"+totalframes);
+
+                                    videoobject.setColorsectionsarray(colorsectioncount);
+                                    videoobject.setMediabarcolor(arrayList);
+                                    videoobject.setMedialocation(medialocation);
+                                    videoobject.setValidcount(validcount);
+                                    videoobject.setCautioncount(cautioncount);
+                                    videoobject.setInvalidcount(invalidcount);
+                                    videoobject.setUnsentcount(unsentcount);
                                 }
 
-                                videoobject.setFrameuploadstatus("");
-                                if(totalframes > 0)
-                                    videoobject.setFrameuploadstatus("Frames : "+syncedframes+"/"+totalframes);
-
-                                videoobject.setColorsectionsarray(colorsectioncount);
-                                videoobject.setMediabarcolor(arrayList);
-                                videoobject.setMedialocation(medialocation);
-                                videoobject.setValidcount(validcount);
-                                videoobject.setCautioncount(cautioncount);
-                                videoobject.setInvalidcount(invalidcount);
-                                videoobject.setUnsentcount(unsentcount);
+                                File file=new File(mediafilepath);
+                                if(file.exists())
+                                    arraymediaitemlist.add(videoobject);
                             }
-
-                            File file=new File(mediafilepath);
-                            if(file.exists())
-                                arraymediaitemlist.add(videoobject);
-                        }
-                    }while(cursor.moveToNext());
-                }
-
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        Collections.sort( arraymediaitemlist, new Comparator()
-                        {
-                            public int compare(Object o1, Object o2) {
-                                if (((video)o1).getId() > ((video)o2).getId()) {
-                                    return -1;
-                                } else if (((video)o1).getId() < ((video)o2).getId()) {
-                                    return +1;
-                                } else {
-                                    return 0;
-                                }
-                            }
-                        });
-
-                        setmediaadapter();
-                        if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
-                        {
-                            if(adaptermedialistlocal != null && arraymediaitemlist.size() > 0)
-                                adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
-
-                            if(adaptermedialistpublished != null && arraymediaitemlist.size() > 0)
-                                adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
-                        }
+                        }while(cursor.moveToNext());
                     }
-                });
 
-                try
-                {
-                    mdbhelper.close();
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Collections.sort( arraymediaitemlist, new Comparator()
+                            {
+                                public int compare(Object o1, Object o2) {
+                                    if (((video)o1).getId() > ((video)o2).getId()) {
+                                        return -1;
+                                    } else if (((video)o1).getId() < ((video)o2).getId()) {
+                                        return +1;
+                                    } else {
+                                        return 0;
+                                    }
+                                }
+                            });
+
+                            setmediaadapter();
+                            if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
+                            {
+                                if(adaptermedialistlocal != null && arraymediaitemlist.size() > 0)
+                                    adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
+
+                                if(adaptermedialistpublished != null && arraymediaitemlist.size() > 0)
+                                    adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
+                            }
+                        }
+                    });
+
+                    try
+                    {
+                        mdbhelper.close();
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 }catch (Exception e)
                 {
                     e.printStackTrace();
                 }
+
             }
         }).start();
     }
@@ -1000,19 +1007,25 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
                 if(adaptermediaoptions == null)
                 {
-                    Log.e("medialistoptions",""+arraylistmediatypeoptions);
-                    adaptermediaoptions = new adaptermediaoptionstype(getActivity(), arraylistmediatypeoptions, new adapteritemclick() {
+                    recyclerviewfilteroption.post(new Runnable() {
                         @Override
-                        public void onItemClicked(Object object) {
-                        }
-                        @Override
-                        public void onItemClicked(Object object, int type) {
-                            video videoobj=(video)object;
-                            setAdapter(videoobj,type);
-                        }
+                        public void run() {
+                            Log.e("medialistoptions",""+arraylistmediatypeoptions);
+                            adaptermediaoptions = new adaptermediafilter(getActivity(), arraylistmediatypeoptions, new adapteritemclick() {
+                                @Override
+                                public void onItemClicked(Object object) {
+                                }
+                                @Override
+                                public void onItemClicked(Object object, int type) {
+                                    video videoobj=(video)object;
+                                    setAdapter(videoobj,type);
+                                }
 
+                            },recyclerviewfilteroption.getWidth());
+                            recyclerviewfilteroption.setAdapter(adaptermediaoptions);
+                        }
                     });
-                    recyclerViewmedialistoption.setAdapter(adaptermediaoptions);
+
                 }
 
                 showselectedmediatypeitems(true);
@@ -1596,6 +1609,60 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public  void uploadmediafromgallery()
     {
+        final CharSequence[] items = {"Image", "Video", "Audio"};
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(applicationviavideocomposer.getactivity());
+        builder.setTitle("Upload Media!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                Intent intent = null;
+                String type = null;
+
+                if (items[item].equals("Image"))
+                {
+                    if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+                    {
+                        intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        type="image/*";
+                    }
+                    else
+                    {
+                        intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                        type="image/*";
+                    }
+                } else if (items[item].equals("Video"))
+                {
+                    if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+                    {
+                        intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                        type="video/*";
+                    }
+                    else
+                    {
+                        intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+                        type="video/*";
+                    }
+                }else if (items[item].equals("Audio"))
+                {
+                    if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+                    {
+                        intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                        type="audio/*";
+                    }
+                    else
+                    {
+                        intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
+                        type="audio/*";
+                    }
+                }
+
+                fireintentforupload(intent,type);
+            }
+        });
+        builder.show();
+
         /*Intent intent = null;
         String type = null;
 
@@ -1632,6 +1699,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             intent.putExtra("return-data", true);
             startActivityForResult(intent,REQUESTCODE_PICK);
         }*/
+    }
+
+    public void fireintentforupload(Intent intent,String type)
+    {
+        if(type!=null || applicationviavideocomposer.getactivity() !=null){
+            intent.setType(type);
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.putExtra("return-data", true);
+            startActivityForResult(intent,REQUESTCODE_PICK);
+        }
     }
 
     public void copymediafromgallery(final String selectedmediafile){

@@ -1481,7 +1481,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         rl_video_downwordarrow.setVisibility(View.GONE);
         backgroundcolor();
         islastdragarrow =false;
-        if(player.isPlaying()){
+        if(player != null && player.isPlaying()){
             img_fullscreen.setVisibility(View.GONE);
             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
             layoutpause.setVisibility(View.VISIBLE);
