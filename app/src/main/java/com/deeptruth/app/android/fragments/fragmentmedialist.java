@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -1608,6 +1609,60 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public  void uploadmediafromgallery()
     {
+        final CharSequence[] items = {"Image", "Video", "Audio"};
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(applicationviavideocomposer.getactivity());
+        builder.setTitle("Upload Media!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                Intent intent = null;
+                String type = null;
+
+                if (items[item].equals("Image"))
+                {
+                    if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+                    {
+                        intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        type="image/*";
+                    }
+                    else
+                    {
+                        intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                        type="image/*";
+                    }
+                } else if (items[item].equals("Video"))
+                {
+                    if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+                    {
+                        intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                        type="video/*";
+                    }
+                    else
+                    {
+                        intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+                        type="video/*";
+                    }
+                }else if (items[item].equals("Audio"))
+                {
+                    if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+                    {
+                        intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                        type="audio/*";
+                    }
+                    else
+                    {
+                        intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
+                        type="audio/*";
+                    }
+                }
+
+                fireintentforupload(intent,type);
+            }
+        });
+        builder.show();
+
         /*Intent intent = null;
         String type = null;
 
@@ -1644,6 +1699,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             intent.putExtra("return-data", true);
             startActivityForResult(intent,REQUESTCODE_PICK);
         }*/
+    }
+
+    public void fireintentforupload(Intent intent,String type)
+    {
+        if(type!=null || applicationviavideocomposer.getactivity() !=null){
+            intent.setType(type);
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.putExtra("return-data", true);
+            startActivityForResult(intent,REQUESTCODE_PICK);
+        }
     }
 
     public void copymediafromgallery(final String selectedmediafile){
