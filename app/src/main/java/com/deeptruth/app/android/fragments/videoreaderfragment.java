@@ -2409,12 +2409,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             }
                             layout_gps.setVisibility(View.VISIBLE);
                             layout_validating.setVisibility(View.VISIBLE);
-                            txt_gps_low_quality.setText(getResources().getString(R.string.gps_low_quality));
-
-
-                            if(colorreason.contains("GPS"))
+                            if(colorreason.contains("GPS")){
+                                txt_gps_low_quality.setText(getResources().getString(R.string.gps_low_quality));
                                 txt_gpsquality.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.gps_low_quality));
-
+                            }
                             txt_gpsquality.setVisibility(View.VISIBLE);
 
                             break;
