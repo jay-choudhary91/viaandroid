@@ -262,8 +262,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             recyclerviewpublishedlist.setOnClickListener(this);
 
             img_camera.setVisibility(View.VISIBLE);
-            img_folder.setVisibility(View.VISIBLE);
-            img_header_search.setVisibility(View.VISIBLE);
+            img_folder.setVisibility(View.GONE);
+            img_header_search.setVisibility(View.GONE);
 
             File folder = new File(xdata.getinstance().getSetting(config.selected_folder));
             txt_title_actionbarcomposer.setText(folder.getName());
@@ -362,6 +362,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     shouldnavigatelist=true;
+                    dataupdator = 6;
                     requestpermissions();
                 }
             };
@@ -1043,6 +1044,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             localarray.add(arraymediaitemlist.get(i));
         }*/
+
+        boolean needtoshiftitem=false;
         Cursor cursor = mdbhelper.getallmediastartdata();
         if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
         {
@@ -1069,10 +1072,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         arraymediaitemlist.get(i).setVideostarttransactionid(videostarttransactionid);
                         arraymediaitemlist.get(i).setThumbnailpath(thumbnailurl);
                         arraymediaitemlist.get(i).setMediacolor(color);
-                        arraymediaitemlist.get(i).setmediapublished((mediapublished.equalsIgnoreCase("1")?true:false));
                         arraymediaitemlist.get(i).setLocalkey(localkey);
                         arraymediaitemlist.get(i).setMediastatus(status);
                         arraymediaitemlist.get(i).setVideotoken(token);
+
+                        if(! arraymediaitemlist.get(i).ismediapublished() && mediapublished.equalsIgnoreCase("1"))
+                            needtoshiftitem=true;
+
+                        arraymediaitemlist.get(i).setmediapublished((mediapublished.equalsIgnoreCase("1")?true:false));
 
                         String title=(media_name.trim().isEmpty())?config.no_title:media_name;
                         if((! arraymediaitemlist.get(i).getMediatitle().equalsIgnoreCase(title)) || (! arraymediaitemlist.get(i).getMedianotes().equalsIgnoreCase(media_notes)))
@@ -1202,6 +1209,15 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
 
             }while(cursor.moveToNext());
+        }
+
+        if(needtoshiftitem)
+        {
+            if(adaptermedialistlocal != null)
+                adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
+
+            if(adaptermedialistpublished != null)
+                adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
         }
 
         try

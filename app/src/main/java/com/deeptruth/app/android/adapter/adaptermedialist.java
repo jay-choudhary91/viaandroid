@@ -413,7 +413,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         });
 
         double parentheight=listviewheight;
-        parentheight=parentheight/4.4;
+        parentheight=parentheight/4.2;
         holder.root_view.getLayoutParams().height = (int)parentheight;
 
         /*if(mediaobject.isDoenable())

@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:id="@+id/layout_share_slide"
                 android:background="@drawable/img_swipeshare"
                 android:layout_height="match_parent">
@@ -60,6 +60,7 @@
                 android:layout_width="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
+                android:visibility="gone"
                 android:id="@+id/layout_folder_slide"
                 android:layout_gravity="center"
                 android:background="@drawable/img_swipedelete"
