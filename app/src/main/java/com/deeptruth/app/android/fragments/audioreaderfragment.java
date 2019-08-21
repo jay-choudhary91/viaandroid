@@ -1115,9 +1115,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
-        destroyvideoplayer();
+
     }
 
     public void destroyvideoplayer()
@@ -1511,6 +1509,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onStop() {
         super.onStop();
+
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        destroyvideoplayer();
     }
 
     public void getmediastartinfo()
