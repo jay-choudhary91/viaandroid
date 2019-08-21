@@ -268,6 +268,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     ImageView videodownwordarrow;
     @BindView(R.id.img_colapseicon)
     ImageView img_colapseicon;
+    @BindView(R.id.layout_gps)
+    LinearLayout layout_gps;
+    @BindView(R.id.txt_gps_low_quality)
+    TextView txt_gps_low_quality;
+    @BindView(R.id.img_gps)
+    ImageView img_gps;
 
     @BindView(R.id.rl_video_downwordarrow)
     RelativeLayout rl_video_downwordarrow;
@@ -341,6 +347,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             ButterKnife.bind(this, rootview);
 
             txt_section_validating_secondary.setVisibility(View.INVISIBLE);
+            txt_gps_low_quality.setVisibility(View.INVISIBLE);
+            img_gps.setVisibility(View.INVISIBLE);
             //setheadermargin();
             navigationbarheight =  common.getnavigationbarheight();
 
@@ -805,6 +813,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         txt_section_validating_secondary.startAnimation(fadeout_animation);
+                        txt_gps_low_quality.startAnimation(fadeout_animation);
+                        img_gps.startAnimation(fadeout_animation);
                         //fadeoutcontrollers();
                     }
                     @Override
@@ -821,6 +831,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         txt_section_validating_secondary.startAnimation(alphanimation);
+                        txt_gps_low_quality.startAnimation(alphanimation);
+                        img_gps.startAnimation(alphanimation);
                         //fadeoutcontrollers();
                     }
                     @Override
@@ -840,6 +852,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     @Override
                     public void onAnimationStart(Animation animation) {
                         txt_section_validating_secondary.startAnimation(alphanimation);
+                        txt_gps_low_quality.startAnimation(alphanimation);
+                        img_gps.startAnimation(alphanimation);
                     }
                     @Override
                     public void onAnimationEnd(Animation animation) {
@@ -2336,6 +2350,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
                         color = arraycontainerformetric.getColor();
 
+                    layout_gps.setVisibility(View.INVISIBLE);
+
                     switch (color) {
                         case "green":
                             txt_section_validating_secondary.setText(config.validating);
@@ -2373,7 +2389,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 e.printStackTrace();
                             }
+                            layout_gps.setVisibility(View.VISIBLE);
                             layout_validating.setVisibility(View.VISIBLE);
+                            txt_gps_low_quality.setText(getResources().getString(R.string.gps_low_quality));
 
                             break;
                     }
