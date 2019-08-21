@@ -53,6 +53,7 @@ import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.adapter.adapterbuttontrim;
 import com.deeptruth.app.android.adapter.adaptersenddialog;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
@@ -1086,7 +1087,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         }
                         else if(! shareurl.trim().isEmpty())
                         {
+                            updatemediapublishedstatus(mediatoken);
                             common.sharemessagewithapps(shareurl);
+                            medialistitemaddbroadcast();
                         }
 
                         if(object.has("message"))
@@ -1141,8 +1144,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             subdialogshare.dismiss();
 
                         if(! shareurl.trim().isEmpty())
+                        {
+                            updatemediapublishedstatus(mediatoken);
                             common.sharemessagewithapps(shareurl);
-
+                            medialistitemaddbroadcast();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -1150,6 +1156,37 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
     }
+
+    public void medialistitemaddbroadcast()
+    {
+        Intent intent = new Intent(config.broadcast_medialistnewitem);
+        applicationviavideocomposer.getactivity().sendBroadcast(intent);
+    }
+
+    public void updatemediapublishedstatus(String mediatoken)
+    {
+        try
+        {
+            databasemanager mdbhelper = new databasemanager(baseactivity.this);
+            mdbhelper.createDatabase();
+            try
+            {
+                mdbhelper.open();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                mdbhelper.updatepublishmediastatus(mediatoken);
+                mdbhelper.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     public void callsharapiafterlogin()
     {
