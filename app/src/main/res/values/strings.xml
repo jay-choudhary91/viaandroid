@@ -19,6 +19,8 @@
     <string name="complete">Complete</string>
     <string name="cancel">Cancel</string>
     <string name="synced_media">Synced Media</string>
+    <string name="local_files">Local Files</string>
+    <string name="published_files">Published Files</string>
     <string name="asynced_media">Asynced Media</string>
     <string name="please_enter_title">Please enter title or description</string>
     <string name="invalid_empty_mediaid">Invalid or empty media id!</string>
