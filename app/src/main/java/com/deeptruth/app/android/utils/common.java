@@ -1642,7 +1642,6 @@ public class common {
 
         long longuptime=Long.parseLong(uptime);
 
-        Log.e("Uptimesystem ",""+longuptime);
         String time = "";
         String wholeUptime = "";
 
