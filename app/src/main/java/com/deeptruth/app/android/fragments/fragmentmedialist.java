@@ -1,9 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,27 +9,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -51,11 +43,9 @@ import android.widget.Toast;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
-import com.deeptruth.app.android.adapter.adaptermediagrid;
 import com.deeptruth.app.android.adapter.adaptermedialist;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
-import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
 import com.deeptruth.app.android.models.video;
@@ -84,7 +74,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by ${matraex} on 6/8/18.
@@ -92,22 +81,14 @@ import static android.content.ContentValues.TAG;
 
 public class fragmentmedialist extends basefragment implements View.OnClickListener, View.OnTouchListener {
 
-    @BindView(R.id.rv_medialist_list)
-    RecyclerView recyclerviewlist;
-    @BindView(R.id.rv_medialist_grid)
-    RecyclerView recyclerviewgrid;
-    @BindView(R.id.lay_gridstyle)
-    RelativeLayout lay_gridstyle;
-    @BindView(R.id.lay_liststyle)
-    RelativeLayout lay_liststyle;
+    @BindView(R.id.rv_medialist_local)
+    RecyclerView recyclerviewlocallist;
+    @BindView(R.id.rv_medialist_published)
+    RecyclerView recyclerviewpublishedlist;
     @BindView(R.id.layout_sectionsearch)
     RelativeLayout layout_sectionsearch;
-
-    @BindView(R.id.layout_mediatype)
-    RelativeLayout layout_mediatype;
     @BindView(R.id.actionbarcomposer)
     RelativeLayout actionbarcomposer;
-
     @BindView(R.id.img_dotmenu)
     ImageView img_dotmenu;
     @BindView(R.id.img_settings)
@@ -116,7 +97,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     TextView txt_searchcancel;
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
-
     @BindView(R.id.edt_searchitem)
     EditText edt_searchitem;
     @BindView(R.id.img_camera)
@@ -129,25 +109,22 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     ImageView img_header_search;
     @BindView(R.id.img_search_editicon)
     ImageView img_search_editicon;
-    @BindView(R.id.btn_gallerylist)
-    ImageView btn_gallerylist;
-    @BindView(R.id.btn_gridlist)
-    ImageView btn_gridlist;
-    @BindView(R.id.viewpager)
-    ViewPager pagermediatype;
+    @BindView(R.id.txt_localfiles)
+    TextView txt_localfiles;
+    @BindView(R.id.txt_publishedfiles)
+    TextView txt_publishedfiles;
 
-    int selectedstyletype=1,selectedmediatype=-1,listviewheight=0,dataupdator=0;
+    int selectedlisttype =0,listviewheight=0,dataupdator=0;
     RelativeLayout listlayout;
     private Handler myhandler;
     private Runnable myrunnable;
     boolean isinbackground=false;
     boolean shouldlaunchcomposer=true;
-
     View rootview = null;
     private static final int request_permissions = 1;
     ArrayList<video> arraymediaitemlist = new ArrayList<>();
-    adaptermedialist adaptermedialist;
-    adaptermediagrid adaptermediagrid;
+    adaptermedialist adaptermedialistlocal;
+    adaptermedialist adaptermedialistpublished;
     private RecyclerTouchListener onTouchListener;
     private static final int request_read_external_storage = 1;
     private BroadcastReceiver medialistitemaddreceiver;
@@ -158,7 +135,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     long lastTapTimeMs = 0;
     long touchDownMs = 0;
     boolean iskeyboardopen = false,shouldnavigatelist=true;
-    private static final int  RC_OVERLAY=21;
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_medialist;
@@ -235,13 +212,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }
             if (permissionsallgranted) {
                 arraymediaitemlist.clear();
-                if(adaptermediagrid != null)
-                    adaptermediagrid.notifyDataSetChanged();
 
-                if(adaptermedialist != null)
-                    adaptermedialist.notifyDataSetChanged();
+                if(adaptermedialistpublished != null)
+                    adaptermedialistpublished.notifyDataSetChanged();
 
-                showselectedmediatypeitems(selectedmediatype,true);
+                if(adaptermedialistlocal != null)
+                    adaptermedialistlocal.notifyDataSetChanged();
+
+                showselectedmediatypeitems(true);
                 fetchmedialistfromdirectory();
             }
         }
@@ -256,16 +234,22 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
            // setheadermargin();
 
             gethelper().drawerenabledisable(false);
+            {
+                LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerviewlocallist.setLayoutManager(layoutManager);
+            }
+            {
+                LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerviewpublishedlist.setLayoutManager(layoutManager);
+            }
 
-            LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
-            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerviewlist.setLayoutManager(layoutManager);
-            ((DefaultItemAnimator) recyclerviewlist.getItemAnimator()).setSupportsChangeAnimations(false);
-            recyclerviewlist.getItemAnimator().setChangeDuration(0);
-            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
-            lay_gridstyle.setOnClickListener(this);
-            lay_liststyle.setOnClickListener(this);
+            ((DefaultItemAnimator) recyclerviewlocallist.getItemAnimator()).setSupportsChangeAnimations(false);
+            recyclerviewlocallist.getItemAnimator().setChangeDuration(0);
+
+            txt_localfiles.setOnClickListener(this);
+            txt_publishedfiles.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
             img_camera.setOnClickListener(this);
             img_folder.setOnClickListener(this);
@@ -274,8 +258,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             txt_searchcancel.setOnClickListener(this);
             img_uploadmedia.setOnClickListener(this);
             listlayout.setOnClickListener(this);
-            recyclerviewlist.setOnClickListener(this);
-            recyclerviewgrid.setOnClickListener(this);
+            recyclerviewlocallist.setOnClickListener(this);
+            recyclerviewpublishedlist.setOnClickListener(this);
 
             img_camera.setVisibility(View.VISIBLE);
             img_folder.setVisibility(View.VISIBLE);
@@ -284,22 +268,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             File folder = new File(xdata.getinstance().getSetting(config.selected_folder));
             txt_title_actionbarcomposer.setText(folder.getName());
             navigationbarheight =  common.getnavigationbarheight();
-
-            try {
-                DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_bg));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            try {
-                DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_blue_bg));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
 
             try {
                 DrawableCompat.setTint(img_header_search.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
@@ -319,7 +287,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             setfooterlayout(true);
 
-            onTouchListener = new RecyclerTouchListener(applicationviavideocomposer.getactivity(), recyclerviewlist);
+            onTouchListener = new RecyclerTouchListener(applicationviavideocomposer.getactivity(), recyclerviewlocallist);
             onTouchListener.setSwipeOptionViews(R.id.img_slide_delete).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
             new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                 @Override
@@ -360,14 +328,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             });
 
-            recyclerviewgrid.setVisibility(View.VISIBLE);
-            recyclerviewgrid.setNestedScrollingEnabled(false);
-            recyclerviewlist.setNestedScrollingEnabled(false);
-            RecyclerView.LayoutManager mLayoutManager=new GridLayoutManager(getActivity(), 2);
-            recyclerviewgrid.setLayoutManager(mLayoutManager);
-
             devicewidth=common.getScreenWidth(applicationviavideocomposer.getactivity());
-            pagermediatype.setAdapter(new CustomPagerAdapter(applicationviavideocomposer.getactivity()));
+
+            showselectedmediatypeitems(true);
+
+            /*pagermediatype.setAdapter(new CustomPagerAdapter(applicationviavideocomposer.getactivity()));
             pagermediatype.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -390,14 +355,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 public void onPageScrollStateChanged(int state) {
 
                 }
-            });
+            });*/
 
-            layout_mediatype.setOnTouchListener(this);
             IntentFilter intentFilter = new IntentFilter(config.broadcast_medialistnewitem);
             medialistitemaddreceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    //selectedstyletype=2;
                     shouldnavigatelist=true;
                     requestpermissions();
                 }
@@ -442,10 +405,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     }
                 }
                 //calling a method of the adapter class and passing the filtered list
-                if(adaptermediagrid != null && adaptermedialist != null)
+                if(adaptermedialistpublished != null && adaptermedialistlocal != null)
                 {
-                    adaptermediagrid.filterlist(filterdnames);
-                    adaptermedialist.filterlist(filterdnames);
+                    adaptermedialistpublished.filterlist(filterdnames);
+                    adaptermedialistlocal.filterlist(filterdnames);
                 }
             }
             else
@@ -499,55 +462,21 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     {
         if(visiblelist)
         {
-            selectedstyletype=2;
-            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
-            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-            recyclerviewlist.setVisibility(View.VISIBLE);
-            recyclerviewgrid.setVisibility(View.GONE);
+            selectedlisttype =0;
+            recyclerviewlocallist.setVisibility(View.VISIBLE);
+            recyclerviewpublishedlist.setVisibility(View.GONE);
 
-            if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                adaptermedialist.notifyitems(arraymediaitemlist);
-            try {
-                DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_bg));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            try {
-                DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_blue_bg));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            if(adaptermedialistlocal != null && arraymediaitemlist.size() > 0)
+                adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
         }
         else
         {
-            selectedstyletype=1;
-            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
-            recyclerviewlist.setVisibility(View.GONE);
-            recyclerviewgrid.setVisibility(View.VISIBLE);
+            selectedlisttype =1;
+            recyclerviewlocallist.setVisibility(View.GONE);
+            recyclerviewpublishedlist.setVisibility(View.VISIBLE);
 
-            if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
-                adaptermediagrid.notifyDataSetChanged();
-            try {
-                DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_bg));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            try {
-                DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.img_blue_bg));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            if(adaptermedialistpublished != null && arraymediaitemlist.size() > 0)
+                adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
         }
     }
 
@@ -555,13 +484,21 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId())
         {
-            case R.id.lay_gridstyle:
-                //shouldshowlist(false);
-                showlistitemsvisible(false);
+            case R.id.txt_localfiles:
+                selectedlisttype=0;
+                txt_localfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
+                        getColor(R.color.blue_item_selected));
+                txt_publishedfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
+                        getColor(R.color.blue_item_deselected));
+                showselectedmediatypeitems(true);
                 break;
-            case R.id.lay_liststyle:
-               // shouldshowlist(true);
-                showlistitemsvisible(true);
+            case R.id.txt_publishedfiles:
+                selectedlisttype=1;
+                txt_publishedfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
+                        getColor(R.color.blue_item_selected));
+                txt_localfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
+                        getColor(R.color.blue_item_deselected));
+                showselectedmediatypeitems(true);
                 break;
             case R.id.img_camera:
                 launchbottombarfragment();
@@ -618,11 +555,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         try
         {
             arraymediaitemlist.clear();
-            if(adaptermediagrid != null)
-                adaptermediagrid.notifyDataSetChanged();
+            if(adaptermedialistpublished != null)
+                adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
 
-            if(adaptermedialist != null)
-                adaptermedialist.notifyitems(arraymediaitemlist);
+            if(adaptermedialistlocal != null)
+                adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
 
             fetchmedialistfromdirectory();
 
@@ -632,117 +569,21 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
     }
 
-    public void showselectedmediatypeitems(int mediatype,boolean scrolllisttotop)
+    public void showselectedmediatypeitems(boolean scrolllisttotop)
     {
-        selectedmediatype=mediatype;
-        config.selectedmediatype=selectedmediatype;
+        setsearchbar();
 
-        String checkitem="";
-        if(selectedmediatype == 0)
+        if(adaptermedialistlocal != null && adaptermedialistpublished != null)
         {
-            checkitem="image";
-            layout_sectionsearch.setVisibility(View.GONE);
-            setsearchbar();
-        }
-        else if(selectedmediatype == 1)
-        {
-            checkitem="video";
-            layout_sectionsearch.setVisibility(View.GONE);
-            setsearchbar();
-        }
-        else if(selectedmediatype == 2)
-        {
-            checkitem="audio";
-            layout_sectionsearch.setVisibility(View.GONE);
-            setsearchbar();
-        }
-        int audiocount=0,videocount=0,imagecount=0;
-        for(int i = 0; i< arraymediaitemlist.size(); i++)
-        {
-            arraymediaitemlist.get(i).setDoenable(false);
-            if(arraymediaitemlist.get(i).getmimetype().startsWith("image"))
-            {
-                imagecount++;
-            }
-            else if(arraymediaitemlist.get(i).getmimetype().startsWith("video"))
-            {
-                videocount++;
-            }
-            else if(arraymediaitemlist.get(i).getmimetype().startsWith("audio"))
-            {
-                audiocount++;
-            }
-            if(arraymediaitemlist.get(i).getmimetype().contains(checkitem))
-                arraymediaitemlist.get(i).setDoenable(true);
-        }
-
-        String countaudio="",countvideo="",countimage="";
-        if(videocount > 0)
-            countvideo=" ("+videocount+")";
-
-        if(imagecount > 0)
-            countimage=" ("+imagecount+")";
-
-        if(audiocount > 0)
-            countaudio=" ("+audiocount+")";
-
-        if(mediatype == 0)
-            mediatype=2;
-        else if(mediatype == 1)
-            mediatype=3;
-        else if(mediatype == 2)
-            mediatype=4;
-
-        for(int i = 0; i<= mediatypepagerenum.values().length; i++)
-        {
-            if(pagermediatype != null)
-            {
-                View view= pagermediatype.getChildAt(i);
-                if(view != null)
-                {
-                    TextView txt_mediatype=(TextView)view.findViewById(R.id.txt_mediatype);
-                    if(i == 2)
-                        txt_mediatype.setText(config.item_photo+countimage);
-                    if(i == 3)
-                         txt_mediatype.setText(config.item_video+countvideo);
-                    if(i == 4)
-                        txt_mediatype.setText(config.item_audio+countaudio);
-
-                    if(mediatype == i)
-                    {
-                        txt_mediatype.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
-                        txt_mediatype.setTextSize(12f);
-                    }
-                    else
-                    {
-                        txt_mediatype.setTypeface(applicationviavideocomposer.regularfonttype, Typeface.NORMAL);
-                        txt_mediatype.setTextSize(12f);
-                    }
-                }
-            }
-        }
-
-        if(adaptermedialist != null && adaptermediagrid != null)
-        {
-            adaptermedialist.notifyitems(arraymediaitemlist);
-            if(arraymediaitemlist.size()==1){
-                RecyclerView.LayoutManager mLayoutManager=new GridLayoutManager(getActivity(), 2);
-                recyclerviewgrid.setLayoutManager(mLayoutManager);
-            }else{
-                RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                recyclerviewgrid.setLayoutManager(mLayoutManager);
-            }
-
-            if(adaptermediagrid != null)
-                adaptermediagrid.notifyDataSetChanged();
+            adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
+            adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
 
             if(scrolllisttotop)
-                recyclerviewgrid.smoothScrollToPosition(0);
+                recyclerviewpublishedlist.smoothScrollToPosition(0);
+
+            if(scrolllisttotop)
+                recyclerviewlocallist.smoothScrollToPosition(0);
         }
-        /*if(selectedstyletype == 1)
-            shouldshowlist(false);
-        else
-            shouldshowlist(true);*/
     }
 
     public void showfolderdialog(final String sourcefilepath)
@@ -880,6 +721,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
                         String status = "" + cursor.getString(cursor.getColumnIndex("status"));
                         String token = "" + cursor.getString(cursor.getColumnIndex("token"));
+                        String mediapublished = "" + cursor.getString(cursor.getColumnIndex("mediapublished"));
 
                         video videoobject=new video();
                         if(id.trim().isEmpty() || id.equalsIgnoreCase("null"))
@@ -899,7 +741,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             videoobject.setExtension(common.getfileextension(location));
                             videoobject.setName(common.getfilename(location));
                             videoobject.setMediastatus(status);
-                            videoobject.setDoenable(false);
+                            videoobject.setmediapublished((mediapublished.equalsIgnoreCase("1")?true:false));
                             videoobject.setVideotoken(token);
 
                             if(mediaduration.trim().isEmpty() && (! type.equalsIgnoreCase("image")))
@@ -1063,11 +905,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         setmediaadapter();
                         if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
                         {
-                            if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                                adaptermedialist.notifyitems(arraymediaitemlist);
+                            if(adaptermedialistlocal != null && arraymediaitemlist.size() > 0)
+                                adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
 
-                            if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
-                                adaptermediagrid.notifyDataSetChanged();
+                            if(adaptermedialistpublished != null && arraymediaitemlist.size() > 0)
+                                adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
                         }
                     }
                 });
@@ -1085,14 +927,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void setmediaadapter()
     {
-        recyclerviewgrid.post(new Runnable() {
+        recyclerviewpublishedlist.post(new Runnable() {
             @Override
             public void run() {
 
-                listviewheight=recyclerviewgrid.getHeight();
-                if(adaptermedialist == null)
+                listviewheight= recyclerviewpublishedlist.getHeight();
+                if(adaptermedialistlocal == null)
                 {
-                    adaptermedialist = new adaptermedialist(getActivity(), arraymediaitemlist, new adapteritemclick() {
+                    adaptermedialistlocal = new adaptermedialist(getActivity(), arraymediaitemlist, new adapteritemclick() {
                         @Override
                         public void onItemClicked(Object object) {
                         }
@@ -1103,12 +945,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         }
 
                     },listviewheight);
-                    recyclerviewlist.setAdapter(adaptermedialist);
+                    recyclerviewlocallist.setAdapter(adaptermedialistlocal);
                 }
 
-                if(adaptermediagrid == null)
+                if(adaptermedialistpublished == null)
                 {
-                    adaptermediagrid = new adaptermediagrid(getActivity(), arraymediaitemlist, new adapteritemclick() {
+                    adaptermedialistpublished = new adaptermedialist(getActivity(), arraymediaitemlist, new adapteritemclick() {
                         @Override
                         public void onItemClicked(Object object) {
                         }
@@ -1118,14 +960,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             setAdapter(videoobj,type);
                         }
 
-                    });
-                    recyclerviewgrid.setAdapter(adaptermediagrid);
+                    },listviewheight);
+                    recyclerviewpublishedlist.setAdapter(adaptermedialistpublished);
                 }
 
-                if(config.selectedmediatype != pagermediatype.getCurrentItem())
-                    pagermediatype.setCurrentItem(config.selectedmediatype,true);
-                else
-                    showselectedmediatypeitems(config.selectedmediatype,true);
+                showselectedmediatypeitems(true);
 
                 if(shouldnavigatelist)
                 {
@@ -1153,13 +992,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                    dataupdator=0;
                }
 
-               if(common.isdevelopermodeenable() && (img_settings.getVisibility() == View.GONE || img_settings.getVisibility() == View.INVISIBLE))
+               if(common.isdevelopermodeenable() && (img_settings.getVisibility() == View.GONE ||
+                       img_settings.getVisibility() == View.INVISIBLE))
                {
-                   if(adaptermedialist != null)
-                       adaptermedialist.notifyDataSetChanged();
+                   if(adaptermedialistlocal != null)
+                       adaptermedialistlocal.notifyDataSetChanged();
 
-                   if(adaptermediagrid != null)
-                       adaptermediagrid.notifyDataSetChanged();
+                   if(adaptermedialistpublished != null)
+                       adaptermedialistpublished.notifyDataSetChanged();
 
                    img_settings.setVisibility(View.VISIBLE);
                }
@@ -1203,7 +1043,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 String status = "" + cursor.getString(cursor.getColumnIndex("status"));
                 String mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
                 String token = "" + cursor.getString(cursor.getColumnIndex("token"));
-
+                String mediapublished = "" + cursor.getString(cursor.getColumnIndex("mediapublished"));
 
                 for(int i = 0; i< arraymediaitemlist.size(); i++)
                 {
@@ -1213,6 +1053,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         arraymediaitemlist.get(i).setVideostarttransactionid(videostarttransactionid);
                         arraymediaitemlist.get(i).setThumbnailpath(thumbnailurl);
                         arraymediaitemlist.get(i).setMediacolor(color);
+                        arraymediaitemlist.get(i).setmediapublished((mediapublished.equalsIgnoreCase("1")?true:false));
                         arraymediaitemlist.get(i).setLocalkey(localkey);
                         arraymediaitemlist.get(i).setMediastatus(status);
                         arraymediaitemlist.get(i).setVideotoken(token);
@@ -1327,11 +1168,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                             if(isneedtonotify)
                             {
-                                if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                                    adaptermedialist.notifyItemChanged(i);
+                                if(adaptermedialistlocal != null && arraymediaitemlist.size() > 0)
+                                    adaptermedialistlocal.notifyItemChanged(i);
 
-                                if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
-                                    adaptermediagrid.notifyItemChanged(i);
+                                if(adaptermedialistpublished != null && arraymediaitemlist.size() > 0)
+                                    adaptermedialistpublished.notifyItemChanged(i);
                             }
                         }
                         break;
@@ -1411,7 +1252,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @Override
     public void onPause() {
         super.onPause();
-        //recyclerviewlist.removeOnItemTouchListener(onTouchListener);
+        //recyclerviewlocallist.removeOnItemTouchListener(onTouchListener);
     }
 
     public void setAdapter(final video videoobj, int type)
@@ -1450,7 +1291,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    showselectedmediatypeitems(selectedmediatype,false);
+                    showselectedmediatypeitems(false);
                     if(! videoobj.getVideostarttransactionid().isEmpty())
                         updatemedialocation(videoobj.getVideostarttransactionid(),videoobj.getPath());
                 }
@@ -1505,8 +1346,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
                 {
                     getallmedialistfromdb();
-                    if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                        adaptermedialist.notifyitems(arraymediaitemlist);
+                    if(adaptermedialistlocal != null && arraymediaitemlist.size() > 0)
+                        adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
+
+                    if(adaptermedialistlocal != null && arraymediaitemlist.size() > 0)
+                        adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
                 }
             }
             else if(type == 2)
@@ -1595,7 +1439,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 System.out.println("file not Deleted :" + videoobj.getPath());
                             }
                         }
-                        showselectedmediatypeitems(selectedmediatype,false);
+                        showselectedmediatypeitems(false);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -1680,38 +1524,33 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public  void uploadmediafromgallery()
     {
-        Intent intent = null;
+        /*Intent intent = null;
         String type = null;
-        if(selectedmediatype == -1)
-        {
-            config.selectedmediatype =0;
-            selectedmediatype=config.selectedmediatype;
-        }
 
         if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
         {
             if(selectedmediatype == 0){
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                type="image/*";
+                type="image*//*";
             }else if(selectedmediatype == 1){
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-                type="video/*";
+                type="video*//*";
             }else if(selectedmediatype == 2){
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-                type="audio/*";
+                type="audio*//*";
             }
         }
         else
         {
             if(selectedmediatype == 0){
                 intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                type="image/*";
+                type="image*//*";
             }else if(selectedmediatype == 1){
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
-                type="video/*";
+                type="video*//*";
             }else if(selectedmediatype == 2){
                 intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
-                type="audio/*";
+                type="audio*//*";
             }
         }
         Activity activity=getActivity();
@@ -1720,7 +1559,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.putExtra("return-data", true);
             startActivityForResult(intent,REQUESTCODE_PICK);
-        }
+        }*/
     }
 
     public void copymediafromgallery(final String selectedmediafile){
@@ -1875,17 +1714,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     {
         String mediatype="image";
         if(selectedmediafile.contains(".m4a") || selectedmediafile.contains(".mp3"))
-        {
             mediatype="audio";
-        }
         else if(selectedmediafile.contains(".jpg") || selectedmediafile.contains(".png") || selectedmediafile.contains(".jpeg"))
-        {
             mediatype="image";
-        }
         else if(selectedmediafile.contains(".mp4") || selectedmediafile.contains(".mov"))
-        {
             mediatype="video";
-        }
+
         databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
         mdbhelper.createDatabase();
 
@@ -1934,23 +1768,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
     }
 
-    public void setheadermargine(){
-        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
-        layout_mediatype.setLayoutParams(params);
-    }
-
-
     public void setfooterlayout(boolean isfottermarginset){
 
         if(isfottermarginset){
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.BELOW,R.id.lay_grid_list_type);
             params.setMargins(-4,-4,-4,navigationbarheight);
             listlayout.setLayoutParams(params);
         }else{
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.BELOW,R.id.lay_grid_list_type);
             params.setMargins(0,0,0,navigationbarheight);
             listlayout.setLayoutParams(params);
         }
@@ -1962,70 +1787,5 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             hidekeyboard();
         }
         iskeyboardopen = false;
-    }
-
-    public class CustomPagerAdapter extends PagerAdapter {
-
-        private Context mContext;
-
-        public CustomPagerAdapter(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup collection, final int position) {
-            final mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            ViewGroup layout = (ViewGroup) inflater.inflate(enummediatype.getLayoutResId(), collection, false);
-            final TextView txt_mediatype=(TextView)layout.findViewById(R.id.txt_mediatype);
-            txt_mediatype.setText(enummediatype.getItemname());
-            txt_mediatype.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.e("onClick ",""+ enummediatype.getItemposition());
-                    if(enummediatype.getItemposition() == 2)
-                    {
-                        pagermediatype.setCurrentItem(0,true);
-                    }
-                    else if(enummediatype.getItemposition() == 3)
-                    {
-                        pagermediatype.setCurrentItem(1,true);
-                    }
-                    else if(enummediatype.getItemposition() == 4)
-                    {
-                        pagermediatype.setCurrentItem(2,true);
-                    }
-                }
-            });
-            collection.addView(layout);
-            return layout;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup collection, int position, Object view) {
-            collection.removeView((View) view);
-        }
-
-        @Override
-        public float getPageWidth(int position) {
-            return 0.20f;
-        }
-
-        @Override
-        public int getCount() {
-            return mediatypepagerenum.values().length;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
-            return enummediatype.getItemname();
-        }
-
     }
 }

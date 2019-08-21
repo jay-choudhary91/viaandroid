@@ -37,6 +37,8 @@
     <color name="selectedimagehash">#005A78</color>
     <color name="videolist_background">#297BB5</color>
     <color name="videoPlayer_header">#4D000000</color>
+    <color name="blue_item_selected">#17b0e2</color>
+    <color name="blue_item_deselected">#aaaaaa</color>
 
     <color name="soundwavecolor">#417CE2</color>
     <color name="wave_color">#474747</color>
