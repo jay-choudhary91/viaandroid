@@ -487,7 +487,7 @@
     <string name="btn_next">NEXT</string>
     <string name="welcome_dialog_text">We have included a quick\n45-second video that will\nexplain all the features of\nyour new VideoLock app.\n\nWould you like to watch a\nVideoLock demo video?</string>
     <string name="betaversion">Beta Version 8.21.19</string>
-    <string name="gps_low_quality">GPS Low Quality</string>
+    <string name="gps_low_quality">GPS Quality Low</string>
 
     <string name="fetching_user_info">Fetching user information!</string>
     <string name="unable_signin">Unable to sign in!</string>

@@ -231,6 +231,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     TextView txt_title_actionbarcomposer;
     @BindView(R.id.txt_mediatimethumb)
     TextView txt_mediatimethumb;
+    @BindView(R.id.txt_gpsquality)
+    TextView txt_gpsquality;
     @BindView(R.id.layout_progressline)
     RelativeLayout layout_progressline;
 
@@ -636,7 +638,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         edt_medianotes.setFocusable(false);
         edt_medianotes.setFocusableInTouchMode(false);
 
-        mediaseekbar.setThumbOffset(-1);
+        mediaseekbar.setThumbOffset(-3);
 
         final RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mediaseekbar.getLayoutParams();
         mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -690,7 +692,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                            RelativeLayout.LayoutParams.WRAP_CONTENT);
                    p.addRule(RelativeLayout.ABOVE, seekBar.getId());
                    Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                   p.setMargins((int) (thumbRect.centerX() - common.dpToPx(getActivity(), 19)), 0, -50, 0);
+
+                   p.setMargins((int) (thumbRect.centerX() - common.dpToPx(getActivity(), 42)), 0, -100, 0);
+
                    layout_progressline.setLayoutParams(p);
                    txt_mediatimethumb.setText(common.gettimestring(seekBar.getProgress()));
                    txt_mediatimethumb.setVisibility(View.VISIBLE);
@@ -703,8 +707,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                player.seekTo(seekBar.getProgress());
-                maxincreasevideoduration=player.getCurrentPosition();
+
+               if(player != null){
+                   player.seekTo(seekBar.getProgress());
+                   maxincreasevideoduration=player.getCurrentPosition();
+               }
             }
         });
 
@@ -2351,6 +2358,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         color = arraycontainerformetric.getColor();
 
                     layout_gps.setVisibility(View.INVISIBLE);
+                    txt_gpsquality.setVisibility(View.INVISIBLE);
+
 
                     switch (color) {
                         case "green":
@@ -2363,6 +2372,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 e.printStackTrace();
                             }
                             layout_validating.setVisibility(View.VISIBLE);
+                            txt_gpsquality.setVisibility(View.INVISIBLE);
 
                             break;
                         case "white":
@@ -2378,6 +2388,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 e.printStackTrace();
                             }
                             layout_validating.setVisibility(View.VISIBLE);
+                            txt_gpsquality.setVisibility(View.INVISIBLE);
 
                             break;
                         case "yellow":
@@ -2392,6 +2403,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             layout_gps.setVisibility(View.VISIBLE);
                             layout_validating.setVisibility(View.VISIBLE);
                             txt_gps_low_quality.setText(getResources().getString(R.string.gps_low_quality));
+                            txt_gpsquality.setVisibility(View.VISIBLE);
 
                             break;
                     }
