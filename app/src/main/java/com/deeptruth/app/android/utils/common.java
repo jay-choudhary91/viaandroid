@@ -87,7 +87,9 @@ import com.deeptruth.app.android.activity.splashactivity;
 import com.deeptruth.app.android.adapter.xapidetailadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
+import com.deeptruth.app.android.models.arraycontainer;
 import com.deeptruth.app.android.models.folder;
+import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.pair;
 import com.deeptruth.app.android.models.sharepopuptextspanning;
 import com.deeptruth.app.android.views.customfontedittext;
@@ -102,6 +104,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 
 import org.apache.http.NameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -126,6 +131,7 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -2062,6 +2068,54 @@ public class common {
             encryptionstring.setSpan(new RelativeSizeSpan(1.1f), 0, keyvalue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_encryption.setText(encryptionstring);
         }
+    }
+
+    public static String getlocationfrommetricdata(String metricdata)
+    {
+        String location="";
+        try {
+
+            Object json = new JSONTokener(metricdata).nextValue();
+            JSONObject jsonobject;
+            if(json instanceof JSONObject)
+            {
+                jsonobject=new JSONObject(metricdata);
+                ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                Iterator<String> myIter = jsonobject.keys();
+                while (myIter.hasNext())
+                {
+                    String key = myIter.next();
+                    String value = jsonobject.optString(key);
+                    if(key.equalsIgnoreCase("address"))
+                    {
+                        location=value;
+                        break;
+                    }
+                }
+            }
+            else if(json instanceof JSONArray)
+            {
+                JSONArray array = new JSONArray(metricdata);
+                for (int j = 0; j < array.length(); j++) {
+                    ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                    JSONObject object = array.getJSONObject(j);
+                    Iterator<String> myIter = object.keys();
+                    while (myIter.hasNext()) {
+                        String key = myIter.next();
+                        String value = object.optString(key);
+                        if(key.equalsIgnoreCase("address"))
+                        {
+                            location=value;
+                            break;
+                        }
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return location;
     }
 
     public static String filesize(String imageurl) {

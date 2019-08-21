@@ -659,6 +659,24 @@ public class databasemanager {
         return  mCur;
     }
 
+    public Cursor updatepublishmediastatus(String mediatoken) {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL("update tblstartmediainfo set mediapublished=1  where token='"+mediatoken+"'");
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
     public Cursor updatefilemediafolderdir(String sourcefile,String destinationfile,String destinationfolder) {
         Cursor mCur=null;
         try {
@@ -995,7 +1013,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT color,sequenceno FROM tblmetadata where localkey = '"+localkey+"'";
+            String sql = "SELECT color,sequenceno,metricdata FROM tblmetadata where localkey = '"+localkey+"'";
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
 

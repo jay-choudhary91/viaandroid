@@ -22,6 +22,7 @@ public class video
     public String mediatype="";
     public String extension="";
     public String localkey="";
+    public String medialocation="";
     public long lastmodifiedtime=0;
     public Bitmap thumbnail=null;
     public boolean isSelected = false;
@@ -33,6 +34,7 @@ public class video
     public String medianotes = "";
     public String mediacolor = "";
     public String frameuploadstatus = "";
+    public String filesize = "";
     public boolean ischeck = false;
     public boolean doenable = false;
     public boolean mediapublished = false;
@@ -190,6 +192,22 @@ public class video
 
     public void setLastmodifiedtime(long lastmodifiedtime) {
         this.lastmodifiedtime = lastmodifiedtime;
+    }
+
+    public String getMedialocation() {
+        return medialocation;
+    }
+
+    public void setMedialocation(String medialocation) {
+        this.medialocation = medialocation;
+    }
+
+    public String getfilesize() {
+        return filesize;
+    }
+
+    public void setfilesize(String filesize) {
+        this.filesize = filesize;
     }
 
     public boolean ismediapublished() {
