@@ -21,4 +21,30 @@
         android:layout_centerVertical="true"
         android:paddingRight="10dp"/>
 
+
+    <LinearLayout
+        android:id="@+id/layout_gps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:visibility="invisible"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_gps"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/warning_icon"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            app:fontType="OpenSans_Semibold"
+            android:id="@+id/txt_gps_low_quality"
+            style="@style/txt_no_gps_wifi"
+            android:textColor="@color/white"
+            android:paddingLeft="10dp"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

@@ -254,15 +254,33 @@
                         android:visibility="gone">
 
                         <com.deeptruth.app.android.views.customfonttextview
+                            android:id="@+id/txt_gpsquality"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/round_corner_seekthumb"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/black"
+                            android:textSize="10sp"
+                            android:padding="2dp"
+                            android:ellipsize="none"
+                            android:text="@string/gps_low_quality"
+                            android:singleLine="true"
+                            android:visibility="visible"
+                            app:fontType="OpenSans_Regular" />
+
+
+                        <com.deeptruth.app.android.views.customfonttextview
                             android:id="@+id/txt_mediatimethumb"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
                             android:background="@drawable/timebubble"
-                            android:layout_marginTop="2dp"
                             android:textColor="@color/black"
                             android:textSize="10sp"
                             android:paddingLeft="1dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_below="@+id/txt_gpsquality"
                             android:ellipsize="none"
                             android:singleLine="true"
                             android:paddingRight="1dp"

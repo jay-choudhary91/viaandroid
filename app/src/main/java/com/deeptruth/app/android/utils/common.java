@@ -66,6 +66,7 @@ import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -3166,6 +3167,18 @@ public class common {
 
         }
         txtview.setText(ss1);
+    }
+
+    public static void underlinespan(TextView textview,String txtstring){
+        SpannableString content = new SpannableString(txtstring);
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        textview.setText(content);
+    }
+
+    public static void removeunderline(TextView textview,String txtstring){
+        SpannableString content = new SpannableString(txtstring);
+        content.removeSpan(content);
+        textview.setText(content);
     }
 }
 
