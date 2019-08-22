@@ -128,7 +128,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     ArrayList<video> arraymediaitemlist = new ArrayList<>();
     adaptermedialist adaptermedialistlocal;
     adaptermedialist adaptermedialistpublished;
-    adaptermediafilter adaptermediaoptions;
+    adaptermediafilter adaptermediafilter;
     private RecyclerTouchListener onTouchListener;
     private static final int request_read_external_storage = 1;
     private BroadcastReceiver medialistitemaddreceiver;
@@ -259,11 +259,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             recyclerviewlocallist.getItemAnimator().setChangeDuration(0);
 
 
-            arraylistmediafilter.add(new mediafilteroptions("Date"));
-            arraylistmediafilter.add(new mediafilteroptions("Title"));
-            arraylistmediafilter.add(new mediafilteroptions("Type"));
-            arraylistmediafilter.add(new mediafilteroptions("Size"));
-            arraylistmediafilter.add(new mediafilteroptions("Location"));
+            arraylistmediafilter.add(new mediafilteroptions(config.Date,false,false));
+            arraylistmediafilter.add(new mediafilteroptions(config.Title,false,false));
+            arraylistmediafilter.add(new mediafilteroptions(config.Type,false,false));
+            arraylistmediafilter.add(new mediafilteroptions(config.Size,false,false));
+            arraylistmediafilter.add(new mediafilteroptions(config.Location,false,false));
 
             txt_localfiles.setOnClickListener(this);
             txt_publishedfiles.setOnClickListener(this);
@@ -1004,24 +1004,26 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     },listviewheight);
                     recyclerviewpublishedlist.setAdapter(adaptermedialistpublished);
                 }
-                if(adaptermediaoptions == null)
+                if(adaptermediafilter == null)
                 {
                     recyclerviewfilteroption.post(new Runnable() {
                         @Override
                         public void run() {
                             Log.e("medialistoptions",""+arraylistmediafilter);
-                            adaptermediaoptions = new adaptermediafilter(getActivity(), arraylistmediafilter, new adapteritemclick() {
+                            adaptermediafilter = new adaptermediafilter(getActivity(), arraylistmediafilter, new adapteritemclick() {
                                 @Override
                                 public void onItemClicked(Object object) {
                                 }
                                 @Override
                                 public void onItemClicked(Object object, int type) {
-                                    video videoobj=(video)object;
-                                    setAdapter(videoobj,type);
+                                    mediafilteroptions mediafilterobj=(mediafilteroptions)object;
+                                    setfilterAdapter(mediafilterobj,type);
                                 }
 
                             },recyclerviewfilteroption.getWidth());
-                            recyclerviewfilteroption.setAdapter(adaptermediaoptions);
+                            recyclerviewfilteroption.setAdapter(adaptermediafilter);
+                            adaptermediafilter.notifyDataSetChanged();
+
                         }
                     });
 
@@ -1065,6 +1067,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                        adaptermedialistpublished.notifyDataSetChanged();
 
                    img_settings.setVisibility(View.VISIBLE);
+               }
+
+               if(arraylistmediafilter != null && arraylistmediafilter.size() >0){
+                   if(adaptermediafilter != null){
+                       adaptermediafilter.notifyDataSetChanged();
+                   }
                }
 
                 myhandler.postDelayed(this, 1000);
@@ -1935,5 +1943,40 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             hidekeyboard();
         }
         iskeyboardopen = false;
+    }
+
+    public void setfilterAdapter(final mediafilteroptions mediafilterobj, int type){
+
+        if(type == 1){
+            if(mediafilterobj.getMediafiltername().equalsIgnoreCase(config.Date))
+            {
+             Toast.makeText(getActivity(),"dateclicked",Toast.LENGTH_SHORT).show();
+             if(!mediafilterobj.isIsselected()){
+                 mediafilterobj.setIsselected(true);
+                 mediafilterobj.setAscending(true);
+             }else{
+                 mediafilterobj.setIsselected(false);
+                 mediafilterobj.setAscending(true);
+             }
+            }else if(mediafilterobj.getMediafiltername().equalsIgnoreCase(config.Title))
+            {
+                Toast.makeText(getActivity(),"titleclicked",Toast.LENGTH_SHORT).show();
+            }else if(mediafilterobj.getMediafiltername().equalsIgnoreCase(config.Type))
+            {
+                Toast.makeText(getActivity(),"typeclicked",Toast.LENGTH_SHORT).show();
+
+            }else if(mediafilterobj.getMediafiltername().equalsIgnoreCase(config.Size))
+            {
+                Toast.makeText(getActivity(),"sizeclicked",Toast.LENGTH_SHORT).show();
+            }else if(mediafilterobj.getMediafiltername().equalsIgnoreCase(config.Location))
+            {
+                Toast.makeText(getActivity(),"locationclicked",Toast.LENGTH_SHORT).show();
+            }
+        }
+       /* if(arraylistmediafilter != null && arraylistmediafilter.size() >0){
+            if(adaptermediafilter != null){
+                adaptermediafilter.notifyDataSetChanged();
+            }
+        }*/
     }
 }

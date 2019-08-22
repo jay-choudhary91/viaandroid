@@ -373,4 +373,10 @@ public class config {
 
     public static final String TOPBAR_HEIGHT = "topbarheight";
 
+    public static final String Date ="Date";
+    public static final String Title ="Title";
+    public static final String Type ="Type";
+    public static final String Size ="Size";
+    public static final String Location ="Location";
+
 }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediafilteroptions;
+import com.deeptruth.app.android.models.video;
 
 import java.util.ArrayList;
 
@@ -74,6 +75,21 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
             holder.img_updownarrow.setVisibility(View.VISIBLE);
         else
             holder.img_updownarrow.setVisibility(View.GONE);
+
+        Log.e("isadpterselected",""+mediaobject.isIsselected());
+        if(mediaobject.isIsselected()){
+            holder.img_updownarrow.setImageResource(R.drawable.ic_uparrow);
+        }else{
+            Log.e("downarrow",""+mediaobject.isIsselected());
+            holder.img_updownarrow.setImageResource(R.drawable.ic_downarrow);
+        }
+
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.onItemClicked(mediaobject , 1);
+            }
+        });
     }
 
     @Override
