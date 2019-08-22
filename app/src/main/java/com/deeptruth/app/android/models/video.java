@@ -23,7 +23,7 @@ public class video
     public String extension="";
     public String localkey="";
     public String medialocation="";
-    public long lastmodifiedtime=0;
+    public long lastmodifiedtime=0,createdatetimestamp=0;
     public Bitmap thumbnail=null;
     public boolean isSelected = false;
     public String mediastatus = "";
@@ -192,6 +192,14 @@ public class video
 
     public void setLastmodifiedtime(long lastmodifiedtime) {
         this.lastmodifiedtime = lastmodifiedtime;
+    }
+
+    public long getcreatedatetimestamp() {
+        return createdatetimestamp;
+    }
+
+    public void setcreatedatetimestamp(long createdatetimestamp) {
+        this.createdatetimestamp = createdatetimestamp;
     }
 
     public String getMedialocation() {

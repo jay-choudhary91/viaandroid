@@ -121,8 +121,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private RelativeLayout listlayout;
     private Handler myhandler;
     private Runnable myrunnable;
-    private boolean isinbackground=false;
-    private boolean shouldlaunchcomposer=true;
+    private boolean ascendinglistbydate=true;
     private View rootview = null;
     private static final int request_permissions = 1;
     private ArrayList<video> arraymediaitemlist = new ArrayList<>();
@@ -162,7 +161,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @Override
     public void onStop() {
         super.onStop();
-        isinbackground=true;
     }
 
     @Override
@@ -188,7 +186,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         gethelper().drawerenabledisable(false);
         gethelper().setwindowfitxy(true);
         gethelper().updateactionbar(1);
-        isinbackground=false;
         if(edt_searchitem != null)
             edt_searchitem.setTag(false);
     }
@@ -269,6 +266,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             arraymediafilterlist.add(new mediafilteroptions(config.filter_size,false,false));
             arraymediafilterlist.add(new mediafilteroptions(config.filter_location,false,false));
 
+            ascendinglistbydate=true;
             selectedmediafilter=config.filter_date;
 
             txt_localfiles.setOnClickListener(this);
@@ -911,19 +909,19 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     {
                                         if(mediastartdevicedate.contains("T"))
                                         {
-                                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                            mediadatetime = format.parse(mediastartdevicedate);
+                                            mediadatetime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH)
+                                                    .parse(mediastartdevicedate);
                                         }
                                         else
                                         {
-                                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
-                                            mediadatetime = format.parse(mediastartdevicedate);
+                                            mediadatetime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH)
+                                                    .parse(mediastartdevicedate);
                                         }
-                                        DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
-                                        String localTime = datee.format(mediadatetime);
 
-                                        final String filecreateddate = new SimpleDateFormat("MM/dd/yyyy",Locale.ENGLISH).format(mediadatetime);
-                                        final String endtime = new SimpleDateFormat("hh:mm:ss.SS aa",Locale.ENGLISH).format(mediadatetime);
+                                        videoobject.setcreatedatetimestamp(mediadatetime.getTime());
+                                        DateFormat dateformat = new SimpleDateFormat("z",Locale.getDefault());
+                                        String localTime = dateformat.format(mediadatetime);
+
                                         videoobject.setCreatedate(common.parsedateformat(mediadatetime));
                                         videoobject.setCreatetime(common.parsetimeformat(mediadatetime)+ " "+localTime );
                                     }
@@ -1036,18 +1034,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         @Override
                         public void run() {
 
-                            Collections.sort( arraymediaitemlist, new Comparator()
-                            {
-                                public int compare(Object o1, Object o2) {
-                                    if (((video)o1).getId() > ((video)o2).getId()) {
-                                        return -1;
-                                    } else if (((video)o1).getId() < ((video)o2).getId()) {
-                                        return +1;
-                                    } else {
-                                        return 0;
-                                    }
-                                }
-                            });
+                            sortlistviewbydate();
 
                             setmediaadapter();
                             if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
@@ -1075,6 +1062,34 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             }
         }).start();
+    }
+
+    public void sortlistviewbydate()
+    {
+        if(ascendinglistbydate)
+        {
+            // Latest date media is on top
+            Collections.sort(arraymediaitemlist, new Comparator<video>() {
+                public int compare(video s1, video s2) {
+                    // notice the cast to (Integer) to invoke compareTo
+                    Integer value1=(int)s2.getcreatedatetimestamp();
+                    Integer value2=(int)s1.getcreatedatetimestamp();
+                    return (value1).compareTo(value2);
+                }
+            });
+        }
+        else
+        {
+            // Latest date media is on bottom
+            Collections.sort(arraymediaitemlist, new Comparator<video>() {
+                public int compare(video s1, video s2) {
+                    // notice the cast to (Integer) to invoke compareTo
+                    Integer value1=(int)s2.getcreatedatetimestamp();
+                    Integer value2=(int)s1.getcreatedatetimestamp();
+                    return (value2).compareTo(value1);
+                }
+            });
+        }
     }
 
     public void setmediaadapter()
@@ -1531,7 +1546,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void shouldlaunchcomposer(boolean shouldlaunchcomposer)
     {
-        this.shouldlaunchcomposer=shouldlaunchcomposer;
+
     }
 
     adapteritemclick mcontrollernavigator=new adapteritemclick() {
@@ -2067,8 +2082,17 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     mediafilterobj.setascending(true);
 
                 mediafilterobj.setfilterselected(true);
+
+                ascendinglistbydate=mediafilterobj.isascending();
                 selectedmediafilter=config.filter_date;
                 showsearchsection();
+                sortlistviewbydate();
+
+                if(adaptermedialistlocal != null && selectedlisttype == 0)
+                    adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
+
+                if(adaptermedialistpublished != null && selectedlisttype == 1)
+                    adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
             }
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_title))
             {
