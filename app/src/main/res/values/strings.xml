@@ -494,6 +494,8 @@
     <string name="fetching_user_info">Fetching user information!</string>
     <string name="unable_signin">Unable to sign in!</string>
     <string name="uploading_has_started">Uploading has started!</string>
+    <string name="media_upload_success">Media uploaded successfully!</string>
+    <string name="media_upload_failed">Media uploading failed!</string>
     <string name="upload_failed">Upload failed!</string>
 
 

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.arch.lifecycle.Lifecycle;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -95,14 +97,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.batch.BatchRequest;
+import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.json.GoogleJsonError;
 import com.google.api.client.http.FileContent;
+import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.Permission;
 import com.onedrive.sdk.concurrency.ICallback;
 import com.onedrive.sdk.concurrency.IProgressCallback;
 import com.onedrive.sdk.core.ClientException;
@@ -117,6 +128,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -1735,9 +1747,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         GoogleSignIn.getSignedInAccountFromIntent(result)
                 .addOnSuccessListener(googleAccount ->
                 {
+
+                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
                     try
                     {
-
                         Log.d(TAG, "Signed in as " + googleAccount.getEmail());
                         // Use the authenticated account to sign in to the Drive service.
                         GoogleAccountCredential credential =
@@ -1753,15 +1766,51 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                         .build();
 
                         //DriveServiceHelper mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
-                        uploadfileatgoogledrive(googleDriveService,getreadytouploadfile(),
+                        Task<GoogleDriveFileHolder> filderHolder=uploadfileatgoogledrive(googleDriveService,getreadytouploadfile(),
                                 common.getmimetype(getreadytouploadfile().getAbsolutePath()),null);
 
-                        progressdialog.dismisswaitdialog();
-                        Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
-                                .getResources().getString(R.string.uploading_has_started),Toast.LENGTH_SHORT).show();
+                        filderHolder.addOnCompleteListener(applicationviavideocomposer.getactivity(), new OnCompleteListener<GoogleDriveFileHolder>() {
+                            @Override
+                            public void onComplete(@NonNull Task<GoogleDriveFileHolder> task) {
 
-                        if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
-                            dialogfileuploadoptions.dismiss();
+                            }
+                        });
+
+                        filderHolder.addOnCanceledListener(applicationviavideocomposer.getactivity(), new OnCanceledListener() {
+                            @Override
+                            public void onCanceled() {
+                                Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                        .getResources().getString(R.string.media_upload_failed),Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        filderHolder.addOnFailureListener(applicationviavideocomposer.getactivity(), new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                        .getResources().getString(R.string.media_upload_failed),Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        filderHolder.addOnSuccessListener(applicationviavideocomposer.getactivity(),
+                                new OnSuccessListener<GoogleDriveFileHolder>() {
+                            @Override
+                            public void onSuccess(GoogleDriveFileHolder googleDriveFileHolder) {
+
+                                progressdialog.dismisswaitdialog();
+                                Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                        .getResources().getString(R.string.media_upload_success),Toast.LENGTH_SHORT).show();
+                                String sharabalelink="https://drive.google.com/open?id="+filderHolder.getResult().getId();
+                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText("googledrivelink",sharabalelink );
+                                clipboard.setPrimaryClip(clip);
+
+                                common.sharemessagewithapps(sharabalelink);
+
+                                if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
+                                    dialogfileuploadoptions.dismiss();
+                            }
+                        });
 
                     }catch (Exception e)
                     {
@@ -1806,14 +1855,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 FileContent fileContent = new FileContent(mimeType, localFile);
 
                 com.google.api.services.drive.model.File fileMeta = googleDriveService.files().create(metadata, fileContent).execute();
+
+                Permission anyoneReadPerm = new Permission();
+                anyoneReadPerm.setType("anyone");
+                anyoneReadPerm.setRole("reader");
+                googleDriveService.permissions().create(fileMeta.getId(), anyoneReadPerm).execute();
+
                 GoogleDriveFileHolder googleDriveFileHolder = new GoogleDriveFileHolder();
                 googleDriveFileHolder.setId(fileMeta.getId());
                 googleDriveFileHolder.setName(fileMeta.getName());
+
                 return googleDriveFileHolder;
             }
         });
     }
-
 
     private void requestgooglesignin() {
         Log.d(TAG, "Requesting sign-in");
