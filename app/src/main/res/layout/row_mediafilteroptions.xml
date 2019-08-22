@@ -15,7 +15,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             app:fontType="OpenSans_Regular"
-            style="@style/mediatypeview"
+            style="@style/mediafilterview"
             android:id="@+id/txt_optiontype"
             android:text="Type"
             android:layout_toRightOf="@+id/txt_title"

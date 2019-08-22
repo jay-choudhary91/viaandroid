@@ -1,7 +1,6 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -49,7 +48,7 @@ import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
-import com.deeptruth.app.android.models.mediatypeoptions;
+import com.deeptruth.app.android.models.mediafilteroptions;
 import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
@@ -140,7 +139,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     long lastTapTimeMs = 0;
     long touchDownMs = 0;
     boolean iskeyboardopen = false,shouldnavigatelist=true;
-    ArrayList<mediatypeoptions> arraylistmediatypeoptions = new ArrayList<>();
+    ArrayList<mediafilteroptions> arraylistmediafilter = new ArrayList<>();
 
     @Override
     public int getlayoutid() {
@@ -260,11 +259,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             recyclerviewlocallist.getItemAnimator().setChangeDuration(0);
 
 
-            arraylistmediatypeoptions.add(new mediatypeoptions("Date"));
-            arraylistmediatypeoptions.add(new mediatypeoptions("Title"));
-            arraylistmediatypeoptions.add(new mediatypeoptions("Type"));
-            arraylistmediatypeoptions.add(new mediatypeoptions("Size"));
-            arraylistmediatypeoptions.add(new mediatypeoptions("Location"));
+            arraylistmediafilter.add(new mediafilteroptions("Date"));
+            arraylistmediafilter.add(new mediafilteroptions("Title"));
+            arraylistmediafilter.add(new mediafilteroptions("Type"));
+            arraylistmediafilter.add(new mediafilteroptions("Size"));
+            arraylistmediafilter.add(new mediafilteroptions("Location"));
 
             txt_localfiles.setOnClickListener(this);
             txt_publishedfiles.setOnClickListener(this);
@@ -1010,8 +1009,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     recyclerviewfilteroption.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.e("medialistoptions",""+arraylistmediatypeoptions);
-                            adaptermediaoptions = new adaptermediafilter(getActivity(), arraylistmediatypeoptions, new adapteritemclick() {
+                            Log.e("medialistoptions",""+arraylistmediafilter);
+                            adaptermediaoptions = new adaptermediafilter(getActivity(), arraylistmediafilter, new adapteritemclick() {
                                 @Override
                                 public void onItemClicked(Object object) {
                                 }

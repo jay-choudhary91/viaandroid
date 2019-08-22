@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
-import com.deeptruth.app.android.models.mediatypeoptions;
+import com.deeptruth.app.android.models.mediafilteroptions;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
  */
 
 public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.myViewHolder> {
-    ArrayList<mediatypeoptions> arraymediatypeoption = new ArrayList<>();
+    ArrayList<mediafilteroptions> arraymediafilter = new ArrayList<>();
     adapteritemclick adapter;
     Context context;
     int screenwidth=0;
@@ -42,10 +42,10 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
         }
     }
 
-    public adaptermediafilter(Context context , ArrayList<mediatypeoptions> arraymediatypeoption, adapteritemclick adapter,
+    public adaptermediafilter(Context context , ArrayList<mediafilteroptions> arraymediafilter, adapteritemclick adapter,
                               int screenwidth){
         this.context = context;
-        this.arraymediatypeoption = arraymediatypeoption;
+        this.arraymediafilter = arraymediafilter;
         this.adapter = adapter;
         this.screenwidth = screenwidth;
     }
@@ -53,7 +53,7 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
     @Override
     public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_mediaoptions, parent, false);
+                .inflate(R.layout.row_mediafilteroptions, parent, false);
 
         return new adaptermediafilter.myViewHolder(itemView);
     }
@@ -68,9 +68,9 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
 
         holder.root_view.setLayoutParams(param);
 
-        final mediatypeoptions mediaobject=arraymediatypeoption.get(position);
-        holder.txt_options.setText(mediaobject.getMediatypename());
-        if(mediaobject.getMediatypename().equalsIgnoreCase("Date"))
+        final mediafilteroptions mediaobject=arraymediafilter.get(position);
+        holder.txt_options.setText(mediaobject.getMediafiltername());
+        if(mediaobject.getMediafiltername().equalsIgnoreCase("Date"))
             holder.img_updownarrow.setVisibility(View.VISIBLE);
         else
             holder.img_updownarrow.setVisibility(View.GONE);
@@ -78,7 +78,7 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
 
     @Override
     public int getItemCount() {
-        Log.e("arraylistsize",""+arraymediatypeoption.size());
-        return arraymediatypeoption.size();
+        Log.e("arraylistsize",""+arraymediafilter.size());
+        return arraymediafilter.size();
     }
 }
