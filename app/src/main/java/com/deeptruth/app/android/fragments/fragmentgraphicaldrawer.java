@@ -616,9 +616,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             vertical_slider_altitude.setMax(2000);
             vertical_slider_traveled.setMax(100);
 
-            initlinechart(linechart_connectionspeed,-4f,50f,true);
-            initlinechart(linechart_datatimedelay,-4f,50f,true);
-            initlinechart(linechart_gpsaccuracy,-8f,100f,true);
+            initlinechart(linechart_connectionspeed,-5f,50f,true);
+            initlinechart(linechart_datatimedelay,-5f,50f,true);
+            initlinechart(linechart_gpsaccuracy,-5f,100f,true);
             vertical_slider_connectionspeed.setMax(50);
             vertical_slider_connectiondatatimedely.setMax(50);
             vertical_slider_gpsaccuracy.setMax(300);
@@ -2724,13 +2724,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
 
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_6dp),0,
                         getActivity().getResources().getDimension(R.dimen.margin_50dp),
                         0);
             }
             else
             {
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_6dp),0,
                         getActivity().getResources().getDimension(R.dimen.margin_8dp),
                         0);
             }
@@ -2785,15 +2785,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             {
                 chart.invalidate();
                 chart.setVisibleXRange(0, 80);
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
-                        getActivity().getResources().getDimension(R.dimen.margin_8dp),
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),0,
+                       0,
                         0);
             }
             else
             {
                 chart.invalidate();
                 chart.setVisibleXRange(0, valuesarray.size());
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,0,
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),0,0,
                         0);
             }
         }

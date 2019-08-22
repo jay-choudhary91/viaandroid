@@ -530,16 +530,16 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             halfpaichartdate(chart_cpuusage);
             halfpaichartdate(chart_battery);
 
-            setchartdata(linechart_speed,200);
-            setchartdata(linechart_altitude,3000);
-            setchartdata(linechart_traveled,300);
+            setchartdata(linechart_speed,-5,200);
+            setchartdata(linechart_altitude,-40,3000);
+            setchartdata(linechart_traveled,-5,300);
             vertical_slider_speed.setMax(80);
             vertical_slider_altitude.setMax(2000);
             vertical_slider_traveled.setMax(100);
 
-            initlinechart(linechart_connectionspeed,50f,true);
-            initlinechart(linechart_datatimedelay,50f,true);
-            initlinechart(linechart_gpsaccuracy,300f,false);
+            initlinechart(linechart_connectionspeed,-5f,50f,true);
+            initlinechart(linechart_datatimedelay,-5f,50f,true);
+            initlinechart(linechart_gpsaccuracy,-5f,100f,true);
             vertical_slider_connectionspeed.setMax(50);
             vertical_slider_connectiondatatimedely.setMax(50);
             vertical_slider_gpsaccuracy.setMax(300);
@@ -967,22 +967,21 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     int mediarunningpercentage = (currentmediaposition * 100) / metricmainarraylist.size();
 
                     if(linechart_connectionspeed != null)
-                        updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage,vertical_slider_connectionspeed);
+                        updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage,vertical_slider_connectionspeed,tvconnection,applicationviavideocomposer.getactivity().getResources().getString(R.string.connection));
 
                     if(linechart_datatimedelay != null)
-                        updatelinegraphwithposition(linechart_datatimedelay,connectiondatadelayvalues,mediarunningpercentage,vertical_slider_connectiondatatimedely);
-
+                        updatelinegraphwithposition(linechart_datatimedelay,connectiondatadelayvalues,mediarunningpercentage,vertical_slider_connectiondatatimedely,txt_datatimedelay,applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay));
                     if(linechart_gpsaccuracy != null)
-                        updatelinegraphwithposition(linechart_gpsaccuracy,gpsaccuracyvalues,mediarunningpercentage,vertical_slider_gpsaccuracy);
+                        updatelinegraphwithposition(linechart_gpsaccuracy,gpsaccuracyvalues,mediarunningpercentage,vertical_slider_gpsaccuracy,tvgpsaccuracy,applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy));
 
                     if(linechart_speed != null && speedgraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_speed,speedgraphitems,mediarunningpercentage,vertical_slider_speed);
+                        updatelinegraphwithposition(linechart_speed,speedgraphitems,mediarunningpercentage,vertical_slider_speed,tvspeed,applicationviavideocomposer.getactivity().getResources().getString(R.string.speed));
 
                     if(linechart_traveled != null && travelledgraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_traveled,travelledgraphitems,mediarunningpercentage,vertical_slider_traveled);
+                        updatelinegraphwithposition(linechart_traveled,travelledgraphitems,mediarunningpercentage,vertical_slider_traveled,tvtraveled,applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled));
 
                     if(linechart_altitude != null && altitudegraphitems.size() > 0)
-                        updatelinegraphwithposition(linechart_altitude,altitudegraphitems,mediarunningpercentage,vertical_slider_altitude);
+                        updatelinegraphwithposition(linechart_altitude,altitudegraphitems,mediarunningpercentage,vertical_slider_altitude,tvaltitude,applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude));
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -1201,10 +1200,24 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     {
                         try
                         {
-                            if(connectionspeedvalues.size() > 0)
-                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
+                            float value=0f;
+                            String unit = "";
+
+                            if(speedarray.length > 1)
+                                unit =  speedarray[1];
+
+                            if(Float.parseFloat(speedarray[0]) <= 1)
+                            {
+                                int newvalue=Math.round(Float.parseFloat(speedarray[0]));
+                                value=(float) newvalue;
+                            }
                             else
-                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(speedarray[0]), 0));
+                                value=Float.parseFloat(speedarray[0]);
+
+                            if(connectionspeedvalues.size() > 0)
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, unit));
+                            else
+                                connectionspeedvalues.add(new Entry(connectionspeedvalues.size(), value, unit));
                         }
                         catch (Exception e)
                         {
@@ -1227,10 +1240,25 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     {
                         try
                         {
-                            if(connectiondatadelayvalues.size() > 0)
-                                connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), Float.parseFloat(array[0]), 0));
+                            float value=0f;
+                            String unit = "";
+
+                            if(array.length > 1)
+                                unit =  array[1];
+
+                            if(Float.parseFloat(array[0]) <= 1)
+                            {
+                                int newvalue=Math.round(Float.parseFloat(array[0]));
+                                value=(float)newvalue;
+                            }
                             else
-                                connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), Float.parseFloat(array[0]), 0));
+                                value=Float.parseFloat(array[0]);
+
+
+                            if(connectiondatadelayvalues.size() > 0)
+                                connectiondatadelayvalues.add(new Entry(connectiondatadelayvalues.size(), value, unit));
+                            else
+                                connectiondatadelayvalues.add(new Entry(connectionspeedvalues.size(), value, unit));
                         }
                         catch (Exception e)
                         {
@@ -1249,10 +1277,28 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     {
                         try
                         {
-                            if(gpsaccuracyvalues.size() > 0)
-                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
+                            float value=0f;
+                            String unit = "";
+
+                            if(Float.parseFloat(itemarray[0]) <= 5)
+                            {
+                                int newvalue=Math.round(Float.parseFloat(itemarray[0]));
+                                value=(float) newvalue;
+
+                                if(value >=100)
+                                    value = 100f;
+
+                            }
                             else
-                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), Float.parseFloat(itemarray[0]), 0));
+                                value=Float.parseFloat(itemarray[0]);
+
+                            if(value >=100)
+                                value = 100f;
+
+                            if(gpsaccuracyvalues.size() > 0)
+                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), value, "feet"));
+                            else
+                                gpsaccuracyvalues.add(new Entry(gpsaccuracyvalues.size(), value, "feet"));
                         }
                         catch (Exception e)
                         {
@@ -1271,13 +1317,19 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         try
                         {
                             float value=1.0f;
+                            String unit = "";
+
+                            if(itemarray.length > 1)
+                                unit =  itemarray[1];
+
+
                             if(Float.parseFloat(itemarray[0]) != 0)
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(speedgraphitems.size() > 0)
-                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
+                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, unit));
                             else
-                                speedgraphitems.add(new Entry(speedgraphitems.size(), value, 0));
+                                speedgraphitems.add(new Entry(speedgraphitems.size(), value,unit));
                         }
                         catch (Exception e)
                         {
@@ -1296,13 +1348,18 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         try
                         {
                             float value=1.0f;
+                            String unit = "";
+
+                            if(itemarray.length > 1)
+                                unit =  itemarray[1];
+
                             if(Float.parseFloat(itemarray[0]) != 0)
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(travelledgraphitems.size() > 0)
-                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
+                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, unit));
                             else
-                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, 0));
+                                travelledgraphitems.add(new Entry(travelledgraphitems.size(), value, unit));
                         }
                         catch (Exception e)
                         {
@@ -1321,13 +1378,19 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         try
                         {
                             float value=1.0f;
+                            String unit = "";
+
+                            if(itemarray.length > 1)
+                                unit =  itemarray[1];
+
+
                             if(Float.parseFloat(itemarray[0]) != 0)
                                 value=Float.parseFloat(itemarray[0]);
 
                             if(altitudegraphitems.size() > 0)
-                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
+                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, unit));
                             else
-                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, 0));
+                                altitudegraphitems.add(new Entry(altitudegraphitems.size(), value, unit));
                         }
                         catch (Exception e)
                         {
@@ -1551,7 +1614,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
 
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
                         getActivity().getResources().getDimension(R.dimen.margin_50dp),
                         //getActivity().getResources().getDimension(R.dimen.margin_6dp));
                         0);
@@ -1617,7 +1680,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             }else{
                 chart.invalidate();
                 chart.setVisibleXRange(0, valuesarray.size());
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,0,
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),
                         //14);
                         0);
 
@@ -1670,25 +1733,15 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     private void setspeedtraveledaltitudechart(final LineChart linechart, Float value, ArrayList<Entry> arrayitems,String chartname) {
 
         linechart.setVisibility(View.VISIBLE);
-
-       /* if( vlauetraveled == 0 || valuespeed == 0 || valuealtitude == 0)
-            setyxisrangefirsttime(linechart,chartname);*/
-
-        Log.e("speed value",""+value);
-
-        /*if(arrayitems.size() > 0)
-        {
-            if(arrayitems.get(arrayitems.size()-1).getY() == value)
-                return;
-        }*/
-
         if(value == 0)
             value=0.0f;
-
         if(value != -1)
         {
-           /* if(arrayitems.size() == 0)
-                arrayitems.add(new Entry(0, 1, 0));*/
+            if(arrayitems.size() >= 190)
+                arrayitems.subList(0, 10).clear();
+
+            //arrayitems.remove(arrayitems.get(arrayitems.size()-1));
+
             arrayitems.add(new Entry(arrayitems.size(), value, 0));
         }
         LineDataSet set1;
@@ -1704,15 +1757,21 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
                 set1.getEntryForIndex(set1.getEntryCount()-1).setIcon(ContextCompat.getDrawable(getActivity(),
                         R.drawable.blue_black_ball));
-
                 linechart.moveViewTo(set1.getEntryForIndex(set1.getEntryCount()-1).getX(),set1.getEntryForIndex(set1.getEntryCount()-1).getY(), YAxis.AxisDependency.LEFT);
-
                 linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,40,getActivity().getResources().getDimension(R.dimen.margin_7dp));
             }
             else
             {
                 linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_6dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
             }
+
+            if(set1.getEntryCount() == 190){
+                set1.removeFirst();
+
+                for(Entry entry: set1.getValues())
+                    entry.setX(entry.getX()-1);
+            }
+
             LineData data = new LineData(set1);
             linechart.setData(data);
             setyaxismaxrange(linechart,chartname,value);
@@ -1721,12 +1780,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             linechart.notifyDataSetChanged();
             linechart.refreshDrawableState();
 
-            /*if(ischart.equalsIgnoreCase("linechart_traveled"))
-                count = count+1;*/
-        } else {
-            // create a dataset and give it a type
-
-            //inislizedtschart(linechart,ischart);
+        }
+        else
+        {
             set1 = new LineDataSet(arrayitems, "");
             set1.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
             set1.setDrawIcons(true);
@@ -1756,12 +1812,10 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<>();
             dataSets.add(set1); // add the data sets
-            // create a data object with the data sets
             LineData data = new LineData(dataSets);
-            // set data
             linechart.setData(data);
 
-            if(value == -1 && arrayitems.size()>80){
+            if(value == -1 && arrayitems.size() > 80){
                 linechart.invalidate();
                 linechart.setVisibleXRange(0, 80);
                 linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_8dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
@@ -1770,12 +1824,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 linechart.invalidate();
                 linechart.setVisibleXRange(0, arrayitems.size());
                 linechart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),10,getActivity().getResources().getDimension(R.dimen.margin_6dp),getActivity().getResources().getDimension(R.dimen.margin_7dp));
-
             }
-
-
         }
-
         linechart.animateX(0);
         Legend l = linechart.getLegend();
         l.setForm(Legend.LegendForm.LINE);
@@ -2030,7 +2080,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         chart.setEntryLabelTextSize(12f);
     }
 
-    public void setchartdata(LineChart linechart,int maxvalue)
+    public void setchartdata(LineChart linechart,int minvalue,int maxvalue)
     {
         linechart.setNoDataText("");
         LimitLine llXAxis = new LimitLine(10f, "");
@@ -2055,7 +2105,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
-        leftAxis.setAxisMinimum(0);
+        leftAxis.setAxisMinimum(minvalue);
         leftAxis.setAxisMaximum(maxvalue);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
@@ -2074,7 +2124,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         linechart.setPinchZoom(false);
 
     }
-    public  void initlinechart(LineChart chart,Float maxrange,boolean shouldusemaxrange)
+    public void initlinechart(LineChart chart,Float minrange,Float maxrange,boolean shouldusemaxrange)
     {
 
         chart.setNoDataText("");
@@ -2090,7 +2140,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         if(shouldusemaxrange)
             yAxis.setAxisMaximum(maxrange);
 
-        yAxis.setAxisMinimum(0f);
+        yAxis.setAxisMinimum(minrange);
 
         // // Create Limit Lines // //
         LimitLine llXAxis = new LimitLine(10f, "");
@@ -2130,7 +2180,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 R.layout.row_chartcustommarkerview);
         chart.setMarker(marker);*/
     }
-
     private void loadmap() {
         SupportMapFragment mapFragment = new SupportMapFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -2517,7 +2566,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         satellitedata=data;
     }
 
-    public void updatelinegraphwithposition(final LineChart chart, final ArrayList<Entry> valuesarray, final int mediarunningpercentage, final verticalseekbar vertical_seekbar)
+    public void updatelinegraphwithposition(final LineChart chart, final ArrayList<Entry> valuesarray, final int mediarunningpercentage,
+                                            final verticalseekbar vertical_seekbar,TextView tvallgraphvalue,String graphtype)
     {
         if (chart.getData() != null &&  chart.getData().getDataSetCount() > 0)
         {
@@ -2554,16 +2604,21 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                 public void run() {
                                     /*Highlight   high = new Highlight(set1.getEntryForIndex(selectedchartposition).getX(), 0, selectedchartposition);
                                     chart.highlightValue(high, false);*/
-
-                                    if(finalSelectedchartposition <=39){
-                                        chart.moveViewToX(set1.getEntryForIndex(0).getX());
-                                    }else{
-                                        chart.moveViewToX(set1.getEntryForIndex(finalSelectedchartposition -39).getX());
+                                    if(finalSelectedchartposition < set1.getEntryCount())
+                                    {
+                                        if(finalSelectedchartposition <=39 && set1.getEntryCount() > 0){
+                                            chart.moveViewToX(set1.getEntryForIndex(0).getX());
+                                        }else{
+                                            chart.moveViewToX(set1.getEntryForIndex(finalSelectedchartposition -39).getX());
+                                        }
                                     }
                                 }
                             });
 
-
+                            String value = ""+set1.getEntryForIndex(selectedchartposition).getY();
+                            String unit = ""+set1.getEntryForIndex(selectedchartposition).getData();
+                            common.setdrawabledata(graphtype,
+                                    "\n"+value+" "+unit , tvallgraphvalue);
 
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
                                     R.drawable.blue_black_ball));
@@ -2581,10 +2636,12 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                     vertical_seekbar.setVisibility(View.GONE);
                             }else{
                                 vertical_seekbar.setVisibility(View.VISIBLE);
-                                float sizey = set1.getEntryForIndex(finalSelectedchartposition1).getY();
-                                updateverticalsliderlocationdata(Float.toString(sizey),vertical_seekbar);
+                                if(finalSelectedchartposition1 < set1.getEntryCount())
+                                {
+                                    float sizey = set1.getEntryForIndex(finalSelectedchartposition1).getY();
+                                    updateverticalsliderlocationdata(Float.toString(sizey),vertical_seekbar);
+                                }
                             }
-
                         }
                     });
                 }
