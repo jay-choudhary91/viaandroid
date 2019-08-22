@@ -1870,23 +1870,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
     }
 
-    JsonBatchCallback<Permission> callback = new JsonBatchCallback<Permission>() {
-        @Override
-        public void onFailure(GoogleJsonError e,
-                              HttpHeaders responseHeaders)
-                throws IOException {
-            // Handle error
-            System.err.println(e.getMessage());
-        }
-
-        @Override
-        public void onSuccess(Permission permission,
-                              HttpHeaders responseHeaders)
-                throws IOException {
-            System.out.println("Permission ID: " + permission.getId());
-        }
-    };
-
     private void requestgooglesignin() {
         Log.d(TAG, "Requesting sign-in");
 
