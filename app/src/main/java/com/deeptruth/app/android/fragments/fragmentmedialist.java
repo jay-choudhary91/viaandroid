@@ -117,29 +117,30 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @BindView(R.id.medialistfilteroption)
     RecyclerView recyclerviewfilteroption;
 
-    int selectedlisttype =0,listviewheight=0,dataupdator=0;
-    RelativeLayout listlayout;
+    private int selectedlisttype =0,listviewheight=0,dataupdator=0;
+    private RelativeLayout listlayout;
     private Handler myhandler;
     private Runnable myrunnable;
-    boolean isinbackground=false;
-    boolean shouldlaunchcomposer=true;
-    View rootview = null;
+    private boolean isinbackground=false;
+    private boolean shouldlaunchcomposer=true;
+    private View rootview = null;
     private static final int request_permissions = 1;
-    ArrayList<video> arraymediaitemlist = new ArrayList<>();
-    adaptermedialist adaptermedialistlocal;
-    adaptermedialist adaptermedialistpublished;
-    adaptermediafilter adaptermediafilter;
+    private ArrayList<video> arraymediaitemlist = new ArrayList<>();
+    private adaptermedialist adaptermedialistlocal;
+    private adaptermedialist adaptermedialistpublished;
+    private adaptermediafilter adaptermediafilter;
     private RecyclerTouchListener onTouchListener;
     private static final int request_read_external_storage = 1;
     private BroadcastReceiver medialistitemaddreceiver;
     private int REQUESTCODE_PICK=201;
-    int navigationbarheight = 0;
-    Handler handler = new Handler();
-    int numberOfTaps = 0, devicewidth = 0;
-    long lastTapTimeMs = 0;
-    long touchDownMs = 0;
-    boolean iskeyboardopen = false,shouldnavigatelist=true;
-    ArrayList<mediafilteroptions> arraylistmediafilter = new ArrayList<>();
+    private int navigationbarheight = 0;
+    private Handler handler = new Handler();
+    private int numberOfTaps = 0, devicewidth = 0;
+    private long lastTapTimeMs = 0;
+    private long touchDownMs = 0;
+    private String selectedmediafilter="";
+    private boolean iskeyboardopen = false,shouldnavigatelist=true;
+    private ArrayList<mediafilteroptions> arraymediafilterlist = new ArrayList<>();
 
     @Override
     public int getlayoutid() {
@@ -258,12 +259,17 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             ((DefaultItemAnimator) recyclerviewlocallist.getItemAnimator()).setSupportsChangeAnimations(false);
             recyclerviewlocallist.getItemAnimator().setChangeDuration(0);
 
+            actionbarcomposer.setOnTouchListener(this);
 
-            arraylistmediafilter.add(new mediafilteroptions(config.Date,false,false));
-            arraylistmediafilter.add(new mediafilteroptions(config.Title,false,false));
-            arraylistmediafilter.add(new mediafilteroptions(config.Type,false,false));
-            arraylistmediafilter.add(new mediafilteroptions(config.Size,false,false));
-            arraylistmediafilter.add(new mediafilteroptions(config.Location,false,false));
+            arraymediafilterlist.clear();
+
+            arraymediafilterlist.add(new mediafilteroptions(config.filter_date,true,true));
+            arraymediafilterlist.add(new mediafilteroptions(config.filter_title,false,false));
+            arraymediafilterlist.add(new mediafilteroptions(config.filter_type,false,false));
+            arraymediafilterlist.add(new mediafilteroptions(config.filter_size,false,false));
+            arraymediafilterlist.add(new mediafilteroptions(config.filter_location,false,false));
+
+            selectedmediafilter=config.filter_date;
 
             txt_localfiles.setOnClickListener(this);
             txt_publishedfiles.setOnClickListener(this);
@@ -407,6 +413,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         return rootview;
     }
 
+    public void showsearchsection()
+    {
+        layout_sectionsearch.setVisibility(View.VISIBLE);
+        /*iskeyboardopen =  true;
+        edt_searchitem.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
+                SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN , 0, 0, 0));
+        edt_searchitem.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
+                SystemClock.uptimeMillis(), MotionEvent.ACTION_UP , 0, 0, 0));*/
+    }
+
     private void searchmediafromlist(String text) {
         if(arraymediaitemlist != null && arraymediaitemlist.size() > 0)
         {
@@ -414,12 +430,107 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             {
                 //new array list that will hold the filtered data
                 ArrayList<video> filterdnames = new ArrayList<>();
-                //looping through existing elements
-                for (video object : arraymediaitemlist) {
+                for (video object : arraymediaitemlist)
+                {
                     //if the existing elements contains the search input
-                    if (object.getMediatitle().toLowerCase().contains(text.toLowerCase()) && object.isDoenable()) {
-                        //adding the element to filtered list
-                        filterdnames.add(object);
+                    if(selectedmediafilter.equalsIgnoreCase(config.filter_date))
+                    {
+                        String datetime="";
+                        if(object.getCreatedate().trim().isEmpty())
+                            datetime="NA";
+                        else
+                            datetime=object.getCreatedate() +", "  + object.getCreatetime();
+
+                        if (datetime.toLowerCase().contains(text.toLowerCase()) && selectedlisttype == 0 && (! object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                        else if (datetime.toLowerCase().contains(text.toLowerCase()) && selectedlisttype == 1 && (object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                    }
+                    else if(selectedmediafilter.equalsIgnoreCase(config.filter_title))
+                    {
+                        if (object.getMediatitle().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 0 && (! object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                        else if (object.getMediatitle().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 1 && (object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                    }
+                    else if(selectedmediafilter.equalsIgnoreCase(config.filter_size))
+                    {
+                        if (object.getfilesize().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 0 && (! object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                        else if (object.getfilesize().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 1 && (object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                    }
+                    else if(selectedmediafilter.equalsIgnoreCase(config.filter_location))
+                    {
+                        if (object.getMedialocation().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 0 && (! object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                        else if (object.getMedialocation().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 1 && (object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                    }
+                    else if(selectedmediafilter.equalsIgnoreCase(config.filter_type))
+                    {
+                        if(text.toLowerCase().equalsIgnoreCase("image") ||
+                                text.toLowerCase().equalsIgnoreCase("photo"))
+                        {
+                            if(selectedlisttype == 0 && (! object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("image"))
+                                    filterdnames.add(object);
+                            }
+                            else if(selectedlisttype == 1 && (object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("image"))
+                                    filterdnames.add(object);
+                            }
+                        }
+                        else if(text.toLowerCase().equalsIgnoreCase("video"))
+                        {
+                            if(selectedlisttype == 0 && (! object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("video"))
+                                    filterdnames.add(object);
+                            }
+                            else if(selectedlisttype == 1 && (object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("video"))
+                                    filterdnames.add(object);
+                            }
+                        }
+                        else if(text.toLowerCase().equalsIgnoreCase("audio"))
+                        {
+                            if(selectedlisttype == 0 && (! object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("audio"))
+                                    filterdnames.add(object);
+                            }
+                            else if(selectedlisttype == 1 && (object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("audio"))
+                                    filterdnames.add(object);
+                            }
+                        }
                     }
                 }
                 //calling a method of the adapter class and passing the filtered list
@@ -434,7 +545,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 setmediaadapter();
             }
         }
-
     }
 
     @Override
@@ -763,6 +873,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 videoobject.setId(Integer.parseInt(id));
                                 videoobject.setPath(mediafilepath);
                                 videoobject.setmimetype(type);
+                                videoobject.setMediatype(type);
                                 videoobject.setLocalkey(localkey);
                                 videoobject.setVideostarttransactionid(videostarttransactionid);
                                 videoobject.setThumbnailpath(thumbnailurl);
@@ -1009,8 +1120,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     recyclerviewfilteroption.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.e("medialistoptions",""+arraylistmediafilter);
-                            adaptermediafilter = new adaptermediafilter(getActivity(), arraylistmediafilter, new adapteritemclick() {
+                            adaptermediafilter = new adaptermediafilter(getActivity(), arraymediafilterlist, new adapteritemclick() {
                                 @Override
                                 public void onItemClicked(Object object) {
                                 }
@@ -1069,7 +1179,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                    img_settings.setVisibility(View.VISIBLE);
                }
 
-               if(arraylistmediafilter != null && arraylistmediafilter.size() >0){
+               if(arraymediafilterlist != null && arraymediafilterlist.size() >0){
                    if(adaptermediafilter != null){
                        adaptermediafilter.notifyDataSetChanged();
                    }
@@ -1945,38 +2055,51 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         iskeyboardopen = false;
     }
 
-    public void setfilterAdapter(final mediafilteroptions mediafilterobj, int type){
+    public void setfilterAdapter(final mediafilteroptions mediafilterobj, int type)
+    {
+        if(type == 1)
+        {
+            if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_date))
+            {
+                if(mediafilterobj.isascending())
+                    mediafilterobj.setascending(false);
+                else
+                    mediafilterobj.setascending(true);
 
-        if(type == 1){
-            if(mediafilterobj.getMediafiltername().equalsIgnoreCase(config.Date))
+                mediafilterobj.setfilterselected(true);
+                selectedmediafilter=config.filter_date;
+                showsearchsection();
+            }
+            else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_title))
             {
-             Toast.makeText(getActivity(),"dateclicked",Toast.LENGTH_SHORT).show();
-             if(!mediafilterobj.isIsselected()){
-                 mediafilterobj.setIsselected(true);
-                 mediafilterobj.setAscending(true);
-             }else{
-                 mediafilterobj.setIsselected(false);
-                 mediafilterobj.setAscending(true);
-             }
-            }else if(mediafilterobj.getMediafiltername().equalsIgnoreCase(config.Title))
+                selectedmediafilter=config.filter_title;
+                showsearchsection();
+            }
+            else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_type))
             {
-                Toast.makeText(getActivity(),"titleclicked",Toast.LENGTH_SHORT).show();
-            }else if(mediafilterobj.getMediafiltername().equalsIgnoreCase(config.Type))
+                selectedmediafilter=config.filter_type;
+                showsearchsection();
+            }
+            else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_size))
             {
-                Toast.makeText(getActivity(),"typeclicked",Toast.LENGTH_SHORT).show();
+                selectedmediafilter=config.filter_size;
+                showsearchsection();
+            }
+            else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_location))
+            {
+                selectedmediafilter=config.filter_location;
+                showsearchsection();
+            }
 
-            }else if(mediafilterobj.getMediafiltername().equalsIgnoreCase(config.Size))
+            for(int i = 0; i< arraymediafilterlist.size(); i++)
             {
-                Toast.makeText(getActivity(),"sizeclicked",Toast.LENGTH_SHORT).show();
-            }else if(mediafilterobj.getMediafiltername().equalsIgnoreCase(config.Location))
-            {
-                Toast.makeText(getActivity(),"locationclicked",Toast.LENGTH_SHORT).show();
+                if(mediafilterobj.getmediafiltername().equalsIgnoreCase(arraymediafilterlist.get(i).getmediafiltername()))
+                    arraymediafilterlist.get(i).setfilterselected(true);
+                else
+                    arraymediafilterlist.get(i).setfilterselected(false);
             }
         }
-       /* if(arraylistmediafilter != null && arraylistmediafilter.size() >0){
-            if(adaptermediafilter != null){
+            if(adaptermediafilter != null)
                 adaptermediafilter.notifyDataSetChanged();
-            }
-        }*/
     }
 }

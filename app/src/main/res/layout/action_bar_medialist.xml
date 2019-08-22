@@ -126,72 +126,6 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/layout_sectionsearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:background="@color/white"
-        >
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:orientation="horizontal"
-        >
-
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="OpenSans_Semibold"
-            android:id="@+id/txt_searchcancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="7dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:textSize="16sp"
-            android:textColor="@color/blue"
-            android:text="Cancel"
-            />
-
-        <com.deeptruth.app.android.views.customfontedittext
-            app:fontType="OpenSans_Regular"
-            android:id="@+id/edt_searchitem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/txt_searchcancel"
-            android:background="@drawable/round_corner_search_editext"
-            android:imeOptions="actionDone"
-            android:paddingLeft="40dp"
-            android:paddingRight="7dp"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
-            android:textCursorDrawable="@drawable/shape_cursor_line"
-            android:textSize="16sp"
-            android:gravity="left|center_vertical"
-            android:layout_centerVertical="true"
-            android:inputType="textCapSentences"
-            android:hint="Search "/>
-
-        <ImageView
-            android:id="@+id/img_search_editicon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/icon_header_search" />
-
-    </RelativeLayout>
-
-    </RelativeLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -244,5 +178,71 @@
         </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_sectionsearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:background="@color/white"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            >
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Semibold"
+                android:id="@+id/txt_searchcancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="7dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textSize="16sp"
+                android:textColor="@color/blue"
+                android:text="Cancel"
+                />
+
+            <com.deeptruth.app.android.views.customfontedittext
+                app:fontType="Comfortaa-Regular"
+                android:id="@+id/edt_searchitem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/txt_searchcancel"
+                android:background="@drawable/round_corner_search_editext"
+                android:imeOptions="actionDone"
+                android:paddingLeft="40dp"
+                android:paddingRight="7dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:textCursorDrawable="@drawable/shape_cursor_line"
+                android:textSize="16sp"
+                android:gravity="left|center_vertical"
+                android:layout_centerVertical="true"
+                android:inputType="textCapSentences"
+                android:hint="Search "/>
+
+            <ImageView
+                android:id="@+id/img_search_editicon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/icon_header_search" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>
