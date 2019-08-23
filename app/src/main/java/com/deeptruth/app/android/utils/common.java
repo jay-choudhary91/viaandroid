@@ -1665,10 +1665,7 @@ public class common {
 
         if(day >= 1)
         {
-            if (day == 1)
-                wholeUptime = String.format("%d d %02d:%02d:%02d", day, hour, minutes, seconds);
-            else
-                wholeUptime = String.format("%d d %02d:%02d:%02d", day, hour, minutes, seconds);
+                wholeUptime = String.format("%dd %02d:%02d:%02d", day, hour, minutes, seconds);
 
             time = wholeUptime;
         }
