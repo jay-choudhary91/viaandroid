@@ -1094,6 +1094,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void setmediaadapter()
     {
+        recyclerviewpublishedlist.setVisibility(View.VISIBLE);
         recyclerviewpublishedlist.post(new Runnable() {
             @Override
             public void run() {

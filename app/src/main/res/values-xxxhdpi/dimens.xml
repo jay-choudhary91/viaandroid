@@ -39,7 +39,7 @@
     <dimen name="encrypting_textsize5dp">5dp</dimen>
     <dimen name="encrypting_textsize6dp">6dp</dimen>
     <dimen name="encrypting_textsize7dp">7dp</dimen>
-    <dimen name="viewheight">110dp</dimen>
+    <dimen name="viewheight">115dp</dimen>
     <dimen name="listviewheight">130dp</dimen>
     <dimen name="animationbarheight">20dp</dimen>
     <dimen name="logoimage_height">150dp</dimen>
