@@ -1121,11 +1121,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void setmediaadapter()
     {
-        recyclerviewpublishedlist.post(new Runnable() {
+        recyclerviewlocallist.setVisibility(View.VISIBLE);
+        recyclerviewlocallist.post(new Runnable() {
             @Override
             public void run() {
 
-                listviewheight= recyclerviewpublishedlist.getHeight();
+                listviewheight= recyclerviewlocallist.getHeight();
                 if(adaptermedialistlocal == null)
                 {
                     adaptermedialistlocal = new adaptermedialist(getActivity(), arraymediaitemlist, new adapteritemclick() {
