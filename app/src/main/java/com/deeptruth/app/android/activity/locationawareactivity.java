@@ -2687,7 +2687,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                     if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending)) {
                         readerarraymedialist.get(i).setMediastatus(config.sync_inprogress);
-                        //initialdate = new Date();
+                        //initialdate = new filter_date();
                         callreadersyncservice(readerarraymedialist.get(i).getPath(), readerarraymedialist.get(i).getmimetype());
                         break;
                     }

@@ -138,11 +138,11 @@ public class introscreenactivity extends AppCompatActivity {
 
                 if(! isinbackground && (! touched))
                 {
-                    Date currentdate=new Date();
+                    filter_date currentdate=new filter_date();
                     int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
                     if(seconddifference > currentselectedduration)
                     {
-                        initialdate = new Date();
+                        initialdate = new filter_date();
 
                         if(currentselected < viewpagerfooter.getAdapter().getCount())
                         {

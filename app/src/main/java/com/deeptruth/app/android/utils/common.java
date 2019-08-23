@@ -2582,7 +2582,7 @@ public class common {
 
 
     public static String getdate() {
-        //Date date = new Date();
+        //filter_date date = new filter_date();
         //return DateFormat.getDateInstance().format(date);
         Date date = new Date();
         DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
@@ -2731,7 +2731,7 @@ public class common {
 
         String pattern = "HH:mm:ss";
         DateFormat df = new SimpleDateFormat(pattern);
-        /*Date today = Calendar.getInstance().getTime();*/
+        /*filter_date today = Calendar.getInstance().getTime();*/
         String converttime = df.format(time);
 
         return converttime;

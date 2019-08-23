@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:id="@+id/layout_typeoption"
         android:gravity="center"
+        android:layout_marginLeft="1dp"
         android:layout_height="wrap_content">
 
         <com.deeptruth.app.android.views.customfonttextview

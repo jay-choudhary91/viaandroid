@@ -373,4 +373,12 @@ public class config {
 
     public static final String TOPBAR_HEIGHT = "topbarheight";
 
+    public static final String filter_date ="Date";
+    public static final String filter_title ="Title";
+    public static final String filter_type ="Type";
+    public static final String filter_size ="Size";
+    public static final String filter_location ="Location";
+
+
+
 }

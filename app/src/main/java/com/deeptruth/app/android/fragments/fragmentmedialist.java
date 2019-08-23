@@ -117,29 +117,29 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @BindView(R.id.medialistfilteroption)
     RecyclerView recyclerviewfilteroption;
 
-    int selectedlisttype =0,listviewheight=0,dataupdator=0;
-    RelativeLayout listlayout;
+    private int selectedlisttype =0,listviewheight=0,dataupdator=0;
+    private RelativeLayout listlayout;
     private Handler myhandler;
     private Runnable myrunnable;
-    boolean isinbackground=false;
-    boolean shouldlaunchcomposer=true;
-    View rootview = null;
+    private boolean ascendinglistbydate=true;
+    private View rootview = null;
     private static final int request_permissions = 1;
-    ArrayList<video> arraymediaitemlist = new ArrayList<>();
-    adaptermedialist adaptermedialistlocal;
-    adaptermedialist adaptermedialistpublished;
-    adaptermediafilter adaptermediaoptions;
+    private ArrayList<video> arraymediaitemlist = new ArrayList<>();
+    private adaptermedialist adaptermedialistlocal;
+    private adaptermedialist adaptermedialistpublished;
+    private adaptermediafilter adaptermediafilter;
     private RecyclerTouchListener onTouchListener;
     private static final int request_read_external_storage = 1;
     private BroadcastReceiver medialistitemaddreceiver;
     private int REQUESTCODE_PICK=201;
-    int navigationbarheight = 0;
-    Handler handler = new Handler();
-    int numberOfTaps = 0, devicewidth = 0;
-    long lastTapTimeMs = 0;
-    long touchDownMs = 0;
-    boolean iskeyboardopen = false,shouldnavigatelist=true;
-    ArrayList<mediafilteroptions> arraylistmediafilter = new ArrayList<>();
+    private int navigationbarheight = 0;
+    private Handler handler = new Handler();
+    private int numberOfTaps = 0, devicewidth = 0;
+    private long lastTapTimeMs = 0;
+    private long touchDownMs = 0;
+    private String selectedmediafilter="";
+    private boolean iskeyboardopen = false,shouldnavigatelist=true;
+    private ArrayList<mediafilteroptions> arraymediafilterlist = new ArrayList<>();
 
     @Override
     public int getlayoutid() {
@@ -161,7 +161,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @Override
     public void onStop() {
         super.onStop();
-        isinbackground=true;
     }
 
     @Override
@@ -187,7 +186,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         gethelper().drawerenabledisable(false);
         gethelper().setwindowfitxy(true);
         gethelper().updateactionbar(1);
-        isinbackground=false;
         if(edt_searchitem != null)
             edt_searchitem.setTag(false);
     }
@@ -258,12 +256,18 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             ((DefaultItemAnimator) recyclerviewlocallist.getItemAnimator()).setSupportsChangeAnimations(false);
             recyclerviewlocallist.getItemAnimator().setChangeDuration(0);
 
+            actionbarcomposer.setOnTouchListener(this);
 
-            arraylistmediafilter.add(new mediafilteroptions("Date"));
-            arraylistmediafilter.add(new mediafilteroptions("Title"));
-            arraylistmediafilter.add(new mediafilteroptions("Type"));
-            arraylistmediafilter.add(new mediafilteroptions("Size"));
-            arraylistmediafilter.add(new mediafilteroptions("Location"));
+            arraymediafilterlist.clear();
+
+            arraymediafilterlist.add(new mediafilteroptions(config.filter_date,true,true));
+            arraymediafilterlist.add(new mediafilteroptions(config.filter_title,false,false));
+            arraymediafilterlist.add(new mediafilteroptions(config.filter_type,false,false));
+            arraymediafilterlist.add(new mediafilteroptions(config.filter_size,false,false));
+            arraymediafilterlist.add(new mediafilteroptions(config.filter_location,false,false));
+
+            ascendinglistbydate=true;
+            selectedmediafilter=config.filter_date;
 
             txt_localfiles.setOnClickListener(this);
             txt_publishedfiles.setOnClickListener(this);
@@ -407,6 +411,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         return rootview;
     }
 
+    public void showsearchsection()
+    {
+        layout_sectionsearch.setVisibility(View.VISIBLE);
+        /*iskeyboardopen =  true;
+        edt_searchitem.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
+                SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN , 0, 0, 0));
+        edt_searchitem.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(),
+                SystemClock.uptimeMillis(), MotionEvent.ACTION_UP , 0, 0, 0));*/
+    }
+
     private void searchmediafromlist(String text) {
         if(arraymediaitemlist != null && arraymediaitemlist.size() > 0)
         {
@@ -414,12 +428,107 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             {
                 //new array list that will hold the filtered data
                 ArrayList<video> filterdnames = new ArrayList<>();
-                //looping through existing elements
-                for (video object : arraymediaitemlist) {
+                for (video object : arraymediaitemlist)
+                {
                     //if the existing elements contains the search input
-                    if (object.getMediatitle().toLowerCase().contains(text.toLowerCase()) && object.isDoenable()) {
-                        //adding the element to filtered list
-                        filterdnames.add(object);
+                    if(selectedmediafilter.equalsIgnoreCase(config.filter_date))
+                    {
+                        String datetime="";
+                        if(object.getCreatedate().trim().isEmpty())
+                            datetime="NA";
+                        else
+                            datetime=object.getCreatedate() +", "  + object.getCreatetime();
+
+                        if (datetime.toLowerCase().contains(text.toLowerCase()) && selectedlisttype == 0 && (! object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                        else if (datetime.toLowerCase().contains(text.toLowerCase()) && selectedlisttype == 1 && (object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                    }
+                    else if(selectedmediafilter.equalsIgnoreCase(config.filter_title))
+                    {
+                        if (object.getMediatitle().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 0 && (! object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                        else if (object.getMediatitle().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 1 && (object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                    }
+                    else if(selectedmediafilter.equalsIgnoreCase(config.filter_size))
+                    {
+                        if (object.getfilesize().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 0 && (! object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                        else if (object.getfilesize().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 1 && (object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                    }
+                    else if(selectedmediafilter.equalsIgnoreCase(config.filter_location))
+                    {
+                        if (object.getMedialocation().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 0 && (! object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                        else if (object.getMedialocation().toLowerCase().
+                                contains(text.toLowerCase()) && selectedlisttype == 1 && (object.ismediapublished()))
+                        {
+                            filterdnames.add(object);
+                        }
+                    }
+                    else if(selectedmediafilter.equalsIgnoreCase(config.filter_type))
+                    {
+                        if(text.toLowerCase().equalsIgnoreCase("image") ||
+                                text.toLowerCase().equalsIgnoreCase("photo"))
+                        {
+                            if(selectedlisttype == 0 && (! object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("image"))
+                                    filterdnames.add(object);
+                            }
+                            else if(selectedlisttype == 1 && (object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("image"))
+                                    filterdnames.add(object);
+                            }
+                        }
+                        else if(text.toLowerCase().equalsIgnoreCase("video"))
+                        {
+                            if(selectedlisttype == 0 && (! object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("video"))
+                                    filterdnames.add(object);
+                            }
+                            else if(selectedlisttype == 1 && (object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("video"))
+                                    filterdnames.add(object);
+                            }
+                        }
+                        else if(text.toLowerCase().equalsIgnoreCase("audio"))
+                        {
+                            if(selectedlisttype == 0 && (! object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("audio"))
+                                    filterdnames.add(object);
+                            }
+                            else if(selectedlisttype == 1 && (object.ismediapublished()))
+                            {
+                                if (object.getMediatype().equalsIgnoreCase("audio"))
+                                    filterdnames.add(object);
+                            }
+                        }
                     }
                 }
                 //calling a method of the adapter class and passing the filtered list
@@ -434,7 +543,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 setmediaadapter();
             }
         }
-
     }
 
     @Override
@@ -763,6 +871,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 videoobject.setId(Integer.parseInt(id));
                                 videoobject.setPath(mediafilepath);
                                 videoobject.setmimetype(type);
+                                videoobject.setMediatype(type);
                                 videoobject.setLocalkey(localkey);
                                 videoobject.setVideostarttransactionid(videostarttransactionid);
                                 videoobject.setThumbnailpath(thumbnailurl);
@@ -800,19 +909,19 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     {
                                         if(mediastartdevicedate.contains("T"))
                                         {
-                                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                            mediadatetime = format.parse(mediastartdevicedate);
+                                            mediadatetime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH)
+                                                    .parse(mediastartdevicedate);
                                         }
                                         else
                                         {
-                                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
-                                            mediadatetime = format.parse(mediastartdevicedate);
+                                            mediadatetime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH)
+                                                    .parse(mediastartdevicedate);
                                         }
-                                        DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
-                                        String localTime = datee.format(mediadatetime);
 
-                                        final String filecreateddate = new SimpleDateFormat("MM/dd/yyyy",Locale.ENGLISH).format(mediadatetime);
-                                        final String endtime = new SimpleDateFormat("hh:mm:ss.SS aa",Locale.ENGLISH).format(mediadatetime);
+                                        videoobject.setcreatedatetimestamp(mediadatetime.getTime());
+                                        DateFormat dateformat = new SimpleDateFormat("z",Locale.getDefault());
+                                        String localTime = dateformat.format(mediadatetime);
+
                                         videoobject.setCreatedate(common.parsedateformat(mediadatetime));
                                         videoobject.setCreatetime(common.parsetimeformat(mediadatetime)+ " "+localTime );
                                     }
@@ -925,18 +1034,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         @Override
                         public void run() {
 
-                            Collections.sort( arraymediaitemlist, new Comparator()
-                            {
-                                public int compare(Object o1, Object o2) {
-                                    if (((video)o1).getId() > ((video)o2).getId()) {
-                                        return -1;
-                                    } else if (((video)o1).getId() < ((video)o2).getId()) {
-                                        return +1;
-                                    } else {
-                                        return 0;
-                                    }
-                                }
-                            });
+                            sortlistviewbydate();
 
                             setmediaadapter();
                             if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
@@ -964,6 +1062,34 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             }
         }).start();
+    }
+
+    public void sortlistviewbydate()
+    {
+        if(ascendinglistbydate)
+        {
+            // Latest date media is on top
+            Collections.sort(arraymediaitemlist, new Comparator<video>() {
+                public int compare(video s1, video s2) {
+                    // notice the cast to (Integer) to invoke compareTo
+                    Integer value1=(int)s2.getcreatedatetimestamp();
+                    Integer value2=(int)s1.getcreatedatetimestamp();
+                    return (value1).compareTo(value2);
+                }
+            });
+        }
+        else
+        {
+            // Latest date media is on bottom
+            Collections.sort(arraymediaitemlist, new Comparator<video>() {
+                public int compare(video s1, video s2) {
+                    // notice the cast to (Integer) to invoke compareTo
+                    Integer value1=(int)s2.getcreatedatetimestamp();
+                    Integer value2=(int)s1.getcreatedatetimestamp();
+                    return (value2).compareTo(value1);
+                }
+            });
+        }
     }
 
     public void setmediaadapter()
@@ -1004,24 +1130,25 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     },listviewheight);
                     recyclerviewpublishedlist.setAdapter(adaptermedialistpublished);
                 }
-                if(adaptermediaoptions == null)
+                if(adaptermediafilter == null)
                 {
                     recyclerviewfilteroption.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.e("medialistoptions",""+arraylistmediafilter);
-                            adaptermediaoptions = new adaptermediafilter(getActivity(), arraylistmediafilter, new adapteritemclick() {
+                            adaptermediafilter = new adaptermediafilter(getActivity(), arraymediafilterlist, new adapteritemclick() {
                                 @Override
                                 public void onItemClicked(Object object) {
                                 }
                                 @Override
                                 public void onItemClicked(Object object, int type) {
-                                    video videoobj=(video)object;
-                                    setAdapter(videoobj,type);
+                                    mediafilteroptions mediafilterobj=(mediafilteroptions)object;
+                                    setfilterAdapter(mediafilterobj,type);
                                 }
 
                             },recyclerviewfilteroption.getWidth());
-                            recyclerviewfilteroption.setAdapter(adaptermediaoptions);
+                            recyclerviewfilteroption.setAdapter(adaptermediafilter);
+                            adaptermediafilter.notifyDataSetChanged();
+
                         }
                     });
 
@@ -1065,6 +1192,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                        adaptermedialistpublished.notifyDataSetChanged();
 
                    img_settings.setVisibility(View.VISIBLE);
+               }
+
+               if(arraymediafilterlist != null && arraymediafilterlist.size() >0){
+                   if(adaptermediafilter != null){
+                       adaptermediafilter.notifyDataSetChanged();
+                   }
                }
 
                 myhandler.postDelayed(this, 1000);
@@ -1413,7 +1546,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void shouldlaunchcomposer(boolean shouldlaunchcomposer)
     {
-        this.shouldlaunchcomposer=shouldlaunchcomposer;
+
     }
 
     adapteritemclick mcontrollernavigator=new adapteritemclick() {
@@ -1935,5 +2068,62 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             hidekeyboard();
         }
         iskeyboardopen = false;
+    }
+
+    public void setfilterAdapter(final mediafilteroptions mediafilterobj, int type)
+    {
+        if(type == 1)
+        {
+            if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_date))
+            {
+                if(mediafilterobj.isascending())
+                    mediafilterobj.setascending(false);
+                else
+                    mediafilterobj.setascending(true);
+
+                mediafilterobj.setfilterselected(true);
+
+                ascendinglistbydate=mediafilterobj.isascending();
+                selectedmediafilter=config.filter_date;
+                showsearchsection();
+                sortlistviewbydate();
+
+                if(adaptermedialistlocal != null && selectedlisttype == 0)
+                    adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
+
+                if(adaptermedialistpublished != null && selectedlisttype == 1)
+                    adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
+            }
+            else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_title))
+            {
+                selectedmediafilter=config.filter_title;
+                showsearchsection();
+            }
+            else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_type))
+            {
+                selectedmediafilter=config.filter_type;
+                showsearchsection();
+            }
+            else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_size))
+            {
+                selectedmediafilter=config.filter_size;
+                showsearchsection();
+            }
+            else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_location))
+            {
+                selectedmediafilter=config.filter_location;
+                showsearchsection();
+            }
+
+            for(int i = 0; i< arraymediafilterlist.size(); i++)
+            {
+                if(mediafilterobj.getmediafiltername().equalsIgnoreCase(arraymediafilterlist.get(i).getmediafiltername()))
+                    arraymediafilterlist.get(i).setfilterselected(true);
+                else
+                    arraymediafilterlist.get(i).setfilterselected(false);
+            }
+        }
+            if(adaptermediafilter != null)
+                adaptermediafilter.notifyDataSetChanged();
     }
 }

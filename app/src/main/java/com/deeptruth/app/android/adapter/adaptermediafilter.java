@@ -1,6 +1,8 @@
 package com.deeptruth.app.android.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,8 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediafilteroptions;
+import com.deeptruth.app.android.utils.common;
+import com.deeptruth.app.android.utils.config;
 
 import java.util.ArrayList;
 
@@ -29,14 +34,14 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
 
 
     public class myViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout linearLayout,root_view;
+        LinearLayout layout_typeoption,root_view;
         TextView txt_options;
         ImageView img_updownarrow;
 
         public myViewHolder(View view) {
             super(view);
             root_view = (LinearLayout) view.findViewById(R.id.root_view);
-            linearLayout = (LinearLayout) view.findViewById(R.id.layout_typeoption);
+            layout_typeoption = (LinearLayout) view.findViewById(R.id.layout_typeoption);
             txt_options = (TextView) view.findViewById(R.id.txt_optiontype);
             img_updownarrow = (ImageView) view.findViewById(R.id.img_updownarrow);
         }
@@ -63,17 +68,51 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
 
         LinearLayout.LayoutParams param=null;
         float width=screenwidth;
-        double newwidth=width/5;
-        param=new LinearLayout.LayoutParams((int)newwidth, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        holder.root_view.setLayoutParams(param);
+        double newwidth=0;
 
         final mediafilteroptions mediaobject=arraymediafilter.get(position);
-        holder.txt_options.setText(mediaobject.getMediafiltername());
-        if(mediaobject.getMediafiltername().equalsIgnoreCase("Date"))
+        holder.txt_options.setText(mediaobject.getmediafiltername());
+        if(mediaobject.getmediafiltername().equalsIgnoreCase(config.filter_date))
             holder.img_updownarrow.setVisibility(View.VISIBLE);
         else
             holder.img_updownarrow.setVisibility(View.GONE);
+
+        if(mediaobject.getmediafiltername().equalsIgnoreCase(config.filter_date))
+            newwidth=width/4;
+        else if(mediaobject.getmediafiltername().equalsIgnoreCase(config.filter_location))
+            newwidth=width/4;
+        else
+            newwidth=width/6;
+
+        if(mediaobject.isfilterselected())
+        {
+            if(mediaobject.getmediafiltername().equalsIgnoreCase(config.filter_date))
+            {
+                if(mediaobject.isascending())
+                    holder.img_updownarrow.setImageResource(R.drawable.ic_uparrow);
+                else
+                    holder.img_updownarrow.setImageResource(R.drawable.ic_downarrow);
+            }
+            holder.txt_options.setTypeface(applicationviavideocomposer.semiboldfonttype);
+            holder.txt_options.setTextSize(12);
+            common.underlinespan(holder.txt_options,mediaobject.getmediafiltername());
+        }
+        else
+        {
+            holder.txt_options.setTypeface(applicationviavideocomposer.comfortaaregular);
+            holder.txt_options.setTextSize(11);
+            common.removeunderline(holder.txt_options,mediaobject.getmediafiltername());
+        }
+
+        holder.layout_typeoption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.onItemClicked(mediaobject , 1);
+            }
+        });
+
+        param=new LinearLayout.LayoutParams((int)newwidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+        holder.root_view.setLayoutParams(param);
     }
 
     @Override
