@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -63,6 +64,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -116,6 +118,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     TextView txt_publishedfiles;
     @BindView(R.id.medialistfilteroption)
     RecyclerView recyclerviewfilteroption;
+    @BindView(R.id.swipeToRefresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     private int selectedlisttype =0,listviewheight=0,dataupdator=0;
     private RelativeLayout listlayout;
@@ -236,6 +240,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             listlayout=rootview.findViewById(R.id.listlayout);
            // setheadermargin();
 
+            try {
+                Field f = mSwipeRefreshLayout.getClass().getDeclaredField("mCircleView");
+                f.setAccessible(true);
+                ImageView img = (ImageView)f.get(mSwipeRefreshLayout);
+                img.setAlpha(0.0f);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
             gethelper().drawerenabledisable(false);
             {
                 LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
@@ -377,6 +389,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                 }
             });*/
+
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    showsearchsection();
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
 
             IntentFilter intentFilter = new IntentFilter(config.broadcast_medialistnewitem);
             medialistitemaddreceiver = new BroadcastReceiver() {
@@ -2092,7 +2112,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                 ascendinglistbydate=mediafilterobj.isascending();
                 selectedmediafilter=config.filter_date;
-                showsearchsection();
                 sortlistviewbydate();
 
                 if(adaptermedialistlocal != null && selectedlisttype == 0)
@@ -2104,22 +2123,18 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_title))
             {
                 selectedmediafilter=config.filter_title;
-                showsearchsection();
             }
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_type))
             {
                 selectedmediafilter=config.filter_type;
-                showsearchsection();
             }
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_size))
             {
                 selectedmediafilter=config.filter_size;
-                showsearchsection();
             }
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_location))
             {
                 selectedmediafilter=config.filter_location;
-                showsearchsection();
             }
 
             for(int i = 0; i< arraymediafilterlist.size(); i++)
