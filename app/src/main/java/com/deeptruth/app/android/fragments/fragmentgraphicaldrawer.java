@@ -609,7 +609,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             halfpaichartdate(chart_cpuusage);
             halfpaichartdate(chart_battery);
 
-            setchartdata(linechart_speed,-5,200);
+            setchartdata(linechart_speed,-4,200);
             setchartdata(linechart_altitude,-40,3000);
             setchartdata(linechart_traveled,-5,300);
             vertical_slider_speed.setMax(80);
@@ -1575,7 +1575,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            float value=1.0f;
+                            float value=0.0f;
                             String unit = "";
 
                             if(itemarray.length > 1)
@@ -1606,7 +1606,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            float value=1.0f;
+                            float value=0.0f;
                             String unit = "";
 
                             if(itemarray.length > 1)
@@ -1636,7 +1636,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         try
                         {
-                            float value=1.0f;
+                            float value=0.0f;
                             String unit = "";
 
                             if(itemarray.length > 1)

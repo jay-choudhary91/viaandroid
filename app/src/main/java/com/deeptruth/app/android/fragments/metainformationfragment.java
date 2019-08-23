@@ -1316,7 +1316,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     {
                         try
                         {
-                            float value=1.0f;
+                            float value=0.0f;
                             String unit = "";
 
                             if(itemarray.length > 1)
@@ -1347,7 +1347,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     {
                         try
                         {
-                            float value=1.0f;
+                            float value=0.0f;
                             String unit = "";
 
                             if(itemarray.length > 1)
@@ -1377,7 +1377,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     {
                         try
                         {
-                            float value=1.0f;
+                            float value=0.0f;
                             String unit = "";
 
                             if(itemarray.length > 1)
