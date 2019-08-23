@@ -616,6 +616,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
     }
 
+    public void resetlistfilters()
+    {
+        edt_searchitem.setText("");
+        hidekeyboard();
+        layout_sectionsearch.setVisibility(View.GONE);
+        iskeyboardopen = false;
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId())
@@ -627,6 +635,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 txt_publishedfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
                         getColor(R.color.blue_item_deselected));
                 showselectedmediatypeitems(true);
+                resetlistfilters();
                 break;
             case R.id.txt_publishedfiles:
                 selectedlisttype=1;
@@ -635,6 +644,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 txt_localfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
                         getColor(R.color.blue_item_deselected));
                 showselectedmediatypeitems(true);
+                resetlistfilters();
                 break;
             case R.id.img_camera:
                 launchbottombarfragment();
@@ -646,10 +656,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 edt_searchitem.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP , 0, 0, 0));
                 break;
             case R.id.txt_searchcancel:
-                edt_searchitem.setText("");
-                hidekeyboard();
-                layout_sectionsearch.setVisibility(View.GONE);
-                iskeyboardopen = false;
+                resetlistfilters();
                 break;
             case R.id.img_dotmenu:
                 hidekeyboard();

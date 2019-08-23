@@ -497,7 +497,9 @@
     <string name="media_upload_success">Media uploaded successfully!</string>
     <string name="media_upload_failed">Media uploading failed!</string>
     <string name="upload_failed">Upload failed!</string>
-
+    <string name="a_certified_videoLock">A certified  VideoLock video is attached below. Please use the link to validate the authenticity of the</string>
+    <string name="if_you_dont_have_the_videolock">if you don’t have the VideoLock app on your phone,you can install it here:
+                    http://VideoLock.com/Reader</string>
 
     <string name="welcome_dialog_title">WELCOME!</string>
     <string name="wel_lineone">We have included a quick</string>

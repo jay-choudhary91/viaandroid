@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -41,6 +42,7 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.rangeseekbar.interfaces.onrangeseekbarchangelistener;
 import com.deeptruth.app.android.rangeseekbar.widgets.crystalrangeseekbar;
+import com.deeptruth.app.android.services.insertmediadataservice;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
@@ -49,7 +51,10 @@ import com.deeptruth.app.android.videotrimmer.hglvideotrimmer;
 import com.deeptruth.app.android.videotrimmer.interfaces.onhglvideolistener;
 import com.deeptruth.app.android.videotrimmer.interfaces.ontrimvideolistener;
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -107,6 +112,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     @BindView(R.id.view_seekbarrightnavigation)
     View view_seekbarrightnavigation;
 
+    public FFmpeg ffmpeg;
     View rootview = null;
     String mediafilepath ="", trimmedmediapath="",mediatoken ="",mediatype="",mediathumbnailurl="";
     int mediaduration = 0;
@@ -267,9 +273,39 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 }, 1000);
             }
 
+            loadffmpeg();
+
         }
         txt_media_endtime.setText(common.mediaplaytimeformatter(mediaduration));
         return rootview;
+    }
+
+    public void loadffmpeg()
+    {
+        try {
+            if (ffmpeg == null) {
+                Log.d("ffmpeg", "ffmpeg : is loading..");
+
+                ffmpeg = FFmpeg.getInstance(applicationviavideocomposer.getactivity());
+            }
+            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
+                @Override
+                public void onFailure() {
+                    // showUnsupportedExceptionDialog();
+                    Log.d("ffmpeg", " onFailure");
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.e("ffmpegsharemedia","onSuccess");
+                }
+            });
+        }catch (FFmpegNotSupportedException e) {
+            //showUnsupportedExceptionDialog();
+            Log.d("ffmpeg", "FFmpegNotSupportedException : " + e);
+        } catch (Exception e) {
+            Log.d("ffmpeg", "EXception no controlada : " + e);
+        }
     }
 
     public void updateleftrightthumbs(long mintimemillis,long maxtimemillis)
@@ -361,10 +397,10 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     {
         if(! ismediatrimmed)
         {
-            if(starttrimlength != 0 && endtrimlength != mediaduration)
+            if(starttrimlength == 0 && endtrimlength == mediaduration) // No trim required
+                return false;
+            else if(starttrimlength != 0 || endtrimlength != mediaduration) // Trim arrows are moved
                 return true;
-            else
-                ismediatrimmed=false;
         }
         return false;
     }
@@ -740,6 +776,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
 
     private void executecutmediacommand(long startMs, long endMs)
     {
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
         File destinationDir = null;
         final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         String fileName = "";
@@ -787,7 +824,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     private void execffmpegbinary(final String[] command, final File dest) {
         try {
             try {
-                applicationviavideocomposer.ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                     @Override
                     public void onFailure(String s) {
                         Log.e("Failure with output : ","IN onFailure");
