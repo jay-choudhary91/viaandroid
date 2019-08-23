@@ -117,7 +117,6 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
 
     @Override
     public int getItemCount() {
-        Log.e("arraylistsize",""+arraymediafilter.size());
         return arraymediafilter.size();
     }
 }

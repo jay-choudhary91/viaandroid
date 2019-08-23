@@ -97,7 +97,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     ImageView img_fullscreen;
     Date lastdateselection=null;
     boolean isviewtouched=false;
-    callservice phonecallservice;
+    //callservice phonecallservice;
     private fragmentmedialist fragmedialist;
     boolean isdraweropen=false ,isdrawerrunning = false;
     int rootviewheight,navigationbarheight, finalheight ,imageheight;
@@ -265,7 +265,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             }
         }).start();
 
-        detectphonecallservice();
+        //detectphonecallservice();
         setdrawerdata();
         getupdatedmetadata();
 
@@ -283,7 +283,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         },2000);
     }
 
-    public void detectphonecallservice()
+    /*public void detectphonecallservice()
     {
         phonecallservice = new callservice();
         Intent intent = new Intent(homeactivity.this, callservice.class);
@@ -294,7 +294,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             else
                 startService(intent);
         }
-    }
+    }*/
 
     private boolean isMyServiceRunning(Class<?> serviceClass)
     {
@@ -337,12 +337,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             }
         }*/
 
-        if(phonecallservice != null)
+        /*if(phonecallservice != null)
         {
             Intent intent = new Intent(homeactivity.this, callservice.class);
             if (isMyServiceRunning(phonecallservice.getClass()))
                 stopService(intent);
-        }
+        }*/
     }
 
     public void showAlertDialog() {

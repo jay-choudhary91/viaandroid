@@ -2625,6 +2625,18 @@ public class common {
 
     }
 
+    public static String getmediatypebymimetype(String mimetype)
+    {
+        if(mimetype.startsWith("image"))
+            return "image";
+        else if(mimetype.startsWith("audio"))
+            return "audio";
+        else if(mimetype.startsWith("video"))
+            return "video";
+
+        return "";
+    }
+
     public static String getphonetime() {
 
         boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());

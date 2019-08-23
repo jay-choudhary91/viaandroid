@@ -1111,6 +1111,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         e.printStackTrace();
                     }
                 }
+                else
+                {
+                        Toast.makeText(baseactivity.this,response.getMessage(),Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -1797,15 +1801,24 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             @Override
                             public void onSuccess(GoogleDriveFileHolder googleDriveFileHolder) {
 
+                                String mediatype=common.getmediatypebymimetype(common.getmimetype
+                                        (getreadytouploadfile().getAbsolutePath()));
+
+                                String sharabalelink="https://drive.google.com/open?id="+filderHolder.getResult().getId();
+
+                                String sharemessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.a_certified_videoLock)
+                                        +" "+mediatype+": "+sharabalelink+" "+applicationviavideocomposer.getactivity().
+                                        getResources().getString(R.string.if_you_dont_have_the_videolock);
+
                                 progressdialog.dismisswaitdialog();
                                 Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.media_upload_success),Toast.LENGTH_SHORT).show();
-                                String sharabalelink="https://drive.google.com/open?id="+filderHolder.getResult().getId();
+
                                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText("googledrivelink",sharabalelink );
+                                ClipData clip = ClipData.newPlainText("googledrivelink",sharemessage );
                                 clipboard.setPrimaryClip(clip);
 
-                                common.sharemessagewithapps(sharabalelink);
+                                common.sharemessagewithapps(sharemessage);
 
                                 if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                                     dialogfileuploadoptions.dismiss();
@@ -1916,10 +1929,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 dialog.dismiss();
-                senditemsdialog(applicationviavideocomposer.getactivity(), mediafilepath, mediatoken,
-                        type, ismediatrimmed,mediathumbnailurl,trimmedmediapath,popupcontenttype);
+                showsharedialogfragment(mediafilepath, mediatoken, type, mediathumbnailurl);
+                if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
+                    dialogfileuploadoptions.dismiss();
             }
         });
 
@@ -2137,6 +2152,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                     new IProgressCallback<Item>() {
                                         @Override
                                         public void success(final Item item) {
+
                                             progressdialog.dismisswaitdialog();
                                             Toast.makeText(baseactivity.this,applicationviavideocomposer.getactivity().getResources()
                                                     .getString(R.string.file_uploaded),

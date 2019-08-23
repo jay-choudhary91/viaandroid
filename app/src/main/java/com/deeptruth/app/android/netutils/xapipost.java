@@ -132,6 +132,11 @@ public class xapipost extends AsyncTask<Void, Void, String> {
                     result.success(true);
                     result.setData(jsonObject);
                 }
+                else if (jsonObject != null && jsonObject.has("error"))
+                {
+                    result.success(false);
+                    result.setMessage(jsonObject.getString("error"));
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
