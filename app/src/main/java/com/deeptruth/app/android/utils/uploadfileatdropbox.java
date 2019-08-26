@@ -3,8 +3,10 @@ package com.deeptruth.app.android.utils;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.dropbox.core.DbxException;
+import com.dropbox.core.util.IOUtil;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.WriteMode;
@@ -27,6 +29,7 @@ public class uploadfileatdropbox extends AsyncTask<String, Void, FileMetadata> {
     public interface Callback {
         void onUploadComplete(FileMetadata result);
         void onError(Exception e);
+        void onProgress(int percentagecompleted);
     }
 
     public uploadfileatdropbox(Context context, DbxClientV2 dbxClient, Callback callback) {
@@ -58,14 +61,28 @@ public class uploadfileatdropbox extends AsyncTask<String, Void, FileMetadata> {
             String remoteFileName = localFile.getName();
 
             try (InputStream inputStream = new FileInputStream(localFile)) {
+                publishProgress();
                 return mDbxClient.files().uploadBuilder("/"+remoteFileName)
                         .withMode(WriteMode.OVERWRITE)
-                        .uploadAndFinish(inputStream);
+                        .uploadAndFinish(inputStream, new IOUtil.ProgressListener() {
+                            @Override
+                            public void onProgress(long bytesWritten) {
+                                long totalbytes=localFile.length();
+                                double progresspercentage = (bytesWritten * 100) / totalbytes;
+                                if(mCallback != null)
+                                    mCallback.onProgress((int)progresspercentage);
+                            }
+                        });
             } catch (Exception e) {
                 mException = e;
             }
         }
 
         return null;
+    }
+
+    @Override
+    protected void onProgressUpdate(Void... values) {
+        super.onProgressUpdate(values);
     }
 }

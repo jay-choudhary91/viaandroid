@@ -101,7 +101,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:visibility="gone"
-                android:text="@string/file_uploaded_dropbox"
                 android:layout_marginTop="@dimen/margin_10dp"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"

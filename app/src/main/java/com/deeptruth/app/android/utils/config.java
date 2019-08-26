@@ -127,6 +127,7 @@ public class config {
     public static final String type_imageframes_get = "imageframes_get";
 
     public static final String datauploaded_success_dialog = "datauploaded_success_dialog";
+    public static final String datauploadeding_process_dialog = "datauploadeding_process_dialog";
 
     public static final String metriclist = "metriclist";
     public static final String framecount = "framecount";
