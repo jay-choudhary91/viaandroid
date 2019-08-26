@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -25,6 +28,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -40,7 +45,7 @@ import java.util.ArrayList;
  * Created by devesh on 6/8/18.
  */
 
-public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myViewHolder> {
+public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myViewHolder> {
 
     Context context;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
@@ -53,10 +58,13 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 tv_valid,tv_caution,tv_unsent,tv_invalid,txt_pipesign_caution,txt_pipesign_unsent,txt_pipesign_invalid,
                 tv_framecounts,txt_videoname,tv_size_location;
         RelativeLayout relative_child ;
-        public ImageView img_imageshare,img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
-        public SwipeRevealLayout root_view;
-        LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide,linearseekbarcolorview,layout_update_labels;
+        public ImageView img_imageshare,img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover,
+                img_slide_save,img_slide_publish,img_slide_send;
+        public SwipeLayout root_view;
+        LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide,linearseekbarcolorview,layout_update_labels,layout_share_send
+                ,layout_share_publish,layout_share_save;
         ProgressBar progressmediasync;
+        LinearLayout delete_layout,share_layout;
 
         public myViewHolder(View view) {
             super(view);
@@ -71,12 +79,18 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             img_slide_create_dir = (ImageView) view.findViewById(R.id.img_slide_create_dir);
             img_slide_delete = (ImageView) view.findViewById(R.id.img_slide_delete);
             img_scanover = (ImageView) view.findViewById(R.id.img_scanover);
+            img_slide_save = (ImageView) view.findViewById(R.id.img_slide_save);
+            img_slide_publish = (ImageView) view.findViewById(R.id.img_slide_publish);
+            img_slide_send = (ImageView) view.findViewById(R.id.img_slide_send);
             img_loader = (ImageView) view.findViewById(R.id.img_loader);
             layout_folder_slide = view.findViewById(R.id.layout_folder_slide);
             layout_delete_slide = view.findViewById(R.id.layout_delete_slide);
+            layout_share_send = view.findViewById(R.id.layout_share_send);
+            layout_share_publish = view.findViewById(R.id.layout_share_publish);
+            layout_share_save = view.findViewById(R.id.layout_share_save);
             layout_share_slide = view.findViewById(R.id.layout_share_slide);
             tv_mediaduration = (TextView) view.findViewById(R.id.tv_mediaduration);
-            root_view = (SwipeRevealLayout) view.findViewById(R.id.root_view);
+            root_view = (SwipeLayout) view.findViewById(R.id.root_view);
             relative_child = (RelativeLayout) view.findViewById(R.id.relative_child);
             linearseekbarcolorview = (LinearLayout) view.findViewById(R.id.linear_seekbarcolorview);
             tv_valid = (TextView) view.findViewById(R.id.tv_valid);
@@ -90,6 +104,32 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             tv_size_location = (TextView) view.findViewById(R.id.tv_size_location);
             layout_update_labels = (LinearLayout) view.findViewById(R.id.layout_update_labels);
             progressmediasync = (ProgressBar) view.findViewById(R.id.progressmediasync);
+            delete_layout = (LinearLayout) view.findViewById(R.id.delete_layout);
+            share_layout = (LinearLayout) view.findViewById(R.id.share_layout);
+
+            try {
+                if(img_slide_save.getDrawable() != null)
+                    DrawableCompat.setTint(img_slide_save.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity(), R.color.white));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            try {
+                if(img_slide_publish.getDrawable() != null)
+                    DrawableCompat.setTint(img_slide_publish.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity(), R.color.white));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            try {
+                if(img_slide_send.getDrawable() != null)
+                    DrawableCompat.setTint(img_slide_send.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity(), R.color.white));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -116,10 +156,19 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     public void onBindViewHolder(@NonNull final myViewHolder holder, final int position) {
 
         final video mediaobject=arrayvideolist.get(position);
-        binderHelper.bind(holder.root_view,""+position);
+        holder.root_view.setShowMode(SwipeLayout.ShowMode.PullOut);
 
-        if( holder.root_view.isOpened())
-            binderHelper.closeLayout(""+position);
+        holder.root_view.addDrag(SwipeLayout.DragEdge.Right,holder.delete_layout);
+        holder.root_view.addDrag(SwipeLayout.DragEdge.Left,holder.share_layout);
+
+
+
+        //binderHelper.bind(holder.root_view,""+position);
+
+        /*if( holder.root_view.getOpenStatus().)
+            binderHelper.closeLayout(""+position);*/
+
+
 
         //  binderHelper.bind(holder.root_view,""+position);
 
@@ -339,6 +388,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 Glide.with(context).load(R.drawable.audiothum).apply(requestOptions).thumbnail(0.1f).into(holder.img_videothumbnail);
             }
         }
+
         holder.img_imageshare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -350,25 +400,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                         holder.img_imageshare.setEnabled(true);
                     }
                 }, 1000);
-                binderHelper.bind(holder.root_view,""+position);
-                binderHelper.closeLayout(""+position);
-                adapter.onItemClicked(mediaobject,1);
-            }
-        });
-
-        holder.layout_share_slide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.layout_share_slide.setEnabled(false);
-                new Handler().postDelayed(new Runnable()
-                {
-                    public void run()
-                    {
-                        holder.layout_share_slide.setEnabled(true);
-                    }
-                }, 1000);
-                binderHelper.bind(holder.root_view,""+position);
-                binderHelper.closeLayout(""+position);
                 adapter.onItemClicked(mediaobject,1);
             }
         });
@@ -384,21 +415,30 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                         holder.layout_delete_slide.setEnabled(true);
                     }
                 }, 1000);
-                binderHelper.bind(holder.root_view,""+position);
-                binderHelper.closeLayout(""+position);
                 adapter.onItemClicked(mediaobject,2);
             }
         });
 
-        holder.layout_folder_slide.setOnClickListener(new View.OnClickListener() {
+        holder.layout_share_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binderHelper.bind(holder.root_view,""+position);
-                binderHelper.closeLayout(""+position);
-                adapter.onItemClicked(mediaobject,6);
+
             }
         });
 
+        holder.layout_share_publish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //adapter.onItemClicked(mediaobject,6);
+            }
+        });
+
+        holder.layout_share_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //adapter.onItemClicked(mediaobject,6);
+            }
+        });
 
         holder.relative_child.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -414,7 +454,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
         double parentheight=listviewheight;
         Log.e("parentheight",""+listviewheight);
-        parentheight=parentheight/2.0;
+        parentheight=parentheight/4.3;
         holder.root_view.getLayoutParams().height = (int)parentheight;
 
         /*if(mediaobject.isDoenable())
@@ -442,6 +482,8 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             binderHelper.closeLayout(""+position);
             binderHelper.bind(holder.root_view,""+position);
         }*/
+
+        mItemManger.bindView(holder.itemView, position);
 
     }
 
@@ -496,6 +538,11 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     @Override
     public int getItemCount() {
         return arrayvideolist.size();
+    }
+
+    @Override
+    public int getSwipeLayoutResourceId(int position) {
+        return R.id.root_view;
     }
 
 }
