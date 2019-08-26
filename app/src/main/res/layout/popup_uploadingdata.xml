@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/popup_background"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/margin_15dp"
+            android:text="@string/uploading"
+            android:textColor="@android:color/black"
+            android:textSize="30sp"
+            app:fontType="Comfortaa-Regular"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="0.6"
+            android:orientation="vertical"
+            android:layout_height="0dp"
+            android:gravity="center_vertical">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_please_wait"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/please_wait_"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:layout_marginTop="@dimen/margin_15dp">
+
+                <ProgressBar
+                    android:id="@+id/progressmediasync"
+                    style="@style/CustomProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_height="@dimen/animationbarheight"/>
+
+                <com.deeptruth.app.android.views.customseekbar
+                    android:id="@+id/seekbar_uploading"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/animationbarheight"
+                    android:layout_centerInParent="true"
+                    android:progressDrawable="@drawable/custom_upload_seekbar"
+                    android:thumb="@drawable/custom_upload_thumb" />
+
+            </RelativeLayout>
+
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0% Complete"
+                android:layout_marginTop="@dimen/margin_10dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:orientation="vertical"
+            android:gravity="top|center_horizontal">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/checkbox_notify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/black"
+                android:checked="true"
+                android:text="@string/notify_when_complete"
+                android:textSize="15sp"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_fileuploaded"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="@string/file_uploaded_dropbox"
+                android:layout_marginTop="@dimen/margin_10dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_ok"
+                style="@style/tv_basic"
+                android:layout_width="wrap_content"
+                android:background="@drawable/round_corner_btn_allow"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:paddingTop="10dp"
+                android:text="OK"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                app:fontType="Comfortaa-Regular" />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Cancel"
+                android:padding="10dp"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:textColor="@color/grey_xxx"
+                android:textSize="16sp"
+                app:fontType="Comfortaa-Regular"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

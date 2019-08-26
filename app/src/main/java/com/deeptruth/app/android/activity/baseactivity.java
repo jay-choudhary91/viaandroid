@@ -29,6 +29,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,6 +93,7 @@ import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.uploadfileatdropbox;
 import com.deeptruth.app.android.utils.xdata;
+import com.deeptruth.app.android.views.customseekbar;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -147,7 +150,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     public boolean isapprunning = false;
     private basefragment mcurrentfragment;
     private SharedPreferences prefs;
-    static Dialog subdialogshare = null;
+    Dialog subdialogshare = null,datauploadingdialog=null,aboutsharedialog=null,shareoptionsdialog=null;
     private Stack<Fragment> mfragments = new Stack<Fragment>();
     private static final int permission_location_request_code = 91;
     String serverresponsemessage = "";
@@ -156,7 +159,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     String mediapath = "";
     String mediatype = "";
     String mediavideotoken = "",mediamethod = "";
-    Dialog dialog;
+    //Dialog dialog;
     Dialog dialoginapppurchase =null,dialogupgradecode=null,dialogfileuploadoptions=null;
     // In the class declaration section:
     //private DropboxAPI<AndroidAuthSession> mdropboxapi;
@@ -908,19 +911,22 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void showaboutsharedialog(String filepath,String mediatoken,String mediatype,String mediathumbnailurl)
     {
-        dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.share_alert_popup);
+        if(aboutsharedialog != null && aboutsharedialog.isShowing())
+            aboutsharedialog.dismiss();
 
-        TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
-        TextView txt_content = (TextView)dialog.findViewById(R.id.txt_content);
+        aboutsharedialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
+        aboutsharedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        aboutsharedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        aboutsharedialog.setCanceledOnTouchOutside(false);
+        aboutsharedialog.setCancelable(true);
+        aboutsharedialog.setContentView(R.layout.share_alert_popup);
+
+        TextView txttitle = (TextView)aboutsharedialog.findViewById(R.id.txt_title);
+        TextView txt_content = (TextView)aboutsharedialog.findViewById(R.id.txt_content);
         txttitle.setText("SHARE");
 
         txttitle.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
-        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
+        final CheckBox notifycheckbox = (CheckBox) aboutsharedialog.findViewById(R.id.notifycheckbox);
         notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
         notifycheckbox.setTextColor(Color.BLACK);
         notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.NORMAL);
@@ -965,11 +971,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         common.setspanning(textsharepopup,txt_content);
 
-        TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
+        TextView ok = (TextView) aboutsharedialog.findViewById(R.id.btn_ok);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                aboutsharedialog.dismiss();
 
                 if(notifycheckbox.isChecked())
                     xdata.getinstance().saveSetting(config.mediasharedialog,"1");
@@ -980,9 +986,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        dialog.setCanceledOnTouchOutside(false);
-        setscreenwidthheight(dialog,96,80,getResources().getString(R.string.popup_publish));
-        dialog.show();
+        aboutsharedialog.setCanceledOnTouchOutside(false);
+        setscreenwidthheight(aboutsharedialog,96,80,getResources().getString(R.string.popup_publish));
+        aboutsharedialog.show();
     }
 
     public void showsharedialogfragment(String filepath, String mediatoken, String mediatype, String mediathumbnailurl)
@@ -1217,20 +1223,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void share_alert_dialog(final Context context,final String title, String content,adapteritemclick mitemclick){
 
-        dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.share_alert_popup);
+        if(shareoptionsdialog != null && shareoptionsdialog.isShowing())
+            shareoptionsdialog.dismiss();
 
-        TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
-        TextView txt_content = (TextView)dialog.findViewById(R.id.txt_content);
+        shareoptionsdialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
+        shareoptionsdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        shareoptionsdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        shareoptionsdialog.setCanceledOnTouchOutside(false);
+        shareoptionsdialog.setCancelable(true);
+        shareoptionsdialog.setContentView(R.layout.share_alert_popup);
+
+        TextView txttitle = (TextView)shareoptionsdialog.findViewById(R.id.txt_title);
+        TextView txt_content = (TextView)shareoptionsdialog.findViewById(R.id.txt_content);
         txttitle.setText(title);
         String str = content;
 
         txttitle.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
-        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
+        final CheckBox notifycheckbox = (CheckBox) shareoptionsdialog.findViewById(R.id.notifycheckbox);
         notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
         notifycheckbox.setTextColor(Color.BLACK);
         notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.NORMAL);
@@ -1326,7 +1335,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             common.setspanning(textsharepopup,txt_content);
         }
 
-        TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
+        TextView ok = (TextView) shareoptionsdialog.findViewById(R.id.btn_ok);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1355,14 +1364,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 //baseactivity.getinstance().senditemsdialog(context);
 
-                dialog.dismiss();
+                shareoptionsdialog.dismiss();
 
             }
         });
 
-        dialog.setCanceledOnTouchOutside(false);
-        setscreenwidthheight(dialog,96,80,getResources().getString(R.string.popup_publish));
-        dialog.show();
+        shareoptionsdialog.setCanceledOnTouchOutside(false);
+        setscreenwidthheight(shareoptionsdialog,96,80,getResources().getString(R.string.popup_publish));
+        shareoptionsdialog.show();
     }
 
     public void showinapppurchasepopup(final Context activity, String title,String message, final adapteritemclick mitemclick,String  gravity)
@@ -1753,9 +1762,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 .addOnSuccessListener(googleAccount ->
                 {
 
-                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                    //progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
                     try
                     {
+                        showuploadingdatapopup(applicationviavideocomposer.getactivity(),0,"");
                         Log.d(TAG, "Signed in as " + googleAccount.getEmail());
                         // Use the authenticated account to sign in to the Drive service.
                         GoogleAccountCredential credential =
@@ -1805,24 +1815,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                 String mediatype=common.getmediatypebymimetype(common.getmimetype
                                         (getreadytouploadfile().getAbsolutePath()));
 
-                                String sharabalelink="https://drive.google.com/open?id="+fileHolder.getResult().getId();
+                                String sharabalelink="https://drive.google.com/open?id="+googleDriveFileHolder.getId();
 
                                 String sharemessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.a_certified_videoLock)
                                         +" "+mediatype+": "+sharabalelink+" "+applicationviavideocomposer.getactivity().
                                         getResources().getString(R.string.if_you_dont_have_the_videolock);
 
                                 progressdialog.dismisswaitdialog();
-                                Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
-                                        .getResources().getString(R.string.media_upload_success),Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                 //       .getResources().getString(R.string.media_upload_success),Toast.LENGTH_SHORT).show();
 
-                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText("googledrivelink",sharemessage );
-                                clipboard.setPrimaryClip(clip);
-
-                                common.sharemessagewithapps(sharemessage);
-
-                                if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
-                                    dialogfileuploadoptions.dismiss();
+                                if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
+                                        showuploadingdatapopup(applicationviavideocomposer.getactivity(),100,sharemessage);
                             }
                         });
 
@@ -1841,6 +1845,102 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
                             .getResources().getString(R.string.unable_signin),Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    public void showuploadingdatapopup(final Context context,int percentage,String sharemessage)
+    {
+
+        if(datauploadingdialog == null || (! datauploadingdialog.isShowing()))
+        {
+            datauploadingdialog =new Dialog(context,R.style.transparent_dialog_borderless);
+            datauploadingdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            datauploadingdialog.setCanceledOnTouchOutside(false);
+            datauploadingdialog.setCancelable(true);
+            datauploadingdialog.setContentView(R.layout.popup_uploadingdata);
+        }
+
+        TextView txt_progress = (TextView) datauploadingdialog.findViewById(R.id.txt_progress);
+        TextView txt_fileuploaded = (TextView) datauploadingdialog.findViewById(R.id.txt_fileuploaded);
+        TextView txt_ok = (TextView) datauploadingdialog.findViewById(R.id.txt_ok);
+        TextView txt_cancel = (TextView) datauploadingdialog.findViewById(R.id.txt_cancel);
+        TextView txt_please_wait = (TextView) datauploadingdialog.findViewById(R.id.txt_please_wait);
+        customseekbar seekbar_uploading = (customseekbar) datauploadingdialog.findViewById(R.id.seekbar_uploading);
+        AppCompatCheckBox checkbox_notify = (AppCompatCheckBox) datauploadingdialog.findViewById(R.id.checkbox_notify);
+
+        checkbox_notify.setText(context.getResources().getString(R.string.notify_when_complete));
+        checkbox_notify.setTextColor(context.getResources().getColor(R.color.black));
+
+        seekbar_uploading.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b)
+            {
+                txt_progress.setText(progress+"% Complete");
+                if(progress == 100)
+                {
+                    checkbox_notify.setVisibility(View.GONE);
+                    txt_fileuploaded.setVisibility(View.VISIBLE);
+                    txt_cancel.setVisibility(View.GONE);
+                    txt_please_wait.setVisibility(View.GONE);
+                }
+                else
+                {
+                    txt_please_wait.setVisibility(View.VISIBLE);
+                    checkbox_notify.setVisibility(View.VISIBLE);
+                    txt_fileuploaded.setVisibility(View.GONE);
+                    txt_cancel.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        seekbar_uploading.setProgress(percentage);
+        seekbar_uploading.setMax(100);
+        seekbar_uploading.setPadding(0, 0, 0, 0);
+
+        txt_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if(seekbar_uploading.getProgress() != 100)
+                {
+                    if(checkbox_notify.isChecked())
+                        xdata.getinstance().saveSetting(config.datauploaded_success_dialog,"1");
+                    else
+                        xdata.getinstance().saveSetting(config.datauploaded_success_dialog,"0");
+                }
+                else
+                {
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("googledrivelink",sharemessage );
+                    clipboard.setPrimaryClip(clip);
+                    common.sharemessagewithapps(sharemessage);
+                }
+
+                if(datauploadingdialog != null && datauploadingdialog.isShowing())
+                    datauploadingdialog.dismiss();
+            }
+        });
+
+        txt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if(datauploadingdialog != null && datauploadingdialog.isShowing())
+                    datauploadingdialog.dismiss();
+            }
+        });
+        setscreenwidthheight(datauploadingdialog,95,80,
+                context.getResources().getString(R.string.popup_videolock));
+        datauploadingdialog.show();
     }
 
 

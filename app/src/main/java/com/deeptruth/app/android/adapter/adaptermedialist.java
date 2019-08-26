@@ -13,7 +13,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -107,7 +106,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_videolist, parent, false);
+                .inflate(R.layout.adapter_medialist, parent, false);
 
         return new myViewHolder(itemView);
     }
