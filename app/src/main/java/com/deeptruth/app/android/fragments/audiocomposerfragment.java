@@ -280,7 +280,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             };
             List<String> deniedpermissions = new ArrayList<>();
             for (String permission : neededpermissions) {
-                if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                     deniedpermissions.add(permission);
                 }
             }
@@ -290,7 +290,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             } else {
                 String[] array = new String[deniedpermissions.size()];
                 array = deniedpermissions.toArray(array);
-                ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
+                ActivityCompat.requestPermissions(applicationviavideocomposer.getactivity(), array, request_permissions);
             }
         }
 
@@ -318,7 +318,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 doafterallpermissionsgranted = new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(applicationviavideocomposer.getactivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
                         //gethelper().onBack();
                     }
                 };
@@ -1337,7 +1337,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                         SpannableStringBuilder builder = new SpannableStringBuilder();
                         builder.append(config.TEXT_GPS)
-                                .append(" ", new CenteredImageSpan(getActivity(),R.drawable.ic_plusminus),0)
+                                .append(" ", new CenteredImageSpan(applicationviavideocomposer.getactivity(),R.drawable.ic_plusminus),0)
                                 .append(gpsvalue+"ft");
 
                         txt_section_gps.setText(builder);
@@ -1347,7 +1347,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                         SpannableStringBuilder builder = new SpannableStringBuilder();
                         builder.append(config.TEXT_GPS)
-                                .append(" ", new CenteredImageSpan(getActivity(),R.drawable.ic_plusminus),0)
+                                .append(" ", new CenteredImageSpan(applicationviavideocomposer.getactivity(),R.drawable.ic_plusminus),0)
                                 .append(gpsvalue+"ft");
 
                         txt_section_gps.setText(builder);

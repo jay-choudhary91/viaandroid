@@ -227,7 +227,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         layout_item_encryption.setVisibility(View.GONE);
         recycler_encryption.setVisibility(View.VISIBLE);
 
-        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
+        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(applicationviavideocomposer.getactivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
         encryptionadapter = new encryptiondataadapter(encryptionarraylist, applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
@@ -400,7 +400,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 if (!hasFocus) {
                     v.setFocusable(false);
                     //gethelper().setwindowfitxy(true);
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
 
                     callupdatemetaapi(mediaid,edt_medianame.getText().toString().trim(),edt_medianotes.getText().toString().trim());
@@ -415,7 +415,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     edt_medianame.setKeyListener(null);
                     v.setFocusable(false);
                     //gethelper().setwindowfitxy(true);
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
 
                     callupdatemetaapi(mediaid,edt_medianame.getText().toString().trim(),edt_medianotes.getText().toString().trim());
@@ -535,7 +535,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
         super.initviews(parent, savedInstanceState);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        applicationviavideocomposer.getactivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         ButterKnife.bind(this, parent);
     }
 
@@ -593,12 +593,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
             case R.id.img_edit_name:
                 visiblefocus(edt_medianame);
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                 break;
             case R.id.img_edit_notes:
                 visiblefocus(edt_medianotes);
-                InputMethodManager imn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imn = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
 
                 break;
@@ -713,7 +713,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             layout_validating.setVisibility(View.VISIBLE);
                     }
                     v.clearFocus();
-                    InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager immm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     immm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
                }
@@ -733,15 +733,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             // fill drawable only supported on api level 18 and above
             Drawable drawable1 = (Drawable) view1.getBackground();
             drawable1.setColorFilter(getResources().getColor(R.color.blue), PorterDuff.Mode.MULTIPLY);
-            view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
+            view1.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.white));
 
             Drawable drawable2 = (Drawable) view2.getBackground();
             drawable2.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
-            view2.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+            view2.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.blue));
 
             Drawable drawable3 = (Drawable) view3.getBackground();
             drawable3.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
-            view3.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+            view3.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.blue));
 
         }
     }
@@ -1184,7 +1184,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
         requestparams.put("title",title);
         requestparams.put("description",description);
-        progressdialog.showwaitingdialog(getActivity());
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
         gethelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
@@ -1197,13 +1197,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         {
                             if(object.getString("success").equalsIgnoreCase("true") || object.getString("success").equalsIgnoreCase("1"))
                             {
-                                Toast.makeText(getActivity(), applicationviavideocomposer.getactivity()
+                                Toast.makeText(applicationviavideocomposer.getactivity(), applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.metadata_updated), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("error"))
                         {
-                            Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             //resetmedianamenotes();
                         }
 
@@ -1220,7 +1220,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
                 else
                 {
-                    Toast.makeText(getActivity(), applicationviavideocomposer.getactivity().getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(applicationviavideocomposer.getactivity(), applicationviavideocomposer.getactivity().getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });

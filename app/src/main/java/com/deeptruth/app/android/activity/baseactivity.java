@@ -97,6 +97,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -1770,17 +1771,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                         .build();
 
                         //DriveServiceHelper mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
-                        Task<GoogleDriveFileHolder> filderHolder=uploadfileatgoogledrive(googleDriveService,getreadytouploadfile(),
+                        Task<GoogleDriveFileHolder> fileHolder=uploadfileatgoogledrive(googleDriveService,getreadytouploadfile(),
                                 common.getmimetype(getreadytouploadfile().getAbsolutePath()),null);
 
-                        filderHolder.addOnCompleteListener(applicationviavideocomposer.getactivity(), new OnCompleteListener<GoogleDriveFileHolder>() {
+                        fileHolder.addOnCompleteListener(applicationviavideocomposer.getactivity(), new OnCompleteListener<GoogleDriveFileHolder>() {
                             @Override
                             public void onComplete(@NonNull Task<GoogleDriveFileHolder> task) {
 
                             }
                         });
 
-                        filderHolder.addOnCanceledListener(applicationviavideocomposer.getactivity(), new OnCanceledListener() {
+                        fileHolder.addOnCanceledListener(applicationviavideocomposer.getactivity(), new OnCanceledListener() {
                             @Override
                             public void onCanceled() {
                                 Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
@@ -1788,7 +1789,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             }
                         });
 
-                        filderHolder.addOnFailureListener(applicationviavideocomposer.getactivity(), new OnFailureListener() {
+                        fileHolder.addOnFailureListener(applicationviavideocomposer.getactivity(), new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
@@ -1796,7 +1797,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             }
                         });
 
-                        filderHolder.addOnSuccessListener(applicationviavideocomposer.getactivity(),
+                        fileHolder.addOnSuccessListener(applicationviavideocomposer.getactivity(),
                                 new OnSuccessListener<GoogleDriveFileHolder>() {
                             @Override
                             public void onSuccess(GoogleDriveFileHolder googleDriveFileHolder) {
@@ -1804,7 +1805,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                 String mediatype=common.getmediatypebymimetype(common.getmimetype
                                         (getreadytouploadfile().getAbsolutePath()));
 
-                                String sharabalelink="https://drive.google.com/open?id="+filderHolder.getResult().getId();
+                                String sharabalelink="https://drive.google.com/open?id="+fileHolder.getResult().getId();
 
                                 String sharemessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.a_certified_videoLock)
                                         +" "+mediatype+": "+sharabalelink+" "+applicationviavideocomposer.getactivity().
@@ -1877,6 +1878,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 GoogleDriveFileHolder googleDriveFileHolder = new GoogleDriveFileHolder();
                 googleDriveFileHolder.setId(fileMeta.getId());
                 googleDriveFileHolder.setName(fileMeta.getName());
+
+
+
 
                 return googleDriveFileHolder;
             }
