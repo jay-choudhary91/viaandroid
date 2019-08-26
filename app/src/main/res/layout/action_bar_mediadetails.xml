@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/img_camera"
             android:layout_marginLeft="14dp"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_whitefolder"/>
 

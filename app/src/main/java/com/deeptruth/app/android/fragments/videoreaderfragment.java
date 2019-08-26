@@ -762,7 +762,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         imgpause.setVisibility(View.GONE);
         img_dotmenu.setVisibility(View.VISIBLE);
-        img_folder.setVisibility(View.VISIBLE);
+        img_folder.setVisibility(View.GONE);
         img_arrow_back.setVisibility(View.VISIBLE);
         txtslotmedia.setText(getResources().getString(R.string.video));
         scrollview_detail.setVisibility(View.VISIBLE);

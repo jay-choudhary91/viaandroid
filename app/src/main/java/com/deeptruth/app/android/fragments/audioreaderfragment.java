@@ -438,7 +438,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         img_pause.setOnClickListener(this);
 
         img_dotmenu.setVisibility(View.VISIBLE);
-        img_folder.setVisibility(View.VISIBLE);
+        img_folder.setVisibility(View.GONE);
         img_arrow_back.setVisibility(View.VISIBLE);
 
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))

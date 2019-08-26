@@ -325,7 +325,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         img_arrow_back.setOnClickListener(this);
 
         img_dotmenu.setVisibility(View.VISIBLE);
-        img_folder.setVisibility(View.VISIBLE);
+        img_folder.setVisibility(View.GONE);
         img_arrow_back.setVisibility(View.VISIBLE);
 
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
