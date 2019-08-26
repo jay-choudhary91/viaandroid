@@ -604,7 +604,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
+        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(applicationviavideocomposer.getactivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
         encryptionadapter = new encryptiondataadapter(encryptionarraylist, applicationviavideocomposer.getactivity());
@@ -693,7 +693,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    p.addRule(RelativeLayout.ABOVE, seekBar.getId());
                    Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
 
-                   p.setMargins((int) (thumbRect.centerX() - common.dpToPx(getActivity(), 43)), 0, -100, 0);
+                   p.setMargins((int) (thumbRect.centerX() - common.dpToPx(applicationviavideocomposer.getactivity(), 43)), 0, -100, 0);
 
                    layout_progressline.setLayoutParams(p);
                    txt_mediatimethumb.setText(common.gettimestring(seekBar.getProgress()));
@@ -719,7 +719,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void run()
             {
-                adapter = new framebitmapadapter(getActivity(), mbitmaplist,recyview_frames.getWidth(),
+                adapter = new framebitmapadapter(applicationviavideocomposer.getactivity(), mbitmaplist,recyview_frames.getWidth(),
                 new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
@@ -734,9 +734,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                 final LinearLayoutManager mlinearlayoutmanager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
                 mlinearlayoutmanager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                recyview_frames.setLayoutManager(new ScrubberLinearLayoutManagerWithSmoothScroller(getActivity(),LinearLayoutManager.HORIZONTAL,false
+                recyview_frames.setLayoutManager(new ScrubberLinearLayoutManagerWithSmoothScroller(applicationviavideocomposer.getactivity(),LinearLayoutManager.HORIZONTAL,false
                 ));
-                // LinearLayoutManager mlinearlayoutmanager = new centerlayoutmanager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                // LinearLayoutManager mlinearlayoutmanager = new centerlayoutmanager(applicationviavideocomposer.getactivity(), LinearLayoutManager.HORIZONTAL, false);
                 //recyview_frames.setLayoutManager(mlinearlayoutmanager);
                 recyview_frames.setItemAnimator(new DefaultItemAnimator());
                 recyview_frames.setAdapter(adapter);
@@ -762,7 +762,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         imgpause.setVisibility(View.GONE);
         img_dotmenu.setVisibility(View.VISIBLE);
-        img_folder.setVisibility(View.VISIBLE);
+        img_folder.setVisibility(View.GONE);
         img_arrow_back.setVisibility(View.VISIBLE);
         txtslotmedia.setText(getResources().getString(R.string.video));
         scrollview_detail.setVisibility(View.VISIBLE);
@@ -889,7 +889,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     v.setFocusable(false);
                     editabletext();
                     gethelper().setwindowfitxy(true);
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
 
                     callupdatemetaapi(mediaid,edt_medianame.getText().toString().trim(),edt_medianotes.getText().toString().trim());
@@ -903,7 +903,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if (!hasFocus) {
                     v.setFocusable(false);
                     gethelper().setwindowfitxy(true);
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
 
                     callupdatemetaapi(mediaid,edt_medianame.getText().toString().trim(),edt_medianotes.getText().toString().trim());
@@ -963,7 +963,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
         super.initviews(parent, savedInstanceState);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        applicationviavideocomposer.getactivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         ButterKnife.bind(this, parent);
     }
 
@@ -1234,12 +1234,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
                 case R.id.img_edit_name:
                     visiblefocus(edt_medianame);
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                     break;
                 case R.id.img_edit_notes:
                     visiblefocus(edt_medianotes);
-                    InputMethodManager imn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imn = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                     break;
                 case R.id.img_share_media:
@@ -1255,7 +1255,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         //gethelper().showsharepopupsub(mediafilepath,"video",mediatoken);
                         baseactivity.getinstance().preparesharedialogfragment(mediafilepath,mediatoken,config.type_video,thumbnailurl);
                     }
-                   // common.sharevideo(getActivity(), mediafilepath);
+                   // common.sharevideo(applicationviavideocomposer.getactivity(), mediafilepath);
                     break;
 
                 case R.id.img_dotmenu:
@@ -1452,7 +1452,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         layout_halfscrnimg.setVisibility(View.VISIBLE);
                         removeheadermargin();
                         view.clearFocus();
-                        InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager immm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         immm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
                     break;
@@ -1553,15 +1553,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             // fill drawable only supported on api level 18 and above
             Drawable drawable1 = (Drawable) view1.getBackground();
             drawable1.setColorFilter(getResources().getColor(R.color.blue), PorterDuff.Mode.MULTIPLY);
-            view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
+            view1.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.white));
 
             Drawable drawable2 = (Drawable) view2.getBackground();
             drawable2.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
-            view2.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+            view2.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.blue));
 
             Drawable drawable3 = (Drawable) view3.getBackground();
             drawable3.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
-            view3.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+            view3.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.blue));
         }
     }
 
@@ -2168,13 +2168,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
             if(mediafilepath == null || (mediafilepath.trim().isEmpty()))
             {
-                common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
+                common.showalert(applicationviavideocomposer.getactivity(),getResources().getString(R.string.file_doesnot_exist));
                 return;
             }
 
             if(! (new File(mediafilepath).exists()))
             {
-                common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
+                common.showalert(applicationviavideocomposer.getactivity(),getResources().getString(R.string.file_doesnot_exist));
                 return;
             }
 
@@ -2182,7 +2182,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             long file_size = file.length();
             if(file_size == 0)
             {
-                common.showalert(getActivity(),getResources().getString(R.string.file_is_empty));
+                common.showalert(applicationviavideocomposer.getactivity(),getResources().getString(R.string.file_is_empty));
                 return;
             }
             if (mbitmaplist.size() != 0)
@@ -2236,7 +2236,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
         requestparams.put("title",title);
         requestparams.put("description",description);
-        progressdialog.showwaitingdialog(getActivity());
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
         gethelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
@@ -2249,13 +2249,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         {
                             if(object.getString("success").equalsIgnoreCase("true") || object.getString("success").equalsIgnoreCase("1"))
                             {
-                                Toast.makeText(getActivity(), applicationviavideocomposer.getactivity()
+                                Toast.makeText(applicationviavideocomposer.getactivity(), applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.metadata_updated), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("error"))
                         {
-                            Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             //resetmedianamenotes();
                         }
 
@@ -2272,7 +2272,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
                 else
                 {
-                    Toast.makeText(getActivity(), applicationviavideocomposer.getactivity().getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(applicationviavideocomposer.getactivity(), applicationviavideocomposer.getactivity().getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -2550,11 +2550,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                    // Set thumbnail properties (Thumbs are squares)
 
-                    int thumbWidthwithoutmultipay =(int)getActivity().getResources().getDimension(R.dimen.play_screen_bar_height);
+                    int thumbWidthwithoutmultipay =(int)applicationviavideocomposer.getactivity().getResources().getDimension(R.dimen.play_screen_bar_height);
 
                     final int thumbWidth = (int)(thumbWidthwithoutmultipay * 1.5);
 
-                    final int thumbHeight = (int)getActivity().getResources().getDimension(R.dimen.play_screen_bar_height);
+                    final int thumbHeight = (int)applicationviavideocomposer.getactivity().getResources().getDimension(R.dimen.play_screen_bar_height);
 
                     int numThumbs = (int) Math.ceil(((float) viewwidth) / thumbWidth);
 

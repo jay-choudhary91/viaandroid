@@ -147,7 +147,7 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
     public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_videolist, parent, false);
+                .inflate(R.layout.adapter_medialist, parent, false);
 
         return new myViewHolder(itemView);
     }

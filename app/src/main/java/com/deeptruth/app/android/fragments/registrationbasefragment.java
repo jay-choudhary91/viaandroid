@@ -55,18 +55,10 @@ public abstract class registrationbasefragment extends Fragment {
         public void replaceFragment(registrationbasefragment f, boolean clearBackStack, boolean addToBackstack);
         public void replaceFragment(registrationbasefragment f, int layoutId, boolean clearBackStack, boolean addToBackstack);
         public void onBack();
-        public void setdatacomposing(boolean isdatacomposing);
-        public void setdatacomposing(boolean isdatacomposing,String mediafilepath);
-        public void updateactionbar(int showHide, int color);
-        public void updateactionbar(int showHide);
-        public boolean isuserlogin();
-        public void redirecttologin();
         public void xapipost_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void hidekeyboard();
         public void onUserLeaveHint();
-
       }
-
 
 
     public abstract int getlayoutid();

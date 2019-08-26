@@ -51,7 +51,7 @@
                 android:layout_toRightOf="@id/img_camera"
                 android:layout_marginLeft="15dp"
                 android:layout_centerVertical="true"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:src="@drawable/ic_whitefolder"/>
 
             <com.deeptruth.app.android.views.customfonttextview

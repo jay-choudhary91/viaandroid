@@ -387,7 +387,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
+        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(applicationviavideocomposer.getactivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
         encryptionadapter = new encryptiondataadapter(encryptionarraylist, applicationviavideocomposer.getactivity());
@@ -438,7 +438,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         img_pause.setOnClickListener(this);
 
         img_dotmenu.setVisibility(View.VISIBLE);
-        img_folder.setVisibility(View.VISIBLE);
+        img_folder.setVisibility(View.GONE);
         img_arrow_back.setVisibility(View.VISIBLE);
 
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
@@ -573,7 +573,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if (!hasFocus) {
                     v.setFocusable(false);
                     gethelper().setwindowfitxy(true);
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
 
                     callupdatemetaapi(mediaid,edt_medianame.getText().toString().trim(),edt_medianotes.getText().toString().trim());
@@ -588,7 +588,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     edt_medianame.setKeyListener(null);
                     v.setFocusable(false);
                     gethelper().setwindowfitxy(true);
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     // if (arraymediaitemlist.size() > 0) {
                     String renamevalue = edt_medianame.getText().toString();
@@ -643,7 +643,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
         super.initviews(parent, savedInstanceState);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        applicationviavideocomposer.getactivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         ButterKnife.bind(this, parent);
     }
 
@@ -695,12 +695,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 break;
             case R.id.img_edit_name:
                 visiblefocus(edt_medianame);
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                 break;
             case R.id.img_edit_notes:
                 visiblefocus(edt_medianotes);
-                InputMethodManager imn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imn = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
 
                 break;
@@ -717,7 +717,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     baseactivity.getinstance().preparesharedialogfragment(mediafilepath,mediatoken,config.type_audio,thumbnailurl);
 
                     //gethelper().showsharepopupsub(mediafilepath,"audio",mediatoken,false);
-                    //common.shareaudio(getActivity(), mediafilepath);
+                    //common.shareaudio(applicationviavideocomposer.getactivity(), mediafilepath);
                 break;
 
             case R.id.img_dotmenu:
@@ -945,7 +945,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     img_verified.setVisibility(View.VISIBLE);
                     removeheadermargin();
                     view.clearFocus();
-                    InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager immm = (InputMethodManager) applicationviavideocomposer.getactivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     immm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
                 break;
@@ -999,15 +999,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             Drawable drawable1 = (Drawable) view1.getBackground();
             drawable1.setColorFilter(getResources().getColor(R.color.blue), PorterDuff.Mode.MULTIPLY);
-            view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
+            view1.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.white));
 
             Drawable drawable2 = (Drawable) view2.getBackground();
             drawable2.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
-            view2.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+            view2.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.blue));
 
             Drawable drawable3 = (Drawable) view3.getBackground();
             drawable3.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
-            view3.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+            view3.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.blue));
 
         }
     }
@@ -1029,7 +1029,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         return true;
     }
 
-    GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
+    GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
@@ -1070,7 +1070,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void swipelefttoright()
     {
-        Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
+        Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
         linearLayout.startAnimation(rightswipe);
         linearLayout.setVisibility(View.VISIBLE);
         rightswipe.start();
@@ -1092,7 +1092,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void swiperighttoleft()
     {
-        Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
+        Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
         linearLayout.startAnimation(leftswipe);
         linearLayout.setVisibility(View.INVISIBLE);
         leftswipe.setAnimationListener(new Animation.AnimationListener() {
@@ -1848,7 +1848,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
         requestparams.put("title",title);
         requestparams.put("description",description);
-        progressdialog.showwaitingdialog(getActivity());
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
         gethelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
@@ -1861,13 +1861,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         {
                             if(object.getString("success").equalsIgnoreCase("true") || object.getString("success").equalsIgnoreCase("1"))
                             {
-                                Toast.makeText(getActivity(), applicationviavideocomposer.getactivity()
+                                Toast.makeText(applicationviavideocomposer.getactivity(), applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.metadata_updated), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("error"))
                         {
-                            Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             //resetmedianamenotes();
                         }
 
@@ -1884,7 +1884,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
                 else
                 {
-                    Toast.makeText(getActivity(), applicationviavideocomposer.getactivity().getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(applicationviavideocomposer.getactivity(), applicationviavideocomposer.getactivity().getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });

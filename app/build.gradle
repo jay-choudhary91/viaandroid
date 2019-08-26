@@ -81,6 +81,9 @@ dependencies {
     implementation('com.github.bumptech.glide:glide:4.8.0@aar') {
         transitive = true
     }
+    compile('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
+        transitive = true;
+    }
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
@@ -107,7 +110,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
     implementation 'com.daimajia.easing:library:2.0@aar'
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
     implementation 'com.dropbox.core:dropbox-core-sdk:3.1.1'

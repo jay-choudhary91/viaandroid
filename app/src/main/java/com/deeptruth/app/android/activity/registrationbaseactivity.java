@@ -193,36 +193,6 @@ public abstract class registrationbaseactivity extends AppCompatActivity impleme
         }
     }
 
-    @Override
-    public void setdatacomposing(boolean isdatacomposing) {
-
-    }
-
-    @Override
-    public void setdatacomposing(boolean isdatacomposing, String mediafilepath) {
-
-    }
-
-    @Override
-    public void updateactionbar(int showHide, int color) {
-
-    }
-
-    @Override
-    public void updateactionbar(int showHide) {
-
-    }
-
-    @Override
-    public boolean isuserlogin() {
-        return false;
-    }
-
-    @Override
-    public void redirecttologin() {
-
-    }
-
     public void backtolastfragment() {
         getSupportFragmentManager().popBackStack();
         if (mfragments.size() > 0) {

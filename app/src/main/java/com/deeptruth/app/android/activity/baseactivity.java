@@ -29,6 +29,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +44,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,12 +93,14 @@ import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.uploadfileatdropbox;
 import com.deeptruth.app.android.utils.xdata;
+import com.deeptruth.app.android.views.customseekbar;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -108,6 +112,8 @@ import com.google.api.client.googleapis.batch.BatchRequest;
 import com.google.api.client.googleapis.batch.json.JsonBatchCallback;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.media.MediaHttpUploader;
+import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
 import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.json.gson.GsonFactory;
@@ -146,7 +152,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     public boolean isapprunning = false;
     private basefragment mcurrentfragment;
     private SharedPreferences prefs;
-    static Dialog subdialogshare = null;
+    Dialog subdialogshare = null,datauploadingdialog=null,aboutsharedialog=null,shareoptionsdialog=null;
     private Stack<Fragment> mfragments = new Stack<Fragment>();
     private static final int permission_location_request_code = 91;
     String serverresponsemessage = "";
@@ -155,7 +161,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     String mediapath = "";
     String mediatype = "";
     String mediavideotoken = "",mediamethod = "";
-    Dialog dialog;
+    //Dialog dialog;
     Dialog dialoginapppurchase =null,dialogupgradecode=null,dialogfileuploadoptions=null;
     // In the class declaration section:
     //private DropboxAPI<AndroidAuthSession> mdropboxapi;
@@ -907,19 +913,22 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void showaboutsharedialog(String filepath,String mediatoken,String mediatype,String mediathumbnailurl)
     {
-        dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.share_alert_popup);
+        if(aboutsharedialog != null && aboutsharedialog.isShowing())
+            aboutsharedialog.dismiss();
 
-        TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
-        TextView txt_content = (TextView)dialog.findViewById(R.id.txt_content);
+        aboutsharedialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
+        aboutsharedialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        aboutsharedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        aboutsharedialog.setCanceledOnTouchOutside(false);
+        aboutsharedialog.setCancelable(true);
+        aboutsharedialog.setContentView(R.layout.share_alert_popup);
+
+        TextView txttitle = (TextView)aboutsharedialog.findViewById(R.id.txt_title);
+        TextView txt_content = (TextView)aboutsharedialog.findViewById(R.id.txt_content);
         txttitle.setText("SHARE");
 
         txttitle.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
-        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
+        final CheckBox notifycheckbox = (CheckBox) aboutsharedialog.findViewById(R.id.notifycheckbox);
         notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
         notifycheckbox.setTextColor(Color.BLACK);
         notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.NORMAL);
@@ -964,11 +973,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         common.setspanning(textsharepopup,txt_content);
 
-        TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
+        TextView ok = (TextView) aboutsharedialog.findViewById(R.id.btn_ok);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                aboutsharedialog.dismiss();
 
                 if(notifycheckbox.isChecked())
                     xdata.getinstance().saveSetting(config.mediasharedialog,"1");
@@ -979,9 +988,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
-        dialog.setCanceledOnTouchOutside(false);
-        setscreenwidthheight(dialog,96,80,getResources().getString(R.string.popup_publish));
-        dialog.show();
+        aboutsharedialog.setCanceledOnTouchOutside(false);
+        setscreenwidthheight(aboutsharedialog,96,80,getResources().getString(R.string.popup_publish));
+        aboutsharedialog.show();
     }
 
     public void showsharedialogfragment(String filepath, String mediatoken, String mediatype, String mediathumbnailurl)
@@ -991,14 +1000,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             if(mediatype.equalsIgnoreCase(config.type_image))
             {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                Fragment prev = getSupportFragmentManager().findFragmentByTag("mediatrimdialog");
                 if (prev != null) {
                     ft.remove(prev);
                 }
                 ft.addToBackStack(null);
                 fragmentsharemedia fragment = new fragmentsharemedia();
                 fragment.setdata(filepath, 0,mediatoken,mediatype,mediathumbnailurl);
-                fragment.show(ft, "dialog");
+                fragment.show(ft, "mediatrimdialog");
             }
             else
             {
@@ -1012,14 +1021,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         public void onPrepared(MediaPlayer mediaPlayer) {
                             int duration = mediaPlayer.getDuration();
                             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                            Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                            Fragment prev = getSupportFragmentManager().findFragmentByTag("mediatrimdialog");
                             if (prev != null) {
                                 ft.remove(prev);
                             }
                             ft.addToBackStack(null);
                             fragmentsharemedia fragment = new fragmentsharemedia();
                             fragment.setdata(filepath, duration,mediatoken,mediatype,mediathumbnailurl);
-                            fragment.show(ft, "dialog");
+                            fragment.show(ft, "mediatrimdialog");
                         }
                     });
                 }
@@ -1216,20 +1225,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void share_alert_dialog(final Context context,final String title, String content,adapteritemclick mitemclick){
 
-        dialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.share_alert_popup);
+        if(shareoptionsdialog != null && shareoptionsdialog.isShowing())
+            shareoptionsdialog.dismiss();
 
-        TextView txttitle = (TextView)dialog.findViewById(R.id.txt_title);
-        TextView txt_content = (TextView)dialog.findViewById(R.id.txt_content);
+        shareoptionsdialog =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
+        shareoptionsdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        shareoptionsdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        shareoptionsdialog.setCanceledOnTouchOutside(false);
+        shareoptionsdialog.setCancelable(true);
+        shareoptionsdialog.setContentView(R.layout.share_alert_popup);
+
+        TextView txttitle = (TextView)shareoptionsdialog.findViewById(R.id.txt_title);
+        TextView txt_content = (TextView)shareoptionsdialog.findViewById(R.id.txt_content);
         txttitle.setText(title);
         String str = content;
 
         txttitle.setTypeface(applicationviavideocomposer.boldfonttype, Typeface.BOLD);
-        final CheckBox notifycheckbox = (CheckBox) dialog.findViewById(R.id.notifycheckbox);
+        final CheckBox notifycheckbox = (CheckBox) shareoptionsdialog.findViewById(R.id.notifycheckbox);
         notifycheckbox.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.do_not_notify_again));
         notifycheckbox.setTextColor(Color.BLACK);
         notifycheckbox.setTypeface(applicationviavideocomposer.comfortaaregular, Typeface.NORMAL);
@@ -1325,7 +1337,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             common.setspanning(textsharepopup,txt_content);
         }
 
-        TextView ok = (TextView) dialog.findViewById(R.id.btn_ok);
+        TextView ok = (TextView) shareoptionsdialog.findViewById(R.id.btn_ok);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1354,14 +1366,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 //baseactivity.getinstance().senditemsdialog(context);
 
-                dialog.dismiss();
+                shareoptionsdialog.dismiss();
 
             }
         });
 
-        dialog.setCanceledOnTouchOutside(false);
-        setscreenwidthheight(dialog,96,80,getResources().getString(R.string.popup_publish));
-        dialog.show();
+        shareoptionsdialog.setCanceledOnTouchOutside(false);
+        setscreenwidthheight(shareoptionsdialog,96,80,getResources().getString(R.string.popup_publish));
+        shareoptionsdialog.show();
     }
 
     public void showinapppurchasepopup(final Context activity, String title,String message, final adapteritemclick mitemclick,String  gravity)
@@ -1722,13 +1734,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void dropboxuploadfile(String filepath) {
 
-        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+        //progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+        xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"0");
         new uploadfileatdropbox(applicationviavideocomposer.getactivity(), DropboxClientFactory.getClient(),
-                new uploadfileatdropbox.Callback() {
+                new uploadfileatdropbox.Callback()
+        {
             @Override
             public void onUploadComplete(FileMetadata result) {
                 progressdialog.dismisswaitdialog();
-                Toast.makeText(applicationviavideocomposer.getactivity(), "File uploaded successfully!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(applicationviavideocomposer.getactivity(), "File uploaded successfully!", Toast.LENGTH_SHORT).show();
+
+                if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
+                    showuploadingdatapopup(applicationviavideocomposer.getactivity(),100,100,
+                            "",applicationviavideocomposer.getactivity().getResources().getString(
+                                    R.string.file_uploaded_dropbox),true);
 
                 if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                     dialogfileuploadoptions.dismiss();
@@ -1737,7 +1756,26 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onError(Exception e) {
                 progressdialog.dismisswaitdialog();
+                if(datauploadingdialog == null && (datauploadingdialog.isShowing()))
+                    datauploadingdialog.dismiss();
+
                 Toast.makeText(applicationviavideocomposer.getactivity(), "Failed to upload file!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onProgress(int percentagecompleted) {
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(xdata.getinstance().getSetting(config.datauploadeding_process_dialog).equalsIgnoreCase("0"))
+                        {
+                            showuploadingdatapopup(applicationviavideocomposer.getactivity(),percentagecompleted,100,
+                                    "",applicationviavideocomposer.getactivity().getResources().getString(
+                                            R.string.file_uploaded_dropbox),false);
+                        }
+
+                    }
+                });
             }
         }).execute(filepath);
     }
@@ -1752,9 +1790,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 .addOnSuccessListener(googleAccount ->
                 {
 
-                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                    //progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
                     try
                     {
+                        xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"0");
                         Log.d(TAG, "Signed in as " + googleAccount.getEmail());
                         // Use the authenticated account to sign in to the Drive service.
                         GoogleAccountCredential credential =
@@ -1770,33 +1809,39 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                         .build();
 
                         //DriveServiceHelper mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
-                        Task<GoogleDriveFileHolder> filderHolder=uploadfileatgoogledrive(googleDriveService,getreadytouploadfile(),
+                        Task<GoogleDriveFileHolder> fileHolder=uploadfileatgoogledrive(googleDriveService,getreadytouploadfile(),
                                 common.getmimetype(getreadytouploadfile().getAbsolutePath()),null);
 
-                        filderHolder.addOnCompleteListener(applicationviavideocomposer.getactivity(), new OnCompleteListener<GoogleDriveFileHolder>() {
+                        fileHolder.addOnCompleteListener(applicationviavideocomposer.getactivity(), new OnCompleteListener<GoogleDriveFileHolder>() {
                             @Override
                             public void onComplete(@NonNull Task<GoogleDriveFileHolder> task) {
 
                             }
                         });
 
-                        filderHolder.addOnCanceledListener(applicationviavideocomposer.getactivity(), new OnCanceledListener() {
+                        fileHolder.addOnCanceledListener(applicationviavideocomposer.getactivity(), new OnCanceledListener() {
                             @Override
                             public void onCanceled() {
+                                if(datauploadingdialog == null && (datauploadingdialog.isShowing()))
+                                    datauploadingdialog.dismiss();
+
                                 Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.media_upload_failed),Toast.LENGTH_SHORT).show();
                             }
                         });
 
-                        filderHolder.addOnFailureListener(applicationviavideocomposer.getactivity(), new OnFailureListener() {
+                        fileHolder.addOnFailureListener(applicationviavideocomposer.getactivity(), new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                if(datauploadingdialog == null && (datauploadingdialog.isShowing()))
+                                    datauploadingdialog.dismiss();
+
                                 Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.media_upload_failed),Toast.LENGTH_SHORT).show();
                             }
                         });
 
-                        filderHolder.addOnSuccessListener(applicationviavideocomposer.getactivity(),
+                        fileHolder.addOnSuccessListener(applicationviavideocomposer.getactivity(),
                                 new OnSuccessListener<GoogleDriveFileHolder>() {
                             @Override
                             public void onSuccess(GoogleDriveFileHolder googleDriveFileHolder) {
@@ -1804,30 +1849,30 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                 String mediatype=common.getmediatypebymimetype(common.getmimetype
                                         (getreadytouploadfile().getAbsolutePath()));
 
-                                String sharabalelink="https://drive.google.com/open?id="+filderHolder.getResult().getId();
+                                String sharabalelink="https://drive.google.com/open?id="+googleDriveFileHolder.getId();
 
                                 String sharemessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.a_certified_videoLock)
                                         +" "+mediatype+": "+sharabalelink+" "+applicationviavideocomposer.getactivity().
                                         getResources().getString(R.string.if_you_dont_have_the_videolock);
 
                                 progressdialog.dismisswaitdialog();
-                                Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
-                                        .getResources().getString(R.string.media_upload_success),Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                 //       .getResources().getString(R.string.media_upload_success),Toast.LENGTH_SHORT).show();
 
-                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText("googledrivelink",sharemessage );
-                                clipboard.setPrimaryClip(clip);
-
-                                common.sharemessagewithapps(sharemessage);
-
-                                if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
-                                    dialogfileuploadoptions.dismiss();
+                                if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
+                                        showuploadingdatapopup(applicationviavideocomposer.getactivity(),100,100,
+                                                sharemessage,applicationviavideocomposer.getactivity().getResources().getString(
+                                                        R.string.file_uploaded_googledrive
+                                                ),true);
                             }
                         });
 
                     }catch (Exception e)
                     {
                         progressdialog.dismisswaitdialog();
+                        if(datauploadingdialog == null && (datauploadingdialog.isShowing()))
+                            datauploadingdialog.dismiss();
+
                         Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
                                 .getResources().getString(R.string.unable_signin),Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
@@ -1840,6 +1885,204 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     Toast.makeText(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
                             .getResources().getString(R.string.unable_signin),Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    public void uploadfileatmsonedrive(String filepath)
+    {
+        final applicationviavideocomposer application = (applicationviavideocomposer)baseactivity.this.getApplication();
+        IOneDriveClient oneDriveClient = application.getOneDriveClient();
+        xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"0");
+        progressdialog.dismisswaitdialog();
+        final AsyncTask<Void, Void, Void> uploadFile = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(final Void... params) {
+                try
+                {
+                    File file = new File(filepath);
+                    byte[] fileInMemory = new byte[(int) file.length()];
+                    FileInputStream fis = new FileInputStream(file);
+                    fis.read(fileInMemory); //read file into bytes[]
+                    fis.close();
+                    // Fix up the file name (needed for camera roll photos, etc)
+                    final String filename = new File(filepath).getName();
+                    final Option option = new QueryOption("@name.conflictBehavior", "fail");
+                    oneDriveClient
+                            .getDrive()
+                            .getItems("root")
+                            .getChildren()
+                            .byId(filename)
+                            .getContent()
+                            .buildRequest(Collections.singletonList(option))
+                            .put(fileInMemory,
+                                    new IProgressCallback<Item>() {
+                                        @Override
+                                        public void success(final Item item) {
+
+                                            progressdialog.dismisswaitdialog();
+                                            //Toast.makeText(baseactivity.this,applicationviavideocomposer.getactivity().getResources()
+                                            //       .getString(R.string.file_uploaded),
+                                            //      Toast.LENGTH_SHORT).show();
+
+                                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
+                                                        showuploadingdatapopup(applicationviavideocomposer.getactivity(),
+                                                                100,100,"",applicationviavideocomposer.getactivity().getResources().getString(
+                                                                        R.string.file_uploaded_onedrive),true);
+                                                }
+                                            });
+
+                                            if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
+                                                dialogfileuploadoptions.dismiss();
+                                        }
+
+                                        @Override
+                                        public void failure(final ClientException error) {
+                                            progressdialog.dismisswaitdialog();
+                                            if(datauploadingdialog == null && (datauploadingdialog.isShowing()))
+                                                datauploadingdialog.dismiss();
+
+                                            if (error.isError(OneDriveErrorCodes.NameAlreadyExists)) {
+                                                Toast.makeText(baseactivity.this,"FileName already exist!",
+                                                        Toast.LENGTH_LONG).show();
+
+                                            } else {
+                                                Toast.makeText(baseactivity.this,applicationviavideocomposer.getactivity().getResources()
+                                                                .getString(R.string.upload_failed),
+                                                        Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void progress(final long current, final long max) {
+                                            /*dialog.setProgress((int) current);
+                                            dialog.setMax((int) max);*/
+                                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run()
+                                                {
+                                                    if(xdata.getinstance().getSetting(config.datauploadeding_process_dialog).equalsIgnoreCase("0"))
+                                                    {
+                                                        double progresspercentage = (current * 100) / max;
+                                                        showuploadingdatapopup(applicationviavideocomposer.getactivity(),
+                                                                (long)progresspercentage,100,"","",false);
+                                                    }
+
+                                                }
+                                            });
+                                        }
+                                    });
+                } catch (final Exception e) {
+                    Log.e(getClass().getSimpleName(), e.getMessage());
+                    Log.e(getClass().getSimpleName(), e.toString());
+                }
+                return null;
+            }
+        };
+        uploadFile.execute();
+    }
+
+    public void showuploadingdatapopup(final Context context,long progress,long maxvalue,String sharemessage,String fileuploaded,
+                                       boolean isuploadcomplete)
+    {
+
+        if(datauploadingdialog == null || (! datauploadingdialog.isShowing()))
+        {
+            datauploadingdialog =new Dialog(context,R.style.transparent_dialog_borderless);
+            datauploadingdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            datauploadingdialog.setCanceledOnTouchOutside(false);
+            datauploadingdialog.setCancelable(true);
+            datauploadingdialog.setContentView(R.layout.popup_uploadingdata);
+        }
+
+        TextView txt_progress = (TextView) datauploadingdialog.findViewById(R.id.txt_progress);
+        TextView txt_fileuploaded = (TextView) datauploadingdialog.findViewById(R.id.txt_fileuploaded);
+        TextView txt_ok = (TextView) datauploadingdialog.findViewById(R.id.txt_ok);
+        TextView txt_cancel = (TextView) datauploadingdialog.findViewById(R.id.txt_cancel);
+        TextView txt_please_wait = (TextView) datauploadingdialog.findViewById(R.id.txt_please_wait);
+        customseekbar seekbar_uploading = (customseekbar) datauploadingdialog.findViewById(R.id.seekbar_uploading);
+        AppCompatCheckBox checkbox_notify = (AppCompatCheckBox) datauploadingdialog.findViewById(R.id.checkbox_notify);
+
+        checkbox_notify.setText(context.getResources().getString(R.string.notify_when_complete));
+        checkbox_notify.setTextColor(context.getResources().getColor(R.color.black));
+
+        txt_fileuploaded.setText(fileuploaded);
+
+        seekbar_uploading.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b)
+            {
+                txt_progress.setText(progress+"% Complete");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        if(isuploadcomplete)
+        {
+            checkbox_notify.setVisibility(View.GONE);
+            txt_fileuploaded.setVisibility(View.VISIBLE);
+            txt_cancel.setVisibility(View.GONE);
+            txt_please_wait.setVisibility(View.GONE);
+        }
+        else
+        {
+            txt_please_wait.setVisibility(View.VISIBLE);
+            checkbox_notify.setVisibility(View.VISIBLE);
+            txt_fileuploaded.setVisibility(View.GONE);
+            txt_cancel.setVisibility(View.VISIBLE);
+        }
+
+        seekbar_uploading.setProgress((int)progress);
+        seekbar_uploading.setMax((int)maxvalue);
+        seekbar_uploading.setPadding(0, 0, 0, 0);
+
+        txt_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if(isuploadcomplete)
+                {
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("googledrivelink",sharemessage );
+                    clipboard.setPrimaryClip(clip);
+                    common.sharemessagewithapps(sharemessage);
+                }
+                else
+                {
+                    if(checkbox_notify.isChecked())
+                        xdata.getinstance().saveSetting(config.datauploaded_success_dialog,"1");
+                    else
+                        xdata.getinstance().saveSetting(config.datauploaded_success_dialog,"0");
+
+                    xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"1");
+                }
+
+                if(datauploadingdialog != null && datauploadingdialog.isShowing())
+                    datauploadingdialog.dismiss();
+            }
+        });
+
+        txt_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if(datauploadingdialog != null && datauploadingdialog.isShowing())
+                    datauploadingdialog.dismiss();
+            }
+        });
+        setscreenwidthheight(datauploadingdialog,95,80,
+                context.getResources().getString(R.string.popup_videolock));
+        datauploadingdialog.show();
     }
 
 
@@ -1867,7 +2110,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 FileContent fileContent = new FileContent(mimeType, localFile);
 
-                com.google.api.services.drive.model.File fileMeta = googleDriveService.files().create(metadata, fileContent).execute();
+                Drive.Files.Create create=googleDriveService.files().create(metadata, fileContent);
+                MediaHttpUploader uploader=create.getMediaHttpUploader();
+                uploader.setDirectUploadEnabled(false);
+                uploader.setChunkSize(MediaHttpUploader.MINIMUM_CHUNK_SIZE); // previously I am using 1000000 thats why it won't work
+                uploader.setProgressListener(new FileUploadProgressListener());
+
+                com.google.api.services.drive.model.File fileMeta = create.execute();
 
                 Permission anyoneReadPerm = new Permission();
                 anyoneReadPerm.setType("anyone");
@@ -1877,10 +2126,46 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 GoogleDriveFileHolder googleDriveFileHolder = new GoogleDriveFileHolder();
                 googleDriveFileHolder.setId(fileMeta.getId());
                 googleDriveFileHolder.setName(fileMeta.getName());
-
                 return googleDriveFileHolder;
             }
         });
+    }
+
+    private class FileUploadProgressListener implements MediaHttpUploaderProgressListener {
+
+
+        public FileUploadProgressListener() {
+        }
+
+        @Override
+        public void progressChanged(MediaHttpUploader mediaHttpUploader) throws IOException {
+            if (mediaHttpUploader == null) return;
+            switch (mediaHttpUploader.getUploadState()) {
+                case INITIATION_STARTED:
+                    Log.d("INITIATION_STARTED",  " DriveUploadStart");
+                    break;
+                case INITIATION_COMPLETE:
+                    Log.d("INITIATION_COMPLETE",  " DriveUploadEnd");
+                    break;
+                case MEDIA_IN_PROGRESS:
+                    double percent = mediaHttpUploader.getProgress() * 100;
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(xdata.getinstance().getSetting(config.datauploadeding_process_dialog).equalsIgnoreCase("0"))
+                            {
+                                showuploadingdatapopup(applicationviavideocomposer.getactivity(),(int)percent,100,
+                                        "","",false);
+                            }
+                        }
+                    });
+
+                    break;
+                case MEDIA_COMPLETE:
+                    //System.out.println("Upload is complete!");
+                    Log.d("MEDIA_COMPLETE",  " DriveUploadEnd");
+            }
+        }
     }
 
     private void requestgooglesignin() {
@@ -2121,75 +2406,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         } catch (Exception e) {
             //app.createOneDriveClient(baseactivity.this, serviceCreated);
         }
-    }
-
-
-    public void uploadfileatmsonedrive(String filepath)
-    {
-        final applicationviavideocomposer application = (applicationviavideocomposer)baseactivity.this.getApplication();
-        IOneDriveClient oneDriveClient = application.getOneDriveClient();
-        final AsyncTask<Void, Void, Void> uploadFile = new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(final Void... params) {
-                try
-                {
-                    File file = new File(filepath);
-                    byte[] fileInMemory = new byte[(int) file.length()];
-                    FileInputStream fis = new FileInputStream(file);
-                    fis.read(fileInMemory); //read file into bytes[]
-                    fis.close();
-                    // Fix up the file name (needed for camera roll photos, etc)
-                    final String filename = new File(filepath).getName();
-                    final Option option = new QueryOption("@name.conflictBehavior", "fail");
-                    oneDriveClient
-                            .getDrive()
-                            .getItems("root")
-                            .getChildren()
-                            .byId(filename)
-                            .getContent()
-                            .buildRequest(Collections.singletonList(option))
-                            .put(fileInMemory,
-                                    new IProgressCallback<Item>() {
-                                        @Override
-                                        public void success(final Item item) {
-
-                                            progressdialog.dismisswaitdialog();
-                                            Toast.makeText(baseactivity.this,applicationviavideocomposer.getactivity().getResources()
-                                                    .getString(R.string.file_uploaded),
-                                                    Toast.LENGTH_SHORT).show();
-
-                                            if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
-                                                dialogfileuploadoptions.dismiss();
-                                        }
-
-                                        @Override
-                                        public void failure(final ClientException error) {
-                                            progressdialog.dismisswaitdialog();
-                                            if (error.isError(OneDriveErrorCodes.NameAlreadyExists)) {
-                                                Toast.makeText(baseactivity.this,"FileName already exist!",
-                                                        Toast.LENGTH_LONG).show();
-
-                                            } else {
-                                                Toast.makeText(baseactivity.this,applicationviavideocomposer.getactivity().getResources()
-                                                                .getString(R.string.upload_failed),
-                                                        Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void progress(final long current, final long max) {
-                                            /*dialog.setProgress((int) current);
-                                            dialog.setMax((int) max);*/
-                                        }
-                                    });
-                } catch (final Exception e) {
-                    Log.e(getClass().getSimpleName(), e.getMessage());
-                    Log.e(getClass().getSimpleName(), e.toString());
-                }
-                return null;
-            }
-        };
-        uploadFile.execute();
     }
 
 

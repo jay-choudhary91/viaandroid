@@ -889,7 +889,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             configureTransform(width, height);
             mediarecorder = new MediaRecorder();
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -957,7 +957,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
                 @Override
                 public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
-                    Activity activity = getActivity();
+                    Activity activity = applicationviavideocomposer.getactivity();
                     if (null != activity) {
                         Toast.makeText(activity, "Failed", Toast.LENGTH_SHORT).show();
                     }
@@ -997,7 +997,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
      * @param viewHeight The height of `textureview`
      */
     private void configureTransform(int viewWidth, int viewHeight) {
-        Activity activity = getActivity();
+        Activity activity = applicationviavideocomposer.getactivity();
         if (null == textureview || null == previewsize || null == activity) {
             return;
         }
@@ -1023,7 +1023,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
 
     private void setUpMediaRecorder() throws IOException {
-        final Activity activity = getActivity();
+        final Activity activity = applicationviavideocomposer.getactivity();
         if (null == activity) {
             return;
         }
@@ -1094,7 +1094,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             int orientation =  camerautil.getOrientation(rotation, upsideDown);
             int sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
             //Log.e("cameraangle ",""+orientation);
-            //Toast.makeText(getActivity(),""+orientation+" "+sensorOrientation,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(applicationviavideocomposer.getactivity(),""+orientation+" "+sensorOrientation,Toast.LENGTH_SHORT).show();
 
             if(rotationangle == 90)  // Landscape left side
             {
@@ -1581,7 +1581,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public static class ErrorDialog extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Activity activity = getActivity();
+            final Activity activity = applicationviavideocomposer.getactivity();
             return new AlertDialog.Builder(activity)
                     .setMessage("This device doesn't support Camera2 API.")
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -1671,7 +1671,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 else if(type == 1)
                                 {
                                     if(finalArray.length > 0)
-                                        ActivityCompat.requestPermissions(getActivity(), finalArray, request_permissions);
+                                        ActivityCompat.requestPermissions(applicationviavideocomposer.getactivity(), finalArray, request_permissions);
                                 }
                             }
                         },finalArray[0]);
@@ -1704,7 +1704,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 doafterallpermissionsgranted = new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(applicationviavideocomposer.getactivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
                         //gethelper().onBack();
                     }
                 };
@@ -2099,7 +2099,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         if(lastrecordedvideo != null)
         {
-            String duration = common.getvideotimefromurl(getActivity(),lastrecordedvideo.getAbsolutePath());
+            String duration = common.getvideotimefromurl(applicationviavideocomposer.getactivity(),lastrecordedvideo.getAbsolutePath());
 
             String medianame=common.getfilename(lastrecordedvideo.getAbsolutePath());
             String[] split=medianame.split("\\.");
@@ -2390,7 +2390,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                                 SpannableStringBuilder builder = new SpannableStringBuilder();
                                  builder.append(config.TEXT_GPS)
-                                 .append(" ", new CenteredImageSpan(getActivity(),R.drawable.ic_plusminus),0)
+                                 .append(" ", new CenteredImageSpan(applicationviavideocomposer.getactivity(),R.drawable.ic_plusminus),0)
                                 .append(gpsvalue+"ft");
 
                                 txt_section_gps.setText(builder);
@@ -2400,7 +2400,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                                 SpannableStringBuilder builder = new SpannableStringBuilder();
                                 builder.append(config.TEXT_GPS)
-                                        .append(" ", new CenteredImageSpan(getActivity(),R.drawable.ic_plusminus),0)
+                                        .append(" ", new CenteredImageSpan(applicationviavideocomposer.getactivity(),R.drawable.ic_plusminus),0)
                                         .append(gpsvalue+"ft");
 
                                 txt_section_gps.setText(builder);

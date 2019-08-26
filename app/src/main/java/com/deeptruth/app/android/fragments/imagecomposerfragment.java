@@ -272,7 +272,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             cameraopencloselock.release();
             cameraDevice.close();
             cameradevice = null;
-            Activity activity = getActivity();
+            Activity activity = applicationviavideocomposer.getactivity();
             if (null != activity) {
                 activity.finish();
             }
@@ -441,7 +441,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      * @param text The message to show
      */
     private void showToast(final String text) {
-        final Activity activity = getActivity();
+        final Activity activity = applicationviavideocomposer.getactivity();
         if (activity != null) {
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -855,7 +855,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 List<String> deniedpermissions = new ArrayList<>();
 
                 for (String permission : neededpermissions) {
-                    if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                         deniedpermissions.add(permission);
                     }
                 }
@@ -867,7 +867,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 {
                     String[] array = new String[deniedpermissions.size()];
                     array = deniedpermissions.toArray(array);
-                    ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
+                    ActivityCompat.requestPermissions(applicationviavideocomposer.getactivity(), array, request_permissions);
                 }
             }
         },config.transition_fragment_millis_0);
@@ -899,7 +899,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
     private void setUpCameraOutputs(int width, int height) {
-        Activity activity = getActivity();
+        Activity activity = applicationviavideocomposer.getactivity();
         CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             CameraCharacteristics characteristics
@@ -984,14 +984,14 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
     private void openCamera(int width, int height) {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+        if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
            // requestCameraPermission();
             return;
         }
         setUpCameraOutputs(width, height);
         configureTransform(width, height);
-        Activity activity = getActivity();
+        Activity activity = applicationviavideocomposer.getactivity();
         CameraManager  manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         // cameraId = manager.getCameraIdList()[0];
         // Choose the sizes for camera preview and video recording
@@ -1141,7 +1141,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      * @param viewHeight The height of `textureview`
      */
     private void configureTransform(int viewWidth, int viewHeight) {
-        Activity activity = getActivity();
+        Activity activity = applicationviavideocomposer.getactivity();
         if (null == textureview || null == previewsize || null == activity) {
             return;
         }
@@ -1174,7 +1174,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         if(madapterclick != null)
             madapterclick.onItemClicked(null,1);
 
-        getImageFile(getActivity());
+        getImageFile(applicationviavideocomposer.getactivity());
         capturestillpicture();
 
         brustmodeenabled=false;
@@ -1216,7 +1216,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             if(expandable_layout != null && expandable_layout.isExpanded())
                 expendcollpaseview(true);
 
-            final Activity activity = getActivity();
+            final Activity activity = applicationviavideocomposer.getactivity();
             metadatametricesjson=new JSONObject();
             if (null == activity || null == cameradevice) {
                 return;
@@ -1262,7 +1262,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             // Orientation
             int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-          //  Toast.makeText(getActivity(),""+rotationangle,Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(applicationviavideocomposer.getactivity(),""+rotationangle,Toast.LENGTH_SHORT).show();
             if(rotationangle == 90)  // Landscape left side
             {
                 captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(90));
@@ -1469,7 +1469,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 break;
 
             case R.id.info: {
-                Activity activity = getActivity();
+                Activity activity = applicationviavideocomposer.getactivity();
                 if (null != activity) {
                     new AlertDialog.Builder(activity)
                             .setMessage("")
@@ -1723,7 +1723,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             if (permissionsallgranted) {
                 doafterallpermissions();
             } else {
-                Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
+                Toast.makeText(applicationviavideocomposer.getactivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
 
             }
         }
@@ -1894,7 +1894,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
                         SpannableStringBuilder builder = new SpannableStringBuilder();
                         builder.append(config.TEXT_GPS)
-                                .append(" ", new CenteredImageSpan(getActivity(),R.drawable.ic_plusminus),0)
+                                .append(" ", new CenteredImageSpan(applicationviavideocomposer.getactivity(),R.drawable.ic_plusminus),0)
                                 .append(gpsvalue+"ft");
 
                         txt_section_gps.setText(builder);
@@ -1904,7 +1904,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
                         SpannableStringBuilder builder = new SpannableStringBuilder();
                         builder.append(config.TEXT_GPS)
-                                .append(" ", new CenteredImageSpan(getActivity(),R.drawable.ic_plusminus),0)
+                                .append(" ", new CenteredImageSpan(applicationviavideocomposer.getactivity(),R.drawable.ic_plusminus),0)
                                 .append(gpsvalue+"ft");
 
                         txt_section_gps.setText(builder);
