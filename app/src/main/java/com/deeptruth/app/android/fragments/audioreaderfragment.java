@@ -123,8 +123,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.scrollview_meta)
     ScrollView scrollview_meta;
 
-    @BindView(R.id.spinner)
-    Spinner spinnermediafolder;
     @BindView(R.id.txt_slot4)
     TextView txtslotmedia;
     @BindView(R.id.txt_slot5)
@@ -235,7 +233,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private GestureDetector detector;
 
     private metainformationfragment fragmentmetainformation;
-    private folderdirectoryspinneradapter folderspinneradapter;
 
     public audioreaderfragment() {
     }
@@ -1593,9 +1590,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             txt_duration.setText(mediaduration);
                           //  txt_title_actionbarcomposer.setText(filecreateddate);
                             txt_createdtime.setText(common.parsedateformat(startdate) + " "+ common.parsetimeformat(startdate));
-
-                            if(mediafolder.trim().length() > 0 && folderspinneradapter == null)
-                                setfolderspinner();
                         }catch (Exception e)
                         {
                             e.printStackTrace();
@@ -1711,94 +1705,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 encryptionadapter.notifyDataSetChanged();
             }
         });
-    }
-
-    public void setfolderspinner()
-    {
-        final List<folder> folderitem=common.getalldirfolders();
-        folderspinneradapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
-                R.layout.row_myfolderspinneradapter,folderitem);
-
-        int selectedposition=0;
-        final File foldername = new File(mediafolder);
-        for(int i=0;i<folderitem.size();i++)
-        {
-            if(folderitem.get(i).getFoldername().equalsIgnoreCase(foldername.getName()))
-            {
-                selectedposition=i;
-                break;
-            }
-        }
-
-        spinnermediafolder.setAdapter(folderspinneradapter);
-        spinnermediafolder.setSelection(selectedposition,true);
-        spinnermediafolder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id)
-            {
-                if(! folderitem.get(position).getFoldername().equalsIgnoreCase(foldername.getName()))
-                {
-                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                String folderpath=folderitem.get(position).getFolderdir();
-                                if(! folderpath.equalsIgnoreCase(new File(mediafilepath).getParent()))
-                                {
-                                    if(common.movemediafile(new File(mediafilepath),new File(folderpath)))
-                                    {
-                                        File destinationmediafile = new File(folderpath + File.separator + new File(mediafilepath).getName());
-                                        updatefilemediafolderdirectory(mediafilepath,destinationmediafile.getAbsolutePath(),folderpath);
-                                        mediafilepath =destinationmediafile.getAbsolutePath();
-                                        xdata.getinstance().saveSetting(config.selectedaudiourl, mediafilepath);
-                                    }
-                                }
-                            }catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressdialog.dismisswaitdialog();
-                                    if(mcontrollernavigator != null)
-                                        mcontrollernavigator.onItemClicked(mediafilepath,3);
-
-                                    loadviewdata();
-                                }
-                            });
-                        }
-                    }).start();
-                }
-            }
-
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    public void updatefilemediafolderdirectory(String sourcefile,String destinationfilepath,String destinationmediafolder)
-    {
-        databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-        mdbhelper.createDatabase();
-
-        try {
-            mdbhelper.open();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        try
-        {
-            mdbhelper.updatefilemediafolderdir(sourcefile,destinationfilepath,destinationmediafolder);
-            mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     public void editabletext(){

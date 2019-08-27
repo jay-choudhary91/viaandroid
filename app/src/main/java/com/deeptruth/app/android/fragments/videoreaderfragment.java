@@ -142,8 +142,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     //tabdetails
 
-    @BindView(R.id.spinner)
-    Spinner spinnermediafolder;
     @BindView(R.id.txt_slot4)
     TextView txtslotmedia;
     @BindView(R.id.txt_slot5)
@@ -333,7 +331,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     boolean isplaypauswebtnshow = false;
     int layoutpauseheight = 0;
     metainformationfragment fragmentmetainformation;
-    folderdirectoryspinneradapter folderspinneradapter;
     boolean isplaying = false;
 
     @Override
@@ -1714,8 +1711,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                         txt_createdtime.setText(common.parsetimeformat(startdate));
 
                                     }
-                                    if(mediafolder.trim().length() > 0 && folderspinneradapter == null)
-                                        setfolderspinner();
 
                                 }catch (Exception e)
                                 {
@@ -1825,98 +1820,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 encryptionadapter.notifyDataSetChanged();
             }
         });
-    }
-
-    public void setfolderspinner()
-    {
-        final List<folder> folderitem=common.getalldirfolders();
-        setspinnerpopupwindowheight(folderitem.size());
-        folderspinneradapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
-                R.layout.row_myfolderspinneradapter,folderitem);
-
-        int selectedposition=0;
-
-        final File foldername = new File(mediafolder);
-
-        for(int i=0;i<folderitem.size();i++)
-        {
-            if(folderitem.get(i).getFoldername().equalsIgnoreCase(foldername.getName()))
-            {
-                selectedposition=i;
-                break;
-            }
-        }
-
-        spinnermediafolder.setAdapter(folderspinneradapter);
-        spinnermediafolder.setSelection(selectedposition,true);
-        spinnermediafolder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id)
-            {
-                if(! folderitem.get(position).getFoldername().equalsIgnoreCase(foldername.getName()))
-                {
-                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            try {
-                                String folderpath=folderitem.get(position).getFolderdir();
-                                if(! folderpath.equalsIgnoreCase(new File(mediafilepath).getParent()))
-                                {
-                                    if(common.movemediafile(new File(mediafilepath),new File(folderpath)))
-                                    {
-                                        File destinationmediafile = new File(folderpath + File.separator + new File(mediafilepath).getName());
-                                        updatefilemediafolderdirectory(mediafilepath,destinationmediafile.getAbsolutePath(),folderpath);
-                                        mediafilepath=destinationmediafile.getAbsolutePath();
-                                        xdata.getinstance().saveSetting(config.selectedvideourl,mediafilepath);
-                                    }
-                                }
-                            }catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run()
-                                {
-                                    progressdialog.dismisswaitdialog();
-                                    if(mcontrollernavigator != null)
-                                        mcontrollernavigator.onItemClicked(mediafilepath,3);
-
-                                    loadviewdata();
-                                }
-                            });
-                        }
-                    }).start();
-                }
-            }
-
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
-    public void updatefilemediafolderdirectory(String sourcefile,String destinationfilepath,String destinationmediafolder)
-    {
-        databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-        mdbhelper.createDatabase();
-
-        try {
-            mdbhelper.open();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        try
-        {
-            mdbhelper.updatefilemediafolderdir(sourcefile,destinationfilepath,destinationmediafolder);
-            mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
@@ -2890,24 +2793,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 layout_validating.setVisibility(View.VISIBLE);
 
             removeheadermargin();
-        }
-    }
-
-    public void  setspinnerpopupwindowheight(int size){
-        try {
-            Field popup = Spinner.class.getDeclaredField("mPopup");
-            popup.setAccessible(true);
-            // Get private mPopup member variable and try cast to ListPopupWindow
-            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(spinnermediafolder);
-            // Set popupWindow height to 500px
-            if(size>3){
-                popupWindow.setHeight(300);
-            }else{
-                popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-            }
-        }
-        catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
-            // silently fail...
         }
     }
 
