@@ -154,7 +154,7 @@ public class readmediadataservice extends Service {
                         }
 
                         if(status.trim().isEmpty() || status.equalsIgnoreCase(config.sync_pending) ||
-                                mediatoken.trim().isEmpty() || completeddate.equalsIgnoreCase("null"))
+                                mediatoken.trim().isEmpty())
                         {
                             int count = 1;
                             try
