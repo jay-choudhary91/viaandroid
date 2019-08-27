@@ -101,7 +101,7 @@
                 android:gravity="center"
                 android:visibility="visible"
                 android:id="@+id/layout_share_send"
-                android:background="@drawable/img_swipeshare"
+                android:background="@drawable/img_swipedelete"
                 android:layout_height="@dimen/listviewheight">
 
                 <ImageView
@@ -137,7 +137,7 @@
                 android:visibility="visible"
                 android:id="@+id/layout_share_save"
                 android:layout_gravity="center"
-                android:background="@drawable/img_swipedelete"
+                android:background="@drawable/img_swipeshare"
                 android:layout_height="@dimen/listviewheight">
 
                 <ImageView
