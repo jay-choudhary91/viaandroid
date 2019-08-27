@@ -2598,7 +2598,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     olddate = Long.parseLong(initialdatereaderapi);
 
                 int seconddifference = (int) (Math.abs(olddate - currentdate.getTime()) / 1000);
-                if (seconddifference > 50 || olddate == 0)
+                if (seconddifference > 40 || olddate == 0)
                     updatesyncedreaderitems();
             }
         }
