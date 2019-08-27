@@ -457,7 +457,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
 
                     baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                             mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,
-                            applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish));
+                            applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),false);
 
                 }
                 @Override
@@ -469,7 +469,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
         }
         baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                 mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,
-                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish));
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),false);
         //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
     }
 
@@ -495,7 +495,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 @Override
                 public void onItemClicked(Object object) {
                     baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                            mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send));
+                            mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send),false);
                 }
                 @Override
                 public void onItemClicked(Object object, int type) {
@@ -505,7 +505,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             return;
         }
         baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
-                mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send));
+                mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send),false);
     }
 
     public void exportitem()

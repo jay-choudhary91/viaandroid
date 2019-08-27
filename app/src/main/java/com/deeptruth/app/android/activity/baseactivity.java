@@ -1617,7 +1617,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     public void senditemsdialog(Context context,String mediafilepath,String mediatoken,final String type,
-                                boolean ismediatrimmed,String mediathumbnailurl,String trimmedmediapath,String popupcontenttype){
+                                boolean ismediatrimmed,String mediathumbnailurl,String trimmedmediapath,String popupcontenttype,boolean ismedialist){
 
         /*if(popupcontenttype.equalsIgnoreCase(getResources().getString(R.string.txt_publish)))
         {
@@ -1675,7 +1675,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             dialogfileuploadoptions.dismiss();
 
                         videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath, mediatoken,  type,
-                                ismediatrimmed,mediathumbnailurl,trimmedmediapath,popupcontenttype);
+                                ismediatrimmed,mediathumbnailurl,trimmedmediapath,popupcontenttype,ismedialist);
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
                     {
@@ -1706,7 +1706,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View view) {
 
-                showsharedialogfragment(mediafilepath, mediatoken, type, mediathumbnailurl);
+                if(!ismedialist)
+                      showsharedialogfragment(mediafilepath, mediatoken, type, mediathumbnailurl);
 
                 if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                     dialogfileuploadoptions.dismiss();
@@ -2184,7 +2185,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
 
     public void videolocksharedialog(final Context context,String mediafilepath,String mediatoken,final String type,
-                                     boolean ismediatrimmed,String mediathumbnailurl,String trimmedmediapath,String popupcontenttype){
+                                     boolean ismediatrimmed,String mediathumbnailurl,String trimmedmediapath,String popupcontenttype,boolean ismedialist){
 
         final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -2217,7 +2218,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v)
             {
                 dialog.dismiss();
-                showsharedialogfragment(mediafilepath, mediatoken, type, mediathumbnailurl);
+                if(!ismedialist)
+                    showsharedialogfragment(mediafilepath, mediatoken, type, mediathumbnailurl);
+
+
                 if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                     dialogfileuploadoptions.dismiss();
             }

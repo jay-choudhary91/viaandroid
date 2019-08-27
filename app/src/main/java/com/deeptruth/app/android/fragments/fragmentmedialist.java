@@ -1565,10 +1565,15 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 fragmentvideoreader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentvideoreader, false, true);
             }
-        }
-        else if(type == 6)
+        }else if(type == 5)
         {
-            showfolderdialog(videoobj.getPath());
+            senditem(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),videoobj.getThumbnailpath());
+        } else if(type == 6)
+        {
+            publishitem(videoobj.getPath(),videoobj.getVideotoken(),videoobj.getMediatype(),videoobj.getThumbnailpath());
+        } else if(type == 7)
+        {
+            exportitem(videoobj);
         }
     }
 
@@ -2148,5 +2153,108 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
             if(adaptermediafilter != null)
                 adaptermediafilter.notifyDataSetChanged();
+    }
+
+    public void senditem(String mediafilepath,String mediatoken,String mediatype,String mediathumbnailurl)
+    {
+
+        String send = getActivity().getResources().getString(R.string.send_details1)+"\n"+"\n"+
+                getActivity().getResources().getString(R.string.send_details2);
+
+        if(xdata.getinstance().getSetting(config.enablesendnotification).isEmpty() ||
+                xdata.getinstance().getSetting(config.enablesendnotification).equalsIgnoreCase("0")) {
+            baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity().
+                    getResources().getString(R.string.txt_send),send ,new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+                    baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                            mediatype,false,mediathumbnailurl,mediafilepath,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send),true);
+                }
+                @Override
+                public void onItemClicked(Object object, int type) {
+
+                }
+            });
+            return;
+        }
+        baseactivity.getinstance().senditemsdialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                mediatype,false,mediathumbnailurl,mediafilepath,applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_send),true);
+    }
+
+    public void publishitem(String mediafilepath,String mediatoken,String mediatype,String mediathumbnailurl)
+    {
+        String publish = applicationviavideocomposer.getactivity().getResources().getString(R.string.publish_details1)+"\n"+"\n"+"\n"+
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.publish_details2);
+
+        if(xdata.getinstance().getSetting(config.enableplubishnotification).isEmpty() ||
+                xdata.getinstance().getSetting(config.enableplubishnotification).equalsIgnoreCase("0"))
+        {
+            baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(),
+                    applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish), publish, new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+
+                            baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                                    mediatype,false,mediathumbnailurl,mediafilepath,
+                                    applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),true);
+
+                        }
+                        @Override
+                        public void onItemClicked(Object object, int type) {
+
+                        }
+                    });
+            return;
+        }
+        baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                mediatype,false,mediathumbnailurl,mediafilepath,
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),true);
+        //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
+    }
+
+
+    public void exportitem(video videoobj)
+    {
+        String export = applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details2);
+
+        if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
+                xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
+            baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity().
+                    getResources().getString(R.string.txt_save),export ,new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+                    checkwritepermission(videoobj);
+                }
+                @Override
+                public void onItemClicked(Object object, int type) {
+                }
+            });
+            return;
+        }
+        checkwritepermission(videoobj);
+    }
+
+    public void checkwritepermission(video videoobj)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if (common.getstoragedeniedpermissions().isEmpty())
+                showmediashareoptions(videoobj);
+        }
+        else
+        {
+            showmediashareoptions(videoobj);
+        }
+    }
+
+    public void showmediashareoptions(video videoobj)
+    {
+        if(videoobj.getMediatype().equalsIgnoreCase(config.type_image))
+            common.shareimage(applicationviavideocomposer.getactivity(),videoobj.getPath());
+        else if(videoobj.getMediatype().equalsIgnoreCase(config.type_video))
+            common.sharevideo(applicationviavideocomposer.getactivity(),videoobj.getPath());
+        else if(videoobj.getMediatype().equalsIgnoreCase(config.type_audio))
+            common.shareaudio(applicationviavideocomposer.getactivity(),videoobj.getPath());
     }
 }

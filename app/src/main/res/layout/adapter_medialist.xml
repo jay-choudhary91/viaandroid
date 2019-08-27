@@ -7,7 +7,6 @@
 <com.daimajia.swipe.SwipeLayout
     android:layout_width="match_parent"
     android:id="@+id/root_view"
-    app:clickToClose="true"
     android:layout_height="100dp">
 
     <LinearLayout

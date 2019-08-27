@@ -401,6 +401,7 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
                     }
                 }, 1000);
                 adapter.onItemClicked(mediaobject,1);
+                holder.root_view.close();
             }
         });
 
@@ -416,6 +417,7 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
                     }
                 }, 1000);
                 adapter.onItemClicked(mediaobject,2);
+                holder.root_view.close();
             }
         });
 
@@ -423,20 +425,27 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
             @Override
             public void onClick(View view) {
 
+                adapter.onItemClicked(mediaobject,5);
+                holder.root_view.close();
+
             }
         });
 
         holder.layout_share_publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //adapter.onItemClicked(mediaobject,6);
+                adapter.onItemClicked(mediaobject,6);
+                holder.root_view.close();
+
+
             }
         });
 
         holder.layout_share_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //adapter.onItemClicked(mediaobject,6);
+                adapter.onItemClicked(mediaobject,7);
+                holder.root_view.close();
             }
         });
 
@@ -449,6 +458,7 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
                         return;
                 }
                 adapter.onItemClicked(mediaobject,4);
+                holder.root_view.close();
             }
         });
 
