@@ -36,6 +36,7 @@ import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.interfaces.progressupdate;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.utils.noise;
 import com.deeptruth.app.android.utils.common;
@@ -257,7 +258,7 @@ public abstract class basefragment extends Fragment {
         public void xapi_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void xapipost_send(Context mContext, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void xapipost_sendjson(Context mContext, String Action, HashMap<String,Object> mPairList, apiresponselistener mListener);
-        public void xapi_uploadfile(Context mContext,String serverurl,String filepath,apiresponselistener mListener);
+        public void xapi_uploadfile(Context mContext,String serverurl,String filepath,apiresponselistener mListener,progressupdate mprogressupdate);
         public void setsoundwaveinformation(int ampletudevalue ,int decibelvalue,boolean issoundwaveshow);
         //public void showinapppurchasepopup(final Context activity,final adapteritemclick mitemclick);
         public void showsharepopupsub(final String path, final String type, final String mediatoken,boolean ismediatrimmed);

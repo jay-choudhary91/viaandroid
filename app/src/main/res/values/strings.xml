@@ -533,6 +533,8 @@
     <string name="notify_when_complete">Notify when complete?</string>
     <string name="uploading">UPLOADING</string>
     <string name="please_wait_">Please wait...</string>
+    <string name="uploading_">Uploading...</string>
+    <string name="your_file_has_been_copied">Your file has been copied to \n your VideoLock.com account.</string>
     <string name="txt_vl_share_title">VIDEOlOCK \nSHARE</string>
     <string name="txt_title_share">SHARE</string>
     <string name="vl_share_lineone">The VideoLock share tool provides</string>

@@ -455,9 +455,11 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 @Override
                 public void onItemClicked(Object object) {
 
-                    baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                    /*baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                             mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,
-                            applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),false);
+                            applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),false);*/
+
+                    baseactivity.getinstance().showsharepopupsub(trimmedmediapath,mediatype,mediatoken,ismediatrimmed);
 
                 }
                 @Override
@@ -467,10 +469,10 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             });
             return;
         }
-        baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+        /*baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                 mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,
-                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),false);
-        //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),false);*/
+        baseactivity.getinstance().showsharepopupsub(trimmedmediapath,mediatype,mediatoken,ismediatrimmed);
     }
 
     public void senditem()
