@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.interfaces.progressupdate;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.taskresult;
@@ -29,25 +30,18 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class xapipostfile extends AsyncTask<Void, Void, String> {
+public class xapipostfile extends AsyncTask<Void, String, String> {
 
     String serverurl;
     Context mContext;
     String filepath = "";
     apiresponselistener listner;
+    progressupdate progressupdate;
 
-
-    HttpURLConnection conn = null;
-    DataOutputStream dos = null;
-    String lineEnd = "\r\n";
-    String twoHyphens = "--";
-    String boundary = "*****";
-    int bytesRead, bytesAvailable, bufferSize;
-    byte[] buffer;
-    int maxBufferSize = 1 * 1024 * 1024;
     String serverresponsemessage = "";
-    int serverresponsecode = 0;
     Date starttime,endtime;
+    File sourceFile = null;
+    long totalfilelength=0;
 
 
     //private final String boundary;
@@ -56,14 +50,47 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
     private String charset;
     private OutputStream outputStream;
     private PrintWriter writer;
+    private boolean cancelbackgroundprogress=false;
 
 
-    public xapipostfile(Context context, String serverurl, String filepath , apiresponselistener responseListner) {
+    public xapipostfile(Context context, String serverurl, String filepath , apiresponselistener responseListner,
+                        progressupdate progressupdate) {
         this.serverurl = serverurl;
         this.filepath = filepath;
         this.mContext = context;
         this.listner = responseListner;
+        this.progressupdate = progressupdate;
         starttime = Calendar.getInstance().getTime();
+        cancelbackgroundprogress=false;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        sourceFile = new File(filepath);
+    }
+
+    public void cancelbackgroundprocess(boolean cancelbackgroundprogress)
+    {
+        this.cancelbackgroundprogress=cancelbackgroundprogress;
+    }
+
+    @Override
+    public void onProgressUpdate(String... values) {
+        super.onProgressUpdate(values);
+        if(progressupdate != null)
+            progressupdate.onupdateprogress(values[0]);
+    }
+
+    @Override
+    protected void onCancelled(String s) {
+        super.onCancelled(s);
+    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        this.cancelbackgroundprogress=true;
     }
 
     @Override
@@ -74,11 +101,11 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
         }
 
         // reference link -> https://gist.github.com/luankevinferreira/5221ea62e874a9b29d86b13a2637517b
-        File sourceFile = new File(filepath);
         if (!sourceFile.isFile()) {
-            Log.e("xapipostfile", "Source file doesn't exist!");
             return "";
         }
+
+        totalfilelength=sourceFile.length();
 
         URLConnection urlconnection = null;
         try {
@@ -96,14 +123,39 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
 
             BufferedOutputStream bos = new BufferedOutputStream(urlconnection.getOutputStream());
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-            int i;
+            int bytesRead=0;
+            long progress = 0;
             // read byte by byte until end of stream
-            while ((i = bis.read()) > 0) {
+            /*while ((i = bis.read()) > 0)
+            {
+                progress += i;
+                Log.e("PreUploadProgress ",""+progress);
+                //publishProgress((int)getcurrentprogress(progress,totalfilelength));
+                int aaa=(int)getcurrentprogress(progress,totalfilelength);
+                Log.e("PostUploadProgress ",""+(int)getcurrentprogress(progress,totalfilelength));
                 bos.write(i);
+            }*/
+            byte buf[] = new byte[1024];
+            int flag=0;
+            while ((bytesRead = bis.read(buf)) != -1)
+            {
+                bos.write(buf, 0, bytesRead);
+                bos.flush();
+                if(isCancelled() || cancelbackgroundprogress)
+                {
+                    flag=1;
+                    Log.e("flagButton ","flagButton");
+                    break;
+                }
+                progress += bytesRead;
+                publishProgress(""+(int)getcurrentprogress(progress,totalfilelength));
             }
             bis.close();
+            bos.flush();
             bos.close();
             System.out.println(((HttpURLConnection) urlconnection).getResponseMessage());
+            if(flag == 1)
+                return "";
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,7 +166,6 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
             endtime = Calendar.getInstance().getTime();
             common.setxapirequestresponses(serverurl,"","",null,"","",
                     starttime,endtime, config.all_xapi_list);
-
 
             if (responseCode == 200)
             {
@@ -145,160 +196,12 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return serverresponsemessage;
+    }
 
-        try { // open a URL connection to the Servlet
-
-
-
-
-
-
-                    // open a URL connection to the Servlet
-                    /*FileInputStream fileInputStream = new FileInputStream(sourceFile);
-                    URL url = new URL(serverurl);
-
-                    boundary = "===" + System.currentTimeMillis() + "===";
-                    httpConn = (HttpURLConnection) url.openConnection();
-                    httpConn.setUseCaches(false);
-                    httpConn.setDoOutput(true);    // indicates POST method
-                    httpConn.setDoInput(true);
-                    httpConn.setRequestMethod("PUT");
-                    httpConn.setRequestProperty("Content-Type",
-                            "multipart/form-data; boundary=" + boundary);
-                    outputStream = httpConn.getOutputStream();
-                    writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"),
-                    true);
-
-                    writer.append("--" + boundary).append(LINE_FEED);
-                    writer.append("Content-Disposition: form-data; name=\"" + common.getfilename(filepath) + "\"")
-                            .append(LINE_FEED);
-                    writer.append("Content-Type: text/plain; charset=" + charset).append(
-                            LINE_FEED);
-                    writer.append(LINE_FEED);
-                    writer.append("video").append(LINE_FEED);
-                    writer.flush();
-
-
-                    writer.append("--" + boundary).append(LINE_FEED);
-                    writer.append(
-                            "Content-Disposition: form-data; name=\"" + common.getfilename(filepath)
-                                    + "\"; filename=\"" + common.getfilename(filepath) + "\"")
-                            .append(LINE_FEED);
-                    writer.append(
-                            "Content-Type: "
-                                    + URLConnection.guessContentTypeFromName(common.getfilename(filepath)))
-                            .append(LINE_FEED);
-                    writer.append("Content-Transfer-Encoding: binary").append(LINE_FEED);
-                    writer.append(LINE_FEED);
-                    writer.flush();
-
-                    FileInputStream inputStream = new FileInputStream(sourceFile);
-                    byte[] buffer = new byte[4096];
-                    int bytesRead = -1;
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        outputStream.write(buffer, 0, bytesRead);
-                    }
-                    outputStream.flush();
-                    inputStream.close();
-                    writer.append(LINE_FEED);
-                    writer.flush();
-
-                    List<String> response = new ArrayList<String>();
-                    writer.append(LINE_FEED).flush();
-                    writer.append("--" + boundary + "--").append(LINE_FEED);
-                    writer.close();
-
-                    // checks server's status code first
-                    int status = httpConn.getResponseCode();
-
-                    if (status == HttpURLConnection.HTTP_OK) {
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                                httpConn.getInputStream()));
-                        String line = null;
-                        while ((line = reader.readLine()) != null) {
-                            response.add(line);
-                        }
-                        reader.close();
-                        httpConn.disconnect();
-                    } else {
-                        throw new IOException("Server returned non-OK status: " + status);
-                    }
-
-                    serverresponsemessage =  response.toString();*/
-
-                   /* // Open a HTTP  connection to  the URL
-                    conn = (HttpURLConnection) url.openConnection();
-                    conn.setDoInput(true); // Allow Inputs
-                    conn.setDoOutput(true); // Allow Outputs
-                    conn.setUseCaches(false); // Don't use a Cached Copy
-                    conn.setRequestMethod("POST");
-                    conn.setRequestProperty("Connection", "Keep-Alive");
-                    conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-                    conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                    conn.setRequestProperty("uploaded_file", common.getfilename(serverurl));
-
-                    dos = new DataOutputStream(conn.getOutputStream());
-
-                    dos.writeBytes(twoHyphens + boundary + lineEnd);
-                    dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""+ common.getfilename(serverurl) + "\"" + lineEnd);
-                            dos.writeBytes(lineEnd);
-
-                    // create a buffer of  maximum size
-                    bytesAvailable = fileInputStream.available();
-
-                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    buffer = new byte[bufferSize];
-
-                    // read file and write it into form...
-                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-                    while (bytesRead > 0) {
-
-                        dos.write(buffer, 0, bufferSize);
-                        bytesAvailable = fileInputStream.available();
-                        bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-                    }
-
-                    // send multipart form data necesssary after file data...
-                    dos.writeBytes(lineEnd);
-                    dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-
-                    // Responses from the server (code and message)
-                    serverresponsecode = conn.getResponseCode();
-                   serverresponsemessage = conn.getResponseMessage();
-
-                    Log.i("uploadFile", "HTTP Response is : "
-                            + serverresponsemessage + ": " + serverresponsecode);
-
-                    if(serverresponsecode == 200){
-
-                        *//*runOnUiThread(new Runnable() {
-                            public void run() {
-
-                                String msg = "File Upload Completed.\n\n See uploaded file here : \n\n"
-                                        +" http://www.androidexample.com/media/uploads/"
-                                        +uploadFileName;
-
-                                messageText.setText(msg);
-                                Toast.makeText(UploadToServer.this, "File Upload Complete.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        });*//*
-                    }
-
-                    //close the streams //
-                    fileInputStream.close();
-                    dos.flush();
-                    dos.close();*/
-
-                } catch (Exception e) {
-
-                    e.printStackTrace();
-                }
-                return serverresponsemessage;
-            }
+    private double getcurrentprogress(long transferred,long total) {
+        return (transferred * 100) / total;
+    }
 
     @Override
     protected void onPostExecute(String aVoid) {
@@ -322,6 +225,11 @@ public class xapipostfile extends AsyncTask<Void, Void, String> {
                     result.success(true);
                     result.setData(object);
                 }
+            }
+            else
+            {
+                result.success(false);
+                result.setData("");
             }
         } catch (Exception e) {
             e.printStackTrace();
