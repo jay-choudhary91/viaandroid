@@ -302,16 +302,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         mSession.authenticate(this);
     }
 
-    /*private AndroidAuthSession builddropboxsession() {
-        // And later in some initialization function:
-        AppKeyPair appKeys = new AppKeyPair(applicationviavideocomposer.getactivity().getResources().getString(R.string.dropbox_appkey),
-                applicationviavideocomposer.getactivity().getResources().getString(R.string.dropbox_appsecret));
-        AndroidAuthSession session = new AndroidAuthSession(appKeys);
-
-        return session;
-    }*/
-
-
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         @Override
         public void onIabPurchaseFinished(IabResult result, com.deeptruth.app.android.inapputils.Purchase info) {
@@ -1803,8 +1793,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     {
                         if(xdata.getinstance().getSetting(config.dropboxauthtoken).trim().isEmpty())
                         {
-                            Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
-                                    .getResources().getString(R.string.dropbox_appkey));
+                            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                            {
+                                Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
+                                        .getResources().getString(R.string.dropbox_appkey));
+                            }
+                            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                            {
+                                Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
+                                        .getResources().getString(R.string.dropbox_appkey_reader));
+                            }
                         }
                         else
                         {
