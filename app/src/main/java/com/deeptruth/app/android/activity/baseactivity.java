@@ -67,6 +67,7 @@ import com.deeptruth.app.android.fragments.fragmentforgotpassword;
 import com.deeptruth.app.android.fragments.fragmentsharemedia;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.fragmentsignin;
+import com.deeptruth.app.android.fragments.fragmentsignup;
 import com.deeptruth.app.android.fragments.fragmentverifyuser;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
@@ -842,7 +843,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 if(!isuserlogin()){
                     //redirecttologin();
-                    showdialogsigninfragment();
+                    showdialogsignupfragment();
 
                     return;
                 }
@@ -868,7 +869,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 if(!isuserlogin()){
                     //redirecttologin();
-                    showdialogsigninfragment();
+                    showdialogsignupfragment();
                     return;
                 }
 
@@ -903,7 +904,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                 if(!isuserlogin()){
                    // redirecttologin();
-                    showdialogsigninfragment();
+                    showdialogsignupfragment();
                     return;
                 }
                 callmediashareapi(type, mediatoken, path, mediamethod);
@@ -2982,6 +2983,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         //ft.addToBackStack(null);
         fragmentsignin fragment = new fragmentsignin();
         fragment.show(ft, "signindialog");
+    }
+
+    public void showdialogsignupfragment(){
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("signupdialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        //ft.addToBackStack(null);
+        fragmentsignup fragment = new fragmentsignup();
+        fragment.show(ft, "signupdialog");
     }
 
     public void showdialogcreateaccountfragment(){
