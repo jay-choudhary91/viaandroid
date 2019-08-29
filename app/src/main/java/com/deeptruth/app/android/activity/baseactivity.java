@@ -1129,7 +1129,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                     progressdialog.dismisswaitdialog();
                                     if (response.isSuccess())
                                     {
-                                        callmediastoreapi(mediatoken, mediatype, path);
+                                        //callmediastoreapi(mediatoken, mediatype, path);
+                                        Log.e("xapipostfile ","step6");
                                     }
                                     else
                                     {
@@ -2211,6 +2212,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }
             });
 
+            if(checkbox_notify.isChecked())
+                xdata.getinstance().saveSetting(config.datauploaded_success_dialog,"1");
+
             txt_cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v)
@@ -2515,12 +2519,15 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         });
 
+        if(checkbox_notify.isChecked())
+            xdata.getinstance().saveSetting(config.datauploaded_success_dialog,"1");
+
         txt_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                /*if(xapiupload != null)
-                    xapiupload.cancel(true);*/
+                if(xapiupload != null)
+                    xapiupload.cancel(true);
 
                 if(mitemclick != null)
                     mitemclick.onItemClicked("1");
@@ -2919,7 +2926,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     showToast("Uploaded new version of " + uploadFileVersionInfo.getName());
                 } catch (BoxException e) {
                     e.printStackTrace();
-                    showToast("Upload failed");
+                    showToast("Media already exist!");
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
