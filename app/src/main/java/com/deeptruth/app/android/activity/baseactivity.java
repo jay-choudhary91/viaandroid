@@ -308,16 +308,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         mSession.authenticate(this);
     }
 
-    /*private AndroidAuthSession builddropboxsession() {
-        // And later in some initialization function:
-        AppKeyPair appKeys = new AppKeyPair(applicationviavideocomposer.getactivity().getResources().getString(R.string.dropbox_appkey),
-                applicationviavideocomposer.getactivity().getResources().getString(R.string.dropbox_appsecret));
-        AndroidAuthSession session = new AndroidAuthSession(appKeys);
-
-        return session;
-    }*/
-
-
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         @Override
         public void onIabPurchaseFinished(IabResult result, com.deeptruth.app.android.inapputils.Purchase info) {
@@ -762,7 +752,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     protected void onPause() {
         super.onPause();
-        getinstance().isapprunning(false);
+        isapprunning(false);
     }
 
 
@@ -939,7 +929,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     {
         String message = applicationviavideocomposer.getactivity().getResources().getString(R.string.if_you_would_like_the_option);
 
-        baseactivity.getinstance().showinapppurchasepopup(applicationviavideocomposer.
+        showinapppurchasepopup(applicationviavideocomposer.
                 getactivity(), "", message, new adapteritemclick(){
             @Override
             public void onItemClicked(Object object) {
@@ -1107,8 +1097,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         requestparams.put("sharemethod", method);
         requestparams.put("fileextension",common.getfileextension(path));
 
-        progressdialog.showwaitingdialog(getinstance());
-        xapipost_send(getinstance(), requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+        xapipost_send(applicationviavideocomposer.getactivity(), requestparams, new apiresponselistener() {
 
             @Override
             public void onResponse(taskresult response) {
@@ -1132,9 +1122,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(! storageurl.trim().isEmpty())
                         {
                             xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"0");
-                            xapi_uploadfile(getinstance(), storageurl, path, new apiresponselistener() {
+                            xapi_uploadfile(applicationviavideocomposer.getactivity(), storageurl, path, new apiresponselistener() {
                                 @Override
                                 public void onResponse(taskresult response) {
+                                    progressdialog.dismisswaitdialog();
                                     if (response.isSuccess())
                                     {
                                         callmediastoreapi(mediatoken, mediatype, path);
@@ -1152,7 +1143,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                     if(xdata.getinstance().getSetting(config.datauploadeding_process_dialog).equalsIgnoreCase("0")
                                             && callbackstatus[0] == 0)
                                     {
-                                        Log.e("UploadPercentage ",percentage);
                                         new Thread(new Runnable() {
                                             @Override
                                             public void run() {
@@ -1160,44 +1150,24 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                                     @Override
                                                     public void run() {
                                                         showvideolockuploadingprocessdialog(applicationviavideocomposer.getactivity(),
-                                                                Long.parseLong(percentage),100,"",false,
-                                                                new adapteritemclick() {
-                                                                    @Override
-                                                                    public void onItemClicked(Object object) {
-                                                                        callbackstatus[0] =1;
-                                                                    }
+                                                            Long.parseLong(percentage),100,"",false,
+                                                            new adapteritemclick() {
+                                                                @Override
+                                                                public void onItemClicked(Object object) {
+                                                                    callbackstatus[0] =1;
+                                                                }
 
-                                                                    @Override
-                                                                    public void onItemClicked(Object object, int type) {
-                                                                    }
-                                                                });
+                                                                @Override
+                                                                public void onItemClicked(Object object, int type) {
+                                                                }
+                                                            });
                                                     }
                                                 });
-
                                             }
                                         }).start();
-
                                     }
-
                                 }
                             });
-
-                            if(xdata.getinstance().getSetting(config.datauploadeding_process_dialog).equalsIgnoreCase("0")
-                                    && callbackstatus[0] == 0)
-                            {
-                                showvideolockuploadingprocessdialog(applicationviavideocomposer.getactivity(),
-                                        0,100,"",false,
-                                        new adapteritemclick() {
-                                            @Override
-                                            public void onItemClicked(Object object) {
-                                                callbackstatus[0] =1;
-                                            }
-
-                                            @Override
-                                            public void onItemClicked(Object object, int type) {
-                                            }
-                                        });
-                            }
                         }
                         else if(! shareurl.trim().isEmpty())
                         {
@@ -1238,8 +1208,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         else if(mediatype.equalsIgnoreCase(config.item_video))
             requestparams.put("videotoken", mediatoken);
 
-        progressdialog.showwaitingdialog(getinstance());
-        xapipost_send(getinstance(), requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+        xapipost_send(applicationviavideocomposer.getactivity(), requestparams, new apiresponselistener() {
 
             @Override
             public void onResponse(taskresult response) {
@@ -1523,11 +1493,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     int position=(int)object;
                     if(trimbuttontext.get(position).getButtontext().equalsIgnoreCase(config.txtyear))
                     {
-                        baseactivity.getinstance().inapppurchase("ABC");
+                        inapppurchase("ABC");
                     }
                     else if(trimbuttontext.get(position).getButtontext().equalsIgnoreCase(config.txtmonth))
                     {
-                        baseactivity.getinstance().inapppurchase("ABC");
+                        inapppurchase("ABC");
                     }
                     else if(trimbuttontext.get(position).getButtontext().equalsIgnoreCase(config.txtupgrade))
                     {
@@ -1676,7 +1646,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     requestparams.put("action","appunlockcode_use");
                     progressdialog.showwaitingdialog(applicationviavideocomposer.
                             getactivity());
-                    baseactivity.getinstance().xapipost_send(applicationviavideocomposer.
+                    xapipost_send(applicationviavideocomposer.
                             getactivity(),requestparams, new apiresponselistener() {
                         @Override
                         public void onResponse(taskresult response) {
@@ -1813,8 +1783,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     {
                         if(xdata.getinstance().getSetting(config.dropboxauthtoken).trim().isEmpty())
                         {
-                            Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
-                                    .getResources().getString(R.string.dropbox_appkey));
+                            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                            {
+                                Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
+                                        .getResources().getString(R.string.dropbox_appkey));
+                            }
+                            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                            {
+                                Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
+                                        .getResources().getString(R.string.dropbox_appkey_reader));
+                            }
                         }
                         else
                         {
@@ -2604,7 +2582,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v)
             {
                 dialog.dismiss();
-                baseactivity.getinstance().showsharepopupsub(trimmedmediapath,type,mediatoken,ismediatrimmed);
+                showsharepopupsub(trimmedmediapath,type,mediatoken,ismediatrimmed);
             }
         });
         setscreenwidthheight(dialog,95,80,context.getResources().getString(R.string.popup_videolock));
@@ -2898,14 +2876,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     BoxRequestsFile.UploadFile request = mFileApi.getUploadRequest(sourcefile, destinationFolderId);
                     final BoxFile uploadFileInfo = request.send();
                     showToast("Media uploaded successfully!" + uploadFileInfo.getName());
-                    loadRootFolder();
                 } catch (BoxException e) {
                     e.printStackTrace();
                     BoxError error = e.getAsBoxError();
                     if (error != null && error.getStatus() == HttpURLConnection.HTTP_CONFLICT) {
                         ArrayList<BoxEntity> conflicts = error.getContextInfo().getConflicts();
                         if (conflicts != null && conflicts.size() == 1 && conflicts.get(0) instanceof BoxFile) {
-                            uploadNewVersion((BoxFile) conflicts.get(0));
+                            uploadNewVersion(sourcefile,(BoxFile) conflicts.get(0));
                             return;
                         }
                     }
@@ -2927,50 +2904,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     }
 
-    //Method to demonstrate fetching folder items from the root folder
-    private void loadRootFolder() {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    //Api to fetch root folder
-                    final BoxIteratorItems folderItems = mFolderApi.getItemsRequest(BoxConstants.ROOT_FOLDER_ID).send();
-                    /*runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.clear();
-                            for (BoxItem boxItem: folderItems) {
-                                mAdapter.add(boxItem);
-                            }
-                        }
-                    });*/
-                } catch (BoxException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }.start();
-    }
-
     /**
      * Method demonstrates a new version of a file being uploaded using the file api
      * @param file
      */
-    private void uploadNewVersion(final BoxFile file) {
+    private void uploadNewVersion(File sourcefile,final BoxFile file) {
         new Thread() {
             @Override
             public void run() {
                 try {
-                    String uploadFileName = "box_logo.png";
-                    InputStream uploadStream = getResources().getAssets().open(uploadFileName);
-                    BoxRequestsFile.UploadNewVersion request = mFileApi.getUploadNewVersionRequest(uploadStream, file.getId());
+                    BoxRequestsFile.UploadNewVersion request = mFileApi.getUploadNewVersionRequest(sourcefile, file.getId());
                     final BoxFile uploadFileVersionInfo = request.send();
                     showToast("Uploaded new version of " + uploadFileVersionInfo.getName());
-                } catch (IOException e) {
-                    e.printStackTrace();
                 } catch (BoxException e) {
                     e.printStackTrace();
                     showToast("Upload failed");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 } finally {
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override

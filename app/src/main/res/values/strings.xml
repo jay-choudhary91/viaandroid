@@ -33,6 +33,10 @@
     <string name="dropbox_appkey">unm21q9pupo7xyg</string>
     <string name="dropbox_appsecret">szxh2fqpibooc3o</string>
 
+    <string name="dropbox_appkey_followedbydb_reader">db-wekhe46wycpw649</string>
+    <string name="dropbox_appkey_reader">wekhe46wycpw649</string>
+    <string name="dropbox_appsecret_reader">mq2f03o17bj22ax</string>
+
     <string name="box_clientid">wbr5nopz36g7ed9tfizxp77vecnpb625</string>
     <string name="box_secret">0VjpiF0sPjNsrlSPfEyGGG4uDIpmPTd9</string>
 

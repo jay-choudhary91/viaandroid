@@ -6,17 +6,17 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dialog_rightmargin"
+        android:layout_marginTop="@dimen/margin_50dp"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/img_logoicon"
-            android:layout_width="250dp"
-            android:layout_height="130dp"
+            android:layout_width="220dp"
+            android:layout_height="140dp"
             android:layout_gravity="center"
             android:scaleType="fitXY"
             android:src="@drawable/splash_logo_icon"
@@ -30,7 +30,7 @@
             android:padding="@dimen/margin_5dp"
             android:textColor="@color/blue_x"
             android:gravity="center"
-            android:textSize="24sp"
+            android:textSize="18sp"
             app:fontType="OpenSans_Semibold"
             android:text="@string/proof_of_the_truth"/>
 
