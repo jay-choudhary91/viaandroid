@@ -105,7 +105,7 @@ public class xapipostfile extends AsyncTask<Void, String, String> {
             return "";
         }
 
-        totalfilelength=sourceFile.length();
+        totalfilelength=sourceFile.length()+config.tail.length();
 
         URLConnection urlconnection = null;
         try {
@@ -124,38 +124,23 @@ public class xapipostfile extends AsyncTask<Void, String, String> {
             BufferedOutputStream bos = new BufferedOutputStream(urlconnection.getOutputStream());
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
             int bytesRead=0;
-            long progress = 0;
-            // read byte by byte until end of stream
-            /*while ((i = bis.read()) > 0)
-            {
-                progress += i;
-                Log.e("PreUploadProgress ",""+progress);
-                //publishProgress((int)getcurrentprogress(progress,totalfilelength));
-                int aaa=(int)getcurrentprogress(progress,totalfilelength);
-                Log.e("PostUploadProgress ",""+(int)getcurrentprogress(progress,totalfilelength));
-                bos.write(i);
-            }*/
+            long currentbyteread = 0,currentprogress=0,previousprogress=0;
             byte buf[] = new byte[1024];
-            int flag=0;
             while ((bytesRead = bis.read(buf)) != -1)
             {
                 bos.write(buf, 0, bytesRead);
                 bos.flush();
-                if(isCancelled() || cancelbackgroundprogress)
-                {
-                    flag=1;
-                    Log.e("flagButton ","flagButton");
-                    break;
+                currentbyteread += bytesRead;
+                currentprogress=(int)getcurrentprogress(currentbyteread,totalfilelength);
+                if (currentprogress >= previousprogress + 5) {
+                    publishProgress(""+currentprogress);
+                    previousprogress = currentprogress;
                 }
-                progress += bytesRead;
-                publishProgress(""+(int)getcurrentprogress(progress,totalfilelength));
             }
             bis.close();
             bos.flush();
             bos.close();
             System.out.println(((HttpURLConnection) urlconnection).getResponseMessage());
-            if(flag == 1)
-                return "";
         } catch (Exception e) {
             e.printStackTrace();
         }

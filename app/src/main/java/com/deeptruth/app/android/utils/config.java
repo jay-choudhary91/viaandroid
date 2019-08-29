@@ -91,6 +91,8 @@ public class config {
     public static final String selectedsyncsetting_1 = "Keep running sync & close after completed";
     public static final String selectedsyncsetting_2 = "Do not allow sync to run in background";
 
+    public static final String boundary = "---------------------------boundary";
+    public static final String tail = "\r\n--" + boundary + "--\r\n";
     public static final String drawer_transparency = "drawer_transparency";
 
     public static final String mediaquality480 = "480P";
