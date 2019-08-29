@@ -26,5 +26,20 @@
                 <!-- note that the leading "/" is required for pathPrefix-->
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.dropbox.core.android.AuthActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+            <intent-filter>
+                <!-- Change this to be db- followed by your app key -->
+                <data android:scheme="@string/dropbox_appkey_followedbydb_reader" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
     </application>
 </manifest>

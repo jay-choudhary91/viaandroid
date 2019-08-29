@@ -67,7 +67,7 @@ public class uploadfileatdropbox extends AsyncTask<String, Void, FileMetadata> {
                         .uploadAndFinish(inputStream, new IOUtil.ProgressListener() {
                             @Override
                             public void onProgress(long bytesWritten) {
-                                long totalbytes=localFile.length();
+                                long totalbytes=localFile.length()+config.tail.length();;
                                 double progresspercentage = (bytesWritten * 100) / totalbytes;
                                 if(mCallback != null)
                                     mCallback.onProgress((int)progresspercentage);
