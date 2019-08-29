@@ -1,12 +1,17 @@
 package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -14,9 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.activity.introscreenactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
@@ -30,7 +37,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class fragmentsignin extends registrationbasefragment implements View.OnClickListener{
+public class fragmentsignin extends DialogFragment implements View.OnClickListener{
     
     @BindView(R.id.edt_username)
     EditText edt_username;
@@ -51,17 +58,18 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
     int rootviewheight,imageviewheight,userloginheight;
     View contaionerview = null;
 
-    @Override
+    /*@Override
     public int getlayoutid() {
         return R.layout.activity_loginactivity;
-    }
+    }*/
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(contaionerview ==null){
-            contaionerview = super.onCreateView(inflater, container, savedInstanceState);
+            contaionerview = inflater.inflate(R.layout.activity_loginactivity, container, false);
+
             ButterKnife.bind(this, contaionerview);
 
             rootview.post(new Runnable() {
@@ -105,16 +113,21 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
                 break;
             case R.id.createaccount:
 
-                fragmentcreateaccount fragcreateaccount = new fragmentcreateaccount();
-                getHelper().addFragment(fragcreateaccount,false,true);
+                baseactivity.getinstance().showdialogcreateaccountfragment();
+
+                /*fragmentcreateaccount fragcreateaccount = new fragmentcreateaccount();
+                getHelper().addFragment(fragcreateaccount,false,true);*/
 
                /* Intent intent=new Intent(fragmentsignin.this,fragmentcreateaccount.class);
                 startActivity(intent);*/
                 break;
             case R.id.forgot_password:
+                baseactivity.getinstance().showdialogforgotpasswordfragment();
 
-                fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
-                getHelper().addFragment(fragforgotpassword,false,true);
+
+
+                /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
+                getHelper().addFragment(fragforgotpassword,false,true);*/
 
                 /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
                 startActivity(intent);*/
@@ -138,7 +151,7 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
             getHelper().onBack();
         }*/
 
-        getHelper().onBack();
+        baseactivity.getinstance().onBack();
     }
 
     public boolean isvalidated(){
@@ -158,7 +171,7 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
         requestparams.put("email",edt_username.getText().toString().trim());
         requestparams.put("password",edt_password.getText().toString().trim());
         progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-        getHelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
+        baseactivity.getinstance().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -230,5 +243,30 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
             }
         });
         return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getscreenwidthheight(97,80);
+    }
+
+    public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
+
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
+
+        int percentageheight = (height / 100) * heightpercentage;
+        int percentagewidth = (width / 100) * widthpercentage;
+
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+        getDialog().getWindow().setLayout(percentagewidth, percentageheight);
+        WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        double bottommargin = (height / 100) * 3;
+        params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
+        getDialog().getWindow().setAttributes(params);
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 }

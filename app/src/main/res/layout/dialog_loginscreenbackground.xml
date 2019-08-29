@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_50dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/img_logoicon"
+            android:layout_width="190dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/splash_logo_icon"
+
+            />
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_proofofthetruth"
+            android:padding="@dimen/margin_5dp"
+            android:textColor="@color/blue_x"
+            android:gravity="center"
+            android:textSize="18sp"
+            app:fontType="OpenSans_Semibold"
+            android:text="@string/proof_of_the_truth"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
