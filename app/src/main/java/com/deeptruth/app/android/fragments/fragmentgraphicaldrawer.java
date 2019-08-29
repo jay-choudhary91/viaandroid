@@ -621,7 +621,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             initlinechart(linechart_gpsaccuracy,-5f,100f,true);
             vertical_slider_connectionspeed.setMax(50);
             vertical_slider_connectiondatatimedely.setMax(50);
-            vertical_slider_gpsaccuracy.setMax(300);
+            vertical_slider_gpsaccuracy.setMax(100);
 
             ViewTreeObserver observer = barvisualizerview.getViewTreeObserver();
             observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
