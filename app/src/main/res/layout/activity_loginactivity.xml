@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:id="@+id/rootview"
     android:layout_height="match_parent"
-    android:background="@drawable/splashscrn"
+    android:background="@drawable/dark_popup_background"
     tools:context="com.deeptruth.app.android.fragments.fragmentsignin">
 
     <RelativeLayout
@@ -16,12 +16,15 @@
         android:focusableInTouchMode="true"
         android:layout_height="match_parent">
 
+        <include layout="@layout/dialog_loginscreenbackground"
+            android:id="@+id/layout_image"></include>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:id="@+id/layout_image"
             android:layout_gravity="bottom"
+            android:visibility="gone"
             android:gravity="bottom">
             <ImageView
                 android:id="@+id/img_imagedeep"
@@ -56,6 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/layout_logindetails"
+            android:layout_marginTop="@dimen/margin_20dp"
             android:layout_below="@+id/layout_image"
             android:gravity="center">
 
@@ -112,8 +116,4 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-
-
-
 </ScrollView>
