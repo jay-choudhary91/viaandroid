@@ -48,7 +48,7 @@
             android:maxLength="50"
             android:padding="5dp"
             android:layout_marginTop="10dp"
-            android:id="@+id/edt_username"/>
+            android:id="@+id/edt_confirmchannel"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             style="@style/edttext_confirmchannel"
