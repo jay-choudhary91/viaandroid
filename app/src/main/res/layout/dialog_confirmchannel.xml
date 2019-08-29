@@ -41,7 +41,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             style="@style/edttext_confirmchannel"
-            android:padding="10dp"
+            android:padding="8dp"
             android:text="@string/create_account"
             android:textColor="@color/white"
             android:background="@drawable/textview_bluebackgroundshape"

@@ -34,7 +34,7 @@
             app:fontType="Comfortaa-Bold"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:maxLines="3"
@@ -47,7 +47,7 @@
             android:background="@drawable/edittext_shap"
             android:maxLength="50"
             android:padding="5dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/edt_username"/>
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -57,7 +57,7 @@
             android:textColor="@color/white"
             android:background="@drawable/textview_bluebackgroundshape"
             app:fontType="Comfortaa-Regular"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             />
 
         <com.deeptruth.app.android.views.customfonttextview
