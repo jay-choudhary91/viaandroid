@@ -1,13 +1,19 @@
 package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -15,7 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
@@ -30,7 +39,7 @@ import br.com.sapereaude.maskedEditText.MaskedEditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class fragmentcreateaccount extends registrationbasefragment implements View.OnClickListener  {
+public class fragmentcreateaccount extends DialogFragment implements View.OnClickListener  {
 
 
     @BindView(R.id.edt_username)
@@ -56,16 +65,16 @@ public class fragmentcreateaccount extends registrationbasefragment implements V
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(contaionerview ==null){
-            contaionerview = super.onCreateView(inflater, container, savedInstanceState);
+            contaionerview = inflater.inflate(R.layout.activity_createaccountactivity, container, false);
             ButterKnife.bind(this, contaionerview);
-            getHelper().onUserLeaveHint();
+           // baseactivity.getinstance().onUserLeaveHint();
 
             txt_submit.setOnClickListener(this);
             edt_phonenumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
-                        getHelper().hidekeyboard();
+                        //baseactivity.getinstance().hidekeyboard();
                     }
                     return false;
                 }
@@ -75,10 +84,10 @@ public class fragmentcreateaccount extends registrationbasefragment implements V
         return contaionerview;
     }
 
-    @Override
+    /*@Override
     public int getlayoutid() {
         return R.layout.activity_createaccountactivity;
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -99,7 +108,7 @@ public class fragmentcreateaccount extends registrationbasefragment implements V
             requestparams.put("password",edt_password.getText().toString().trim());
             requestparams.put("confirmpassword",edt_confirmpassword.getText().toString().trim());
             progressdialog.showwaitingdialog(getActivity());
-            getHelper().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
+            baseactivity.getinstance().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
                 @Override
                 public void onResponse(taskresult response) {
                     progressdialog.dismisswaitdialog();
@@ -114,9 +123,9 @@ public class fragmentcreateaccount extends registrationbasefragment implements V
                                     if(object.has(config.clientid))
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                    fragmentverifyuser fragverifyuser = new fragmentverifyuser();
+                                    /*fragmentverifyuser fragverifyuser = new fragmentverifyuser();
                                     fragverifyuser.setdata(config.createaccount);
-                                    getHelper().addFragment(fragverifyuser,false,true);
+                                    getHelper().addFragment(fragverifyuser,false,true);*/
 
 
                                    /* Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
@@ -144,7 +153,13 @@ public class fragmentcreateaccount extends registrationbasefragment implements V
                                         error=error+"\n"+errorarray.get(i).toString();
                                     }
                                 }
-                                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+
+                                new AlertDialog.Builder(applicationviavideocomposer.getactivity())
+                                        .setMessage(error)
+                                        .setPositiveButton(android.R.string.ok, null)
+                                        .show();
+
+                               // Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                             }
 
                             if(object.has("not_verified"))
@@ -153,6 +168,8 @@ public class fragmentcreateaccount extends registrationbasefragment implements V
                                 {
                                     if(object.has(config.clientid))
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
+
+                                    baseactivity.getinstance().showdialogverifyuserfragment();
 
                                    /* Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
                                     intent.putExtra("activityname",config.fragmentcreateaccount);
@@ -184,5 +201,30 @@ public class fragmentcreateaccount extends registrationbasefragment implements V
             phonenumber=phonenumber.replace("-","");
             phonenumber=phonenumber.replace("-","");
             return phonenumber;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getscreenwidthheight(97,80);
+    }
+
+    public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
+
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
+
+        int percentageheight = (height / 100) * heightpercentage;
+        int percentagewidth = (width / 100) * widthpercentage;
+
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+        getDialog().getWindow().setLayout(percentagewidth, percentageheight);
+        WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        double bottommargin = (height / 100) * 3;
+        params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
+        getDialog().getWindow().setAttributes(params);
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 }

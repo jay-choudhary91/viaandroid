@@ -1,18 +1,26 @@
 package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.pinviewnumeric;
 import com.deeptruth.app.android.utils.progressdialog;
@@ -28,7 +36,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class fragmentverifyuser extends registrationbasefragment implements View.OnClickListener {
+public class fragmentverifyuser extends DialogFragment implements View.OnClickListener {
 
     @BindView(R.id.pinview)
     pinviewnumeric pinview;
@@ -51,7 +59,7 @@ public class fragmentverifyuser extends registrationbasefragment implements View
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(contaionerview ==null){
-            contaionerview = super.onCreateView(inflater, container, savedInstanceState);
+            contaionerview = inflater.inflate(R.layout.activity_verifyuser, container, false);
             ButterKnife.bind(this, contaionerview);
 
             rootview.post(new Runnable() {
@@ -76,17 +84,17 @@ public class fragmentverifyuser extends registrationbasefragment implements View
             pinview.setPinViewEventListener(new pinviewnumeric.PinViewEventListener() {
                 @Override
                 public void onDataEntered(pinviewnumeric pinview, boolean fromUser) {
-                   getHelper().hidekeyboard();
+                    //baseactivity.getinstance().hidekeyboard();
                 }
             });
         }
         return contaionerview;
     }
 
-    @Override
+    /*@Override
     public int getlayoutid() {
         return R.layout.activity_verifyuser;
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -118,7 +126,7 @@ public class fragmentverifyuser extends registrationbasefragment implements View
         requestparams.put("clientid",clientid);
         requestparams.put("code",value);
         progressdialog.showwaitingdialog(getActivity());
-        getHelper().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
+        baseactivity.getinstance().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -180,9 +188,10 @@ public class fragmentverifyuser extends registrationbasefragment implements View
     {
         if(xdata.getinstance().getSetting(config.reset_authtoken).toString().trim().length() > 0)
         {
+            baseactivity.getinstance().showdialogchangepasswordfragment();
 
-            fragmentchangepassword fragchangepassword = new fragmentchangepassword();
-            getHelper().addFragment(fragchangepassword,false,true);
+            /*fragmentchangepassword fragchangepassword = new fragmentchangepassword();
+            getHelper().addFragment(fragchangepassword,false,true);*/
         }
         else
         {
@@ -194,9 +203,35 @@ public class fragmentverifyuser extends registrationbasefragment implements View
         this.forgotpassword = forgotpassword;
 
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getscreenwidthheight(97,80);
+    }
 
     public void gotologin(){
-        fragmentsignin fragverifyuser = new fragmentsignin();
-        getHelper().addFragment(fragverifyuser,true,true);
+
+        baseactivity.getinstance().showdialogsigninfragment();
+        /*fragmentsignin fragverifyuser = new fragmentsignin();
+        getHelper().addFragment(fragverifyuser,true,true);*/
+    }
+
+    public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
+
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
+
+        int percentageheight = (height / 100) * heightpercentage;
+        int percentagewidth = (width / 100) * widthpercentage;
+
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+        getDialog().getWindow().setLayout(percentagewidth, percentageheight);
+        WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        double bottommargin = (height / 100) * 3;
+        params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
+        getDialog().getWindow().setAttributes(params);
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 }

@@ -61,8 +61,13 @@ import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
+import com.deeptruth.app.android.fragments.fragmentchangepassword;
+import com.deeptruth.app.android.fragments.fragmentcreateaccount;
+import com.deeptruth.app.android.fragments.fragmentforgotpassword;
 import com.deeptruth.app.android.fragments.fragmentsharemedia;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
+import com.deeptruth.app.android.fragments.fragmentsignin;
+import com.deeptruth.app.android.fragments.fragmentverifyuser;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
@@ -846,7 +851,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 mediamethod = config.type_private;
 
                 if(!isuserlogin()){
-                    redirecttologin();
+                    //redirecttologin();
+                    showdialogsigninfragment();
+
                     return;
                 }
 
@@ -870,7 +877,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 mediamethod = config.type_public;
 
                 if(!isuserlogin()){
-                    redirecttologin();
+                    //redirecttologin();
+                    showdialogsigninfragment();
                     return;
                 }
 
@@ -904,7 +912,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }*/
 
                 if(!isuserlogin()){
-                    redirecttologin();
+                   // redirecttologin();
+                    showdialogsigninfragment();
                     return;
                 }
                 callmediashareapi(type, mediatoken, path, mediamethod);
@@ -1324,7 +1333,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     public void callloginscreen(){
-        redirecttologin();
+        //redirecttologin();
         return;
     }
 
@@ -2853,6 +2862,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
         }
 
+        else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_alert))){
+
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER);
+            dialog.getWindow().setLayout(percentagewidth,WindowManager.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
+        }
+
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
@@ -3006,7 +3022,91 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         initboxsession();
     }
 
+    public void showdialogsigninfragment(){
 
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("signindialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        //ft.addToBackStack(null);
+        fragmentsignin fragment = new fragmentsignin();
+        fragment.show(ft, "signindialog");
+    }
+
+    public void showdialogcreateaccountfragment(){
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("signindialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        //ft.addToBackStack(null);
+        fragmentcreateaccount fragment = new fragmentcreateaccount();
+
+        fragment.show(ft, "signindialog");
+    }
+
+    public void showdialogverifyuserfragment(){
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("signindialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        //ft.addToBackStack(null);
+        fragmentverifyuser fragment = new fragmentverifyuser();
+        fragment.setdata(config.createaccount);
+        fragment.show(ft, "signindialog");
+    }
+
+    public void showdialogforgotpasswordfragment(){
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("forgotpassword");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        //ft.addToBackStack(null);
+        fragmentforgotpassword fragment = new fragmentforgotpassword();
+        fragment.show(ft, "forgotpassword");
+    }
+
+    public void showdialogchangepasswordfragment(){
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("changepassword");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        //ft.addToBackStack(null);
+        fragmentchangepassword fragment = new fragmentchangepassword();
+        fragment.show(ft, "changepassword");
+    }
+
+    public void alertdialog(final Context context,String msg){
+
+        final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.alert_dialog);
+
+        TextView txt_title = (TextView) dialog.findViewById(R.id.txt_title);
+        if(!msg.isEmpty())
+            txt_title.setText(msg);
+
+        TextView btn_ok = (TextView) dialog.findViewById(R.id.btn_ok);
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        setscreenwidthheight(dialog,70,0,getResources().getString(R.string.popup_alert));
+        dialog.show();
+    }
 }
 
 

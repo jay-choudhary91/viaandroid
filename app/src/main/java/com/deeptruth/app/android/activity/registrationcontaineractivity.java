@@ -26,8 +26,11 @@ public class registrationcontaineractivity extends registrationbaseactivity{
 
     public void launchcomposerfragment()
     {
-        fragmentsignin fragbottombar=new fragmentsignin();
-        replaceFragment(fragbottombar, false, true);
+
+
+
+        /*fragmentsignin fragbottombar=new fragmentsignin();
+        replaceFragment(fragbottombar, false, true);*/
     }
 }
 

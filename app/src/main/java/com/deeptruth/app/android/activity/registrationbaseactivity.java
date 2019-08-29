@@ -184,7 +184,7 @@ public abstract class registrationbaseactivity extends AppCompatActivity impleme
             return;
         }*/
 
-        if (getcurrentfragment() instanceof fragmentsignin) {
+        /*if (getcurrentfragment() instanceof fragmentsignin) {
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);
             finish();
@@ -192,7 +192,7 @@ public abstract class registrationbaseactivity extends AppCompatActivity impleme
             return;
         }else{
             backtolastfragment();
-        }
+        }*/
     }
 
     public void backtolastfragment() {
