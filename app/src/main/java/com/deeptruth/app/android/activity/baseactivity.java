@@ -1118,7 +1118,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                     progressdialog.dismisswaitdialog();
                                     if (response.isSuccess())
                                     {
-                                        callmediastoreapi(mediatoken, mediatype, path);
+                                        //callmediastoreapi(mediatoken, mediatype, path);
+                                        Log.e("xapipostfile ","step6");
                                     }
                                     else
                                     {
@@ -2200,6 +2201,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }
             });
 
+            if(checkbox_notify.isChecked())
+                xdata.getinstance().saveSetting(config.datauploaded_success_dialog,"1");
+
             txt_cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v)
@@ -2503,6 +2507,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     videolockuploadingdialog.dismiss();
             }
         });
+
+        if(checkbox_notify.isChecked())
+            xdata.getinstance().saveSetting(config.datauploaded_success_dialog,"1");
 
         txt_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
