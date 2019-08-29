@@ -89,7 +89,9 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txt_submit:
-                checkValidations();
+                //checkValidations();
+                baseactivity.getinstance().showdialogconfirmchannelfragment();
+
                 break;
         }
     }

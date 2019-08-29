@@ -46,6 +46,7 @@
             android:textColor="@color/white"
             android:background="@drawable/textview_bluebackgroundshape"
             app:fontType="Comfortaa-Regular"
+            android:id="@+id/txt_createaccount"
             />
     </LinearLayout>
 

@@ -62,6 +62,7 @@ import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
 import com.deeptruth.app.android.fragments.fragmentchangepassword;
+import com.deeptruth.app.android.fragments.fragmentconfirmchannel;
 import com.deeptruth.app.android.fragments.fragmentcreateaccount;
 import com.deeptruth.app.android.fragments.fragmentforgotpassword;
 import com.deeptruth.app.android.fragments.fragmentsharemedia;
@@ -3045,6 +3046,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         //ft.addToBackStack(null);
         fragmentchangepassword fragment = new fragmentchangepassword();
         fragment.show(ft, "changepassword");
+    }
+
+    public void showdialogconfirmchannelfragment(){
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("confirmchannel");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        //ft.addToBackStack(null);
+        fragmentconfirmchannel fragment = new fragmentconfirmchannel();
+        fragment.show(ft, "confirmchannel");
     }
 
     public void alertdialog(final Context context,String msg){
