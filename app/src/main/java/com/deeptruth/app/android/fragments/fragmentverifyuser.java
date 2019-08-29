@@ -26,6 +26,7 @@ import com.deeptruth.app.android.utils.pinviewnumeric;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
+import com.deeptruth.app.android.views.customfontedittext;
 import com.deeptruth.app.android.views.customfonttextview;
 
 import org.json.JSONArray;
@@ -38,31 +39,24 @@ import butterknife.ButterKnife;
 
 public class fragmentverifyuser extends DialogFragment implements View.OnClickListener {
 
-    @BindView(R.id.pinview)
-    pinviewnumeric pinview;
-    @BindView(R.id.tv_complete)
-    customfonttextview tvcomplete;
-    @BindView(R.id.tv_cancel)
-    customfonttextview tvcancel;
-    @BindView(R.id.rootview)
-    ScrollView rootview;
-    @BindView(R.id.layout_bottom)
-    LinearLayout layout_bottom;
-    @BindView(R.id.layout_top)
-    LinearLayout layout_top;
-    int topviewheight,bottomviewheight,rootviewheight;
+
+    @BindView(R.id.txt_verify)
+    customfonttextview txt_verify;
+    @BindView(R.id.edt_confirmchannel)
+    customfontedittext edt_confirmchannel;
+   /* @BindView(R.id.rootview)
+    ScrollView rootview;*/
     View contaionerview = null;
-    String forgotpassword = "";
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(contaionerview ==null){
-            contaionerview = inflater.inflate(R.layout.activity_verifyuser, container, false);
+            contaionerview = inflater.inflate(R.layout.dialog_confirmationcode, container, false);
             ButterKnife.bind(this, contaionerview);
 
-            rootview.post(new Runnable() {
+            /*rootview.post(new Runnable() {
                 @Override
                 public void run() {
                     rootviewheight = rootview.getHeight();
@@ -76,17 +70,11 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
                     layout_bottom.setVisibility(View.VISIBLE);
                     layout_bottom.requestLayout();
                 }
-            });
+            });*/
 
 
-            tvcomplete.setOnClickListener(this);
-            tvcancel.setOnClickListener(this);
-            pinview.setPinViewEventListener(new pinviewnumeric.PinViewEventListener() {
-                @Override
-                public void onDataEntered(pinviewnumeric pinview, boolean fromUser) {
-                    //baseactivity.getinstance().hidekeyboard();
-                }
-            });
+            txt_verify.setOnClickListener(this);
+
         }
         return contaionerview;
     }
@@ -105,7 +93,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
                 break;
 
             case R.id.tv_cancel:
-                gotologin();
+               // gotologin();
                 break;
 
         }
@@ -113,15 +101,15 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
 
     public void validatecallapi()
     {
-        String value=pinview.getValue();
+        String value=edt_confirmchannel.getText().toString();
         String clientid= xdata.getinstance().getSetting(config.clientid);
        // String activityname = getgetIntent().getExtras().getString("activityname");
 
         HashMap<String,String> requestparams=new HashMap<>();
         requestparams.put("type","client");
         requestparams.put("action","verify");
-        if(!forgotpassword.isEmpty() && forgotpassword.equalsIgnoreCase(config.forgotpassword))
-                requestparams.put("action","verifyforgotten");
+        /*if(!forgotpassword.isEmpty() && forgotpassword.equalsIgnoreCase(config.forgotpassword))
+                requestparams.put("action","verifyforgotten");*/
 
         requestparams.put("clientid",clientid);
         requestparams.put("code",value);
@@ -201,7 +189,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
     }
 
     public void setdata(String forgotpassword){
-        this.forgotpassword = forgotpassword;
+       // this.forgotpassword = forgotpassword;
 
     }
     @Override
