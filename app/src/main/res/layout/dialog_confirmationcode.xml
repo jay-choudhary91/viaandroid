@@ -58,6 +58,8 @@
             android:background="@drawable/textview_bluebackgroundshape"
             app:fontType="Comfortaa-Regular"
             android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/txt_verify"
             />
 
         <com.deeptruth.app.android.views.customfonttextview
