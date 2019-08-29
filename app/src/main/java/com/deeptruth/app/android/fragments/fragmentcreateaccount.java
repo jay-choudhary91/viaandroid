@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
@@ -41,20 +42,16 @@ import butterknife.ButterKnife;
 public class fragmentcreateaccount extends DialogFragment implements View.OnClickListener  {
 
 
-    @BindView(R.id.edt_username)
-    EditText edt_username;
+    @BindView(R.id.edt_channel_name)
+    EditText edt_channel_name;
     @BindView(R.id.email)
     EditText edt_email;
     @BindView(R.id.edt_password)
     EditText edt_password;
     @BindView(R.id.edt_confirmpassword)
     EditText edt_confirmpassword;
-    @BindView(R.id.edt_phonenumber)
-    MaskedEditText edt_phonenumber;
     @BindView(R.id.txt_submit)
     TextView txt_submit;
-    @BindView(R.id.layout_userdeatils)
-    RelativeLayout layout_userdeatils;
 
 
     View contaionerview = null;
@@ -64,12 +61,12 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(contaionerview ==null){
-            contaionerview = inflater.inflate(R.layout.activity_createaccountactivity, container, false);
+            contaionerview = inflater.inflate(R.layout.dialog_createaccount, container, false);
             ButterKnife.bind(this, contaionerview);
            // baseactivity.getinstance().onUserLeaveHint();
 
             txt_submit.setOnClickListener(this);
-            edt_phonenumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+           /* edt_phonenumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
@@ -77,7 +74,7 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
                     }
                     return false;
                 }
-            });
+            });*/
 
         }
         return contaionerview;
@@ -102,14 +99,13 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
             HashMap<String,String> requestparams=new HashMap<>();
             requestparams.put("type","client");
             requestparams.put("action","create");
-            requestparams.put("name",edt_username.getText().toString().trim());
+            requestparams.put("name",edt_channel_name.getText().toString().trim());
             requestparams.put("email",edt_email.getText().toString().trim());
             requestparams.put("password",edt_password.getText().toString().trim());
             requestparams.put("confirmpassword",edt_confirmpassword.getText().toString().trim());
             progressdialog.showwaitingdialog(getActivity());
             baseactivity.getinstance().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
-            progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-            getHelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
+
                 @Override
                 public void onResponse(taskresult response) {
                     progressdialog.dismisswaitdialog();
@@ -193,16 +189,6 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
             return true;
         }
 
-        public String validphonenumber(){
-            String phonenumber= edt_phonenumber.getText().toString().trim().toString();
-            phonenumber=phonenumber.replace("(" , "");
-            phonenumber=phonenumber.replace(")" , "");
-            phonenumber=phonenumber.replace(" ","");
-            phonenumber=phonenumber.replace("#","");
-            phonenumber=phonenumber.replace("-","");
-            phonenumber=phonenumber.replace("-","");
-            return phonenumber;
-    }
 
     @Override
     public void onResume() {
@@ -228,4 +214,17 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
         getDialog().getWindow().setAttributes(params);
         getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
+
+
+    /*public String validphonenumber(){
+            String phonenumber= edt_phonenumber.getText().toString().trim().toString();
+            phonenumber=phonenumber.replace("(" , "");
+            phonenumber=phonenumber.replace(")" , "");
+            phonenumber=phonenumber.replace(" ","");
+            phonenumber=phonenumber.replace("#","");
+            phonenumber=phonenumber.replace("-","");
+            phonenumber=phonenumber.replace("-","");
+            return phonenumber;
+    }*/
+
 }

@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.registrationbasefragment;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
@@ -90,8 +91,7 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
         requestparams.put("email",edtusername.getText().toString().trim());
         progressdialog.showwaitingdialog(getActivity());
         baseactivity.getinstance().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
-        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-        getHelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
+
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
