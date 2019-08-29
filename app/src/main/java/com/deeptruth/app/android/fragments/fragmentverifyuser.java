@@ -17,7 +17,6 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
@@ -127,6 +126,8 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
         requestparams.put("code",value);
         progressdialog.showwaitingdialog(getActivity());
         baseactivity.getinstance().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+        getHelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -151,7 +152,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
                             else
                             {
                                 if(object.has("error"))
-                                    Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -169,7 +170,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(applicationviavideocomposer.getactivity(), error, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e)
                     {
@@ -178,7 +179,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
                 }
                 else
                 {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(applicationviavideocomposer.getactivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });

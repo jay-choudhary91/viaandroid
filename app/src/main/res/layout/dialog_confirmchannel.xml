@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/dark_popup_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <include layout="@layout/dialog_loginscreenbackground"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/txtview_confirmchannel"
+            android:text="@string/please_confirm_your_channel_name"
+            android:textColor="@color/white"
+            app:fontType="Comfortaa-Regular"
+            />
+
+        <com.deeptruth.app.android.views.customfontedittext
+            style="@style/edttext_confirmchannel"
+            android:hint="@string/confirm_channel"
+            app:fontType="Comfortaa-Regular"
+            android:background="@drawable/edittext_shap"
+            android:maxLength="50"
+            android:padding="5dp"
+            android:id="@+id/edt_username"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/txtview_confirmchannel"
+            android:text="@string/channel_name_is_unchangeable_after_an_account_is_created"
+            android:textColor="@color/white"
+            app:fontType="Comfortaa-Regular"
+            />
+
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/edttext_confirmchannel"
+            android:padding="10dp"
+            android:text="@string/create_account"
+            android:textColor="@color/white"
+            android:background="@drawable/textview_bluebackgroundshape"
+            app:fontType="Comfortaa-Regular"
+            />
+    </LinearLayout>
+
+</LinearLayout>

@@ -89,4 +89,7 @@
     <dimen name="txt_size">4.33sp</dimen>
     <dimen name="iconheight">28dp</dimen>
     <dimen name="iconwidth">28dp</dimen>
+
+    <dimen name="dialog_leftmargin">75dp</dimen>
+    <dimen name="dialog_rightmargin">75dp</dimen>
 </resources>

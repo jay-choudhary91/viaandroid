@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/dark_popup_background"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/dialog_loginscreenbackground"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginLeft="@dimen/dialog_leftmargin"
+            android:layout_marginRight="@dimen/dialog_rightmargin"
+            android:text="@string/signup"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/textview_bluebackgroundshape"
+            app:fontType="Comfortaa-Regular"
+            />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/already_have_an_account"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:textSize="15sp"
+                android:gravity="center"
+                app:fontType="Comfortaa-Regular"
+                />
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:text="@string/sign_in"
+                android:textSize="15sp"
+                android:textColor="@color/blue"
+                android:layout_gravity="center"
+                android:gravity="center"
+                app:fontType="Comfortaa-Regular"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

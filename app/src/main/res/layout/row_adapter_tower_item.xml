@@ -14,7 +14,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="0dp"
-            android:layout_weight="1.5"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize12sp"
             android:textColor="@color/white"
@@ -24,7 +24,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.7"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize12sp"
             android:textColor="@color/white"
@@ -34,7 +34,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.7"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize12sp"
             android:textColor="@color/white"
@@ -44,7 +44,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.7"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize12sp"
             android:textColor="@color/white"
@@ -76,7 +76,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="0dp"
-            android:layout_weight="1.5"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize12sp"
             android:textColor="@color/white"
@@ -95,7 +95,7 @@
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/tv_cellid"
             android:layout_width="0dp"
-            android:layout_weight="1.5"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize12sp"
             android:textColor="@color/white"
@@ -107,7 +107,7 @@
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/tv_mcc"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.7"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize12sp"
             android:textColor="@color/white"
@@ -119,7 +119,7 @@
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/tv_mnc"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.7"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize12sp"
             android:textColor="@color/white"
@@ -131,7 +131,7 @@
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/tv_iso"
             android:layout_width="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.7"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize12sp"
             android:textColor="@color/white"
@@ -169,7 +169,7 @@
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/tv_network"
             android:layout_width="0dp"
-            android:layout_weight="1.5"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:textSize="@dimen/textsize12sp"
             android:textColor="@color/white"
