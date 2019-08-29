@@ -2901,7 +2901,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     showToast("Uploaded new version of " + uploadFileVersionInfo.getName());
                 } catch (BoxException e) {
                     e.printStackTrace();
-                    showToast("Upload failed");
+                    showToast("Media already exist!");
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
