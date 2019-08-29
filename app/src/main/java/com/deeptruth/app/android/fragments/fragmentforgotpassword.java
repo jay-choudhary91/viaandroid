@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.registrationbasefragment;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.customedittext;
@@ -83,8 +84,8 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
         requestparams.put("type","client");
         requestparams.put("action","forgotpassword");
         requestparams.put("email",edtusername.getText().toString().trim());
-        progressdialog.showwaitingdialog(getActivity());
-        getHelper().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+        getHelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -106,7 +107,7 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
                             else
                             {
                                 if(object.has("error"))
-                                    Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -124,7 +125,7 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(applicationviavideocomposer.getactivity(), error, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e)
                     {
@@ -133,7 +134,7 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
                 }
                 else
                 {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(applicationviavideocomposer.getactivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });

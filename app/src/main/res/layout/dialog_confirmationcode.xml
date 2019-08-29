@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/dark_popup_background">
+
+
+    <include layout="@layout/dialog_loginscreenbackground"></include>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/margin_10dp"
+        android:layout_height="match_parent">
+
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/txtview_confirmchannel"
+            android:text="@string/congrats"
+            android:textColor="@color/white"
+            app:fontType="Comfortaa-Bold"
+            android:textSize="20sp"
+            />
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/discription_confirmation_code"
+            android:textColor="@color/white"
+            app:fontType="Comfortaa-Bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:maxLines="3"
+            />
+
+        <com.deeptruth.app.android.views.customfontedittext
+            style="@style/edttext_confirmchannel"
+            android:hint="@string/confirmation_code"
+            app:fontType="Comfortaa-Regular"
+            android:background="@drawable/edittext_shap"
+            android:maxLength="50"
+            android:padding="5dp"
+            android:layout_marginTop="20dp"
+            android:id="@+id/edt_username"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/edttext_confirmchannel"
+            android:padding="10dp"
+            android:text="@string/verify_code"
+            android:textColor="@color/white"
+            android:background="@drawable/textview_bluebackgroundshape"
+            app:fontType="Comfortaa-Regular"
+            android:layout_marginTop="20dp"
+            />
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/txt_createaccount"
+            android:layout_marginTop="@dimen/margin_10dp"
+            android:text="@string/please_resend_code"
+           android:layout_gravity="center"
+            app:fontType="Comfortaa-Regular" />
+    </LinearLayout>
+</LinearLayout>
