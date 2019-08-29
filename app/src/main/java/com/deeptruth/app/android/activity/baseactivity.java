@@ -2515,8 +2515,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v)
             {
-                /*if(xapiupload != null)
-                    xapiupload.cancel(true);*/
+                if(xapiupload != null)
+                    xapiupload.cancel(true);
 
                 if(mitemclick != null)
                     mitemclick.onItemClicked("1");
