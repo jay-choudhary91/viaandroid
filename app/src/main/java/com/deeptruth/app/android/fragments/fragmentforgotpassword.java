@@ -1,19 +1,23 @@
 package com.deeptruth.app.android.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.registrationbasefragment;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
@@ -35,7 +39,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class fragmentforgotpassword extends registrationbasefragment implements View.OnClickListener {
+public class fragmentforgotpassword extends DialogFragment implements View.OnClickListener {
 
     @BindView(R.id.tv_forgotpassword)
     customfonttextview tvforgotpassword;
@@ -51,7 +55,8 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(contaionerview ==null){
-            contaionerview = super.onCreateView(inflater, container, savedInstanceState);
+            contaionerview = inflater.inflate(R.layout.activity_forgotpassword, container, false);
+
             ButterKnife.bind(this, contaionerview);
 
             tv_next.setOnClickListener(this);
@@ -59,10 +64,10 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
         return contaionerview;
     }
 
-    @Override
+    /*@Override
     public int getlayoutid() {
         return R.layout.activity_forgotpassword;
-    }
+    }*/
 
     @Override
     public void onClick(View view) {
@@ -84,8 +89,9 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
         requestparams.put("type","client");
         requestparams.put("action","forgotpassword");
         requestparams.put("email",edtusername.getText().toString().trim());
-        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-        getHelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(getActivity());
+        baseactivity.getinstance().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
+
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -100,9 +106,9 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                fragmentverifyuser fragverifyuser = new fragmentverifyuser();
+                                /*fragmentverifyuser fragverifyuser = new fragmentverifyuser();
                                 fragverifyuser.setdata(config.forgotpassword);
-                                getHelper().addFragment(fragverifyuser,false,true);
+                                getHelper().addFragment(fragverifyuser,false,true);*/
                             }
                             else
                             {
@@ -138,5 +144,30 @@ public class fragmentforgotpassword extends registrationbasefragment implements 
                 }
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getscreenwidthheight(97,80);
+    }
+
+    public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
+
+        int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
+        int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
+
+        int percentageheight = (height / 100) * heightpercentage;
+        int percentagewidth = (width / 100) * widthpercentage;
+
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+        getDialog().getWindow().setLayout(percentagewidth, percentageheight);
+        WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        double bottommargin = (height / 100) * 3;
+        params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
+        getDialog().getWindow().setAttributes(params);
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 }

@@ -25,7 +25,6 @@
             app:fontType="Comfortaa-Regular"
             android:inputType="textEmailAddress"
             android:imeOptions="actionNext"
-            android:layout_below="@+id/edt_username"
             android:id="@+id/email"/>
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -68,7 +67,7 @@
             app:fontType="Comfortaa-Regular"
             android:maxLength="50"
             android:imeOptions="actionNext"
-            android:id="@+id/edt_username"/>
+            android:id="@+id/edt_channel_name"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="wrap_content"
@@ -88,6 +87,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:gravity="center"
+            android:id="@+id/txt_submit"
             android:text="@string/next"
             android:textColor="@color/white"
             android:background="@drawable/textview_bluebackgroundshape"
