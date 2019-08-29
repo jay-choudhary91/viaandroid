@@ -1118,7 +1118,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                     progressdialog.dismisswaitdialog();
                                     if (response.isSuccess())
                                     {
-                                        //callmediastoreapi(mediatoken, mediatype, path);
+                                        callmediastoreapi(mediatoken, mediatype, path);
                                         Log.e("xapipostfile ","step6");
                                     }
                                     else

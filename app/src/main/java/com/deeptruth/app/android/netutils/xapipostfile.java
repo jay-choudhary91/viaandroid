@@ -109,6 +109,7 @@ public class xapipostfile extends AsyncTask<Void, String, String> {
 
         URLConnection urlconnection = null;
         try {
+            Log.e("xapipostfile ","step1");
             File file = new File(filepath);
             URL url = new URL(serverurl);
             urlconnection = url.openConnection();
@@ -125,8 +126,10 @@ public class xapipostfile extends AsyncTask<Void, String, String> {
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
             int bytesRead=0;
             long currentbyteread = 0,currentprogress=0,previousprogress=0;
-            byte buf[] = new byte[1024];
-            while ((bytesRead = bis.read(buf)) != -1)
+            byte buf[] = new byte[16*1024];
+            Log.e("xapipostfile ","step2");
+            //while ((bytesRead = bis.read(buf)) != -1)
+            while ((bytesRead = bis.read(buf)) > 0)
             {
                 bos.write(buf, 0, bytesRead);
                 bos.flush();
@@ -136,7 +139,12 @@ public class xapipostfile extends AsyncTask<Void, String, String> {
                     publishProgress(""+currentprogress);
                     previousprogress = currentprogress;
                 }
+                if (isCancelled())
+                    break;
+
+                Log.e("xapipostfile ","step3 "+currentprogress);
             }
+            Log.e("xapipostfile ","step4");
             bis.close();
             bos.flush();
             bos.close();
@@ -146,6 +154,7 @@ public class xapipostfile extends AsyncTask<Void, String, String> {
         }
         try {
 
+            Log.e("xapipostfile ","step5");
             InputStream inputStream;
             int responseCode = ((HttpURLConnection) urlconnection).getResponseCode();
             endtime = Calendar.getInstance().getTime();
