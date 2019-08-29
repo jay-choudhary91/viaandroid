@@ -286,8 +286,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
      * Set required config parameters. Use values from your application settings in the box developer console.
      */
     private void configureboxclient() {
-        BoxConfig.CLIENT_ID = "wbr5nopz36g7ed9tfizxp77vecnpb625";
-        BoxConfig.CLIENT_SECRET = "0VjpiF0sPjNsrlSPfEyGGG4uDIpmPTd9";
+        BoxConfig.CLIENT_ID = applicationviavideocomposer.getactivity().getResources().getString(R.string.box_clientid);
+        BoxConfig.CLIENT_SECRET = applicationviavideocomposer.getactivity().getResources().getString(R.string.box_secret);
 
         // needs to match redirect uri in developer settings if set.
         //   BoxConfig.REDIRECT_URL = "<YOUR_REDIRECT_URI>";
