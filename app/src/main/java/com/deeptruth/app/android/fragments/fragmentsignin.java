@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.introscreenactivity;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
@@ -30,8 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class fragmentsignin extends registrationbasefragment implements View.OnClickListener{
-
-
+    
     @BindView(R.id.edt_username)
     EditText edt_username;
     @BindView(R.id.edt_password)
@@ -94,7 +94,7 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.bind(getActivity());
+        ButterKnife.bind(applicationviavideocomposer.getactivity());
     }
 
     @Override
@@ -128,7 +128,7 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
             if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
                 xdata.getinstance().saveSetting(config.enableintroscreen,"no");
 
-            Intent intent=new Intent(getActivity(),introscreenactivity.class);
+            Intent intent=new Intent(applicationviavideocomposer.getactivity(),introscreenactivity.class);
             startActivity(intent);
             getHelper().onBack();
 
@@ -157,8 +157,8 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
         requestparams.put("action","authorize");
         requestparams.put("email",edt_username.getText().toString().trim());
         requestparams.put("password",edt_password.getText().toString().trim());
-        progressdialog.showwaitingdialog(getActivity());
-        getHelper().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+        getHelper().xapipost_send(applicationviavideocomposer.getactivity(),requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -184,7 +184,7 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
                             else
                             {
                                 if(object.has("error"))
-                                    Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -202,7 +202,7 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(applicationviavideocomposer.getactivity(), error, Toast.LENGTH_SHORT).show();
                         }
 
                         if(object.has("not_verified"))
@@ -212,7 +212,7 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
+                                Intent intent=new Intent(applicationviavideocomposer.getactivity(),fragmentverifyuser.class);
                                 intent.putExtra("activityname",config.loginpage);
                                 startActivity(intent);
                             }
@@ -225,7 +225,7 @@ public class fragmentsignin extends registrationbasefragment implements View.OnC
                 }
                 else
                 {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(applicationviavideocomposer.getactivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });

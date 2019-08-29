@@ -33,8 +33,12 @@
     <string name="dropbox_appkey">unm21q9pupo7xyg</string>
     <string name="dropbox_appsecret">szxh2fqpibooc3o</string>
 
-    <string name="limit_reached_title">30-SECOND \nLIMIT REACHED</string>
+    <string name="box_clientid">wbr5nopz36g7ed9tfizxp77vecnpb625</string>
+    <string name="box_secret">0VjpiF0sPjNsrlSPfEyGGG4uDIpmPTd9</string>
 
+    <string name="android_api_key">AIzaSyDPoZJinB-VFdViZST5kRggT92m3qOrh7w</string>
+
+    <string name="limit_reached_title">30-SECOND \nLIMIT REACHED</string>
     <string name="limit_reached">This lite version of the VideoLock app lets you record unlimited short videos and audios.\nTo record and
         certify longer videos/audios, please upgrade to the full version VideoLock.</string>
 
@@ -103,8 +107,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
-    <string name="android_api_key">AIzaSyDPoZJinB-VFdViZST5kRggT92m3qOrh7w</string>
 
     <string name="md">md5</string>
     <string name="md_salt">md5+salt</string>
