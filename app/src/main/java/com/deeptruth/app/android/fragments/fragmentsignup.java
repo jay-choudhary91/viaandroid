@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -41,6 +42,8 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
     customfonttextview btn_signup;
     @BindView(R.id.btn_signin)
     customfonttextview btn_signin;
+    @BindView(R.id.img_backbutton)
+    ImageView img_backbutton;
     View contaionerview = null;
 
 
@@ -53,6 +56,7 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
 
             btn_signup.setOnClickListener(this);
             btn_signin.setOnClickListener(this);
+            img_backbutton.setOnClickListener(this);
         }
         return contaionerview;
     }
@@ -69,11 +73,14 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
             case R.id.btn_signup:
                 baseactivity.getinstance().showdialogcreateaccountfragment();
                 getDialog().dismiss();
-
                 break;
 
             case R.id.btn_signin:
                 baseactivity.getinstance().showdialogsigninfragment();
+                getDialog().dismiss();
+                break;
+
+            case R.id.img_backbutton:
                 getDialog().dismiss();
                 break;
         }
@@ -85,6 +92,11 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
         super.onResume();
 
         getscreenwidthheight(97,80);
+    }
+
+    @Override
+    public int getTheme() {
+        return R.style.dialog_slide_animation;
     }
 
     public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
@@ -102,6 +114,5 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
         double bottommargin = (height / 100) * 3;
         params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
         getDialog().getWindow().setAttributes(params);
-        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 }

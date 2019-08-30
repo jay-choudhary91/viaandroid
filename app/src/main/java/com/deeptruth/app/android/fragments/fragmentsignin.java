@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -55,6 +56,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     LinearLayout layout_image;
     @BindView(R.id.layout_logindetails)
     LinearLayout layout_logindetails;
+    @BindView(R.id.img_backbutton)
+    ImageView img_backbutton;
     int rootviewheight,imageviewheight,userloginheight;
     View contaionerview = null;
 
@@ -92,6 +95,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
             txt_createaccount.setOnClickListener(this);
             txt_forgotpassword.setOnClickListener(this);
             rootview.setOnClickListener(this);
+            img_backbutton.setOnClickListener(this);
         }
         return contaionerview;
     }
@@ -103,6 +107,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
         super.onCreate(savedInstanceState);
         ButterKnife.bind(applicationviavideocomposer.getactivity());
     }
+
+
 
     @Override
     public void onClick(View view) {
@@ -124,6 +130,17 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 baseactivity.getinstance().showdialogforgotpasswordfragment();
 
 
+
+                /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
+                getHelper().addFragment(fragforgotpassword,false,true);*/
+
+                /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
+                startActivity(intent);*/
+                break;
+
+            case R.id.img_backbutton:
+                getDialog().dismiss();
+                baseactivity.getinstance().showdialogsignupfragment();
 
                 /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
                 getHelper().addFragment(fragforgotpassword,false,true);*/
@@ -254,6 +271,13 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
         getscreenwidthheight(97,80);
     }
 
+    @Override
+    public int getTheme() {
+        return R.style.dialog_slide_animation;
+    }
+
+
+
     public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
 
         int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
@@ -269,6 +293,5 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
         double bottommargin = (height / 100) * 3;
         params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
         getDialog().getWindow().setAttributes(params);
-        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 }

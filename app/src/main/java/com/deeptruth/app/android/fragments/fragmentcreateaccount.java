@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,8 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     EditText edt_confirmpassword;
     @BindView(R.id.txt_submit)
     TextView txt_submit;
+    @BindView(R.id.img_backbutton)
+    ImageView img_backbutton;
 
 
     View contaionerview = null;
@@ -66,6 +69,7 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
            // baseactivity.getinstance().onUserLeaveHint();
 
             txt_submit.setOnClickListener(this);
+            img_backbutton.setOnClickListener(this);
            /* edt_phonenumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -77,6 +81,8 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
             });*/
 
         }
+
+
         return contaionerview;
     }
 
@@ -91,6 +97,12 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
             case R.id.txt_submit:
                 //checkValidations();
                 baseactivity.getinstance().showdialogconfirmchannelfragment();
+
+                break;
+            case R.id.img_backbutton:
+                //checkValidations();
+                getDialog().dismiss();
+                baseactivity.getinstance().showdialogsignupfragment();
 
                 break;
         }
@@ -199,7 +211,12 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
         getscreenwidthheight(97,80);
     }
 
-    public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
+    @Override
+    public int getTheme() {
+        return R.style.dialog_slide_animation;
+    }
+
+    public void getscreenwidthheight(int widthpercentage, int heightpercentage) {
 
         int width = common.getScreenWidth(applicationviavideocomposer.getactivity());
         int height = common.getScreenHeight(applicationviavideocomposer.getactivity());
@@ -214,7 +231,6 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
         double bottommargin = (height / 100) * 3;
         params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
         getDialog().getWindow().setAttributes(params);
-        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 
 
