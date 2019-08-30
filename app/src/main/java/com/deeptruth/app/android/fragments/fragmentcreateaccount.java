@@ -139,14 +139,6 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
                                     baseactivity.getinstance().showdialogconfirmchannelfragment();
                                     getDialog().dismiss();
 
-                                    /*fragmentverifyuser fragverifyuser = new fragmentverifyuser();
-                                    fragverifyuser.setdata(config.createaccount);
-                                    getHelper().addFragment(fragverifyuser,false,true);*/
-
-
-                                   /* Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
-                                    intent.putExtra("activityname",config.createaccount);
-                                    startActivity(intent);*/
                                 }
                                 else
                                 {
@@ -188,9 +180,6 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
                                     baseactivity.getinstance().showdialogconfirmchannelfragment();
                                     getDialog().dismiss();
 
-                                   /* Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
-                                    intent.putExtra("activityname",config.fragmentcreateaccount);
-                                    startActivity(intent);*/
                                 }
                             }
 

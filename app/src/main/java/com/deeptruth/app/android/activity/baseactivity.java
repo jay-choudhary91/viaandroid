@@ -3017,7 +3017,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         fragment.show(ft, "createaccount");
     }
 
-    public void showdialogverifyuserfragment(){
+    public void showdialogverifyuserfragment(String type){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("verifyuser");
@@ -3026,7 +3026,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         //ft.addToBackStack(null);
         fragmentverifyuser fragment = new fragmentverifyuser();
-        fragment.setdata(config.createaccount);
+        fragment.setdata(type);
         fragment.show(ft, "verifyuser");
     }
 
