@@ -141,6 +141,14 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
                 startActivity(intent);*/
                 break;
+
+            case R.id.layout_logindetails:
+                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                break;
+
+            case R.id.layout_image:
+                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                break;
         }
     }
     public void login()

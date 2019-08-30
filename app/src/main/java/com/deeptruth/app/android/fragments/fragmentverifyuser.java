@@ -46,6 +46,11 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
     customfontedittext edt_confirmchannel;
    /* @BindView(R.id.rootview)
     ScrollView rootview;*/
+   @BindView(R.id.layout_verifyuser)
+   customfontedittext layout_verifyuser;
+    @BindView(R.id.imgvideolock_background)
+    customfontedittext imgvideolock_background;
+
     View contaionerview = null;
 
 
@@ -94,7 +99,12 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
             case R.id.tv_cancel:
                // gotologin();
                 break;
-
+            case R.id.layout_verifyuser:
+                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                break;
+            case R.id.imgvideolock_background:
+                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                break;
         }
     }
 

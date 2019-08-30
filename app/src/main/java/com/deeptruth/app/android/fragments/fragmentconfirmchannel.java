@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
@@ -43,6 +44,10 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
     customfonttextview txt_createaccount;
     @BindView(R.id.img_backbutton)
     ImageView img_backbutton;
+    @BindView(R.id.imgvideolock_background)
+    LinearLayout imgvideolock_background;
+    @BindView(R.id.rootview)
+    LinearLayout rootview;
     View contaionerview = null;
 
 
@@ -77,6 +82,14 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
                 getDialog().dismiss();
                 baseactivity.getinstance().showdialogcreateaccountfragment();
 
+                break;
+
+            case R.id.imgvideolock_background:
+                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                break;
+
+            case R.id.rootview:
+                common.hidekeyboard(applicationviavideocomposer.getactivity());
                 break;
         }
     }

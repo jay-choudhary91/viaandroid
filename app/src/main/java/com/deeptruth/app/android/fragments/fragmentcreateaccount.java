@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +56,10 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     TextView txt_submit;
     @BindView(R.id.img_backbutton)
     ImageView img_backbutton;
+    @BindView(R.id.imgvideolock_background)
+    LinearLayout imgvideolock_background;
+    @BindView(R.id.rootview)
+    LinearLayout rootview;
 
 
     View contaionerview = null;
@@ -103,6 +108,13 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
                 getDialog().dismiss();
                 baseactivity.getinstance().showdialogsignupfragment();
 
+                break;
+            case R.id.imgvideolock_background:
+                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                break;
+
+            case R.id.rootview:
+                common.hidekeyboard(applicationviavideocomposer.getactivity());
                 break;
         }
     }
