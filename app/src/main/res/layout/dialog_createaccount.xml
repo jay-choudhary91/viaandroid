@@ -69,7 +69,7 @@
             android:hint="@string/channel_name"
             app:fontType="Comfortaa-Regular"
             android:maxLength="50"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionDone"
             android:layout_marginTop="@dimen/margin_8dp"
             android:id="@+id/edt_channel_name"/>
 
