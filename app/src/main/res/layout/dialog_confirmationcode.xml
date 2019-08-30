@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/dark_popup_background">
+    android:background="@drawable/bluegradient">
 
 
     <include layout="@layout/dialog_loginscreenbackground"></include>
@@ -34,10 +34,9 @@
             app:fontType="Comfortaa-Bold"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
-            android:maxLines="3"
             />
 
         <com.deeptruth.app.android.views.customfontedittext
@@ -47,12 +46,13 @@
             android:background="@drawable/edittext_shap"
             android:maxLength="50"
             android:padding="5dp"
+            android:maxLines="1"
             android:layout_marginTop="10dp"
             android:id="@+id/edt_confirmchannel"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             style="@style/edttext_confirmchannel"
-            android:padding="10dp"
+            android:padding="5dp"
             android:text="@string/verify_code"
             android:textColor="@color/white"
             android:background="@drawable/textview_bluebackgroundshape"
