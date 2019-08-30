@@ -72,7 +72,7 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
 
         switch (v.getId()){
             case R.id.btn_signup:
-                baseactivity.getinstance().showdialogcreateaccountfragment();
+                baseactivity.getinstance().showdialogcreateaccountfragment(config.signuppage);
                 getDialog().dismiss();
                 break;
 

@@ -3022,7 +3022,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         fragment.show(ft, "signupdialog");
     }
 
-    public void showdialogcreateaccountfragment(){
+    public void showdialogcreateaccountfragment(String type){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("createaccount");
@@ -3031,6 +3031,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         //ft.addToBackStack(null);
         fragmentcreateaccount fragment = new fragmentcreateaccount();
+        fragment.setdata(type);
         fragment.show(ft, "createaccount");
     }
 

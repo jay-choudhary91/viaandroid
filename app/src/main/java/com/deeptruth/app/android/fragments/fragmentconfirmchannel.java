@@ -75,7 +75,7 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
 
             case R.id.img_backbutton:
                 getDialog().dismiss();
-                baseactivity.getinstance().showdialogcreateaccountfragment();
+                baseactivity.getinstance().showdialogcreateaccountfragment("");
 
                 break;
         }
@@ -104,8 +104,9 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
                         {
                             if(object.getString("success").equalsIgnoreCase("1"))
                             {
-                                baseactivity.getinstance().showdialogverifyuserfragment(config.createaccount);
+
                                 getDialog().dismiss();
+                                baseactivity.getinstance().showdialogverifyuserfragment(config.createaccount);
 
                             }
                             else

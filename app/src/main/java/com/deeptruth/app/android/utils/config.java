@@ -183,6 +183,7 @@ public class config {
     public static final String createaccount = "fragmentcreateaccount";
     public static final String forgotpassword = "fragmentforgotpassword";
     public static final String loginpage = "loginpage";
+    public static final String signuppage = "signuppage";
     public static final String camera = "camera";
     public static final String picturequality = "picturequality";
     public static final String firstmediacreated = "firstmediacreated";

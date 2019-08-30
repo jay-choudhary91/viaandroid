@@ -116,7 +116,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 isvalidated();
                 break;
             case R.id.createaccount:
-                baseactivity.getinstance().showdialogcreateaccountfragment();
+                baseactivity.getinstance().showdialogcreateaccountfragment(config.loginpage);
+                getDialog().dismiss();
 
                 /*fragmentcreateaccount fragcreateaccount = new fragmentcreateaccount();
                 getHelper().addFragment(fragcreateaccount,false,true);*/
@@ -126,6 +127,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 break;
             case R.id.forgot_password:
                 baseactivity.getinstance().showdialogforgotpasswordfragment();
+                getDialog().dismiss();
                 /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
                 getHelper().addFragment(fragforgotpassword,false,true);*/
 

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -47,6 +48,8 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
     customfontedittext edt_confirmchannel;
    /* @BindView(R.id.rootview)
     ScrollView rootview;*/
+   @BindView(R.id.img_backbutton)
+   ImageView img_backbutton;
     View contaionerview = null;
     String forgotpassword="";
 
@@ -58,6 +61,8 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
             contaionerview = inflater.inflate(R.layout.dialog_confirmationcode, container, false);
             ButterKnife.bind(this, contaionerview);
 
+            img_backbutton.setVisibility(View.GONE);
+
             txt_verify.setOnClickListener(this);
 
         }
@@ -68,7 +73,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
     public void onClick(View v) {
 
         switch (v.getId()){
-            case R.id.tv_complete:
+            case R.id.txt_verify:
                 validatecallapi();
                 break;
 

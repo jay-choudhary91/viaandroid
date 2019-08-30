@@ -55,6 +55,7 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     TextView txt_submit;
     @BindView(R.id.img_backbutton)
     ImageView img_backbutton;
+    String type = "";
 
 
     View contaionerview = null;
@@ -101,8 +102,12 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
             case R.id.img_backbutton:
                 //checkValidations();
                 getDialog().dismiss();
-                baseactivity.getinstance().showdialogsignupfragment();
 
+                if(!type.isEmpty() && type.equalsIgnoreCase(config.loginpage)){
+                    baseactivity.getinstance().showdialogsigninfragment();
+              }else {
+                    baseactivity.getinstance().showdialogsignupfragment();
+                }
                 break;
         }
     }
@@ -135,9 +140,6 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
 
                                     if(object.has(config.authtoken))
                                         xdata.getinstance().saveSetting(config.authtoken,object.getString(config.authtoken));
-
-                                    baseactivity.getinstance().showdialogconfirmchannelfragment();
-                                    getDialog().dismiss();
 
                                 }
                                 else
@@ -177,8 +179,9 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
                                     if(object.has(config.clientid))
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                    baseactivity.getinstance().showdialogconfirmchannelfragment();
                                     getDialog().dismiss();
+                                    baseactivity.getinstance().showdialogconfirmchannelfragment();
+
 
                                 }
                             }
@@ -212,6 +215,11 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
 
         getDialog().getWindow()
                 .getAttributes().windowAnimations = R.style.dialog_slide_animation;
+    }
+
+    public void setdata(String type){
+        this.type = type;
+
     }
 
 
