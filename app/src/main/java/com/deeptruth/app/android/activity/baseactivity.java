@@ -137,7 +137,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -152,13 +151,11 @@ import java.util.concurrent.Executors;
 import com.box.androidsdk.content.BoxApiFile;
 import com.box.androidsdk.content.BoxApiFolder;
 import com.box.androidsdk.content.BoxConfig;
-import com.box.androidsdk.content.BoxConstants;
 import com.box.androidsdk.content.BoxException;
 import com.box.androidsdk.content.auth.BoxAuthentication;
 import com.box.androidsdk.content.models.BoxEntity;
 import com.box.androidsdk.content.models.BoxError;
 import com.box.androidsdk.content.models.BoxFile;
-import com.box.androidsdk.content.models.BoxIteratorItems;
 import com.box.androidsdk.content.models.BoxSession;
 import com.box.androidsdk.content.requests.BoxRequestsFile;
 
@@ -1122,7 +1119,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                         if(! storageurl.trim().isEmpty())
                         {
-                            xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"0");
+                            xdata.getinstance().saveSetting(config.datauploading_process_dialog,"0");
                             xapi_uploadfile(applicationviavideocomposer.getactivity(), storageurl, path, new apiresponselistener() {
                                 @Override
                                 public void onResponse(taskresult response) {
@@ -1142,7 +1139,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                 @Override
                                 public void onupdateprogress(String percentage) {
                                     progressdialog.dismisswaitdialog();
-                                    if(xdata.getinstance().getSetting(config.datauploadeding_process_dialog).equalsIgnoreCase("0")
+                                    if(xdata.getinstance().getSetting(config.datauploading_process_dialog).equalsIgnoreCase("0")
                                             && callbackstatus[0] == 0)
                                     {
                                         new Thread(new Runnable() {
@@ -1242,19 +1239,24 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             //common.sharemessagewithapps(shareurl);
                             medialistitemaddbroadcast();
 
-                            showvideolockuploadingprocessdialog(applicationviavideocomposer.getactivity(),
-                                    100,100,shareurl,true,
-                                    new adapteritemclick() {
-                                        @Override
-                                        public void onItemClicked(Object object) {
+                            if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
+                            {
+                                common.shownotification(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                    .getResources().getString(R.string.your_file_has_been_copied));
+                                showvideolockuploadingprocessdialog(applicationviavideocomposer.getactivity(),
+                                        100,100,shareurl,true,
+                                        new adapteritemclick() {
+                                            @Override
+                                            public void onItemClicked(Object object) {
 
-                                        }
+                                            }
 
-                                        @Override
-                                        public void onItemClicked(Object object, int type) {
+                                            @Override
+                                            public void onItemClicked(Object object, int type) {
 
-                                        }
-                                    });
+                                            }
+                                        });
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1845,7 +1847,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         //progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
         final int[] callbackstatus = {0};
-        xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"0");
+        xdata.getinstance().saveSetting(config.datauploading_process_dialog,"0");
         new uploadfileatdropbox(applicationviavideocomposer.getactivity(), DropboxClientFactory.getClient(),
                 new uploadfileatdropbox.Callback()
         {
@@ -1855,9 +1857,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 //Toast.makeText(applicationviavideocomposer.getactivity(), "File uploaded successfully!", Toast.LENGTH_SHORT).show();
 
                 if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
+                {
+                    common.shownotification(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                            .getResources().getString(R.string.file_uploaded_dropbox));
                     showstandarduploadprocesscompletedialog(applicationviavideocomposer.getactivity(),100,100,
                             "",applicationviavideocomposer.getactivity().getResources().getString(
                                     R.string.file_uploaded_dropbox));
+
+                }
 
                 if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
                     dialogfileuploadoptions.dismiss();
@@ -1876,7 +1883,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(xdata.getinstance().getSetting(config.datauploadeding_process_dialog).equalsIgnoreCase("0")
+                        if(xdata.getinstance().getSetting(config.datauploading_process_dialog).equalsIgnoreCase("0")
                                 && callbackstatus[0] == 0)
                         {
                             showstandarduploadingprocessdialog(applicationviavideocomposer.getactivity(),percentagecompleted,100,
@@ -1914,7 +1921,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     //progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
                     try
                     {
-                        xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"0");
+                        xdata.getinstance().saveSetting(config.datauploading_process_dialog,"0");
                         Log.d(TAG, "Signed in as " + googleAccount.getEmail());
                         // Use the authenticated account to sign in to the Drive service.
                         GoogleAccountCredential credential =
@@ -1981,9 +1988,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                  //       .getResources().getString(R.string.media_upload_success),Toast.LENGTH_SHORT).show();
 
                                 if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
+                                {
+                                    common.shownotification(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                            .getResources().getString(R.string.file_uploaded_googledrive));
                                     showstandarduploadprocesscompletedialog(applicationviavideocomposer.getactivity(),100,100,
-                                                sharemessage,applicationviavideocomposer.getactivity().getResources().getString(
-                                                        R.string.file_uploaded_googledrive));
+                                            sharemessage,applicationviavideocomposer.getactivity().getResources().getString(
+                                                    R.string.file_uploaded_googledrive));
+                                }
+
                             }
                         });
 
@@ -2011,7 +2023,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     {
         final applicationviavideocomposer application = (applicationviavideocomposer)baseactivity.this.getApplication();
         IOneDriveClient oneDriveClient = application.getOneDriveClient();
-        xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"0");
+        xdata.getinstance().saveSetting(config.datauploading_process_dialog,"0");
         progressdialog.dismisswaitdialog();
         final int[] callbackstatus = {0};
         final AsyncTask<Void, Void, Void> uploadFile = new AsyncTask<Void, Void, Void>() {
@@ -2049,9 +2061,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                                 public void run() {
                                                     if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).
                                                             equalsIgnoreCase("1"))
+                                                    {
+                                                        common.shownotification(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                                                .getResources().getString(R.string.file_uploaded_onedrive));
                                                         showstandarduploadprocesscompletedialog(applicationviavideocomposer.getactivity(),
                                                                 100,100,"",applicationviavideocomposer.getactivity().getResources().getString(
                                                                         R.string.file_uploaded_onedrive));
+                                                    }
+
                                                 }
                                             });
 
@@ -2084,7 +2101,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                                 @Override
                                                 public void run()
                                                 {
-                                                    if(xdata.getinstance().getSetting(config.datauploadeding_process_dialog).
+                                                    if(xdata.getinstance().getSetting(config.datauploading_process_dialog).
                                                             equalsIgnoreCase("0") && callbackstatus[0] == 0)
                                                     {
                                                         double progresspercentage = (current * 100) / max;
@@ -2201,7 +2218,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         else
                             xdata.getinstance().saveSetting(config.datauploaded_success_dialog,"0");
 
-                        xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"1");
+                        xdata.getinstance().saveSetting(config.datauploading_process_dialog,"1");
 
                         if(mitemclick != null)
                             mitemclick.onItemClicked("1");
@@ -2370,7 +2387,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(xdata.getinstance().getSetting(config.datauploadeding_process_dialog).
+                            if(xdata.getinstance().getSetting(config.datauploading_process_dialog).
                                     equalsIgnoreCase("0") && callbackstatus[0] == 0)
                             {
                                 showstandarduploadingprocessdialog(applicationviavideocomposer.getactivity(), (int) percent, 100,
@@ -2396,7 +2413,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(xdata.getinstance().getSetting(config.datauploadeding_process_dialog).
+                            if(xdata.getinstance().getSetting(config.datauploading_process_dialog).
                                     equalsIgnoreCase("0") && callbackstatus[0] == 0)
                             {
                                 showstandarduploadingprocessdialog(applicationviavideocomposer.getactivity(), 100, 100,
@@ -2508,7 +2525,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     else
                         xdata.getinstance().saveSetting(config.datauploaded_success_dialog,"0");
 
-                    xdata.getinstance().saveSetting(config.datauploadeding_process_dialog,"1");
+                    xdata.getinstance().saveSetting(config.datauploading_process_dialog,"1");
 
                     if(mitemclick != null)
                         mitemclick.onItemClicked("1");

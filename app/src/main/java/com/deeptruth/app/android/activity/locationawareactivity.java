@@ -398,7 +398,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     @Override
     public boolean isuserlogin() {
-        if (xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
+        if (xdata.getinstance().getSetting(config.isuserlogin).trim().isEmpty())
             return false;
 
         return true;
