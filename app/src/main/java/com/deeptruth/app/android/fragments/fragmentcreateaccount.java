@@ -95,8 +95,7 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txt_submit:
-                //checkValidations();
-                baseactivity.getinstance().showdialogconfirmchannelfragment();
+                checkValidations();
 
                 break;
             case R.id.img_backbutton:
@@ -133,6 +132,12 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
                                 {
                                     if(object.has(config.clientid))
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
+
+                                    if(object.has(config.authtoken))
+                                        xdata.getinstance().saveSetting(config.authtoken,object.getString(config.authtoken));
+
+                                    baseactivity.getinstance().showdialogconfirmchannelfragment();
+                                    getDialog().dismiss();
 
                                     /*fragmentverifyuser fragverifyuser = new fragmentverifyuser();
                                     fragverifyuser.setdata(config.createaccount);
@@ -180,7 +185,8 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
                                     if(object.has(config.clientid))
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                    baseactivity.getinstance().showdialogverifyuserfragment();
+                                    baseactivity.getinstance().showdialogconfirmchannelfragment();
+                                    getDialog().dismiss();
 
                                    /* Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
                                     intent.putExtra("activityname",config.fragmentcreateaccount);

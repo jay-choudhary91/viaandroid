@@ -6,21 +6,31 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfontedittext;
 import com.deeptruth.app.android.views.customfonttextview;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,8 +69,7 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
 
         switch (v.getId()){
             case R.id.txt_createaccount:
-                getDialog().dismiss();
-                baseactivity.getinstance().showdialogverifyuserfragment();
+                checkValidations();
 
                 break;
 
@@ -70,6 +79,90 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
 
                 break;
         }
+    }
+
+    public  boolean checkValidations() {
+
+        edt_username.getText().toString();
+
+        HashMap<String,String> requestparams=new HashMap<>();
+        requestparams.put("type","client");
+        requestparams.put("action","setchannel");
+        requestparams.put("channel", edt_username.getText().toString().trim());
+        requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
+        progressdialog.showwaitingdialog(getActivity());
+        baseactivity.getinstance().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
+
+            @Override
+            public void onResponse(taskresult response) {
+                progressdialog.dismisswaitdialog();
+                if(response.isSuccess())
+                {
+                    try {
+                        JSONObject object=new JSONObject(response.getData().toString());
+                        if(object.has("success"))
+                        {
+                            if(object.getString("success").equalsIgnoreCase("1"))
+                            {
+                                baseactivity.getinstance().showdialogverifyuserfragment();
+                                getDialog().dismiss();
+
+                                    /*fragmentverifyuser fragverifyuser = new fragmentverifyuser();
+                                    fragverifyuser.setdata(config.createaccount);
+                                    getHelper().addFragment(fragverifyuser,false,true);*/
+
+
+                                   /* Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
+                                    intent.putExtra("activityname",config.createaccount);
+                                    startActivity(intent);*/
+                            }
+                            else
+                            {
+                                if(object.has("error"))
+                                    new AlertDialog.Builder(applicationviavideocomposer.getactivity())
+                                            .setMessage(object.getString("error"))
+                                            .setPositiveButton(android.R.string.ok, null)
+                                            .show();
+
+                                    //Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        if(object.has("errors"))
+                        {
+                            JSONArray errorarray=object.getJSONArray("errors");
+                            String error="";
+                            for(int i=0;i<errorarray.length();i++)
+                            {
+                                if(error.trim().isEmpty())
+                                {
+                                    error=error+errorarray.get(i).toString();
+                                }
+                                else
+                                {
+                                    error=error+"\n"+errorarray.get(i).toString();
+                                }
+                            }
+
+                            new AlertDialog.Builder(applicationviavideocomposer.getactivity())
+                                    .setMessage(error)
+                                    .setPositiveButton(android.R.string.ok, null)
+                                    .show();
+
+                            // Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(applicationviavideocomposer.getactivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        return true;
     }
 
     @Override
