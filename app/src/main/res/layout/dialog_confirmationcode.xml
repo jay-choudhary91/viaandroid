@@ -54,7 +54,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             style="@style/edttext_confirmchannel"
-            android:padding="5dp"
+            android:padding="3dp"
             android:text="@string/verify_code"
             android:textColor="@color/white"
             android:background="@drawable/textview_bluebackgroundshape"
@@ -67,7 +67,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             style="@style/txt_createaccount"
-            android:layout_marginTop="@dimen/margin_10dp"
+            android:layout_marginTop="@dimen/margin_5dp"
             android:text="@string/please_resend_code"
            android:layout_gravity="center"
             app:fontType="Comfortaa-Regular" />
