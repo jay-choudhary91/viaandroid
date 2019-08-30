@@ -212,9 +212,13 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     }
 
     @Override
-    public int getTheme() {
-        return R.style.dialog_slide_animation;
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getDialog().getWindow()
+                .getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
+
 
     public void getscreenwidthheight(int widthpercentage, int heightpercentage) {
 

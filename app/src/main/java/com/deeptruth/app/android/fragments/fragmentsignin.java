@@ -108,8 +108,6 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
         ButterKnife.bind(applicationviavideocomposer.getactivity());
     }
 
-
-
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -117,7 +115,6 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 isvalidated();
                 break;
             case R.id.createaccount:
-
                 baseactivity.getinstance().showdialogcreateaccountfragment();
 
                 /*fragmentcreateaccount fragcreateaccount = new fragmentcreateaccount();
@@ -128,9 +125,6 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 break;
             case R.id.forgot_password:
                 baseactivity.getinstance().showdialogforgotpasswordfragment();
-
-
-
                 /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
                 getHelper().addFragment(fragforgotpassword,false,true);*/
 
@@ -141,7 +135,6 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
             case R.id.img_backbutton:
                 getDialog().dismiss();
                 baseactivity.getinstance().showdialogsignupfragment();
-
                 /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
                 getHelper().addFragment(fragforgotpassword,false,true);*/
 
@@ -272,8 +265,11 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     }
 
     @Override
-    public int getTheme() {
-        return R.style.dialog_slide_animation;
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getDialog().getWindow()
+                .getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 
 
