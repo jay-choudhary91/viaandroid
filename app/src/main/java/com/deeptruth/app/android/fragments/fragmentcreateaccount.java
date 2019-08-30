@@ -1,7 +1,15 @@
 package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -60,36 +68,28 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     LinearLayout imgvideolock_background;
     @BindView(R.id.rootview)
     LinearLayout rootview;
-
+    @BindView(R.id.img_dialog_background)
+    ImageView img_dialog_background;
 
     View contaionerview = null;
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(contaionerview ==null){
+        if(contaionerview ==null)
+        {
             contaionerview = inflater.inflate(R.layout.dialog_createaccount, container, false);
             ButterKnife.bind(this, contaionerview);
-           // baseactivity.getinstance().onUserLeaveHint();
 
             txt_submit.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
             imgvideolock_background.setOnClickListener(this);
             rootview.setOnClickListener(this);
-           /* edt_phonenumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
-                        //baseactivity.getinstance().hidekeyboard();
-                    }
-                    return false;
-                }
-            });*/
 
+            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+                    R.drawable.bluegradient);
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
         }
-
-
         return contaionerview;
     }
 
@@ -237,7 +237,7 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
         int percentageheight = (height / 100) * heightpercentage;
         int percentagewidth = (width / 100) * widthpercentage;
 
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getDialog().getWindow().setBackgroundDrawableResource(R.color.transparent);
         getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
         getDialog().getWindow().setLayout(percentagewidth, percentageheight);
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
@@ -259,3 +259,4 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     }*/
 
 }
+

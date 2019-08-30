@@ -1,5 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
@@ -47,7 +50,9 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
     @BindView(R.id.imgvideolock_background)
     LinearLayout imgvideolock_background;
     @BindView(R.id.rootview)
-    LinearLayout rootview;
+    RelativeLayout rootview;
+    @BindView(R.id.img_dialog_background)
+    ImageView img_dialog_background;
     View contaionerview = null;
 
 
@@ -57,6 +62,10 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
         if(contaionerview ==null){
             contaionerview = inflater.inflate(R.layout.dialog_confirmchannel, container, false);
             ButterKnife.bind(this, contaionerview);
+
+            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+                    R.drawable.bluegradient);
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
 
             txt_createaccount.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);

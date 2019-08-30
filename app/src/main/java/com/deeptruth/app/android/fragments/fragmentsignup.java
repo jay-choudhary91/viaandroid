@@ -1,5 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -44,6 +46,9 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
     customfonttextview btn_signin;
     @BindView(R.id.img_backbutton)
     ImageView img_backbutton;
+    @BindView(R.id.img_dialog_background)
+    ImageView img_dialog_background;
+
     View contaionerview = null;
 
 
@@ -53,6 +58,10 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
         if(contaionerview ==null){
             contaionerview = inflater.inflate(R.layout.dialog_signup, container, false);
             ButterKnife.bind(this, contaionerview);
+
+            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+                    R.drawable.bluegradient);
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
 
             btn_signup.setOnClickListener(this);
             btn_signin.setOnClickListener(this);

@@ -2,6 +2,8 @@ package com.deeptruth.app.android.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -63,6 +65,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     LinearLayout layout_logindetails;
     @BindView(R.id.img_backbutton)
     ImageView img_backbutton;
+    @BindView(R.id.img_dialog_background)
+    ImageView img_dialog_background;
     int rootviewheight,imageviewheight,userloginheight;
     View contaionerview = null;
 
@@ -96,6 +100,12 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
 
                 }
             });
+
+            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+                    R.drawable.bluegradient);
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
+
+
             txt_login.setOnClickListener(this);
             txt_createaccount.setOnClickListener(this);
             txt_forgotpassword.setOnClickListener(this);
@@ -310,7 +320,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
         int percentageheight = (height / 100) * heightpercentage;
         int percentagewidth = (width / 100) * widthpercentage;
 
-        getDialog().getWindow().setBackgroundDrawableResource(R.drawable.dark_popup_background);
+        getDialog().getWindow().setBackgroundDrawableResource(R.color.transparent);
         getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
         getDialog().getWindow().setLayout(percentagewidth, percentageheight);
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();

@@ -15,6 +15,13 @@
         android:focusableInTouchMode="true"
         android:layout_height="match_parent">
 
+
+        <ImageView
+            android:id="@+id/img_dialog_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
+
         <include layout="@layout/dialog_loginscreenbackground"
             android:id="@+id/layout_image"></include>
 

@@ -1,6 +1,8 @@
 package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +48,8 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
     EditText edt_confirmpassword;
     @BindView(R.id.tv_submit)
     TextView tv_submit;
+    @BindView(R.id.img_dialog_background)
+    ImageView img_dialog_background;
 
     View contaionerview = null;
 
@@ -56,6 +61,10 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
             contaionerview = inflater.inflate(R.layout.activity_changepassword, container, false);
 
             ButterKnife.bind(this, contaionerview);
+
+            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+                    R.drawable.bluegradient);
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
 
             tv_submit.setOnClickListener(this);
         }
