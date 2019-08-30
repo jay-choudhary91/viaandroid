@@ -117,27 +117,20 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
                         {
                             if(object.getString("success").equalsIgnoreCase("1"))
                             {
-                                baseactivity.getinstance().showdialogverifyuserfragment();
+                                baseactivity.getinstance().showdialogverifyuserfragment(config.createaccount);
                                 getDialog().dismiss();
 
-                                    /*fragmentverifyuser fragverifyuser = new fragmentverifyuser();
-                                    fragverifyuser.setdata(config.createaccount);
-                                    getHelper().addFragment(fragverifyuser,false,true);*/
-
-
-                                   /* Intent intent=new Intent(getActivity(),fragmentverifyuser.class);
-                                    intent.putExtra("activityname",config.createaccount);
-                                    startActivity(intent);*/
                             }
                             else
                             {
-                                if(object.has("error"))
+                                if(object.has("error")){
                                     new AlertDialog.Builder(applicationviavideocomposer.getactivity())
                                             .setMessage(object.getString("error"))
                                             .setPositiveButton(android.R.string.ok, null)
                                             .show();
+                                }
 
-                                    //Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))

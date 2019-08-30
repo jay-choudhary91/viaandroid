@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,11 +62,6 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
         return contaionerview;
     }
 
-   /* @Override
-    public int getlayoutid() {
-        return R.layout.activity_changepassword;
-    }*/
-
     @Override
     public void onClick(View v)
     {
@@ -102,14 +98,16 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                /*fragmentsignin fragsignin = new fragmentsignin();
-                                getHelper().addFragment(fragsignin,true,true);*/
-
                             }
                             else
                             {
-                                if(object.has("error"))
-                                    Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                                if(object.has("error")){
+                                    new AlertDialog.Builder(applicationviavideocomposer.getactivity())
+                                            .setMessage(object.getString("error"))
+                                            .setPositiveButton(android.R.string.ok, null)
+                                            .show();
+                                }
+                                    //Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -127,7 +125,13 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                            new AlertDialog.Builder(applicationviavideocomposer.getactivity())
+                                    .setMessage(error)
+                                    .setPositiveButton(android.R.string.ok, null)
+                                    .show();
+
+
+                           // Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e)
                     {

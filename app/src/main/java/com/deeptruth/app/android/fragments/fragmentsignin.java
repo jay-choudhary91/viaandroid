@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -210,12 +211,19 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                                 if(object.has(config.clientemail))
                                     xdata.getinstance().saveSetting(config.clientemail,object.getString(config.clientemail));
 
+                                xdata.getinstance().saveSetting(config.isuserlogin,"1");
+
                                 login();
                             }
                             else
                             {
-                                if(object.has("error"))
-                                    Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                                if(object.has("error")){
+                                    new AlertDialog.Builder(applicationviavideocomposer.getactivity())
+                                            .setMessage(object.getString("error"))
+                                            .setPositiveButton(android.R.string.ok, null)
+                                            .show();
+                                }
+                                //Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -233,7 +241,13 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(applicationviavideocomposer.getactivity(), error, Toast.LENGTH_SHORT).show();
+                            new AlertDialog.Builder(applicationviavideocomposer.getactivity())
+                                    .setMessage(error)
+                                    .setPositiveButton(android.R.string.ok, null)
+                                    .show();
+
+
+                            //Toast.makeText(applicationviavideocomposer.getactivity(), error, Toast.LENGTH_SHORT).show();
                         }
 
                         if(object.has("not_verified"))
@@ -243,11 +257,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                baseactivity.getinstance().showdialogverifyuserfragment();
+                                baseactivity.getinstance().showdialogverifyuserfragment(config.loginpage);
 
-                                /*Intent intent=new Intent(applicationviavideocomposer.getactivity(),fragmentverifyuser.class);
-                                intent.putExtra("activityname",config.loginpage);
-                                startActivity(intent);*/
                             }
                         }
 

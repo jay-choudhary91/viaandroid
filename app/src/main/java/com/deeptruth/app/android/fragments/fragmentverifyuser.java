@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
     customfontedittext imgvideolock_background;
 
     View contaionerview = null;
+    String forgotpassword="";
 
 
     @Nullable
@@ -61,32 +63,11 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
             contaionerview = inflater.inflate(R.layout.dialog_confirmationcode, container, false);
             ButterKnife.bind(this, contaionerview);
 
-            /*rootview.post(new Runnable() {
-                @Override
-                public void run() {
-                    rootviewheight = rootview.getHeight();
-                    topviewheight = ((rootviewheight *55)/100);
-                    layout_top.getLayoutParams().height = topviewheight;
-                    layout_top.setVisibility(View.VISIBLE);
-                    layout_top.requestLayout();
-
-                    bottomviewheight = (rootviewheight -topviewheight);
-                    layout_bottom.getLayoutParams().height = bottomviewheight;
-                    layout_bottom.setVisibility(View.VISIBLE);
-                    layout_bottom.requestLayout();
-                }
-            });*/
-
             txt_verify.setOnClickListener(this);
 
         }
         return contaionerview;
     }
-
-    /*@Override
-    public int getlayoutid() {
-        return R.layout.activity_verifyuser;
-    }*/
 
     @Override
     public void onClick(View v) {
@@ -117,8 +98,8 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
         HashMap<String,String> requestparams=new HashMap<>();
         requestparams.put("type","client");
         requestparams.put("action","verify");
-        /*if(!forgotpassword.isEmpty() && forgotpassword.equalsIgnoreCase(config.forgotpassword))
-                requestparams.put("action","verifyforgotten");*/
+        if(!forgotpassword.isEmpty() && forgotpassword.equalsIgnoreCase(config.forgotpassword))
+                requestparams.put("action","verifyforgotten");
 
         requestparams.put("clientid",clientid);
         requestparams.put("code",value);
@@ -148,8 +129,13 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
                             }
                             else
                             {
-                                if(object.has("error"))
-                                    Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+                                if(object.has("error")){
+                                    new AlertDialog.Builder(applicationviavideocomposer.getactivity())
+                                            .setMessage(object.getString("error"))
+                                            .setPositiveButton(android.R.string.ok, null)
+                                            .show();
+                                }
+                                   // Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -167,7 +153,13 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(applicationviavideocomposer.getactivity(), error, Toast.LENGTH_SHORT).show();
+                            new AlertDialog.Builder(applicationviavideocomposer.getactivity())
+                                    .setMessage(error)
+                                    .setPositiveButton(android.R.string.ok, null)
+                                    .show();
+
+
+                            //Toast.makeText(applicationviavideocomposer.getactivity(), error, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e)
                     {
@@ -188,8 +180,6 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
         {
             baseactivity.getinstance().showdialogchangepasswordfragment();
 
-            /*fragmentchangepassword fragchangepassword = new fragmentchangepassword();
-            getHelper().addFragment(fragchangepassword,false,true);*/
         }
         else
         {
@@ -198,7 +188,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
     }
 
     public void setdata(String forgotpassword){
-       // this.forgotpassword = forgotpassword;
+        this.forgotpassword = forgotpassword;
 
     }
     @Override
@@ -211,8 +201,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
     public void gotologin(){
 
         baseactivity.getinstance().showdialogsigninfragment();
-        /*fragmentsignin fragverifyuser = new fragmentsignin();
-        getHelper().addFragment(fragverifyuser,true,true);*/
+
     }
 
     @Override

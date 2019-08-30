@@ -1533,20 +1533,22 @@ public class common {
                 .show();
     }
 
-    public static void shownotification(Context context){
+    public static void shownotification(Context context,String message){
 
-        Intent notificationIntent = new Intent(context, splashactivity.class);
+        /*Intent notificationIntent = new Intent(context, splashactivity.class);
         notificationIntent.putExtra(config.launchtype,config.launchtypemedialist);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);*/
+
+        Intent notificationIntent = new Intent();
 
         String channelId = context.getResources().getString(R.string.default_notification_channel_id);
         final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent,
                 PendingIntent.FLAG_ONE_SHOT);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, channelId)
                 .setContentTitle(context.getResources().getString(R.string.app_name))
-                .setContentText(context.getResources().getString(R.string.app_name)+" "+
-                        context.getResources().getString(R.string.bg_sync_complete))
+                .setContentText(message)
+                        //context.getResources().getString(R.string.bg_sync_complete))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setStyle(new NotificationCompat.BigTextStyle())
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -1561,12 +1563,11 @@ public class common {
         {
             NotificationChannel channel = new NotificationChannel(channelId,   context.getResources().getString(R.string.app_name)
                     , NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription(context.getResources().getString(R.string.app_name)+" "+
-                    context.getResources().getString(R.string.bg_sync_complete));
+            /*channel.setDescription(context.getResources().getString(R.string.app_name)+" "+
+                    context.getResources().getString(R.string.bg_sync_complete));*/
+            channel.setDescription(message);
             notificationManager.createNotificationChannel(channel);
         }
-
-
         notificationManager.notify(0, notificationBuilder.build());
     }
 

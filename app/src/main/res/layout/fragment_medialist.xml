@@ -39,4 +39,12 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:layout_below="@id/layout_mediatype"
+        android:layout_height="match_parent"></WebView>
+
 </RelativeLayout>
