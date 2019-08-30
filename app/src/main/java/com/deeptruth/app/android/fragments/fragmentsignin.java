@@ -1,6 +1,9 @@
 package com.deeptruth.app.android.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -8,11 +11,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,6 +65,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     LinearLayout layout_logindetails;
     @BindView(R.id.img_backbutton)
     ImageView img_backbutton;
+    @BindView(R.id.img_dialog_background)
+    ImageView img_dialog_background;
     int rootviewheight,imageviewheight,userloginheight;
     View contaionerview = null;
 
@@ -92,11 +100,19 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
 
                 }
             });
+
+            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+                    R.drawable.bluegradient);
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
+
+
             txt_login.setOnClickListener(this);
             txt_createaccount.setOnClickListener(this);
             txt_forgotpassword.setOnClickListener(this);
             rootview.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
+            layout_logindetails.setOnClickListener(this);
+            layout_image.setOnClickListener(this);
         }
         return contaionerview;
     }
@@ -144,8 +160,19 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
                 startActivity(intent);*/
                 break;
+
+            case R.id.layout_logindetails:
+                Log.e("ontouch","ontouch");
+
+                break;
+
+            case R.id.layout_image:
+                Log.e("ontouchimage","ontouch");
+                break;
         }
     }
+
+
     public void login()
     {
         /*if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
@@ -295,7 +322,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
         int percentageheight = (height / 100) * heightpercentage;
         int percentagewidth = (width / 100) * widthpercentage;
 
-        getDialog().getWindow().setBackgroundDrawableResource(R.drawable.dark_popup_background);
+        getDialog().getWindow().setBackgroundDrawableResource(R.color.transparent);
         getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
         getDialog().getWindow().setLayout(percentagewidth, percentageheight);
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();

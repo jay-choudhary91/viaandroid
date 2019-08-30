@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/bluegradient"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:id="@+id/rootview"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_dialog_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
     <include layout="@layout/dialog_loginscreenbackground"></include>
@@ -39,7 +50,7 @@
             android:text="@string/channel_name_is_unchangeable_after_an_account_is_created"
             android:textColor="@color/white"
             app:fontType="Comfortaa-Regular"
-            android:textSize="11sp"
+            android:textSize="10sp"
             />
 
 
@@ -55,3 +66,4 @@
     </LinearLayout>
 
 </LinearLayout>
+</RelativeLayout>

@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
@@ -247,9 +248,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             webview.getSettings().setJavaScriptEnabled(true);
             webview.getSettings().setSupportZoom(false);
             webview.getSettings().setBuiltInZoomControls(true);
-
-            /*webview.getSettings().setLoadWithOverviewMode(true);
-            webview.getSettings().setUseWideViewPort(true);*/
+            webview.getSettings().setLoadWithOverviewMode(true);
+            webview.getSettings().setUseWideViewPort(true);
+            WebSettings settings = webview.getSettings();
+            settings.setDomStorageEnabled(true);
 
 
             try {

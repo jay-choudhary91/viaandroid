@@ -1,6 +1,8 @@
 package com.deeptruth.app.android.fragments;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -50,6 +52,11 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
     ScrollView rootview;*/
    @BindView(R.id.img_backbutton)
    ImageView img_backbutton;
+   @BindView(R.id.layout_verifyuser)
+   LinearLayout layout_verifyuser;
+    @BindView(R.id.img_dialog_background)
+    ImageView img_dialog_background;
+
     View contaionerview = null;
     String forgotpassword="";
 
@@ -61,9 +68,14 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
             contaionerview = inflater.inflate(R.layout.dialog_confirmationcode, container, false);
             ButterKnife.bind(this, contaionerview);
 
+            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+                    R.drawable.bluegradient);
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
+
             img_backbutton.setVisibility(View.GONE);
 
             txt_verify.setOnClickListener(this);
+            layout_verifyuser.setOnClickListener(this);
 
         }
         return contaionerview;
@@ -80,7 +92,9 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
             case R.id.tv_cancel:
                // gotologin();
                 break;
-
+            case R.id.layout_verifyuser:
+                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                break;
         }
     }
 

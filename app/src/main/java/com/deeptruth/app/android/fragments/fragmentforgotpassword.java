@@ -1,5 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -48,9 +51,9 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
     customfontedittext edtusername;
     @BindView(R.id.tv_next)
     customfonttextview tv_next;
-    @BindView(R.id.layout_forgotpass)
-    RelativeLayout layout_forgotpass;
     View contaionerview = null;
+    @BindView(R.id.img_dialog_background)
+    ImageView img_dialog_background;
 
     @Nullable
     @Override
@@ -59,6 +62,10 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
             contaionerview = inflater.inflate(R.layout.activity_forgotpassword, container, false);
 
             ButterKnife.bind(this, contaionerview);
+
+            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+                    R.drawable.bluegradient);
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
 
             tv_next.setOnClickListener(this);
         }
