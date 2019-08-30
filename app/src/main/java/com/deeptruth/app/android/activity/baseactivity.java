@@ -3008,27 +3008,26 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     public void showdialogcreateaccountfragment(){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("signindialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("createaccount");
         if (prev != null) {
             ft.remove(prev);
         }
         //ft.addToBackStack(null);
         fragmentcreateaccount fragment = new fragmentcreateaccount();
-
-        fragment.show(ft, "signindialog");
+        fragment.show(ft, "createaccount");
     }
 
     public void showdialogverifyuserfragment(){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("signindialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("verifyuser");
         if (prev != null) {
             ft.remove(prev);
         }
         //ft.addToBackStack(null);
         fragmentverifyuser fragment = new fragmentverifyuser();
         fragment.setdata(config.createaccount);
-        fragment.show(ft, "signindialog");
+        fragment.show(ft, "verifyuser");
     }
 
     public void showdialogforgotpasswordfragment(){

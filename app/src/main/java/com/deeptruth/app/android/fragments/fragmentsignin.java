@@ -151,7 +151,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
             getHelper().onBack();
         }*/
 
-        baseactivity.getinstance().onBack();
+        getDialog().dismiss();
+        //baseactivity.getinstance().onBack();
     }
 
     public boolean isvalidated(){
@@ -225,9 +226,11 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                Intent intent=new Intent(applicationviavideocomposer.getactivity(),fragmentverifyuser.class);
+                                baseactivity.getinstance().showdialogverifyuserfragment();
+
+                                /*Intent intent=new Intent(applicationviavideocomposer.getactivity(),fragmentverifyuser.class);
                                 intent.putExtra("activityname",config.loginpage);
-                                startActivity(intent);
+                                startActivity(intent);*/
                             }
                         }
 
