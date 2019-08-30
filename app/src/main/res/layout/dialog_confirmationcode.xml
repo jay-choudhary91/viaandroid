@@ -44,12 +44,13 @@
             android:hint="@string/confirmation_code"
             app:fontType="Comfortaa-Regular"
             android:background="@drawable/edittext_shap"
-            android:maxLength="50"
+            android:maxLength="6"
             android:padding="3dp"
             android:maxLines="1"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="@dimen/dialog_leftmargin"
             android:layout_marginRight="@dimen/dialog_rightmargin"
+            android:inputType="number"
             android:id="@+id/edt_confirmchannel"/>
 
         <com.deeptruth.app.android.views.customfonttextview
