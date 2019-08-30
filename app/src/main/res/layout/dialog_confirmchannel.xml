@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bluegradient"
+    android:background="@drawable/dark_popup_background"
     android:id="@+id/rootview"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
