@@ -75,6 +75,8 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
 
             txt_submit.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
+            imgvideolock_background.setOnClickListener(this);
+            rootview.setOnClickListener(this);
            /* edt_phonenumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

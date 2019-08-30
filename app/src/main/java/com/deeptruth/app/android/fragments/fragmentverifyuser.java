@@ -64,6 +64,8 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
             ButterKnife.bind(this, contaionerview);
 
             txt_verify.setOnClickListener(this);
+            imgvideolock_background.setOnClickListener(this);
+            layout_verifyuser.setOnClickListener(this);
 
         }
         return contaionerview;

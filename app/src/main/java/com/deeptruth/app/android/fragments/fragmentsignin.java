@@ -1,5 +1,6 @@
 package com.deeptruth.app.android.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,11 +9,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -97,6 +101,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
             txt_forgotpassword.setOnClickListener(this);
             rootview.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
+            layout_logindetails.setOnClickListener(this);
+            layout_image.setOnClickListener(this);
         }
         return contaionerview;
     }
@@ -144,14 +150,17 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 break;
 
             case R.id.layout_logindetails:
-                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                Log.e("ontouch","ontouch");
+
                 break;
 
             case R.id.layout_image:
-                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                Log.e("ontouchimage","ontouch");
                 break;
         }
     }
+
+
     public void login()
     {
         /*if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))

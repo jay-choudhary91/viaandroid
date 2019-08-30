@@ -60,6 +60,8 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
 
             txt_createaccount.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
+            imgvideolock_background.setOnClickListener(this);
+            rootview.setOnClickListener(this);
         }
         return contaionerview;
     }
