@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/dark_popup_background"
+    android:background="@drawable/bluegradient"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -30,6 +30,7 @@
             android:background="@drawable/edittext_shap"
             android:maxLength="50"
             android:padding="5dp"
+            android:maxLines="1"
             android:id="@+id/edt_username"/>
 
         <com.deeptruth.app.android.views.customfonttextview

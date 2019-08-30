@@ -88,7 +88,6 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
 
                 }
             });
-
             txt_login.setOnClickListener(this);
             txt_createaccount.setOnClickListener(this);
             txt_forgotpassword.setOnClickListener(this);
