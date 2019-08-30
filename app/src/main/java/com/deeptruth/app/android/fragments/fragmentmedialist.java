@@ -33,6 +33,8 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -120,6 +122,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     RecyclerView recyclerviewfilteroption;
     @BindView(R.id.swipeToRefresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.webview)
+    WebView webview;
 
     private int selectedlisttype =0,listviewheight=0,dataupdator=0;
     private RelativeLayout listlayout;
@@ -239,6 +243,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             ButterKnife.bind(this,rootview);
             listlayout=rootview.findViewById(R.id.listlayout);
            // setheadermargin();
+
+            webview.getSettings().setJavaScriptEnabled(true);
+            webview.getSettings().setSupportZoom(false);
+            webview.getSettings().setBuiltInZoomControls(true);
+
+            /*webview.getSettings().setLoadWithOverviewMode(true);
+            webview.getSettings().setUseWideViewPort(true);*/
+
 
             try {
                 Field f = mSwipeRefreshLayout.getClass().getDeclaredField("mCircleView");
@@ -408,7 +420,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             };
             applicationviavideocomposer.getactivity().registerReceiver(medialistitemaddreceiver, intentFilter);
-            showlistitemsvisible(true);
+            showlocallistitems(true);
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
                 img_uploadmedia.setVisibility(View.VISIBLE);
@@ -427,6 +439,23 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 fetchmedialistfromdirectory();
 
             resetmedialist();
+
+            webview.loadUrl("https://videolock.com/my");
+            //webview.loadUrl("https://www.matraex.com/");
+
+            webview.setWebViewClient(new WebViewClient() {
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
+                    return true;
+                }
+
+                public void onPageFinished(WebView view, String url) {
+                }
+
+                public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+
+                }
+            });
         }
         return rootview;
     }
@@ -604,13 +633,15 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         return true;
     }
 
-    public void showlistitemsvisible(boolean visiblelist)
+    public void showlocallistitems(boolean visiblelist)
     {
         if(visiblelist)
         {
             selectedlisttype =0;
             recyclerviewlocallist.setVisibility(View.VISIBLE);
+            recyclerviewfilteroption.setVisibility(View.VISIBLE);
             recyclerviewpublishedlist.setVisibility(View.GONE);
+            webview.setVisibility(View.GONE);
 
             txt_localfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
                     getColor(R.color.blue_item_selected));
@@ -624,7 +655,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             selectedlisttype =1;
             recyclerviewlocallist.setVisibility(View.GONE);
-            recyclerviewpublishedlist.setVisibility(View.VISIBLE);
+            recyclerviewpublishedlist.setVisibility(View.GONE);
+            recyclerviewfilteroption.setVisibility(View.GONE);
+            webview.setVisibility(View.VISIBLE);
 
             txt_publishedfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
                     getColor(R.color.blue_item_selected));
@@ -650,6 +683,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             case R.id.txt_localfiles:
                 selectedlisttype=0;
+                recyclerviewlocallist.setVisibility(View.VISIBLE);
+                recyclerviewfilteroption.setVisibility(View.VISIBLE);
+                recyclerviewpublishedlist.setVisibility(View.GONE);
+                webview.setVisibility(View.GONE);
+
                 txt_localfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
                         getColor(R.color.blue_item_selected));
                 txt_publishedfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
@@ -659,6 +697,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 break;
             case R.id.txt_publishedfiles:
                 selectedlisttype=1;
+                recyclerviewlocallist.setVisibility(View.GONE);
+                recyclerviewpublishedlist.setVisibility(View.GONE);
+                recyclerviewfilteroption.setVisibility(View.GONE);
+                webview.setVisibility(View.VISIBLE);
+
                 txt_publishedfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
                         getColor(R.color.blue_item_selected));
                 txt_localfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
@@ -1187,7 +1230,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 if(shouldnavigatelist)
                 {
                     shouldnavigatelist=false;
-                    showlistitemsvisible(true);
+                    showlocallistitems(true);
                 }
 
             }

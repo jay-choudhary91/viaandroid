@@ -203,6 +203,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                                 if(object.has(config.clientemail))
                                     xdata.getinstance().saveSetting(config.clientemail,object.getString(config.clientemail));
 
+                                xdata.getinstance().saveSetting(config.isuserlogin,"1");
+
                                 login();
                             }
                             else

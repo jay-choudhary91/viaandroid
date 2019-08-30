@@ -229,7 +229,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
             break;
 
             case R.id.txt_logout:
-                xdata.getinstance().saveSetting(config.authtoken,"");
+                xdata.getinstance().saveSetting(config.isuserlogin,"");
                 Toast.makeText(applicationviavideocomposer.getactivity(),"Logout Successful",Toast.LENGTH_SHORT).show();
                 txt_username.setText("");
                 txt_logout.setText("");

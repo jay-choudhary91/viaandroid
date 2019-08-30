@@ -53,6 +53,7 @@ public class config {
 
     public static final double max_connectionspeedrange = 50;
 
+    public static final String publishedlist_url = "https://videolock.com/my";
     public static final String location_elevationapi_baseurl = "https://maps.googleapis.com/maps/api/elevation/json?";
     public static final String prefs_name = "main_prefs";
     public static final String time_format = "hh:mm a";
@@ -129,7 +130,7 @@ public class config {
     public static final String type_imageframes_get = "imageframes_get";
 
     public static final String datauploaded_success_dialog = "datauploaded_success_dialog";
-    public static final String datauploadeding_process_dialog = "datauploadeding_process_dialog";
+    public static final String datauploading_process_dialog = "datauploading_process_dialog";
 
     public static final String metriclist = "metriclist";
     public static final String framecount = "framecount";
@@ -318,6 +319,7 @@ public class config {
     public static final String json_blob="json blob";
     public static final String json_towerlist="json_towerlist";
     public static final String jailbroken="jailbroken";
+    public static final String isuserlogin="isuserlogin";
 
     public static final String item_satellitesdate ="item_satellitesdate";
     public static final String item_remoteip="item_remoteip";
