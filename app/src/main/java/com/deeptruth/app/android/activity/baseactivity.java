@@ -2606,7 +2606,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onClick(View v)
             {
-                dialog.dismiss();
+                //dialog.dismiss();
                 showsharepopupsub(trimmedmediapath,type,mediatoken,ismediatrimmed);
             }
         });
