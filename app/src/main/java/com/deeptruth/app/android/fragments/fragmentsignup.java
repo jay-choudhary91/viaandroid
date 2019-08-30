@@ -87,7 +87,6 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
         }
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -96,8 +95,11 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
     }
 
     @Override
-    public int getTheme() {
-        return R.style.dialog_slide_animation;
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getDialog().getWindow()
+                .getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 
     public void getscreenwidthheight(int widthpercentage,int heightpercentage) {

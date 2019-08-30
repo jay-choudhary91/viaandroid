@@ -153,6 +153,15 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
         getscreenwidthheight(97,80);
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getDialog().getWindow()
+                .getAttributes().windowAnimations = R.style.dialog_slide_animation;
+    }
+
+
     public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
 
         int width = common.getScreenWidth(applicationviavideocomposer.getactivity());

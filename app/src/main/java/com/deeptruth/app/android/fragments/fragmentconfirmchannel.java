@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
@@ -30,6 +31,8 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
     customfontedittext edt_username;
     @BindView(R.id.txt_createaccount)
     customfonttextview txt_createaccount;
+    @BindView(R.id.img_backbutton)
+    ImageView img_backbutton;
     View contaionerview = null;
 
 
@@ -41,6 +44,7 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
             ButterKnife.bind(this, contaionerview);
 
             txt_createaccount.setOnClickListener(this);
+            img_backbutton.setOnClickListener(this);
         }
         return contaionerview;
     }
@@ -55,12 +59,18 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
 
         switch (v.getId()){
             case R.id.txt_createaccount:
+                getDialog().dismiss();
                 baseactivity.getinstance().showdialogverifyuserfragment();
+
+                break;
+
+            case R.id.img_backbutton:
+                getDialog().dismiss();
+                baseactivity.getinstance().showdialogcreateaccountfragment();
 
                 break;
         }
     }
-
 
     @Override
     public void onResume() {
@@ -68,6 +78,15 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
 
         getscreenwidthheight(97,80);
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getDialog().getWindow()
+                .getAttributes().windowAnimations = R.style.dialog_slide_animation;
+    }
+
 
     public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
 
