@@ -58,5 +58,6 @@
     <dimen name="iconwidth">28dp</dimen>
     <dimen name="dialog_leftmargin">80dp</dimen>
     <dimen name="dialog_rightmargin">80dp</dimen>
+    <dimen name="margin_55dp">55dp</dimen>
 
 </resources>

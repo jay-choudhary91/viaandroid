@@ -45,9 +45,11 @@
             app:fontType="Comfortaa-Regular"
             android:background="@drawable/edittext_shap"
             android:maxLength="50"
-            android:padding="5dp"
+            android:padding="3dp"
             android:maxLines="1"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/dialog_leftmargin"
+            android:layout_marginRight="@dimen/dialog_rightmargin"
             android:id="@+id/edt_confirmchannel"/>
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -59,6 +61,8 @@
             app:fontType="Comfortaa-Regular"
             android:layout_marginTop="10dp"
             android:id="@+id/txt_verify"
+            android:layout_marginLeft="@dimen/dialog_leftmargin"
+            android:layout_marginRight="@dimen/dialog_rightmargin"
             />
 
         <com.deeptruth.app.android.views.customfonttextview

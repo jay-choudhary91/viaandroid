@@ -585,13 +585,14 @@
     <string name="confirm_channel">Confirm Channel</string>
     <string name="sign_in">Sign in</string>
     <string name="please_confirm_your_channel_name">Please confirm your channel name:</string>
-    <string name="channel_name_is_unchangeable_after_an_account_is_created">Channel names are unchangeable \nafter an account is created.</string>
+    <string name="channel_name_is_unchangeable_after_an_account_is_created">* Channel names are unchangeable \nafter an account is created.</string>
     <string name="congrats">Congrats!</string>
-    <string name="discription_confirmation_code">please enter your confirmation code \nand start publishing your own certified \nand verified VideoLock recordings.</string>
+    <string name="discription_confirmation_code">Please enter your confirmation code \nand start publishing your own certified \nand verified VideoLock recordings.</string>
     <string name="confirmation_code">Confirmation Code</string>
     <string name="verify_code">Verify</string>
     <string name="please_resend_code">Please resend code</string>
     <string name="channel_name">Channel Name</string>
     <string name="confirmation_code_will_be_emailed_in_minutes">A confirmation code will \nbe emailed in minutes...</string>
     <string name="your_published_media_will_be_located_at">Your published media will be located at </string>
+    <string name="channelname_link"><u>"http://VideoLock.com/ChannelName"</u></string>
 </resources>
