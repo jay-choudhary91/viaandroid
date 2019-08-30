@@ -593,5 +593,5 @@
     <string name="please_resend_code">Please resend code</string>
     <string name="channel_name">Channel Name</string>
     <string name="confirmation_code_will_be_emailed_in_minutes">A confirmation code will \nbe emailed in minutes...</string>
-    <string name="your_published_media_will_be_located_at">Your published media will be located at</string>
+    <string name="your_published_media_will_be_located_at">Your published media will be located at </string>
 </resources>
