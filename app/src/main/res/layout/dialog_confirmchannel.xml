@@ -13,6 +13,8 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:orientation="vertical"
+        android:layout_marginRight="@dimen/dialog_rightmargin"
+        android:layout_marginLeft="@dimen/dialog_leftmargin"
         android:layout_height="match_parent">
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -24,12 +26,11 @@
             />
 
         <com.deeptruth.app.android.views.customfontedittext
-            style="@style/edttext_confirmchannel"
+            style="@style/edt_dialogcreateaccount"
             android:hint="@string/confirm_channel"
             app:fontType="Comfortaa-Regular"
             android:background="@drawable/edittext_shap"
             android:maxLength="50"
-            android:padding="5dp"
             android:maxLines="1"
             android:id="@+id/edt_username"/>
 
@@ -44,7 +45,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             style="@style/edttext_confirmchannel"
-            android:padding="8dp"
+            android:padding="3dp"
             android:text="@string/create_account"
             android:textColor="@color/white"
             android:background="@drawable/textview_bluebackgroundshape"

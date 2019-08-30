@@ -61,6 +61,7 @@
     <dimen name="margin_32dp">32dp</dimen>
     <dimen name="margin_40dp">40dp</dimen>
     <dimen name="margin_50dp">50dp</dimen>
+    <dimen name="margin_55dp">55dp</dimen>
     <dimen name="textsize1sp">1sp</dimen>
     <dimen name="textsize2sp">2sp</dimen>
     <dimen name="textsize3sp">3sp</dimen>

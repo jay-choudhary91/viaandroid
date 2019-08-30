@@ -7,7 +7,6 @@
     android:fillViewport="true"
     android:id="@+id/rootview"
     android:layout_height="match_parent"
-    android:background="@drawable/dark_popup_background"
     tools:context="com.deeptruth.app.android.fragments.fragmentsignin">
 
     <RelativeLayout
@@ -60,6 +59,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/layout_logindetails"
             android:layout_below="@+id/layout_image"
+            android:layout_marginLeft="@dimen/dialog_leftmargin"
+            android:layout_marginRight="@dimen/dialog_rightmargin"
             android:gravity="center">
 
             <RelativeLayout
@@ -70,7 +71,7 @@
                 android:layout_height="wrap_content">
 
                 <com.deeptruth.app.android.views.customfontedittext
-                    style="@style/edt_login"
+                    style="@style/edt_dialogcreateaccount"
                     android:hint="@string/email"
                     app:fontType="Comfortaa-Regular"
                     android:background="@drawable/edittext_shap"
@@ -79,12 +80,13 @@
                     android:id="@+id/edt_username"/>
 
                 <com.deeptruth.app.android.views.customfontedittext
-                    style="@style/edt_login"
+                    style="@style/edt_dialogcreateaccount"
                     android:hint="@string/password"
                     android:imeOptions="actionDone"
                     android:maxLength="15"
                     android:inputType="textPassword"
                     android:layout_below="@id/edt_username"
+                    android:layout_marginTop="@dimen/margin_8dp"
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/edt_password"/>
 

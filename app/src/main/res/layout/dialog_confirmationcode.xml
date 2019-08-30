@@ -45,25 +45,29 @@
             app:fontType="Comfortaa-Regular"
             android:background="@drawable/edittext_shap"
             android:maxLength="50"
-            android:padding="5dp"
+            android:padding="3dp"
             android:maxLines="1"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/dialog_leftmargin"
+            android:layout_marginRight="@dimen/dialog_rightmargin"
             android:id="@+id/edt_confirmchannel"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             style="@style/edttext_confirmchannel"
-            android:padding="5dp"
+            android:padding="3dp"
             android:text="@string/verify_code"
             android:textColor="@color/white"
             android:background="@drawable/textview_bluebackgroundshape"
             app:fontType="Comfortaa-Regular"
             android:layout_marginTop="10dp"
             android:id="@+id/txt_verify"
+            android:layout_marginLeft="@dimen/dialog_leftmargin"
+            android:layout_marginRight="@dimen/dialog_rightmargin"
             />
 
         <com.deeptruth.app.android.views.customfonttextview
             style="@style/txt_createaccount"
-            android:layout_marginTop="@dimen/margin_10dp"
+            android:layout_marginTop="@dimen/margin_5dp"
             android:text="@string/please_resend_code"
            android:layout_gravity="center"
             app:fontType="Comfortaa-Regular" />

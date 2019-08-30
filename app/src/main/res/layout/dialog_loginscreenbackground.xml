@@ -7,11 +7,11 @@
 
     <ImageView
         android:id="@+id/img_backbutton"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:scaleType="fitXY"
-        android:layout_marginTop="@dimen/margin_15dp"
-        android:layout_marginLeft="@dimen/margin_15dp"
+        android:layout_marginTop="@dimen/margin_10dp"
+        android:layout_marginLeft="@dimen/margin_10dp"
         android:tint="@color/white"
         android:src="@drawable/ic_reply"/>
 
@@ -20,13 +20,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/margin_30dp"
+        android:layout_marginTop="@dimen/margin_55dp"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/img_logoicon"
-            android:layout_width="200dp"
-            android:layout_height="120dp"
+            android:layout_width="190dp"
+            android:layout_height="110dp"
             android:layout_gravity="center"
             android:scaleType="fitXY"
             android:src="@drawable/splash_logo_icon"
@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txt_proofofthetruth"
-            android:padding="@dimen/margin_5dp"
+            android:padding="@dimen/margin_2dp"
             android:textColor="@color/blue_x"
             android:gravity="center"
             android:textSize="16sp"

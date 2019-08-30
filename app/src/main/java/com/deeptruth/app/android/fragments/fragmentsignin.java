@@ -282,7 +282,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
         int percentageheight = (height / 100) * heightpercentage;
         int percentagewidth = (width / 100) * widthpercentage;
 
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getDialog().getWindow().setBackgroundDrawableResource(R.drawable.dark_popup_background);
         getDialog().getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
         getDialog().getWindow().setLayout(percentagewidth, percentageheight);
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();

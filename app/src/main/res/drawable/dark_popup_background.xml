@@ -107,7 +107,7 @@
             <stroke android:color="#8f474545" />
             <stroke android:width="0.5dp"/>
 
-            <corners android:radius="@dimen/margin_14dp" />
+            <corners android:radius="@dimen/margin_18dp" />
         </shape>
     </item>
 
@@ -115,7 +115,7 @@
     <item>
         <shape>
             <solid android:color="@color/color_progress_popup_back" />
-            <corners android:radius="@dimen/margin_14dp" />
+            <corners android:radius="@dimen/margin_18dp" />
         </shape>
     </item>
 </layer-list>

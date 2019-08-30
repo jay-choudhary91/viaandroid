@@ -56,6 +56,7 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
 
             btn_signup.setOnClickListener(this);
             btn_signin.setOnClickListener(this);
+            btn_signin.setText(" "+applicationviavideocomposer.getactivity().getResources().getString(R.string.sign_in));
             img_backbutton.setOnClickListener(this);
         }
         return contaionerview;

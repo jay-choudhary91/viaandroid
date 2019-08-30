@@ -67,5 +67,6 @@
 
     <dimen name="dialog_leftmargin">40dp</dimen>
     <dimen name="dialog_rightmargin">40dp</dimen>
+    <dimen name="margin_55dp">55dp</dimen>
 
 </resources>
