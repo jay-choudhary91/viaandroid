@@ -72,7 +72,6 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
                 }
             });*/
 
-
             txt_verify.setOnClickListener(this);
 
         }
