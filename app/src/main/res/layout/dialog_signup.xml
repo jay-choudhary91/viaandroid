@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <include layout="@layout/dialog_loginscreenbackground"></include>
+    <include layout="@layout/dialog_background"></include>
 
     <LinearLayout
         android:layout_width="match_parent"

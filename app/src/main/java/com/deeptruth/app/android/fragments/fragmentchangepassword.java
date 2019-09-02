@@ -124,8 +124,12 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
                         {
                             if(object.getString("success").equalsIgnoreCase("1") || object.getString("success").equalsIgnoreCase("true"))
                             {
-                                if(object.has(config.clientid))
+                                if(object.has(config.clientid)){
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
+
+                                    baseactivity.getinstance().showdialogsigninfragment();
+                                    getDialog().dismiss();
+                                }
 
                             }
                             else

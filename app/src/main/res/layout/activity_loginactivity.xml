@@ -22,7 +22,7 @@
             android:layout_height="match_parent"
             android:scaleType="fitXY"/>
 
-        <include layout="@layout/dialog_loginscreenbackground"
+        <include layout="@layout/dialog_background"
             android:id="@+id/layout_image"></include>
 
         <LinearLayout
