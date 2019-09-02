@@ -536,6 +536,7 @@
     <string name="file_uploaded_dropbox">Your file has been uploaded \n to your DropBox account.</string>
     <string name="file_uploaded_googledrive">Your file has been uploaded \n to your GoogleDrive account.</string>
     <string name="file_uploaded_onedrive">Your file has been uploaded \n to your OneDrive account.</string>
+    <string name="file_uploaded_box">Your file has been uploaded \n to your Box account.</string>
     <string name="notify_when_complete">Notify when complete?</string>
     <string name="uploading">UPLOADING</string>
     <string name="please_wait_">Please wait...</string>

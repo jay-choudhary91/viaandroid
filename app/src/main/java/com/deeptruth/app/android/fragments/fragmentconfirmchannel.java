@@ -194,8 +194,8 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        getDialog().getWindow()
-                .getAttributes().windowAnimations = R.style.dialog_slide_animation;
+        getDialog().setCanceledOnTouchOutside(false);
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 
 
