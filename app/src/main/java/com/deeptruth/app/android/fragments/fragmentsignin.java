@@ -22,6 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +59,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     @BindView(R.id.forgot_password)
     TextView txt_forgotpassword;
     @BindView(R.id.rootview)
-    ScrollView rootview;
+    RelativeLayout rootview;
     @BindView(R.id.layout_image)
     LinearLayout layout_image;
     @BindView(R.id.layout_logindetails)
