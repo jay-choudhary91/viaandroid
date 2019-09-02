@@ -298,19 +298,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             txt_mediatype.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.e("onClick ",""+ enummediatype.getItemposition());
                     if(enummediatype.getItemposition() == 2)
-                    {
                         pagermediatype.setCurrentItem(0,true);
-                    }
                     else if(enummediatype.getItemposition() == 3)
-                    {
                         pagermediatype.setCurrentItem(1,true);
-                    }
                     else if(enummediatype.getItemposition() == 4)
-                    {
                         pagermediatype.setCurrentItem(2,true);
-                    }
                 }
             });
             collection.addView(layout);
