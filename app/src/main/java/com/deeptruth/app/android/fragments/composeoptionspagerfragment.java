@@ -416,35 +416,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     xdata.getinstance().saveSetting(config.welcomedialog,"1");
                     baseactivity.getinstance().welcomedialog(getActivity());
                 }
-
-                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(applicationviavideocomposer.getactivity()))
-                {
-                    common.showalert(applicationviavideocomposer.getactivity(), getResources().getString(R.string.allow_apps_to),
-                            new adapteritemclick() {
-                        @Override
-                        public void onItemClicked(Object object) {
-                            openOverlaySettings();
-                        }
-
-                        @Override
-                        public void onItemClicked(Object object, int type) {
-
-                        }
-                    });
-                }*/
             }
         },10);
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private void openOverlaySettings() {
-        final Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:" + applicationviavideocomposer.getactivity().getPackageName()));
-        try {
-            startActivityForResult(intent, RC_OVERLAY);
-        } catch (ActivityNotFoundException e) {
-            Log.e(TAG, e.getMessage());
-        }
     }
 
     @Override
@@ -697,11 +670,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     public void swipelefttoright()
     {
         Date currentdate=new Date();
-        int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
+        int seconddifference= (int)(Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
         if(seconddifference >= 1)
         {
             if(currentselectedcomposer == 0)
                 return;
+
             currentselectedcomposer--;
             pagermediatype.setCurrentItem(currentselectedcomposer,true);
             initialdate =new Date();
@@ -714,8 +688,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
         if(seconddifference >= 1)
         {
-            if(currentselectedcomposer == 2)
+            if(currentselectedcomposer == mediatypepagerenum.values().length-1)
                 return;
+
             currentselectedcomposer++;
             pagermediatype.setCurrentItem(currentselectedcomposer,true);
             initialdate =new Date();
