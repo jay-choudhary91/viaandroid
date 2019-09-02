@@ -141,6 +141,7 @@ public class config {
     public static final String prefs_sha = "sha";
     public static final String prefs_sha_salt = "shasalt";
 
+    public static final String currentstate = "currentstate";
     public static final String cpuusageuser = "cpuusageuser";
     public static final String cpuusagesystem = "cpuusagesystem";
     public static final String cpuusageiow = "cpuusageiow";
@@ -233,6 +234,7 @@ public class config {
     public static final String devicecurrency="devicecurrency";
     public static final String gpsonoff="gpsonoff";
     public static final String deviceorientation="deviceorientation";
+    public static final String recordedstate="recordedstate";
 
     public static final String sync_offline="offline";
     public static final String sync_pending="pending";

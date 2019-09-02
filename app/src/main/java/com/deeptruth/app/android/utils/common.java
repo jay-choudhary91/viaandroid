@@ -912,6 +912,8 @@ public class common {
             metricItemName = config.remoteip;
         }else if (key.equalsIgnoreCase(config.jailbroken)) {
             metricItemName = config.jailbroken;
+        }else if (key.equalsIgnoreCase(config.recordedstate)) {
+            metricItemName = config.recordedstate;
         }
         else if (key.equalsIgnoreCase(config.camera)) {
             metricItemName = config.camera;
@@ -1779,7 +1781,8 @@ public class common {
                 "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country","jailbroken",
                 "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid","deviceconnection", "numberoftowers",
                 "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,
-                "phoneclocktime", "worldclocktime", config.connectiondatadelay,config.satellitedate,config.satellitesdata,config.remoteip,config.worldclockdate,config.phoneclockdate};
+                "phoneclocktime", "worldclocktime", config.connectiondatadelay,config.satellitedate,config.satellitesdata,config.remoteip,
+                config.worldclockdate,config.phoneclockdate,config.recordedstate};
 
         return items;
     }
@@ -2090,7 +2093,7 @@ public class common {
                 {
                     String key = myIter.next();
                     String value = jsonobject.optString(key);
-                    if(key.equalsIgnoreCase("address"))
+                    if(key.equalsIgnoreCase(config.recordedstate))
                     {
                         location=value;
                         break;
@@ -2107,7 +2110,7 @@ public class common {
                     while (myIter.hasNext()) {
                         String key = myIter.next();
                         String value = object.optString(key);
-                        if(key.equalsIgnoreCase("address"))
+                        if(key.equalsIgnoreCase(config.recordedstate))
                         {
                             location=value;
                             break;

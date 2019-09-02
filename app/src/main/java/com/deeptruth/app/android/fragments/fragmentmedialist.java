@@ -1003,6 +1003,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     e.printStackTrace();
                                 }
 
+                                String recordedlocation = "";
                                 Cursor cursor2 = mdbhelper.getmediacolor(localkey);
                                 if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
                                 {
@@ -1011,13 +1012,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     LinearLayout layout=(LinearLayout)viewparent.findViewById(R.id.linear_seekbarcolorview);
                                     ArrayList<String> arrayList=new ArrayList<>();
                                     int validcount=0,cautioncount=0,unsentcount=0,invalidcount=0;
-                                    String medialocation="";
+
 
                                     do{
                                         String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
                                         String metricdata=cursor2.getString(cursor2.getColumnIndex("metricdata"));
-                                        if(medialocation.trim().isEmpty())
-                                            medialocation=common.getlocationfrommetricdata(metricdata);
+                                        if(recordedlocation.trim().isEmpty())
+                                            recordedlocation=common.getlocationfrommetricdata(metricdata);
 
                                         arrayList.add(framecolor);
                                         if(framecolor.equalsIgnoreCase(config.color_green))
@@ -1088,7 +1089,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                                     videoobject.setColorsectionsarray(colorsectioncount);
                                     videoobject.setMediabarcolor(arrayList);
-                                    videoobject.setMedialocation(medialocation);
+                                    videoobject.setMedialocation(recordedlocation);
                                     videoobject.setValidcount(validcount);
                                     videoobject.setCautioncount(cautioncount);
                                     videoobject.setInvalidcount(invalidcount);
@@ -1328,6 +1329,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         arraymediaitemlist.get(i).setMediastatus(status);
                         arraymediaitemlist.get(i).setVideotoken(token);
 
+
                         if(! arraymediaitemlist.get(i).ismediapublished() && mediapublished.equalsIgnoreCase("1"))
                             needtoshiftitem=true;
 
@@ -1373,8 +1375,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                         int sectioncount=0,validcount=0,cautioncount=0,invalidcount=0,unsentcount=0,lastsequenceno=0,
                                 syncedframes=0,totalframes=0;
-                        String lastcolor="",strsequenceno="";
-                        String medialocation="";
+                        String lastcolor="",strsequenceno="",recordedlocation = "";;
 
                         ArrayList<String> colorsectioncount=new ArrayList<>();
                         ArrayList<String> arrayList=new ArrayList<>();
@@ -1385,8 +1386,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 String framecolor = cursor2.getString(cursor2.getColumnIndex("color"));
                                 strsequenceno=cursor2.getString(cursor2.getColumnIndex("sequenceno"));
                                 String metricdata=cursor2.getString(cursor2.getColumnIndex("metricdata"));
-                                if(medialocation.trim().isEmpty())
-                                    medialocation=common.getlocationfrommetricdata(metricdata);
+                                if(recordedlocation.trim().isEmpty())
+                                    recordedlocation=common.getlocationfrommetricdata(metricdata);
 
                                 arrayList.add(framecolor);
                                 if (framecolor.equalsIgnoreCase(config.color_green))
@@ -1445,7 +1446,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             arraymediaitemlist.get(i).setCautioncount(cautioncount);
                             arraymediaitemlist.get(i).setInvalidcount(invalidcount);
                             arraymediaitemlist.get(i).setUnsentcount(unsentcount);
-                            arraymediaitemlist.get(i).setMedialocation(medialocation);
+                            arraymediaitemlist.get(i).setMedialocation(recordedlocation);
 
                             if(isneedtonotify)
                             {

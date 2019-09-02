@@ -400,6 +400,7 @@ public class locationservice extends Service implements LocationListener, GpsSta
                         }
                         String currentaddress = strReturnedAddress.toString();
                         xdata.getinstance().saveSetting("currentaddress", "" + currentaddress);
+                        xdata.getinstance().saveSetting(config.currentstate, "" + returnedAddress.getAdminArea());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -1874,9 +1874,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = xdata.getinstance().getSetting("satelliteangle");
         } else if (key.equalsIgnoreCase("satelliteid")) {
             metricItemValue = xdata.getinstance().getSetting("satelliteid");
+        }else if (key.equalsIgnoreCase(config.recordedstate)) {
+            metricItemValue = xdata.getinstance().getSetting(config.currentstate);
         } else if (key.equalsIgnoreCase("strengthofsatellites")) {
             metricItemValue = xdata.getinstance().getSetting("strengthofsatellites");
-            ;
         } else if (key.equalsIgnoreCase("attitude")) {
             metricItemValue = xdata.getinstance().getSetting(config.phone_attitude);
         } else if (key.equalsIgnoreCase(config.airplanemode)) {
