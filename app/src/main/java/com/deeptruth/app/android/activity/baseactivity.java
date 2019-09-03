@@ -1866,11 +1866,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     showstandarduploadprocesscompletedialog(applicationviavideocomposer.getactivity(),100,100,
                             "",applicationviavideocomposer.getactivity().getResources().getString(
                                     R.string.file_uploaded_dropbox));
-
                 }
-
-                if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
-                    dialogfileuploadoptions.dismiss();
             }
 
             @Override
@@ -2074,9 +2070,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                                                 }
                                             });
-
-                                            if(dialogfileuploadoptions != null && dialogfileuploadoptions.isShowing())
-                                                dialogfileuploadoptions.dismiss();
                                         }
 
                                         @Override
