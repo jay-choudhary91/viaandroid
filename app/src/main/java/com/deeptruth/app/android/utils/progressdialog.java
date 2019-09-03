@@ -15,16 +15,23 @@ public class progressdialog
     public static KProgressHUD mprogress;
 
     public static void showwaitingdialog(Context context) {
-        if (mprogress != null && mprogress.isShowing()) {
-            mprogress.dismiss();
-        }
 
-        mprogress = KProgressHUD.create(context)
-                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setCancellable(false)
-                .setAnimationSpeed(1)
-                .setDimAmount(0.5f)
-                .show();
+        try
+        {
+            if (mprogress != null && mprogress.isShowing()) {
+                mprogress.dismiss();
+            }
+
+            mprogress = KProgressHUD.create(context)
+                    .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                    .setCancellable(false)
+                    .setAnimationSpeed(1)
+                    .setDimAmount(0.5f)
+                    .show();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     //
@@ -46,8 +53,15 @@ public class progressdialog
     }
 
     public static void dismisswaitdialog() {
-        if (mprogress != null && mprogress.isShowing()) {
-            mprogress.dismiss();
+        try
+        {
+            if (mprogress != null && mprogress.isShowing()) {
+                mprogress.dismiss();
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
+
     }
 }
