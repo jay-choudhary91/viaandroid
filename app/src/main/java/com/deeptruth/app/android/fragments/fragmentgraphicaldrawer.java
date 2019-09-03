@@ -2786,7 +2786,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 chart.invalidate();
                 chart.setVisibleXRange(0, 80);
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),0,
-                        getActivity().getResources().getDimension(R.dimen.margin_4dp),
+                        getActivity().getResources().getDimension(R.dimen.margin_7dp),
                         0);
             }
             else
@@ -2794,7 +2794,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 chart.invalidate();
                 chart.setVisibleXRange(0, valuesarray.size());
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),0,
-                        getActivity().getResources().getDimension(R.dimen.margin_4dp),
+                        getActivity().getResources().getDimension(R.dimen.margin_7dp),
                         0);
             }
         }

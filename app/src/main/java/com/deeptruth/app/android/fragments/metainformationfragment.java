@@ -1673,14 +1673,15 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 chart.invalidate();
                 chart.setVisibleXRange(0, 80);
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),0,
-                        0,
+                        getActivity().getResources().getDimension(R.dimen.margin_7dp),
                         //14);
                         0);
 
             }else{
                 chart.invalidate();
                 chart.setVisibleXRange(0, valuesarray.size());
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,0,
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_8dp),10,
+                        getActivity().getResources().getDimension(R.dimen.margin_7dp),
                         //14);
                         0);
 
