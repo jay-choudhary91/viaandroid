@@ -58,6 +58,7 @@ import com.deeptruth.app.android.services.callservice;
 import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 
@@ -742,6 +743,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         if(myhandler != null && myhandler != null)
             myhandler.removeCallbacks(myrunnable);
 
+        progressdialog.dismisswaitdialog();
     }
 
     @Override
