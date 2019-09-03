@@ -327,6 +327,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
 
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
+        getDialog().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
 

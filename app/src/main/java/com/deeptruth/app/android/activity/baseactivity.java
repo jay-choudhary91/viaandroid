@@ -2817,8 +2817,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         }else if(type.equalsIgnoreCase(getResources().getString(R.string.popup_share)) ){
 
-            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER);
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL |Gravity.TOP);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            double bottommargin = (height / 100) * 20;
+            params.y = (int)bottommargin;
+            dialog.getWindow().setAttributes(params);
             dialog.getWindow().setLayout(percentagewidth,percentageheight);
             dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_zoom_animation;
 
