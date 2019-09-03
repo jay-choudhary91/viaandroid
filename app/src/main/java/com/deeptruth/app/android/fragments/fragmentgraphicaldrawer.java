@@ -618,7 +618,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             initlinechart(linechart_connectionspeed,-5f,50f,true);
             initlinechart(linechart_datatimedelay,-5f,50f,true);
-            initlinechart(linechart_gpsaccuracy,-5f,100f,true);
+            initlinechart(linechart_gpsaccuracy,-10f,100f,true);
             vertical_slider_connectionspeed.setMax(50);
             vertical_slider_connectiondatatimedely.setMax(50);
             vertical_slider_gpsaccuracy.setMax(100);
@@ -2786,14 +2786,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 chart.invalidate();
                 chart.setVisibleXRange(0, 80);
                 chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),0,
-                       0,
+                        getActivity().getResources().getDimension(R.dimen.margin_4dp),
                         0);
             }
             else
             {
                 chart.invalidate();
                 chart.setVisibleXRange(0, valuesarray.size());
-                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),0,0,
+                chart.setViewPortOffsets(getActivity().getResources().getDimension(R.dimen.margin_7dp),0,
+                        getActivity().getResources().getDimension(R.dimen.margin_4dp),
                         0);
             }
         }
