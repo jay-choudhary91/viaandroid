@@ -91,10 +91,9 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
             img_backbutton.setOnClickListener(this);
             imgvideolock_background.setOnClickListener(this);
             rootview.setOnClickListener(this);
-
             Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
                     R.drawable.bluegradient);
-            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,140));
         }
         return contaionerview;
     }
@@ -252,6 +251,8 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
 
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
+        getDialog().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     public void setdata(String type){

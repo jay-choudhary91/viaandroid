@@ -118,7 +118,7 @@
                     android:id="@+id/txt_degree"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_degreeview"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_alignParentBottom="true"
                     android:text="Degree"/>
 
@@ -143,6 +143,7 @@
                         android:gravity="center"
                         style="@style/txt_row_locationinfo"
                         android:layout_weight="0.3"
+                        android:visibility="gone"
                         android:text="Heading"/>
 
                     <com.deeptruth.app.android.views.customfonttextview
@@ -160,6 +161,15 @@
                         android:gravity="center"
                         android:layout_weight="0.3"
                         android:text="Longitude"/>
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_gpsaccuracy"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_locationinfo"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:layout_weight="0.3"
+                        android:text="GPS Accuracy"/>
 
                 </LinearLayout>
 
@@ -260,7 +270,7 @@
                     android:textSize="12sp"
                     android:lines="2"
                     android:gravity="center"
-                    android:text="Traveled"/>
+                    android:text="Distance"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -331,7 +341,7 @@
                     android:textSize="12sp"
                     android:gravity="center"
                     android:lines="2"
-                    android:text="Altitude"/>
+                    android:text="Elevation"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

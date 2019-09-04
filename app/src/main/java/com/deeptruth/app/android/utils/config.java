@@ -267,13 +267,13 @@ public class config {
     public static final String color_code_white="#ffffff";
     public static final String color_code_blue="#0000FF";
 
-    public static final String color_code_drawer_location="00a0dc";
-    public static final String color_code_drawer_time="00aaa0";
-    public static final String color_code_drawer_sound="a0aa00";
-    public static final String color_code_drawer_phone="ff9600";
-    public static final String color_code_drawer_connection="ff8278";
-    public static final String color_code_drawer_summary="d27ddc";
-    public static final String color_code_drawer_encryption="8282ff";
+    public static final String color_code_drawer_location="487386";
+    public static final String color_code_drawer_time="2b8a84";
+    public static final String color_code_drawer_sound="f7941d";
+    public static final String color_code_drawer_phone="719c33";
+    public static final String color_code_drawer_connection="f36523";
+    public static final String color_code_drawer_summary="15588d";
+    public static final String color_code_drawer_encryption="cb4c57";
 
 
     public static final String item_valid="Valid";

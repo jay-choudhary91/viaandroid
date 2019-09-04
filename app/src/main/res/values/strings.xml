@@ -243,6 +243,7 @@
     <string name="degree">Degree</string>
     <string name="heading">Heading</string>
     <string name="traveled">Traveled</string>
+    <string name="distance">Distance</string>
     <string name="xaxis">X-Axis</string>
     <string name="yaxis">Y-Axis</string>
     <string name="zaxis">Z-Axis</string>
@@ -273,6 +274,7 @@
     <string name="data_currency">Currency</string>
     <string name="data_airplane_mode">Airplane Mode</string>
     <string name="data_gps">GPS</string>
+    <string name="gps_accuracy">GPS Accuracy</string>
     <string name="data_jailbroken">Jailbroken</string>
 
     <string name="view_dummy1">Dummy1</string>
@@ -494,7 +496,7 @@
     <string name="btn_maybe_later">Maybe Later</string>
     <string name="btn_next">NEXT</string>
     <string name="welcome_dialog_text">We have included a quick\n45-second video that will\nexplain all the features of\nyour new VideoLock app.\n\nWould you like to watch a\nVideoLock demo video?</string>
-    <string name="betaversion">Beta Version 9.02.19</string>
+    <string name="betaversion">Beta Version 9.03.19</string>
     <string name="gps_low_quality">GPS Quality Low</string>
 
     <string name="fetching_user_info">Fetching user information!</string>
