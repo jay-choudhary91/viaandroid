@@ -873,4 +873,12 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             // do nothing for now
         }
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        getDialog().setCanceledOnTouchOutside(false);
+        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_rotate_animation;
+    }
 }

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="card_flip_time_full">300</integer>
+    <integer name="card_flip_time_half">150</integer>
+
     <dimen name="item_text_size_15">15dp</dimen>
     <dimen name="item_text_size_12">12dp</dimen>
     <dimen name="analog_clock_size">180dp</dimen>
