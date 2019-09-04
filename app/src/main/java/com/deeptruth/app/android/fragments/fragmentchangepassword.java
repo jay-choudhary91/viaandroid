@@ -54,6 +54,8 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
     TextView tv_submit;
     @BindView(R.id.img_dialog_background)
     ImageView img_dialog_background;
+    @BindView(R.id.img_backbutton)
+    ImageView img_backbutton;
 
     View contaionerview = null;
 
@@ -71,6 +73,7 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
             img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
 
             tv_submit.setOnClickListener(this);
+            img_backbutton.setOnClickListener(this);
         }
         return contaionerview;
     }
@@ -82,6 +85,10 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
         {
             case R.id.tv_submit:
                 validatechangepassword();
+                break;
+
+            case R.id.img_backbutton:
+                //validatechangepassword();
                 break;
         }
     }
@@ -95,11 +102,19 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
                 if (getCurrentFocus() != null) {
                     InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
                 }
                 return super.dispatchTouchEvent(motionEvent);
             }
 
         };
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ButterKnife.bind(applicationviavideocomposer.getactivity());
+
     }
 
     public void validatechangepassword()
@@ -182,17 +197,16 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
     @Override
     public void onResume() {
         super.onResume();
-        getscreenwidthheight(97,80);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getscreenwidthheight(97,80);
 
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getDialog().getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     public void getscreenwidthheight(int widthpercentage, int heightpercentage) {
@@ -210,6 +224,5 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
         double bottommargin = (height / 100) * 3;
         params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
         getDialog().getWindow().setAttributes(params);
-        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 }

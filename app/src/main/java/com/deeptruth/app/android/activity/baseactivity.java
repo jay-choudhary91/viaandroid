@@ -32,6 +32,10 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.BulletSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -103,6 +107,7 @@ import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.uploadfileatdropbox;
 import com.deeptruth.app.android.utils.xdata;
+import com.deeptruth.app.android.views.customfonttextview;
 import com.deeptruth.app.android.views.customseekbar;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.DbxClientV2;
@@ -2827,6 +2832,53 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         dialog.show();
     }
 
+    public void informationdialog(final Context context){
+
+        final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.information_popup);
+
+
+        TextView txt_line_one = (TextView) dialog.findViewById(R.id.tv_valid_one);
+        TextView txt_line_two = (TextView) dialog.findViewById(R.id.tv_valid_two);
+        TextView txt_line_three = (TextView) dialog.findViewById(R.id.tv_valid_three);
+        TextView txt_line_four = (TextView) dialog.findViewById(R.id.tv_valid_four);
+
+        addBullet(txt_line_one);
+        addBullet(txt_line_two);
+        addBullet(txt_line_three);
+        addBullet(txt_line_four);
+
+        TextView txt_cuation_one = (TextView) dialog.findViewById(R.id.tv_caution_one);
+        TextView txt_cuation_two = (TextView) dialog.findViewById(R.id.tv_caution_two);
+        TextView txt_cuation_three = (TextView) dialog.findViewById(R.id.tv_caution_three);
+        TextView txt_cuation_four = (TextView) dialog.findViewById(R.id.tv_caution_four);
+
+        addBullet(txt_cuation_one);
+        addBullet(txt_cuation_two);
+        addBullet(txt_cuation_three);
+        addBullet(txt_cuation_four);
+
+
+        TextView txt_invalide_one = (TextView) dialog.findViewById(R.id.tv_invalid_one);
+        TextView txt_invalide_two = (TextView) dialog.findViewById(R.id.tv_invalid_two);
+        TextView txt_invalide_three = (TextView) dialog.findViewById(R.id.tv_invalid_three);
+
+        addBullet(txt_invalide_one);
+        addBullet(txt_invalide_two);
+        addBullet(txt_invalide_three);
+
+
+        TextView txt_trimmed_one = (TextView) dialog.findViewById(R.id.tv_trimmed_one);
+        addBullet(txt_trimmed_one);
+
+
+        setscreenwidthheight(dialog,90,70,getResources().getString(R.string.information_popup));
+        dialog.show();
+    }
+
     // MS Onedrive callbacks and methods
 
     public void loginwithonedrive(String filepath)
@@ -2878,6 +2930,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL |Gravity.TOP);
             WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
             double bottommargin = (height / 100) * 20;
+            params.y = (int)bottommargin;
+            dialog.getWindow().setAttributes(params);
+            dialog.getWindow().setLayout(percentagewidth,percentageheight);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_zoom_animation;
+
+        }
+        else if(type.equalsIgnoreCase(getResources().getString(R.string.information_popup)) ){
+
+            dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL |Gravity.TOP);
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            double bottommargin = (height / 100) * 15;
             params.y = (int)bottommargin;
             dialog.getWindow().setAttributes(params);
             dialog.getWindow().setLayout(percentagewidth,percentageheight);
@@ -3261,6 +3324,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         setscreenwidthheight(dialog,70,0,getResources().getString(R.string.popup_alert));
         dialog.show();
+    }
+
+    private void addBullet(TextView textview) {
+        CharSequence text = textview.getText();
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        SpannableString spannable = new SpannableString(text);
+        spannable.setSpan(new BulletSpan(10), 0, text.length(), 0);
+        textview.setText(spannable);
     }
 }
 
