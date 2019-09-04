@@ -316,7 +316,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         initialdate = new Date();
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
+        if (BuildConfig.FLAVOR.contains(config.build_flavor_composer)) {
             mOrientation = new Orientation(this);
             registerallbroadcast();
             getconnectionspeed();
@@ -1027,7 +1027,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     public static boolean checkCameraPermission(final Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composeraudio))
+            return true;
+        else
+            return ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
     }
 
 
@@ -1035,7 +1038,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     protected void onDestroy() {
         super.onDestroy();
 
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
+        if (BuildConfig.FLAVOR.contains(config.build_flavor_composer)) {
             try {
                 if (isservicebound)
                     applicationviavideocomposer.getactivity().unbindService(serviceConnection);
@@ -1213,12 +1216,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                         try
                         {
-                            if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                            if (BuildConfig.FLAVOR.contains(config.build_flavor_composer))
                                 getconnectionspeed();
 
                             if (timercounterhandler == -1 || timercounterhandler >= 3) {
                                 timercounterhandler = 0;
-                                if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer) && (! isappinbackground)) {
+                                if (BuildConfig.FLAVOR.contains(config.build_flavor_composer) && (! isappinbackground)) {
                                     try {
                                         if (!locationawareactivity.checkLocationEnable(locationawareactivity.this))
                                             xdata.getinstance().saveSetting("gpsenabled", "0");
@@ -1251,7 +1254,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                             (xdata.getinstance().getSetting(config.item_satellitesdate).trim().isEmpty())) {
                                         servermetricsgetupdatecounter = 0;
                                         currentsatellitecounter++;
-                                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                                        if(BuildConfig.FLAVOR.contains(config.build_flavor_composer))
                                             getsistermetric();
                                     }
 
@@ -2000,9 +2003,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     protected void onResume() {
         super.onResume();
         isappinbackground=false;
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+        if (BuildConfig.FLAVOR.contains(config.build_flavor_composer))
             getallpermissions();
-        else if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        else if (BuildConfig.FLAVOR.contains(config.build_flavor_reader))
             startmetrices();
     }
 
@@ -2502,7 +2505,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     public void onStart() {
         super.onStart();
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
+        if (BuildConfig.FLAVOR.contains(config.build_flavor_reader)) {
             IntentFilter intentFilter = new IntentFilter(config.reader_service_getmetadata);
             coredatabroadcastreceiver = new BroadcastReceiver() {
                 @Override
@@ -2516,7 +2519,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             };
             registerReceiver(coredatabroadcastreceiver, intentFilter);
         }
-        /*else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+        /*else if(BuildConfig.FLAVOR.contains(config.build_flavor_composer))
         {
             if(mFusedLocationClient != null)
             {
@@ -2544,7 +2547,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         super.onStop();
 
         isappinbackground=true;
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
+        if (BuildConfig.FLAVOR.contains(config.build_flavor_reader)){
             try{
                 applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
             }catch (Exception e){
@@ -2563,7 +2566,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     public void syncmediadatabase() {
 
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
+        if (BuildConfig.FLAVOR.contains(config.build_flavor_composer)) {
 
             if (mdbhelper == null) {
                 mdbhelper = new databasemanager(locationawareactivity.this);
@@ -2589,7 +2592,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             if(unsyncedmediaitems.size() > 0)
                 updateunsyncedcomposeritems();
 
-        } else if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        } else if (BuildConfig.FLAVOR.contains(config.build_flavor_reader))
         {
             if (common.isnetworkconnected(getApplicationContext())) {
                 Date currentdate = new Date();

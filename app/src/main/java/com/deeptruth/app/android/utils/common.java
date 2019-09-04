@@ -1657,7 +1657,17 @@ public class common {
 
         long longuptime=Long.parseLong(uptime);
 
-        String time = "";
+        long seconds = longuptime % 60;
+        long hours = longuptime / 60;
+        long minutes = hours % 60;
+        hours = hours / 60;
+
+        StringBuffer text = new StringBuffer("");    // 26:52:24
+        text.append(common.appendzero(hours)+":"+common.appendzero(minutes)+":"+common.appendzero(seconds));
+
+        return text.toString();
+
+        /*String time = "";
         String wholeUptime = "";
 
         int day = (int) (longuptime / (24 * 3600));
@@ -1682,7 +1692,7 @@ public class common {
             wholeUptime = String.format("%02d:%02d:%02d", hour, minutes, seconds);
             time = wholeUptime;
         }
-        return time;
+        return time;*/
     }
 
     public static String gettimezoneshortname() {

@@ -29,9 +29,18 @@
     <string name="file_uploaded">File uploaded successfully!</string>
     <string name="create_onedrive_client">Please wait while create the client...</string>
 
-    <string name="dropbox_appkey_followedbydb">db-unm21q9pupo7xyg</string>
-    <string name="dropbox_appkey">unm21q9pupo7xyg</string>
-    <string name="dropbox_appsecret">szxh2fqpibooc3o</string>
+    <string name="dropbox_appkey_followedbydb_composer">db-unm21q9pupo7xyg</string>
+    <string name="dropbox_appkey_composer">unm21q9pupo7xyg</string>
+    <string name="dropbox_appsecret_composer">szxh2fqpibooc3o</string>
+
+    <string name="dropbox_appkey_followedbydb_composer_audio">db-erqffdu9w70efuc</string>
+    <string name="dropbox_appkey_composer_audio">erqffdu9w70efuc</string>
+    <string name="dropbox_appsecret_composer_audio">vdv61wgg8mzzb0c</string>
+
+    <string name="dropbox_appkey_followedbydb_composer_videoimage">db-5o7i2uleiln4ouu</string>
+    <string name="dropbox_appkey_composer_videoimage">5o7i2uleiln4ouu</string>
+    <string name="dropbox_appsecret_composer_videoimage">9k9orlkjbkfvwwe</string>
+
 
     <string name="dropbox_appkey_followedbydb_reader">db-wekhe46wycpw649</string>
     <string name="dropbox_appkey_reader">wekhe46wycpw649</string>
@@ -496,7 +505,7 @@
     <string name="btn_maybe_later">Maybe Later</string>
     <string name="btn_next">NEXT</string>
     <string name="welcome_dialog_text">We have included a quick\n45-second video that will\nexplain all the features of\nyour new VideoLock app.\n\nWould you like to watch a\nVideoLock demo video?</string>
-    <string name="betaversion">Beta Version 9.03.19</string>
+    <string name="betaversion">Beta Version 9.04.19</string>
     <string name="gps_low_quality">GPS Quality Low</string>
 
     <string name="fetching_user_info">Fetching user information!</string>
@@ -505,6 +514,9 @@
     <string name="media_upload_success">Media uploaded successfully!</string>
     <string name="media_upload_failed">Media uploading failed!</string>
     <string name="upload_failed">Upload failed!</string>
+    <string name="videolock_sharemessage">A certified VideoLock video is attached below. Please use the link to validate the authenticity of
+        the video: http://VideoLock.com/ja1o35xr if you don’t have the VideoLock app on your phone, you can install
+        it here:http://VideoLock.com/Reader</string>
     <string name="a_certified_videoLock">A certified  VideoLock video is attached below. Please use the link to validate the authenticity of the</string>
     <string name="if_you_dont_have_the_videolock">if you don’t have the VideoLock app on your phone,you can install it here:
                     http://VideoLock.com/Reader</string>

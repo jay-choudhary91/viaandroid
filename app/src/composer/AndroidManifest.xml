@@ -33,7 +33,7 @@
             android:theme="@android:style/Theme.Light.NoTitleBar" >
             <intent-filter>
                 <!-- Change this to be db- followed by your app key -->
-                <data android:scheme="@string/dropbox_appkey_followedbydb" />
+                <data android:scheme="@string/dropbox_appkey_followedbydb_composer" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />

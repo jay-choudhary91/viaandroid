@@ -94,7 +94,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
            // layout_mediatype.setPadding(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
 
 
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            if(BuildConfig.FLAVOR.contains(config.build_flavor_reader))
             {
                 img_camera.setVisibility(View.GONE);
             }

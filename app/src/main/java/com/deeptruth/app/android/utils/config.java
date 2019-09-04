@@ -10,6 +10,13 @@ import java.io.File;
 
 public class config {
 
+    public static final String development_url = "http://dev.api.deeptruth.com/xapi.php?";
+    public static final String production_url = "http://prod.api.deeptruth.com/xapi.php?";
+    public static final String build_flavor_reader = "reader";
+    public static final String build_flavor_composer = "composer";
+    public static final String build_flavor_composeraudio = "composeraudio";
+    public static final String build_flavor_composervideoimage = "composervideoimage";
+
     public static int requestcode_login=11;
     public static int requestcode_googlesignin=102;
     public static String allmedia="All Media";
@@ -60,10 +67,6 @@ public class config {
     public static final String worldclocktime_format = "hh:mm:ss a";
     public static final String phonetime_format = "hh:mm:ss";
     public static final String date_format = "MM/dd/yyyy";
-    public static final String betaversion_dateformat ="MM.dd.yy";
-    public static final String date_time_format = "MM-dd-yyyy hh:mm:ss";
-    public static final String build_flavor_videocreater = "creater";
-    public static final String build_flavor_videoviewer = "viewer";
     public static final String broadcast_call = "com.matraex.call_broadcast";
     public static final String composer_service_savemetadata = "composer_service_savemetadata";
     public static final String reader_service_getmetadata = "reader_service_getmetadata";
@@ -104,12 +107,6 @@ public class config {
     public static final String imagequality = "imagequality";
     public static final String videoquality = "videoquality";
     public static final String selectedcamera = "selectedcamera";
-
-    public static final String development_url = "http://dev.api.deeptruth.com/xapi.php?";
-    public static final String production_url = "http://prod.api.deeptruth.com/xapi.php?";
-    public static final String build_flavor_reader = "reader";
-    public static final String build_flavor_composer = "composer";
-    public static Location MyLastLocation = null;
 
     public static final String type_video_update = "video_update";
     public static final String type_video_start = "video_start";

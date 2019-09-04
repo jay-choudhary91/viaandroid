@@ -34,6 +34,16 @@ android {
             versionName "1.0"
             applicationId 'com.deeptruth.app.composer.android'
         }
+        composeraudio {
+            versionCode 1
+            versionName "1.0"
+            applicationId 'com.deeptruth.app.composer.android.a'
+        }
+        composervideoimage {
+            versionCode 1
+            versionName "1.0"
+            applicationId 'com.deeptruth.app.composer.android.vi'
+        }
     }
     packagingOptions {
         pickFirst 'lib/armeabi/libavdevice.so'

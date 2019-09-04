@@ -69,7 +69,7 @@ public class appbackgroundactionservice extends Service
         try
         {
            // Toast.makeText(getApplicationContext(),"In service",Toast.LENGTH_SHORT).show();
-            if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+            if (BuildConfig.FLAVOR.contains(config.build_flavor_composer))
             {
                 databasemanager  mdbhelper = new databasemanager(getApplicationContext());
                 try

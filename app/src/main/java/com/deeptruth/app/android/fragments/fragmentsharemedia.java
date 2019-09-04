@@ -457,7 +457,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
 
                     baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                             mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,
-                            applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),false);
+                            applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),false,false);
 
                     //baseactivity.getinstance().showsharepopupsub(trimmedmediapath,mediatype,mediatoken,ismediatrimmed);
 
@@ -471,7 +471,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
         }
         baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                 mediatype,ismediatrimmed,mediathumbnailurl,trimmedmediapath,
-                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),false);
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),false,false);
         //baseactivity.getinstance().showsharepopupsub(trimmedmediapath,mediatype,mediatoken,ismediatrimmed);
     }
 
@@ -879,6 +879,6 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
         super.onActivityCreated(savedInstanceState);
 
         getDialog().setCanceledOnTouchOutside(false);
-        getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_rotate_animation;
+        //getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_rotate_animation;
     }
 }

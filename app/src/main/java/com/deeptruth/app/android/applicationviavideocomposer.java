@@ -153,7 +153,7 @@ public class applicationviavideocomposer extends Application
     /*@OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private void onAppBackgrounded()
     {
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+        if(BuildConfig.FLAVOR.contains(config.build_flavor_composer))
         {
             if(! isactivitybecomefinish)
             {

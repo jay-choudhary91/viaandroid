@@ -172,7 +172,7 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
 
         //  binderHelper.bind(holder.root_view,""+position);
 
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        if(BuildConfig.FLAVOR.contains(config.build_flavor_reader))
         {
             if(mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete) ||
                     mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
@@ -452,7 +452,7 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
         holder.relative_child.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                if(BuildConfig.FLAVOR.contains(config.build_flavor_reader))
                 {
                     if (! mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete))
                         return;

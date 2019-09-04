@@ -105,7 +105,15 @@ import com.deeptruth.app.android.utils.uploadfileatdropbox;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customseekbar;
 import com.dropbox.core.android.Auth;
+import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.FileSharingInfo;
+import com.dropbox.core.v2.files.MediaInfo;
+import com.dropbox.core.v2.files.SymlinkInfo;
+import com.dropbox.core.v2.sharing.GetSharedLinkFileBuilder;
+import com.dropbox.core.v2.sharing.ListSharedLinksResult;
+import com.dropbox.core.v2.sharing.SharedLinkMetadata;
+import com.dropbox.core.v2.sharing.SharedLinkSettings;
 import com.eclipsesource.json.JsonValue;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -1780,7 +1788,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             dialogfileuploadoptions.dismiss();
 
                         videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath, mediatoken,  type,
-                                ismediatrimmed,mediathumbnailurl,trimmedmediapath,popupcontenttype,ismedialist);
+                                ismediatrimmed,mediathumbnailurl,trimmedmediapath,popupcontenttype,ismedialist,true);
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
                     {
@@ -1793,9 +1801,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
                             {
                                 Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
-                                        .getResources().getString(R.string.dropbox_appkey));
+                                        .getResources().getString(R.string.dropbox_appkey_composer));
                             }
-                            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composeraudio))
+                            {
+                                Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
+                                        .getResources().getString(R.string.dropbox_appkey_composer_audio));
+                            }
+                            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage))
+                            {
+                                Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
+                                        .getResources().getString(R.string.dropbox_appkey_composer_videoimage));
+                            }
+                            else if(BuildConfig.FLAVOR.contains(config.build_flavor_reader))
                             {
                                 Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.dropbox_appkey_reader));
@@ -1851,24 +1869,61 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         //progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
         final int[] callbackstatus = {0};
         xdata.getinstance().saveSetting(config.datauploading_process_dialog,"0");
-        new uploadfileatdropbox(applicationviavideocomposer.getactivity(), DropboxClientFactory.getClient(),
+        DbxClientV2 mDbxClient=DropboxClientFactory.getClient();
+        new uploadfileatdropbox(applicationviavideocomposer.getactivity(), mDbxClient,
                 new uploadfileatdropbox.Callback()
         {
             @Override
             public void onUploadComplete(FileMetadata result) {
                 progressdialog.dismisswaitdialog();
-                //Toast.makeText(applicationviavideocomposer.getactivity(), "File uploaded successfully!", Toast.LENGTH_SHORT).show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try
+                        {
+                            String sharabalelink="";
+                            ListSharedLinksResult sharedLinksResults = mDbxClient.sharing().listSharedLinksBuilder()
+                                    .withPath(result.getPathDisplay()).withDirectOnly(true).start();
+                            if (sharedLinksResults.getLinks() == null || sharedLinksResults.getLinks().size() == 0)
+                            {
+                                try
+                                {
+                                    SharedLinkMetadata  meta= mDbxClient.sharing().createSharedLinkWithSettings(result.getPathDisplay());
+                                    sharabalelink=meta.getUrl();
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                            else
+                            {
+                                sharabalelink = sharedLinksResults.getLinks().get(0).getUrl();
+                            }
+                            String finalSharabalelink = sharabalelink;
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String mediatype=common.getmediatypebymimetype(common.getmimetype(filepath));
+                                    String sharemessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.a_certified_videoLock)
+                                            +" "+mediatype+": "+ finalSharabalelink +" "+applicationviavideocomposer.getactivity().
+                                            getResources().getString(R.string.if_you_dont_have_the_videolock);
+                                    if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
+                                    {
+                                        common.shownotification(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                                .getResources().getString(R.string.file_uploaded_dropbox));
+                                        showstandarduploadprocesscompletedialog(applicationviavideocomposer.getactivity(),100,100,
+                                                sharemessage,applicationviavideocomposer.getactivity().getResources().getString(R.string.file_uploaded_dropbox));
+                                    }
+                                }
+                            });
 
-                if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
-                {
-                    common.shownotification(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
-                            .getResources().getString(R.string.file_uploaded_dropbox));
-                    showstandarduploadprocesscompletedialog(applicationviavideocomposer.getactivity(),100,100,
-                            "",applicationviavideocomposer.getactivity().getResources().getString(
-                                    R.string.file_uploaded_dropbox));
-                }
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
             }
-
             @Override
             public void onError(Exception e) {
                 progressdialog.dismisswaitdialog();
@@ -2563,7 +2618,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
 
     public void videolocksharedialog(final Context context,String mediafilepath,String mediatoken,final String type,
-                                     boolean ismediatrimmed,String mediathumbnailurl,String trimmedmediapath,String popupcontenttype,boolean ismedialist){
+                                     boolean ismediatrimmed,String mediathumbnailurl,String trimmedmediapath,String popupcontenttype,
+                                     boolean ismedialist,boolean shoulddirectmessageshare){
 
         final Dialog dialog =new Dialog(context,R.style.transparent_dialog_borderless);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -2609,7 +2665,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             public void onClick(View v)
             {
                 //dialog.dismiss();
-                showsharepopupsub(trimmedmediapath,type,mediatoken,ismediatrimmed);
+                if(shoulddirectmessageshare)
+                    common.sharemessagewithapps(applicationviavideocomposer.getactivity().getResources().getString(R.string
+                                        .videolock_sharemessage));
+                else
+                    showsharepopupsub(trimmedmediapath,type,mediatoken,ismediatrimmed);
             }
         });
         setscreenwidthheight(dialog,95,80,context.getResources().getString(R.string.popup_videolock));

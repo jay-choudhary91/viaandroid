@@ -423,7 +423,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             };
             applicationviavideocomposer.getactivity().registerReceiver(medialistitemaddreceiver, intentFilter);
             showlocallistitems(true);
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            if(BuildConfig.FLAVOR.contains(config.build_flavor_reader))
             {
                 img_uploadmedia.setVisibility(View.VISIBLE);
                 img_camera.setVisibility(View.GONE);
@@ -442,8 +442,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             resetmedialist();
 
-            webview.loadUrl("https://videolock.com/my");
-            //webview.loadUrl("https://www.matraex.com/");
+            webview.loadUrl(config.publishedlist_url);
 
             webview.setWebViewClient(new WebViewClient() {
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -1030,7 +1029,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                         if(framecolor.equalsIgnoreCase(config.color_red))
                                             invalidcount++;
 
-                                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                                        if(BuildConfig.FLAVOR.contains(config.build_flavor_composer))
                                         {
                                             if(framecolor.trim().isEmpty())
                                                 unsentcount++;
@@ -1399,7 +1398,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 if (framecolor.equalsIgnoreCase(config.color_red))
                                     invalidcount++;
 
-                                if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
+                                if (BuildConfig.FLAVOR.contains(config.build_flavor_composer)) {
                                     if (framecolor.trim().isEmpty())
                                         unsentcount++;
                                 }
@@ -2242,7 +2241,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                             baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                                     mediatype,false,mediathumbnailurl,mediafilepath,
-                                    applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),true);
+                                    applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),true,false);
 
                         }
                         @Override
@@ -2254,7 +2253,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
         baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                 mediatype,false,mediathumbnailurl,mediafilepath,
-                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),true);
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),true,false);
         //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
     }
 

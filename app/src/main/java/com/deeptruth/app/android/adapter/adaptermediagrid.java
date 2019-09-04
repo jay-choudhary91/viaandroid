@@ -137,7 +137,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 }
             }
 
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            if(BuildConfig.FLAVOR.contains(config.build_flavor_reader))
             {
                 if(mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete) ||
                         mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
@@ -186,7 +186,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 @Override
                 public void onClick(View view)
                 {
-                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                    if(BuildConfig.FLAVOR.contains(config.build_flavor_reader))
                     {
                         if (! mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete))
                             return;

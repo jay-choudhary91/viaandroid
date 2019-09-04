@@ -56,6 +56,8 @@ import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
+import com.deeptruth.app.android.enumclasses.mediatypepagerenum_audio;
+import com.deeptruth.app.android.enumclasses.mediatypepagerenum_videoimage;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.thumbnailholder;
 import com.deeptruth.app.android.sensor.Orientation;
@@ -291,19 +293,43 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         @Override
         public Object instantiateItem(ViewGroup collection, final int position) {
             final mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
+            final mediatypepagerenum_videoimage enummediatypevideoimage = mediatypepagerenum_videoimage.values()[position];
+            final mediatypepagerenum_audio enummediatypeaudio = mediatypepagerenum_audio.values()[position];
             LayoutInflater inflater = LayoutInflater.from(mContext);
             ViewGroup layout = (ViewGroup) inflater.inflate(enummediatype.getLayoutResId(), collection, false);
             final TextView txt_mediatype=(TextView)layout.findViewById(R.id.txt_mediatype);
-            txt_mediatype.setText(enummediatype.getItemname());
+
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                txt_mediatype.setText(enummediatype.getItemname());
+            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage))
+                txt_mediatype.setText(enummediatypevideoimage.getItemname());
+            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composeraudio))
+                txt_mediatype.setText(enummediatypeaudio.getItemname());
+
             txt_mediatype.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(enummediatype.getItemposition() == 2)
-                        pagermediatype.setCurrentItem(0,true);
-                    else if(enummediatype.getItemposition() == 3)
-                        pagermediatype.setCurrentItem(1,true);
-                    else if(enummediatype.getItemposition() == 4)
-                        pagermediatype.setCurrentItem(2,true);
+                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                    {
+                        if(enummediatype.getItemposition() == 2)
+                            pagermediatype.setCurrentItem(0,true);
+                        else if(enummediatype.getItemposition() == 3)
+                            pagermediatype.setCurrentItem(1,true);
+                        else if(enummediatype.getItemposition() == 4)
+                            pagermediatype.setCurrentItem(2,true);
+                    }
+                    else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage))
+                    {
+                        if(enummediatypevideoimage.getItemposition() == 2)
+                            pagermediatype.setCurrentItem(0,true);
+                        else if(enummediatypevideoimage.getItemposition() == 3)
+                            pagermediatype.setCurrentItem(1,true);
+                    }
+                    else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composeraudio))
+                    {
+                        if(enummediatypeaudio.getItemposition() == 4)
+                            pagermediatype.setCurrentItem(2,true);
+                    }
                 }
             });
             collection.addView(layout);
@@ -332,8 +358,22 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         @Override
         public CharSequence getPageTitle(int position) {
-            mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
-            return enummediatype.getItemname();
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+            {
+                mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
+                return enummediatype.getItemname();
+            }
+            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage))
+            {
+                mediatypepagerenum_videoimage enummediatype = mediatypepagerenum_videoimage.values()[position];
+                return enummediatype.getItemname();
+            }
+            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composeraudio))
+            {
+                mediatypepagerenum_audio enummediatype = mediatypepagerenum_audio.values()[position];
+                return enummediatype.getItemname();
+            }
+            return "";
         }
     }
 
@@ -427,6 +467,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void initviewpager()
     {
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composeraudio))
+            config.selectedmediatype=2;
+        else
+            config.selectedmediatype=1;
+
         flingactionmindstvac=common.getcomposerswipearea();
         currentselectedcomposer=config.selectedmediatype;
         pagermediatype.setCurrentItem(currentselectedcomposer,true);
@@ -441,7 +486,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         else if(currentpagerpos == 2)
             currentpagerpos=4;
 
-        if(currentpagerpos == 2)
+        if(currentpagerpos == 3)
         {
             for(int i=0;i<=6;i++)
             {
@@ -676,6 +721,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(currentselectedcomposer == 0)
                 return;
 
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composeraudio))
+            {
+                if(currentselectedcomposer == 4 || currentselectedcomposer == 2)
+                    return;
+            }
             currentselectedcomposer--;
             pagermediatype.setCurrentItem(currentselectedcomposer,true);
             initialdate =new Date();
@@ -690,6 +740,17 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             if(currentselectedcomposer == mediatypepagerenum.values().length-1)
                 return;
+
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage))
+            {
+                if(currentselectedcomposer == 3 || currentselectedcomposer == 1)
+                    return;
+            }
+            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composeraudio))
+            {
+                if(currentselectedcomposer == 4 || currentselectedcomposer == 2)
+                    return;
+            }
 
             currentselectedcomposer++;
             pagermediatype.setCurrentItem(currentselectedcomposer,true);

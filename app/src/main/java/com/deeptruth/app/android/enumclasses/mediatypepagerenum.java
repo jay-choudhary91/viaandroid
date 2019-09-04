@@ -1,6 +1,8 @@
 package com.deeptruth.app.android.enumclasses;
 
+import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.utils.config;
 
 /**
  * Created by ${matraex} on 12/4/19.
@@ -8,6 +10,7 @@ import com.deeptruth.app.android.R;
 
 public enum mediatypepagerenum
 {
+
     Item1("", R.layout.row_composemediatype,0),
     Item2("", R.layout.row_composemediatype,1),
     Item3("PHOTO", R.layout.row_composemediatype,2),
@@ -29,7 +32,6 @@ public enum mediatypepagerenum
     public int getItemposition() {
         return itemposition;
     }
-
 
     public String getItemname() {
         return itemname;

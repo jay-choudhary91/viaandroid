@@ -25,15 +25,71 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311325935925-amprdnklvqsjncih9n2gomjogcdqg8l7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311325935925:android:0a5c07fa52060271",
+        "android_client_info": {
+          "package_name": "com.deeptruth.app.composer.android.a"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311325935925-amprdnklvqsjncih9n2gomjogcdqg8l7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4dKOOYMMobafO7I_knJ2ujzXZpvdZ0hQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311325935925-amprdnklvqsjncih9n2gomjogcdqg8l7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311325935925:android:36d3d314cb5f8314",
+        "android_client_info": {
+          "package_name": "com.deeptruth.app.composer.android.vi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311325935925-amprdnklvqsjncih9n2gomjogcdqg8l7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4dKOOYMMobafO7I_knJ2ujzXZpvdZ0hQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311325935925-amprdnklvqsjncih9n2gomjogcdqg8l7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     },
@@ -56,15 +112,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311325935925-amprdnklvqsjncih9n2gomjogcdqg8l7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

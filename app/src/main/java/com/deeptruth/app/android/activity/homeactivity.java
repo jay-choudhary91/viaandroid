@@ -238,14 +238,14 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                        if(BuildConfig.FLAVOR.contains(config.build_flavor_reader))
                         {
                             fragment_container.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
                             fragmedialist =new fragmentmedialist();
                             fragmedialist.shouldlaunchcomposer(true);
                             replaceFragment(fragmedialist, false, true);
                         }
-                        else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                        else if(BuildConfig.FLAVOR.contains(config.build_flavor_composer))
                         {
                             fragment_container.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
                             launchcomposerfragment();
@@ -326,7 +326,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
         //showAlertDialog();
 
-        /*if(! isactivitybecomefinish && (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)))
+        /*if(! isactivitybecomefinish && (BuildConfig.FLAVOR.contains(config.build_flavor_composer)))
         {
             if (isMyServiceRunning(appbackgroundactionservice.class))
                 stopService(new Intent(getBaseContext(), appbackgroundactionservice.class));

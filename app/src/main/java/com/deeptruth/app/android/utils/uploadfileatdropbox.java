@@ -10,6 +10,7 @@ import com.dropbox.core.util.IOUtil;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.WriteMode;
+import com.dropbox.core.v2.sharing.DbxUserSharingRequests;
 
 import java.io.File;
 import java.io.FileInputStream;

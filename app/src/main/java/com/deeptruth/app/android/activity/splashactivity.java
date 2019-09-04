@@ -119,7 +119,7 @@ public class splashactivity extends Activity {
                                             new Handler().postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                                                    if(BuildConfig.FLAVOR.contains(config.build_flavor_reader))
                                                     {
                                                         Intent in=new Intent(splashactivity.this,homeactivity.class);
                                                         startActivity(in);
