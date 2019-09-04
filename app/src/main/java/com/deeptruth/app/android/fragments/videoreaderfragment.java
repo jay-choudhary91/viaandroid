@@ -281,6 +281,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     FrameLayout metainfocontainer;
     @BindView(R.id.progressmediasync)
     ProgressBar progressmediasync;
+    @BindView(R.id.video_info)
+    ImageView video_info;
 
     int footerheight=0;
     int lastrotatedangle =-1,videorotatedangle=-1;
@@ -756,6 +758,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         playpausebutton.setOnClickListener(new setonClick());
         layout_dtls.setOnClickListener(new setonClick());
         img_colapseicon.setOnClickListener(new setonClick());
+        video_info.setOnClickListener(new setonClick());
 
         imgpause.setVisibility(View.GONE);
         img_dotmenu.setVisibility(View.VISIBLE);
@@ -1265,6 +1268,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
                 case R.id.img_camera:
                     launchbottombarfragment();
+                    break;
+
+                case R.id.video_info:
+
+                    baseactivity.getinstance().informationdialog(applicationviavideocomposer.getactivity());
+
                     break;
 
                 case R.id.img_arrow_back:

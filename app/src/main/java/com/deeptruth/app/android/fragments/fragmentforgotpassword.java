@@ -201,13 +201,14 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
     public void onResume() {
         super.onResume();
 
-        getscreenwidthheight(97,80);
+
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getscreenwidthheight(97,80);
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
         getDialog().getWindow().setSoftInputMode(

@@ -598,4 +598,49 @@
     <string name="confirmation_code_will_be_emailed_in_minutes">A confirmation code will \nbe emailed in minutes...</string>
     <string name="your_published_media_will_be_located_at">Your published media will be located at </string>
     <string name="channelname_link"><u>"http://VideoLock.com/ChannelName"</u></string>
+
+    <string name="discription_first">All VideoLock media is certified during recording, in real-time, with digital DNA fingerprints at 30-times-per-second and mapped with over 80 dimensions of metadata.</string>
+    <string name="discription_second">The VideoLock Reputation Score helps you evaluate on a second-by-second basis with the following results: </string>
+
+    <string name="info_trimmed">TRIMMED</string>
+    <string name="info_valid">VALID</string>
+    <string name="info_invalid">INVALID</string>
+    <string name="info_caution">CAUTION</string>
+
+    <string name="information_title">VideoLock Reputation Score</string>
+    <string name="information_popup">information_popup</string>
+
+
+    <string name="valid_line1">The image has not been modified - not even a single pixel, and </string>
+    <string name="valid_line2">The sound has not been altered, and </string>
+    <string name="valid_line3">The metadata has not been altered, and </string>
+    <string name="valid_line4">All 80+ layers of metadata were precise and recorded.</string>
+
+
+    <string name="caution_line1">The image has not been modified - not even a single pixel, and</string>
+    <string name="caution_line2">The sound has not been altered, and</string>
+    <string name="caution_line3">The metadata has not been altered, and</string>
+    <string name="caution_line4">One of the 80+ layers of metadata was not available/precise:</string>
+
+    <string name="caution_sub_line1">o GPS was not available</string>
+    <string name="caution_sub_line2">o GPS accuracy was wider than 50 feet</string>
+    <string name="caution_sub_line3">o No internet connection during recording</string>
+    <string name="caution_sub_line4">o Slow or delayed connection</string>
+
+
+    <string name="invalid_line1">A portion of an image has been modified or</string>
+    <string name="invalid_line2">A portion of the audio has been modified or</string>
+    <string name="invalid_line3">Any one of the 80+ layers of metadata has been changed:</string>
+
+    <string name="invalid_sub_line1">o Location changed</string>
+    <string name="invalid_sub_line2">o Time changed</string>
+    <string name="invalid_sub_line3">o Cell tower proximity changed</string>
+    <string name="invalid_sub_line4">o Speed, direction, altitude changed</string>
+    <string name="invalid_sub_line5">o Satellite locations changed</string>
+
+
+    <string name="trimmed_line1">Part of the original recording is not included in the version you are watching.</string>
+
+    <string name="txt_note">Note: If the recording was not originally created by VideoLock or the recording has been compressed by an email or text messaging system, the entire recording will be considered invalid.</string>
+
 </resources>

@@ -97,12 +97,10 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
         switch (v.getId()){
             case R.id.btn_signup:
                 baseactivity.getinstance().showdialogcreateaccountfragment(config.signuppage);
-                getDialog().dismiss();
                 break;
 
             case R.id.btn_signin:
                 baseactivity.getinstance().showdialogsigninfragment();
-                getDialog().dismiss();
                 break;
 
             case R.id.img_backbutton:
@@ -115,13 +113,14 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
 
-        getscreenwidthheight(97,80);
+
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getscreenwidthheight(97,80);
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }

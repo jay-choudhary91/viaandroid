@@ -140,6 +140,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(applicationviavideocomposer.getactivity());
+
     }
 
     @Override
@@ -152,15 +153,30 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 baseactivity.getinstance().showdialogcreateaccountfragment(config.loginpage);
                 getDialog().dismiss();
 
+                /*fragmentcreateaccount fragcreateaccount = new fragmentcreateaccount();
+                getHelper().addFragment(fragcreateaccount,false,true);*/
+
+               /* Intent intent=new Intent(fragmentsignin.this,fragmentcreateaccount.class);
+                startActivity(intent);*/
                 break;
             case R.id.forgot_password:
                 baseactivity.getinstance().showdialogforgotpasswordfragment();
                 getDialog().dismiss();
+                /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
+                getHelper().addFragment(fragforgotpassword,false,true);*/
+
+                /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
+                startActivity(intent);*/
                 break;
 
             case R.id.img_backbutton:
-                baseactivity.getinstance().showdialogsignupfragment();
                 getDialog().dismiss();
+                baseactivity.getinstance().showdialogsignupfragment();
+                /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
+                getHelper().addFragment(fragforgotpassword,false,true);*/
+
+                /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
+                startActivity(intent);*/
                 break;
 
             case R.id.layout_logindetails:
@@ -303,17 +319,17 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
 
-        getscreenwidthheight(97,80);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        getscreenwidthheight(97,80);
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
-        getDialog().getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
     }
 
 
