@@ -152,30 +152,15 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 baseactivity.getinstance().showdialogcreateaccountfragment(config.loginpage);
                 getDialog().dismiss();
 
-                /*fragmentcreateaccount fragcreateaccount = new fragmentcreateaccount();
-                getHelper().addFragment(fragcreateaccount,false,true);*/
-
-               /* Intent intent=new Intent(fragmentsignin.this,fragmentcreateaccount.class);
-                startActivity(intent);*/
                 break;
             case R.id.forgot_password:
                 baseactivity.getinstance().showdialogforgotpasswordfragment();
                 getDialog().dismiss();
-                /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
-                getHelper().addFragment(fragforgotpassword,false,true);*/
-
-                /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
-                startActivity(intent);*/
                 break;
 
             case R.id.img_backbutton:
-                getDialog().dismiss();
                 baseactivity.getinstance().showdialogsignupfragment();
-                /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
-                getHelper().addFragment(fragforgotpassword,false,true);*/
-
-                /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
-                startActivity(intent);*/
+                getDialog().dismiss();
                 break;
 
             case R.id.layout_logindetails:

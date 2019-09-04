@@ -128,15 +128,13 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
                 break;
             case R.id.img_backbutton:
                 //checkValidations();
-                getDialog().dismiss();
-
-                if(!type.isEmpty() && type.equalsIgnoreCase(config.loginpage)){
+             if(!type.isEmpty() && type.equalsIgnoreCase(config.loginpage)){
                     baseactivity.getinstance().showdialogsigninfragment();
               }else {
                     baseactivity.getinstance().showdialogsignupfragment();
                 }
-                baseactivity.getinstance().showdialogsignupfragment();
 
+                getDialog().dismiss();
                 break;
             case R.id.imgvideolock_background:
                 common.hidekeyboard(applicationviavideocomposer.getactivity());

@@ -58,6 +58,8 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
     View contaionerview = null;
     @BindView(R.id.img_dialog_background)
     ImageView img_dialog_background;
+    @BindView(R.id.img_backbutton)
+    ImageView img_backbutton;
 
     @Nullable
     @Override
@@ -72,6 +74,8 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
             img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
 
             tv_next.setOnClickListener(this);
+            img_backbutton.setOnClickListener(this);
+
         }
         return contaionerview;
     }
@@ -91,6 +95,13 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
                     xdata.getinstance().saveSetting(config.usernameemailaddress,edtusername.getText().toString().trim());
                     validatecallapi();
                 }
+                break;
+
+            case R.id.img_backbutton:
+
+                baseactivity.getinstance().showdialogsigninfragment();
+                getDialog().dismiss();
+
                 break;
         }
     }

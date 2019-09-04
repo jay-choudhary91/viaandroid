@@ -110,8 +110,8 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
                 break;
 
             case R.id.img_backbutton:
-                getDialog().dismiss();
                 baseactivity.getinstance().showdialogcreateaccountfragment("");
+                getDialog().dismiss();
 
                 break;
 

@@ -54,6 +54,8 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
     TextView tv_submit;
     @BindView(R.id.img_dialog_background)
     ImageView img_dialog_background;
+    @BindView(R.id.img_backbutton)
+    ImageView img_backbutton;
 
     View contaionerview = null;
 
@@ -71,6 +73,7 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
             img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
 
             tv_submit.setOnClickListener(this);
+            img_backbutton.setOnClickListener(this);
         }
         return contaionerview;
     }
@@ -82,6 +85,10 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
         {
             case R.id.tv_submit:
                 validatechangepassword();
+                break;
+
+            case R.id.img_backbutton:
+                //validatechangepassword();
                 break;
         }
     }
