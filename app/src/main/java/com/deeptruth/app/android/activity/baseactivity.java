@@ -139,6 +139,7 @@ import com.onedrive.sdk.concurrency.ICallback;
 import com.onedrive.sdk.concurrency.IProgressCallback;
 import com.onedrive.sdk.core.ClientException;
 import com.onedrive.sdk.core.OneDriveErrorCodes;
+import com.onedrive.sdk.extensions.FileSystemInfo;
 import com.onedrive.sdk.extensions.IOneDriveClient;
 import com.onedrive.sdk.extensions.Item;
 import com.onedrive.sdk.options.Option;
@@ -2105,10 +2106,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                         @Override
                                         public void success(final Item item) {
 
+                                            String mediatype=common.getmediatypebymimetype(common.getmimetype
+                                                    (getreadytouploadfile().getAbsolutePath()));
+                                            String sharabalelink=item.webUrl;
+                                            String sharemessage=applicationviavideocomposer.getactivity().getResources().getString(R.string.a_certified_videoLock)
+                                                    +" "+mediatype+": "+sharabalelink+" "+applicationviavideocomposer.getactivity().
+                                                    getResources().getString(R.string.if_you_dont_have_the_videolock);
+
                                             progressdialog.dismisswaitdialog();
-                                            //Toast.makeText(baseactivity.this,applicationviavideocomposer.getactivity().getResources()
-                                            //       .getString(R.string.file_uploaded),
-                                            //      Toast.LENGTH_SHORT).show();
 
                                             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                                 @Override
@@ -2119,7 +2124,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                                         common.shownotification(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
                                                                 .getResources().getString(R.string.file_uploaded_onedrive));
                                                         showstandarduploadprocesscompletedialog(applicationviavideocomposer.getactivity(),
-                                                                100,100,"",applicationviavideocomposer.getactivity().getResources().getString(
+                                                                100,100,sharemessage,applicationviavideocomposer.getactivity().getResources().getString(
                                                                         R.string.file_uploaded_onedrive));
                                                     }
 
