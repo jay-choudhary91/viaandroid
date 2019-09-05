@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -45,10 +43,10 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class fragmentconfirmchannel extends DialogFragment implements View.OnClickListener {
+public class fragmentsetchannel extends DialogFragment implements View.OnClickListener {
 
     @BindView(R.id.edt_username)
-    customfontedittext edt_username;
+    customfontedittext edt_channelname;
     @BindView(R.id.txt_createaccount)
     customfonttextview txt_createaccount;
     @BindView(R.id.img_backbutton)
@@ -60,13 +58,13 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
     @BindView(R.id.img_dialog_background)
     ImageView img_dialog_background;
     View contaionerview = null;
-    String userverified="",channelname="";
+    String userverified="";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(contaionerview ==null){
-            contaionerview = inflater.inflate(R.layout.dialog_confirmchannel, container, false);
+            contaionerview = inflater.inflate(R.layout.dialog_setchannel, container, false);
             ButterKnife.bind(this, contaionerview);
 
             Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
@@ -107,23 +105,16 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
 
         switch (v.getId()){
             case R.id.txt_createaccount:
-                if(channelname.trim().isEmpty())
-                {
-                    checkValidations();
-                }
+                if(edt_channelname.getText().toString().trim().length() > 0)
+                    baseactivity.getinstance().showdialogconfirmchannelfragment(edt_channelname.getText().toString().trim(),userverified);
                 else
-                {
-                    if(channelname.equals(edt_username.getText().toString().trim()))
-                        checkValidations();
-                    else
-                        Toast.makeText(applicationviavideocomposer.getactivity(),"Confirm channel name mismatch!",Toast.LENGTH_SHORT).show();
-                }
-
+                    Toast.makeText(applicationviavideocomposer.getactivity(),"Please enter channel name!",Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.img_backbutton:
                 baseactivity.getinstance().showdialogcreateaccountfragment("");
                 getDialog().dismiss();
+
                 break;
 
             case R.id.imgvideolock_background:
@@ -136,90 +127,9 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
         }
     }
 
-
-
-    public  boolean checkValidations() {
-
-        edt_username.getText().toString();
-
-        HashMap<String,String> requestparams=new HashMap<>();
-        requestparams.put("type","client");
-        requestparams.put("action","setchannel");
-        requestparams.put("channel", edt_username.getText().toString().trim());
-        requestparams.put("authtoken",xdata.getinstance().getSetting(config.authtoken));
-        progressdialog.showwaitingdialog(getActivity());
-        baseactivity.getinstance().xapipost_send(getActivity(),requestparams, new apiresponselistener() {
-
-            @Override
-            public void onResponse(taskresult response) {
-                progressdialog.dismisswaitdialog();
-                if(response.isSuccess())
-                {
-                    try {
-                        JSONObject object=new JSONObject(response.getData().toString());
-                        if(object.has("success"))
-                        {
-                            if(object.getString("success").equalsIgnoreCase("1"))
-                            {
-
-                                getDialog().dismiss();
-                                if(userverified.equalsIgnoreCase("1") || userverified.trim().isEmpty())
-                                    baseactivity.getinstance().showdialogverifyuserfragment(config.createaccount);
-                            }
-                            else
-                            {
-                                if(object.has("error")){
-                                    new AlertDialog.Builder(applicationviavideocomposer.getactivity())
-                                            .setMessage(object.getString("error"))
-                                            .setPositiveButton(android.R.string.ok, null)
-                                            .show();
-                                }
-
-                                //Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        if(object.has("errors"))
-                        {
-                            JSONArray errorarray=object.getJSONArray("errors");
-                            String error="";
-                            for(int i=0;i<errorarray.length();i++)
-                            {
-                                if(error.trim().isEmpty())
-                                {
-                                    error=error+errorarray.get(i).toString();
-                                }
-                                else
-                                {
-                                    error=error+"\n"+errorarray.get(i).toString();
-                                }
-                            }
-
-                            new AlertDialog.Builder(applicationviavideocomposer.getactivity())
-                                    .setMessage(error)
-                                    .setPositiveButton(android.R.string.ok, null)
-                                    .show();
-
-                            // Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-                        }
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    Toast.makeText(applicationviavideocomposer.getactivity(), getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        return true;
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     @Override
@@ -249,8 +159,7 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
         getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
     }
 
-    public void setdata(String channelname,String userverified) {
-        this.channelname = channelname;
+    public void setdata(String userverified) {
         this.userverified = userverified;
     }
 }

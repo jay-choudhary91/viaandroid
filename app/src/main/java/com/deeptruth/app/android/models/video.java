@@ -35,6 +35,7 @@ public class video
     public String mediacolor = "";
     public String frameuploadstatus = "";
     public String filesize = "";
+    public long filesizebytes = 0;
     public boolean ischeck = false;
     public boolean doenable = false;
     public boolean mediapublished = false;
@@ -208,6 +209,14 @@ public class video
 
     public void setMedialocation(String medialocation) {
         this.medialocation = medialocation;
+    }
+
+    public long getFilesizebytes() {
+        return filesizebytes;
+    }
+
+    public void setFilesizebytes(long filesizebytes) {
+        this.filesizebytes = filesizebytes;
     }
 
     public String getfilesize() {

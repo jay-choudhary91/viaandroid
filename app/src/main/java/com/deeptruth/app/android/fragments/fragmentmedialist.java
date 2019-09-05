@@ -130,7 +130,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private RelativeLayout listlayout;
     private Handler myhandler;
     private Runnable myrunnable;
-    private boolean ascendinglistbydate=true;
+    private boolean ascendinglistby =true;
     private View rootview = null;
     private static final int request_permissions = 1;
     private ArrayList<video> arraymediaitemlist = new ArrayList<>();
@@ -292,7 +292,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             arraymediafilterlist.add(new mediafilteroptions(config.filter_size,false,false));
             arraymediafilterlist.add(new mediafilteroptions(config.filter_location,false,false));
 
-            ascendinglistbydate=true;
+            ascendinglistby =true;
             selectedmediafilter=config.filter_date;
 
             txt_localfiles.setOnClickListener(this);
@@ -950,6 +950,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 videoobject.setMedianotes(media_notes);
                                 videoobject.setMediacolor(color);
                                 videoobject.setfilesize(filesize);
+                                videoobject.setFilesizebytes(new File(mediafilepath).length());
                                 videoobject.setExtension(common.getfileextension(location));
                                 videoobject.setName(common.getfilename(location));
                                 videoobject.setMediastatus(status);
@@ -1106,7 +1107,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         @Override
                         public void run() {
 
-                            sortlistviewbydate();
+                            sortlistviewby("date");
 
                             setmediaadapter();
                             if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
@@ -1136,31 +1137,73 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }).start();
     }
 
-    public void sortlistviewbydate()
+    public void sortlistviewby(String sortby)
     {
-        if(ascendinglistbydate)
+        if(sortby.equalsIgnoreCase("date"))
         {
-            // Latest date media is on top
-            Collections.sort(arraymediaitemlist, new Comparator<video>() {
-                public int compare(video s1, video s2) {
-                    // notice the cast to (Integer) to invoke compareTo
-                    Integer value1=(int)s2.getcreatedatetimestamp();
-                    Integer value2=(int)s1.getcreatedatetimestamp();
-                    return (value1).compareTo(value2);
-                }
-            });
+            if(ascendinglistby)
+            {
+                // Latest date media is on top
+                Collections.sort(arraymediaitemlist, new Comparator<video>() {
+                    public int compare(video s1, video s2) {
+                        // notice the cast to (Integer) to invoke compareTo
+                        Integer value1=(int)s2.getcreatedatetimestamp();
+                        Integer value2=(int)s1.getcreatedatetimestamp();
+                        return (value1).compareTo(value2);
+                    }
+                });
+            }
+            else
+            {
+                // Latest date media is on bottom
+                Collections.sort(arraymediaitemlist, new Comparator<video>() {
+                    public int compare(video s1, video s2) {
+                        // notice the cast to (Integer) to invoke compareTo
+                        Integer value1=(int)s2.getcreatedatetimestamp();
+                        Integer value2=(int)s1.getcreatedatetimestamp();
+                        return (value2).compareTo(value1);
+                    }
+                });
+            }
         }
-        else
+        else if(sortby.equalsIgnoreCase("title") || sortby.equalsIgnoreCase("location") ||
+                sortby.equalsIgnoreCase("size"))
         {
-            // Latest date media is on bottom
-            Collections.sort(arraymediaitemlist, new Comparator<video>() {
-                public int compare(video s1, video s2) {
-                    // notice the cast to (Integer) to invoke compareTo
-                    Integer value1=(int)s2.getcreatedatetimestamp();
-                    Integer value2=(int)s1.getcreatedatetimestamp();
-                    return (value2).compareTo(value1);
-                }
-            });
+            if(ascendinglistby)
+            {
+                Collections.sort(arraymediaitemlist, new Comparator<video>() {
+                    public int compare(video s1, video s2)
+                    {
+                        if(sortby.equalsIgnoreCase("location"))
+                            return s1.getMedialocation().compareTo(s2.getMedialocation());
+                        else if(sortby.equalsIgnoreCase("size"))
+                        {
+                            Integer value1=(int)s1.getFilesizebytes();
+                            Integer value2=(int)s2.getFilesizebytes();
+                            return (value1).compareTo(value2);
+                        }
+                        return s1.getMediatitle().compareTo(s2.getMediatitle());
+                    }
+                });
+            }
+            else
+            {
+                Collections.sort(arraymediaitemlist, new Comparator<video>() {
+                    public int compare(video s1, video s2)
+                    {
+                        if(sortby.equalsIgnoreCase("location"))
+                            return s2.getMedialocation().compareTo(s1.getMedialocation());
+                        else if(sortby.equalsIgnoreCase("size"))
+                        {
+                            Integer value1=(int)s1.getFilesizebytes();
+                            Integer value2=(int)s2.getFilesizebytes();
+                            return (value2).compareTo(value1);
+                        }
+
+                        return s2.getMediatitle().compareTo(s1.getMediatitle());
+                    }
+                });
+            }
         }
     }
 
@@ -2152,28 +2195,24 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     {
         if(type == 1)
         {
+            if(mediafilterobj.isascending())
+                mediafilterobj.setascending(false);
+            else
+                mediafilterobj.setascending(true);
+
+            mediafilterobj.setfilterselected(true);
+
+            ascendinglistby =mediafilterobj.isascending();
+
             if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_date))
             {
-                if(mediafilterobj.isascending())
-                    mediafilterobj.setascending(false);
-                else
-                    mediafilterobj.setascending(true);
-
-                mediafilterobj.setfilterselected(true);
-
-                ascendinglistbydate=mediafilterobj.isascending();
                 selectedmediafilter=config.filter_date;
-                sortlistviewbydate();
-
-                if(adaptermedialistlocal != null && selectedlisttype == 0)
-                    adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
-
-                if(adaptermedialistpublished != null && selectedlisttype == 1)
-                    adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
+                sortlistviewby("date");
             }
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_title))
             {
                 selectedmediafilter=config.filter_title;
+                sortlistviewby("title");
             }
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_type))
             {
@@ -2182,11 +2221,19 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_size))
             {
                 selectedmediafilter=config.filter_size;
+                sortlistviewby("size");
             }
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_location))
             {
                 selectedmediafilter=config.filter_location;
+                sortlistviewby("location");
             }
+
+            if(adaptermedialistlocal != null && selectedlisttype == 0)
+                adaptermedialistlocal.notifyitems(arraymediaitemlist,selectedlisttype);
+
+            if(adaptermedialistpublished != null && selectedlisttype == 1)
+                adaptermedialistpublished.notifyitems(arraymediaitemlist,selectedlisttype);
 
             for(int i = 0; i< arraymediafilterlist.size(); i++)
             {

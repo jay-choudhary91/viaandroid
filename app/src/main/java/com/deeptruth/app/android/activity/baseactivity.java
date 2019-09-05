@@ -72,6 +72,7 @@ import com.deeptruth.app.android.fragments.fragmentchangepassword;
 import com.deeptruth.app.android.fragments.fragmentconfirmchannel;
 import com.deeptruth.app.android.fragments.fragmentcreateaccount;
 import com.deeptruth.app.android.fragments.fragmentforgotpassword;
+import com.deeptruth.app.android.fragments.fragmentsetchannel;
 import com.deeptruth.app.android.fragments.fragmentsharemedia;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.fragmentsignin;
@@ -158,7 +159,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -582,6 +585,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     @Override
+    public void redirecttologin() {
+        showdialogsignupfragment();
+    }
+
+    @Override
     public void replacetabfragment(basefragment f, boolean clearBackStack, boolean addToBackstack) {
         replacetabfragment(f, R.id.tab_container, clearBackStack, addToBackstack);
     }
@@ -854,12 +862,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             linear_share_btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediamethod = config.type_private;
+                mediamethod = config.sharemethod_private;
 
                 if(!isuserlogin()){
-                    //redirecttologin();
                     showdialogsignupfragment();
-
                     return;
                 }
 
@@ -880,7 +886,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             linear_share_btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediamethod = config.type_public;
+                mediamethod = config.sharemethod_public;
 
                 if(!isuserlogin()){
                     //redirecttologin();
@@ -918,7 +924,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }*/
 
                 if(!isuserlogin()){
-                   // redirecttologin();
                     showdialogsignupfragment();
                     return;
                 }
@@ -1211,7 +1216,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void callmediastoreapi(String mediatoken, String mediatype, String mediapath)
     {
-
         HashMap<String, String> requestparams = new HashMap<>();
         requestparams.put("action", "stored");
         requestparams.put("type", mediatype);
@@ -1247,13 +1251,25 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         if(object.has("shareurl"))
                             shareurl=object.getString("shareurl");
 
+                        if(object.has("failure"))
+                        {
+                            if(object.getString("failure").equalsIgnoreCase("1"))
+                            {
+                                if(object.has("message"))
+                                {
+                                    Toast.makeText(applicationviavideocomposer.getactivity(),object.getString("message"),Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+                            }
+                        }
+
+
                         if (subdialogshare != null && subdialogshare.isShowing())
                             subdialogshare.dismiss();
 
                         if(! shareurl.trim().isEmpty())
                         {
                             updatemediapublishedstatus(mediatoken);
-                            //common.sharemessagewithapps(shareurl);
                             medialistitemaddbroadcast();
 
                             if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
@@ -1771,6 +1787,15 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
 
                     int position=(int)object;
+
+                    if(! sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_videoLock_share))
+                    {
+                        if(!isuserlogin()){
+                            showdialogsignupfragment();
+                            return;
+                        }
+                    }
+
                     if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_box))
                     {
                         if(mFileApi == null)
@@ -3061,13 +3086,41 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             }
                         }
                     });
+
                     final BoxFile uploadFileInfo = request.send();
-                    BoxSharedLink sharedurl=uploadFileInfo.getSharedLink();
+                    Date today = new Date();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(today);
+                    cal.add(Calendar.HOUR, 10);     // 10 Hours from now
+                    Date modifiedDate = cal.getTime();
+                    String fileid=uploadFileInfo.getId();
+                    BoxRequestsFile.UpdatedSharedFile updatedsharefile= mFileApi.getCreateSharedLinkRequest(uploadFileInfo.getId());
+                    updatedsharefile.setUnsharedAt(modifiedDate)
+                    .setCanDownload(true)
+                    .setAccess(BoxSharedLink.Access.OPEN)
+                    .send();
+
+                    BoxSharedLink sharedurl=updatedsharefile.getSharedLink();
+                    String url=sharedurl.getURL();
+                    String url2=sharedurl.getDownloadURL();
+                    String url3=sharedurl.getVanityURL();
+                    String url5=sharedurl.getDownloadURL();
+                    String url6=sharedurl.getDownloadURL();
+                    String url7=sharedurl.getDownloadURL();
+
                     //ArrayList<BoxSharedLink.Access> arraylist1 = uploadFileInfo.getAllowedSharedLinkAccessLevels();
+                    BoxSharedLink sharedlink = uploadFileInfo.getSharedLink();
                     List<String> arraylist2 = uploadFileInfo.getTags();
                     List<BoxCollection> arraylist3 = uploadFileInfo.getCollections();
                     List<String> arraylist4 = uploadFileInfo.getPropertiesKeySet();
                     JsonValue shared_link = uploadFileInfo.getPropertyValue("shared_link");
+
+                    /*BoxFile file = new BoxFile(api, "id");
+                    BoxSharedLink.Permissions permissions = new BoxSharedLink.Permissions();
+                    permissions.setCanDownload(true);
+                    permissions.setCanPreview(true);
+                    Date unshareDate = new Date();
+                    BoxSharedLink sharedLink = file.createSharedLink(BoxSharedLink.Access.OPEN, null, permissions);*/
 
                     if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).
                             equalsIgnoreCase("1"))
@@ -3290,7 +3343,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         fragment.show(ft, "changepassword");
     }
 
-    public void showdialogconfirmchannelfragment(){
+    public void showdialogsetchannelfragment(String userverified){
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("setchannel");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        //ft.addToBackStack(null);
+        fragmentsetchannel fragment = new fragmentsetchannel();
+        fragment.setdata(userverified);
+        fragment.show(ft, "setchannel");
+    }
+
+    public void showdialogconfirmchannelfragment(String channelname,String userverified){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("confirmchannel");
@@ -3299,6 +3365,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         //ft.addToBackStack(null);
         fragmentconfirmchannel fragment = new fragmentconfirmchannel();
+        fragment.setdata(channelname,userverified);
         fragment.show(ft, "confirmchannel");
     }
 
