@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/rootview"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_dialog_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+    <include layout="@layout/dialog_background"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginRight="@dimen/dialog_rightmargin"
+        android:layout_marginLeft="@dimen/dialog_leftmargin"
+        android:layout_height="match_parent">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/txtview_confirmchannel"
+            android:text="@string/please_enter_your_channel_name"
+            android:textColor="@color/white"
+            app:fontType="Comfortaa-Regular"
+            android:textSize="11sp"
+            />
+
+        <com.deeptruth.app.android.views.customfontedittext
+            style="@style/edt_dialogcreateaccount"
+            android:hint="Channel Name"
+            app:fontType="Comfortaa-Regular"
+            android:background="@drawable/edittext_shap"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:id="@+id/edt_username"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/txtview_confirmchannel"
+            android:text="@string/channel_name_is_unchangeable_after_an_account_is_created"
+            android:textColor="@color/white"
+            app:fontType="Comfortaa-Regular"
+            android:textSize="10sp"
+            />
+
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/edttext_confirmchannel"
+            android:padding="3dp"
+            android:text="Next"
+            android:textColor="@color/white"
+            android:background="@drawable/textview_bluebackgroundshape"
+            app:fontType="Comfortaa-Regular"
+            android:id="@+id/txt_createaccount"
+            />
+    </LinearLayout>
+
+</LinearLayout>
+</RelativeLayout>

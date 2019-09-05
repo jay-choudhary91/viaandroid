@@ -191,25 +191,9 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     }
 
 
-    public void login()
+    public void navigatetosetchannel()
     {
-        /*if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
-        {
-            if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
-                xdata.getinstance().saveSetting(config.enableintroscreen,"no");
 
-            Intent intent=new Intent(applicationviavideocomposer.getactivity(),introscreenactivity.class);
-            startActivity(intent);
-            getHelper().onBack();
-
-        }
-        else
-        {
-            getHelper().onBack();
-        }*/
-
-        getDialog().dismiss();
-        //baseactivity.getinstance().onBack();
     }
 
     public boolean isvalidated(){
@@ -237,13 +221,14 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 {
                     try {
                         JSONObject object=new JSONObject(response.getData().toString());
+
+                        if(object.has(config.clientid))
+                            xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
+
                         if(object.has("success"))
                         {
                             if(object.getString("success").equalsIgnoreCase("true") || object.getString("success").equalsIgnoreCase("1"))
                             {
-                                if(object.has(config.clientid))
-                                    xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
-
                                 if(object.has(config.authtoken))
                                     xdata.getinstance().saveSetting(config.authtoken,object.getString(config.authtoken));
 
@@ -252,7 +237,20 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
 
                                 xdata.getinstance().saveSetting(config.isuserlogin,"1");
 
-                                login();
+                                if(object.has(config.clientchannel))
+                                {
+                                    if(object.getString(config.clientchannel).equalsIgnoreCase("null") ||
+                                            object.getString(config.clientchannel).trim().isEmpty())
+                                    {
+                                        String not_verified="";
+                                        if(object.has("not_verified"))
+                                            not_verified=object.getString("not_verified");
+
+                                        baseactivity.getinstance().showdialogsetchannelfragment(not_verified);
+                                    }
+                                }
+
+                                getDialog().dismiss();
                             }
                             else
                             {
@@ -265,6 +263,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                                 //Toast.makeText(applicationviavideocomposer.getactivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
+
+
                         if(object.has("errors"))
                         {
                             JSONArray errorarray=object.getJSONArray("errors");
@@ -291,6 +291,15 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
 
                         if(object.has("not_verified"))
                         {
+                            if(object.has(config.clientchannel))
+                            {
+                                if(object.getString(config.clientchannel).equalsIgnoreCase("null") ||
+                                        object.getString(config.clientchannel).trim().isEmpty())
+                                {
+                                    baseactivity.getinstance().showdialogsetchannelfragment(object.getString("not_verified"));
+                                    return;
+                                }
+                            }
                             if(object.getString("not_verified").equalsIgnoreCase("1"))
                             {
                                 if(object.has(config.clientid))
@@ -318,7 +327,6 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     @Override
@@ -329,10 +337,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
     }
-
-
 
     public void getscreenwidthheight(int widthpercentage,int heightpercentage) {
 

@@ -214,7 +214,7 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
                                     getDialog().dismiss();
-                                    baseactivity.getinstance().showdialogconfirmchannelfragment();
+                                    baseactivity.getinstance().showdialogconfirmchannelfragment("","");
 
 
                                 }

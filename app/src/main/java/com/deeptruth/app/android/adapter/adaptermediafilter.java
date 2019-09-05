@@ -72,10 +72,6 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
 
         final mediafilteroptions mediaobject=arraymediafilter.get(position);
         holder.txt_options.setText(mediaobject.getmediafiltername());
-        if(mediaobject.getmediafiltername().equalsIgnoreCase(config.filter_date))
-            holder.img_updownarrow.setVisibility(View.VISIBLE);
-        else
-            holder.img_updownarrow.setVisibility(View.GONE);
 
         if(mediaobject.getmediafiltername().equalsIgnoreCase(config.filter_date))
             newwidth=width/4;
@@ -86,19 +82,19 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
 
         if(mediaobject.isfilterselected())
         {
-            if(mediaobject.getmediafiltername().equalsIgnoreCase(config.filter_date))
-            {
-                if(mediaobject.isascending())
-                    holder.img_updownarrow.setImageResource(R.drawable.ic_uparrow);
-                else
-                    holder.img_updownarrow.setImageResource(R.drawable.ic_downarrow);
-            }
+            holder.img_updownarrow.setVisibility(View.VISIBLE);
+            if(mediaobject.isascending())
+                holder.img_updownarrow.setImageResource(R.drawable.ic_uparrow);
+            else
+                holder.img_updownarrow.setImageResource(R.drawable.ic_downarrow);
+
             holder.txt_options.setTypeface(applicationviavideocomposer.semiboldfonttype);
             holder.txt_options.setTextSize(12);
             common.underlinespan(holder.txt_options,mediaobject.getmediafiltername());
         }
         else
         {
+            holder.img_updownarrow.setVisibility(View.GONE);
             holder.txt_options.setTypeface(applicationviavideocomposer.comfortaaregular);
             holder.txt_options.setTextSize(11);
             common.removeunderline(holder.txt_options,mediaobject.getmediafiltername());

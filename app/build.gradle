@@ -127,7 +127,7 @@ dependencies {
     implementation('com.onedrive.sdk:onedrive-sdk-android:+')
     implementation 'com.google.code.gson:gson:2.3.1'
     implementation 'com.microsoft.services.msa:msa-auth:0.8.4'
-    implementation 'com.box:box-android-sdk:4.0.0'
+    implementation 'com.box:box-android-sdk:4.2.3'
 
     implementation "com.daimajia.swipelayout:library:1.2.0@aar"
 

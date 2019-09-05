@@ -12,6 +12,7 @@
     <string name="next">Next</string>
     <string name="login">Login</string>
     <string name="create_account">Create Account</string>
+    <string name="create_channel">Create Channel</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="phone_number">Phone Number</string>
     <string name="hint_text">enter username/email</string>
@@ -599,8 +600,10 @@
     <string name="signup">Sign Up</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="confirm_channel">Confirm Channel</string>
+    <string name="set_channel">Set Channel</string>
     <string name="sign_in">Sign in</string>
     <string name="please_confirm_your_channel_name">Please confirm your channel name:</string>
+    <string name="please_enter_your_channel_name">Please enter your channel name:</string>
     <string name="channel_name_is_unchangeable_after_an_account_is_created">* Channel names are unchangeable \nafter an account is created.</string>
     <string name="congrats">Congrats!</string>
     <string name="discription_confirmation_code">Please enter your confirmation code \nand start publishing your own certified \nand verified VideoLock recordings.</string>

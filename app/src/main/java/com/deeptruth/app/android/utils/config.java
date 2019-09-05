@@ -309,6 +309,7 @@ public class config {
     public static final String enablenotification ="enablenotification";
     public static final String authtoken="authtoken";
     public static final String clientemail="clientemail";
+    public static final String clientchannel="clientchannel";
     public static final String usernameemailaddress="usernameemailaddress";
     public static final String reset_authtoken="reset_authtoken";
     public static final String clientid="clientid";
@@ -345,6 +346,15 @@ public class config {
     {
         LOCATION, STORAGE, CAMERA, AUDIO
     }
+
+    public static final String sharemethod_box = "box";
+    public static final String sharemethod_dropbox = "dropbox";
+    public static final String sharemethod_gdrive = "gdrive";
+    public static final String sharemethod_onedrive = "onedrive";
+    public static final String sharemethod_hidden = "hidden";
+    public static final String sharemethod_public = "public";
+    public static final String sharemethod_private = "private";
+
 
     public static final String all_xapi_list = "xapi_list_item_";
     public static final String sidecar_xapi_actions = "sidecar_xapi_actions_item_";
