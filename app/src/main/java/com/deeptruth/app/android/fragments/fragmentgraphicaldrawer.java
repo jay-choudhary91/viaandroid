@@ -147,6 +147,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     customfonttextview tvwifi;
     @BindView(R.id.txt_gps_accuracy)
     customfonttextview tvgpsaccuracy;
+    @BindView(R.id.txt_gpsaccuracy)
+    customfonttextview tv_gpsaccuracy;
     @BindView(R.id.txt_screen)
     customfonttextview tvscreen;
     @BindView(R.id.txt_country)
@@ -770,11 +772,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                     if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
                     {
-                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+altitude, tvaltitude);
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.elevation),"\n"+altitude, tvaltitude);
                     }
                     else
                     {
-                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+"NA", tvaltitude);
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.elevation),"\n"+"NA", tvaltitude);
                     }
 
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.xaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_x), tvxaxis);
@@ -817,14 +819,18 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     {
                         common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
                                 "\n"+gpsaccuracy+" feet", tvgpsaccuracy);
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                                "\n"+gpsaccuracy+" feet", tv_gpsaccuracy);
                     }
                     else
                     {
                         common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
                                 "\n"+ "NA" , tvgpsaccuracy);
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                                "\n"+ "NA" , tv_gpsaccuracy);
                     }
 
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.distance),
                             "\n"+traveled, tvtraveled);
 
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),"\n"+
@@ -1007,7 +1013,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                         mappathpolyline=null;
                         mappathcoordinates.clear();
-                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.distance),
                                 "\n"+common.travelleddistanceformatter("0.0"), tvtraveled);
 
                         if(altitudegraphitems.size() > 0 || speedgraphitems.size() > 0 || travelledgraphitems.size() > 0)
@@ -3194,6 +3200,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         settextviewcolor(tvversion, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(tvwifi, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(tvgpsaccuracy, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        settextviewcolor(tv_gpsaccuracy, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(tvscreen, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(tvcountry, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(tvcpuusage, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));

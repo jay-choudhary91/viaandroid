@@ -133,7 +133,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="130dp"
                     android:layout_marginTop="5dp"
                     android:orientation="vertical">
 
@@ -167,7 +167,6 @@
                         app:fontType="OpenSans_Regular"
                         style="@style/txt_row_locationinfo"
                         android:gravity="center"
-                        android:visibility="gone"
                         android:layout_weight="0.3"
                         android:text="GPS Accuracy"/>
 

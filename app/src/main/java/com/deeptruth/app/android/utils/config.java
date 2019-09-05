@@ -265,12 +265,12 @@ public class config {
     public static final String color_code_blue="#0000FF";
 
     public static final String color_code_drawer_location="487386";
-    public static final String color_code_drawer_time="2b8a84";
-    public static final String color_code_drawer_sound="f7941d";
-    public static final String color_code_drawer_phone="719c33";
-    public static final String color_code_drawer_connection="f36523";
+    public static final String color_code_drawer_time="2B8A84";
+    public static final String color_code_drawer_sound="F7941D";
+    public static final String color_code_drawer_phone="719C33";
+    public static final String color_code_drawer_connection="F36523";
     public static final String color_code_drawer_summary="15588d";
-    public static final String color_code_drawer_encryption="cb4c57";
+    public static final String color_code_drawer_encryption="CB4C57";
 
 
     public static final String item_valid="Valid";
