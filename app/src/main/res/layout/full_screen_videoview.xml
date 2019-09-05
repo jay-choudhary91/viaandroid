@@ -198,10 +198,11 @@
 
                                 <ImageView
                                     android:id="@+id/video_info"
-                                    android:layout_width="30dp"
-                                    android:layout_height="@dimen/margin_30dp"
+                                    android:layout_width="20dp"
+                                    android:layout_height="@dimen/margin_20dp"
                                     android:layout_centerHorizontal="true"
-
+                                    android:layout_marginTop="@dimen/margin_10dp"
+                                    android:layout_centerVertical="true"
                                     android:background="@drawable/question"/>
 
 
