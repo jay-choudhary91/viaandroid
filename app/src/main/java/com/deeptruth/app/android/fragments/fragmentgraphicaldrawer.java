@@ -1419,7 +1419,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         linechart_speed.clear();
         linechart_traveled.clear();
         linechart_altitude.clear();
-       // layout_soundiformation.setVisibility(View.GONE);
+        layout_soundiformation.setVisibility(View.GONE);
 
         String linecolor="";
         List<coloredpoint> linepoints = new ArrayList<>();
