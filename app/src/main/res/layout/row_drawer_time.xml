@@ -48,8 +48,8 @@
                     android:gravity="center"
                     android:text="@string/phone_time"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:fontType="OpenSans_Regular" />
+                    android:textSize="14sp"
+                    app:fontType="OpenSans_Semibold" />
 
                 <com.deeptruth.app.android.utils.AnalogClock
                     android:id="@+id/phone_time_clock_white"
@@ -70,7 +70,6 @@
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_phone_time"
                     style="@style/txt_timedate"
-                    android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/white"
@@ -80,7 +79,6 @@
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_phone_date"
                     style="@style/txt_timedate"
-                    android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/white"
@@ -103,8 +101,8 @@
                     android:gravity="center"
                     android:text="@string/world_clock_time"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
-                    app:fontType="OpenSans_Regular" />
+                    android:textSize="14sp"
+                    app:fontType="OpenSans_Semibold" />
 
                 <com.deeptruth.app.android.utils.AnalogClock
                     android:id="@+id/world_time_clock_white"
@@ -125,7 +123,6 @@
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_world_time"
                     style="@style/txt_timedate"
-                    android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/white"
@@ -135,7 +132,6 @@
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_world_date"
                     style="@style/txt_timedate"
-                    android:layout_marginTop="0dp"
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/white"

@@ -249,6 +249,7 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="altitude">Altitude</string>
+    <string name="elevation">Elevation</string>
     <string name="speed">Speed</string>
     <string name="degree">Degree</string>
     <string name="heading">Heading</string>
