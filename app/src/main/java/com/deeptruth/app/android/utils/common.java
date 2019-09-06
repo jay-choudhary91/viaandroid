@@ -2186,6 +2186,13 @@ public class common {
 
     }
 
+    public static String gettotalframepercentage(int obtains,int total)
+    {
+        double percentage = (obtains * 100) / total;
+        percentage=Math.round(percentage);
+        return ""+((int)percentage)+"%";
+    }
+
     public static String gettimestring(long millis) {
         StringBuffer buf = new StringBuffer();
         int hours = (int) (millis / (1000 * 60 * 60));

@@ -1115,7 +1115,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
         requestparams.put("sharemethod", method);
-        requestparams.put("fileextension",common.getfileextension(path));
+        requestparams.put("fileextension",common.getfileextension(path).replace(".",""));
 
         progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
         xapipost_send(applicationviavideocomposer.getactivity(), requestparams, new apiresponselistener() {
@@ -1220,7 +1220,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         requestparams.put("action", "stored");
         requestparams.put("type", mediatype);
         requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
-        requestparams.put("fileextension",common.getfileextension(mediapath));
+        requestparams.put("fileextension",common.getfileextension(mediapath).replace(".",""));
         if(mediatype.equalsIgnoreCase(config.item_image))
             requestparams.put("imagetoken", mediatoken);
         else if(mediatype.equalsIgnoreCase(config.item_audio))

@@ -2329,7 +2329,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void exportitem(video videoobj)
     {
-        String export = applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
+        /*String export = applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
                 applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details2);
 
         if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
@@ -2346,6 +2346,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             });
             return;
         }
+        checkwritepermission(videoobj);*/
+
         checkwritepermission(videoobj);
     }
 

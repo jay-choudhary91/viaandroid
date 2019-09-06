@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,11 +13,15 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,6 +42,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.adapter.satellitesdataadapter;
 import com.deeptruth.app.android.adapter.toweritemadapter;
@@ -49,6 +55,7 @@ import com.deeptruth.app.android.models.coloredpoint;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.satellites;
+import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.AnalogClock;
@@ -104,10 +111,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 
@@ -230,22 +242,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     TextView txt_cpuusage;
     @BindView(R.id.txtbattery)
     TextView txtbattery;
-    @BindView(R.id.txt_videoaudiodata)
-    TextView txt_videoaudiodata;
-    @BindView(R.id.txt_valid)
-    TextView txt_valid;
-    @BindView(R.id.txt_caution)
-    TextView txt_caution;
-    @BindView(R.id.txt_invalid)
-    TextView txt_invalid;
-    @BindView(R.id.txt_validmeta)
-    TextView txt_validmeta;
-    @BindView(R.id.txt_cautionmeta)
-    TextView txt_cautionmeta;
-    @BindView(R.id.txt_invalidmeta)
-    TextView txt_invalidmeta;
-    @BindView(R.id.text_meta)
-    TextView text_meta;
     @BindView(R.id.txt_connectioninformation)
     TextView txt_connectioninformation;
     @BindView(R.id.txt_timeinformation)
@@ -290,8 +286,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     TextView txt_phone_time;
     @BindView(R.id.txt_world_time)
     TextView txt_world_time;
-    @BindView(R.id.pie_metadatachart)
-    PieChart pie_metadatachart;
     @BindView(R.id.pie_videoaudiochart)
     PieChart pie_videoaudiochart;
     @BindView(R.id.chart_memoeyusage)
@@ -306,26 +300,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     LineChart linechart_traveled;
     @BindView(R.id.linechart_altitude)
     LineChart linechart_altitude;
-    @BindView(R.id.txt_videoaudio_validframes)
-    TextView txt_videoaudio_validframes;
-    @BindView(R.id.txt_videoaudio_cautionframes)
-    TextView txt_videoaudio_cautionframes;
-    @BindView(R.id.txt_videoaudio_invalidframes)
-    TextView txt_videoaudio_invalidframes;
-    @BindView(R.id.txt_meta_validframes)
-    TextView txt_meta_validframes;
-    @BindView(R.id.txt_meta_cautionframes)
-    TextView txt_meta_cautionframes;
-    @BindView(R.id.txt_meta_invalidframes)
-    TextView txt_meta_invalidframes;
     @BindView(R.id.linear_mediavideoaudio)
     LinearLayout linear_mediavideoaudio;
-    @BindView(R.id.linear_mediametadata)
-    LinearLayout linear_mediametadata;
     @BindView(R.id.seekbar_mediavideoaudio)
     customseekbar seekbar_mediavideoaudio;
-    @BindView(R.id.seekbar_mediametadata)
-    customseekbar seekbar_mediametadata;
     @BindView(R.id.linechart_connectionspeed)
     LineChart linechart_connectionspeed;
     @BindView(R.id.linechart_datatimedelay)
@@ -336,8 +314,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     LineChart linechart_gpsaccuracy;
     @BindView(R.id.txt_mediainformation)
     TextView txt_mediainformation;
-    @BindView(R.id.layout_mediametadata)
-    LinearLayout layout_mediametadata;
     @BindView(R.id.vertical_slider_speed)
     verticalseekbar vertical_slider_speed;
     @BindView(R.id.vertical_slider_traveled)
@@ -404,6 +380,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     TextView txt_sun;
     @BindView(R.id.txt_moon)
     TextView txt_moon;
+    @BindView(R.id.txt_total_frames)
+    TextView txt_total_frames;
+    @BindView(R.id.txt_start_time)
+    TextView txt_start_time;
+    @BindView(R.id.txt_end_time)
+    TextView txt_end_time;
+    @BindView(R.id.txt_total_length)
+    TextView txt_total_length;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -471,19 +455,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           img_drawer_summary.setColorFilter(Color.argb(255, 255, 255, 255));
 
           seekbar_mediavideoaudio.setEnabled(false);
-          seekbar_mediametadata.setEnabled(false);
           vertical_slider_speed.setEnabled(false);
           vertical_slider_altitude.setEnabled(false);
           vertical_slider_traveled.setEnabled(false);
           vertical_slider_gpsaccuracy.setEnabled(false);
           vertical_slider_connectionspeed.setEnabled(false);
           vertical_slider_connectiondatatimedely.setEnabled(false);
-          linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
           linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
           //visiblity gone of media information
             layout_mediasummary.setVisibility(View.GONE);
-            layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
 
           {
@@ -1302,7 +1283,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             if(metricmainarraylist != null && metricmainarraylist.size() > 0)
             {
                 layout_mediasummary.setVisibility(View.VISIBLE);
-                layout_mediametadata.setVisibility(View.VISIBLE);
                 txt_mediainformation.setVisibility(View.VISIBLE);
                 txt_phone_date.setText("");
                 txt_world_date.setText("");
@@ -1315,7 +1295,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         {
             setdefaultzoomlevel=true;
             layout_mediasummary.setVisibility(View.GONE);
-            layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
             showhideverticalbar(true);
             resetmediainformation();
@@ -1348,20 +1327,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     {
         try
         {
-            txt_videoaudio_validframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-            txt_videoaudio_cautionframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-            txt_videoaudio_invalidframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-            txt_meta_validframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-            txt_meta_cautionframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-            txt_meta_invalidframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-
-            if(seekbar_mediametadata != null)
-                seekbar_mediametadata.setProgress(0);
-
             if(seekbar_mediavideoaudio != null)
                 seekbar_mediavideoaudio.setProgress(0);
 
-            linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
             linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
             clearlinegraphs();
@@ -1385,14 +1353,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
 
 
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        try
-        {
-            linear_mediametadata.removeAllViews();
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -1834,14 +1794,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             e.printStackTrace();
         }
 
-        try {
-            linear_mediametadata.removeAllViews();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
-        linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
+
+        linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().
+                getResources().getColor(R.color.validating_white_bg));
 
         for(int i=0;i<colorsectioncount.size();i++)
         {
@@ -1856,25 +1811,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(! weight.trim().isEmpty())
                     {
                         linear_mediavideoaudio.addView(getmediaseekbarbackgroundview(weight,color));
-                        linear_mediametadata.addView(getmediaseekbarbackgroundview(weight,color));
                     }
                 }
             }
         }
 
-        txt_videoaudio_validframes.setText(validcount+" Frames");
-        txt_videoaudio_cautionframes.setText(cautioncount+" Frames");
-        txt_videoaudio_invalidframes.setText(invalidcount+" Frames");
-        txt_meta_validframes.setText(validcount+" Frames");
-        txt_meta_cautionframes.setText(cautioncount+" Frames");
-        txt_meta_invalidframes.setText(invalidcount+" Frames");
-        mediapiechartdata(pie_videoaudiochart,20,15,40,25);
-        mediapiechartdata(pie_metadatachart,20,15,40,25);
+        //mediapiechartdata(pie_videoaudiochart,20,10,40,30,100);
+        mediapiechartdata(pie_videoaudiochart,validcount,cautioncount,invalidcount,unsent,lastsequenceno);
 
         seekbar_mediavideoaudio.setPadding(0,0,0,0);
-        seekbar_mediametadata.setPadding(0,0,0,0);
         seekbar_mediavideoaudio.setMax(metricmainarraylist.size());
-        seekbar_mediametadata.setMax(metricmainarraylist.size());
     }
 
     public void setcurrentmediaposition(int currentmediaposition)
@@ -2221,15 +2167,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 {
                     if(seekbar_mediavideoaudio != null)
                         seekbar_mediavideoaudio.setProgress(currentmediaposition,true);
-                    if(seekbar_mediametadata != null)
-                        seekbar_mediametadata.setProgress(currentmediaposition,true);
                 }
                 else
                 {
                     if(seekbar_mediavideoaudio != null)
                         seekbar_mediavideoaudio.setProgress(currentmediaposition);
-                    if(seekbar_mediametadata != null)
-                        seekbar_mediametadata.setProgress(currentmediaposition);
                 }
             }
         }catch (Exception e)
@@ -2254,24 +2196,108 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 e.printStackTrace();
             }
 
-            ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
-            for(int i=0;i<mitemlist.size();i++)
-            {
-                String metricdata=mitemlist.get(i).getMetricdata();
-                String sequencehash = mitemlist.get(i).getSequencehash();
-                String hashmethod = mitemlist.get(i).getHashmethod();
-                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
-                String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                String color = mitemlist.get(i).getColor();
-                String latency = mitemlist.get(i).getLatency();
-                String sequenceno = mitemlist.get(i).getSequenceno();
-                String colorreason = mitemlist.get(i).getColorreason();
-                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,latency,sequenceno,colorreason);
+            String localkey="",mediastartdevicedate="",type="";
+            Cursor cursor=mdbhelper.getstartmediainfo(common.getfilename(mediafilepath));
+            if (cursor != null && cursor.getCount() > 0) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
+                        mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
+                        type = "" + cursor.getString(cursor.getColumnIndex("type"));
+
+                    } while (cursor.moveToNext());
+                }
+
+
             }
+            if(! localkey.trim().isEmpty())
+            {
+                ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabylocalkey(localkey);
+                for(int i=0;i<mitemlist.size();i++)
+                {
+                    String metricdata=mitemlist.get(i).getMetricdata();
+                    String sequencehash = mitemlist.get(i).getSequencehash();
+                    String hashmethod = mitemlist.get(i).getHashmethod();
+                    String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                    String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                    String color = mitemlist.get(i).getColor();
+                    String latency = mitemlist.get(i).getLatency();
+                    String sequenceno = mitemlist.get(i).getSequenceno();
+                    String colorreason = mitemlist.get(i).getColorreason();
+                    parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,latency,sequenceno,colorreason);
+                }
+            }
+
+            try {
+
+                txt_total_length.setText("");
+                txt_start_time.setText("");
+                txt_end_time.setText("");
+                txt_total_frames.setText("");
+
+                if(! mediastartdevicedate.trim().isEmpty())
+                {
+
+                        Date startdate = null;
+                        if(mediastartdevicedate.contains("T"))
+                        {
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                            startdate = format.parse(mediastartdevicedate);
+                        }
+                        else
+                        {
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                            startdate = format.parse(mediastartdevicedate);
+                        }
+
+                        if(! type.equalsIgnoreCase(config.type_image))
+                        {
+                            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                                    BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
+
+                            final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), uri);
+                            if (mp != null) {
+                                Date finalStartdate = startdate;
+                                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                    @Override
+                                    public void onPrepared(MediaPlayer mediaPlayer) {
+                                        int duration = mediaPlayer.getDuration();
+                                        setmediatimedurationdata(duration,finalStartdate);
+                                    }
+                                });
+                            }
+                        }
+                        else
+                        {
+                            setmediatimedurationdata(0,startdate);
+                        }
+                    }
+
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
         }catch (Exception e)
         {
             e.printStackTrace();
         }
+    }
+
+    public void setmediatimedurationdata(int duration,Date finalStartdate)
+    {
+        int seconds=duration/1000;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(finalStartdate);
+        calendar.add(Calendar.SECOND, seconds);
+        Date enddate = calendar.getTime();
+        DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+        String localTime = datee.format(enddate);
+        txt_total_length.setText(common.gettimestring(duration));
+        txt_start_time.setText(common.parsedateformat(finalStartdate) + " "+ common.parsetimeformat(finalStartdate) +" " +
+                localTime);
+        txt_end_time.setText(common.parsedateformat(enddate) + " "+ common.parsetimeformat(enddate) +" " +
+                localTime);
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
@@ -3143,10 +3169,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.invalidate();
     }
 
-    public void mediapiechartdata(PieChart piechart,int valid,int caution,int invalid ,int unsent)
+    public void mediapiechartdata(PieChart piechart,int valid,int caution,int invalid ,int unsent,int lastsequenceno)
     {
         piechart.setNoDataText("");
-        piechart.setExtraOffsets(0, 0, 0, 0);
+        piechart.setExtraOffsets(30, 10, 30, 10);
         // add a selection listener
         piechart.setOnChartValueSelectedListener(this);
         piechart.getLegend().setEnabled(false);
@@ -3164,14 +3190,47 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         //meta_pie_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
        // meta_pie_chart.setHoleRadius(0.0f);
+
+        String validString="",cautionString="",invalidString="",unsentString="";
+        int counter=0;
+
+        if(valid > 0)
+            validString=valid+" Valid Frames\n("+common.gettotalframepercentage(valid,lastsequenceno)+")";
+
+        if(caution > 0)
+            cautionString=caution+" Caution Frames\n("+common.gettotalframepercentage(caution,lastsequenceno)+")";
+
+        if(invalid > 0)
+            invalidString=invalid+" Invalid Frames\n("+common.gettotalframepercentage(invalid,lastsequenceno)+")";
+
+        if(unsent > 0)
+            unsentString=unsent+" Unsent Frames\n("+common.gettotalframepercentage(unsent,lastsequenceno)+")";
+
         ArrayList<PieEntry> entries = new ArrayList<>();
-        String[] items = new String[] {"Yellow","Green","Green","Gray"};
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-        entries.add(new PieEntry(valid,items[0 % items.length],0));
-        entries.add(new PieEntry(caution,items[1 % items.length],0));
-        entries.add(new PieEntry(invalid,items[2 % items.length],0));
-        entries.add(new PieEntry(unsent, items[3 % items.length],0));
+        String[] items = new String[] {validString,cautionString,invalidString,unsentString};
+
+
+
+        if(valid > 0)
+            entries.add(new PieEntry(valid,items[counter % items.length],0));
+
+        if(caution > 0)
+        {
+            counter++;
+            entries.add(new PieEntry(caution,items[counter % items.length],0));
+        }
+
+        if(invalid > 0)
+        {
+            counter++;
+            entries.add(new PieEntry(invalid,items[counter % items.length],0));
+        }
+
+        if(unsent > 0)
+        {
+            counter++;
+            entries.add(new PieEntry(unsent, items[counter % items.length],0));
+        }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setSliceSpace(2f);
@@ -3180,7 +3239,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         dataSet.setSelectionShift(5f);
         dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         dataSet.setValueLinePart1OffsetPercentage(80.f);
-        dataSet.setValueLinePart1Length(0.9f);
+        dataSet.setValueLinePart1Length(0.7f);
         dataSet.setValueLinePart2Length(0.5f);
         dataSet.setValueLineColor(getActivity().getResources().getColor(R.color.white));
         // add a lot of colors
@@ -3202,6 +3261,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         piechart.setEntryLabelTextSize(7f);
         piechart.highlightValues(null);
         piechart.invalidate();
+
+        txt_total_frames.setText(""+lastsequenceno);
 
     }
 
@@ -3254,28 +3315,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         settextviewcolor(tvencryption, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(tvdataletency, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txtdegree, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_meta_cautionframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_meta_validframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_meta_invalidframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_Memory, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_mediainformation, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_videoaudio_cautionframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_videoaudio_invalidframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_videoaudio_validframes, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_videoaudiodata, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_cpuusage, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_phonetime, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txtbattery, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_valid, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txtdegree, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_caution, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_invalid, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_timeinformation, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_validmeta, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_invalidmeta, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(txt_cautionmeta, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_worldclocktime, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        settextviewcolor(text_meta, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_connectioninformation, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_datatimedelay, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
         settextviewcolor(txt_world_time, applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));

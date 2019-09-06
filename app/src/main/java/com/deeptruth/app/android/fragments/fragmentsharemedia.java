@@ -525,7 +525,10 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                 applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details2);
 
         getDialog().dismiss();
-        if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
+
+        checkwritepermission();
+
+        /*if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
                 xdata.getinstance().getSetting(config.enableexportnotification).equalsIgnoreCase("0")) {
             baseactivity.getinstance().share_alert_dialog(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity().
                     getResources().getString(R.string.txt_save),export ,new adapteritemclick() {
@@ -539,7 +542,7 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
             });
             return;
         }
-        checkwritepermission();
+        checkwritepermission();*/
     }
 
     @Override
