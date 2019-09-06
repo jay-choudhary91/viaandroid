@@ -1205,6 +1205,27 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 });
             }
         }
+        else if(sortby.equalsIgnoreCase("type"))
+        {
+            if(ascendinglistby)
+            {
+                Collections.sort(arraymediaitemlist, new Comparator<video>() {
+                    public int compare(video s1, video s2)
+                    {
+                        return s1.getMediatype().compareTo(s2.getMediatype());
+                    }
+                });
+            }
+            else
+            {
+                Collections.sort(arraymediaitemlist, new Comparator<video>() {
+                    public int compare(video s1, video s2)
+                    {
+                        return s2.getMediatype().compareTo(s1.getMediatype());
+                    }
+                });
+            }
+        }
     }
 
     public void setmediaadapter()
@@ -2217,6 +2238,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_type))
             {
                 selectedmediafilter=config.filter_type;
+                sortlistviewby("type");
             }
             else if(mediafilterobj.getmediafiltername().equalsIgnoreCase(config.filter_size))
             {
@@ -2307,7 +2329,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void exportitem(video videoobj)
     {
-        String export = applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
+        /*String export = applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details1)+"\n"+"\n"+"\n"+
                 applicationviavideocomposer.getactivity().getResources().getString(R.string.export_details2);
 
         if(xdata.getinstance().getSetting(config.enableexportnotification).isEmpty() ||
@@ -2324,6 +2346,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             });
             return;
         }
+        checkwritepermission(videoobj);*/
+
         checkwritepermission(videoobj);
     }
 

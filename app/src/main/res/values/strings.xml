@@ -313,6 +313,14 @@
     <string name="availablewifinetwork">Available Wifi Networks</string>
     <string name="metadata">Meta Data</string>
     <string name="video_audio_data">Video/Audio Data</string>
+    <string name="original_recording">Original Recording</string>
+    <string name="txt_start_time">Start Time:</string>
+    <string name="txt_end_time">End Time:</string>
+    <string name="length">Length:</string>
+    <string name="frames_">Frames:</string>
+    <string name="gps_low_quality_">GPS Low Quality:</string>
+    <string name="gps_no_signal">GPS No Signal:</string>
+    <string name="slowdata_connection">Slow Data Connection:</string>
 
 
     <string name="setting">Settings</string>

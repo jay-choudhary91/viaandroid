@@ -230,8 +230,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     TextView txt_phone_time;
     @BindView(R.id.txt_world_time)
     TextView txt_world_time;
-    @BindView(R.id.pie_metadatachart)
-    PieChart pie_metadatachart;
     @BindView(R.id.pie_videoaudiochart)
     PieChart pie_videoaudiochart;
     @BindView(R.id.chart_memoeyusage)
@@ -246,26 +244,10 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     LineChart linechart_traveled;
     @BindView(R.id.linechart_altitude)
     LineChart linechart_altitude;
-    @BindView(R.id.txt_videoaudio_validframes)
-    TextView txt_videoaudio_validframes;
-    @BindView(R.id.txt_videoaudio_cautionframes)
-    TextView txt_videoaudio_cautionframes;
-    @BindView(R.id.txt_videoaudio_invalidframes)
-    TextView txt_videoaudio_invalidframes;
-    @BindView(R.id.txt_meta_validframes)
-    TextView txt_meta_validframes;
-    @BindView(R.id.txt_meta_cautionframes)
-    TextView txt_meta_cautionframes;
-    @BindView(R.id.txt_meta_invalidframes)
-    TextView txt_meta_invalidframes;
     @BindView(R.id.linear_mediavideoaudio)
     LinearLayout linear_mediavideoaudio;
-    @BindView(R.id.linear_mediametadata)
-    LinearLayout linear_mediametadata;
     @BindView(R.id.seekbar_mediavideoaudio)
     customseekbar seekbar_mediavideoaudio;
-    @BindView(R.id.seekbar_mediametadata)
-    customseekbar seekbar_mediametadata;
     @BindView(R.id.linechart_connectionspeed)
     LineChart linechart_connectionspeed;
     @BindView(R.id.linechart_datatimedelay)
@@ -278,8 +260,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     TextView txt_mediainformation;
     @BindView(R.id.layout_mediasummary)
     LinearLayout layout_mediasummary;
-    @BindView(R.id.layout_mediametadata)
-    LinearLayout layout_mediametadata;
     @BindView(R.id.txt_timeinformation)
     TextView txt_timeinformation;
     @BindView(R.id.txt_phonetime)
@@ -292,22 +272,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     TextView txt_cpuusage;
     @BindView(R.id.txtbattery)
     TextView txtbattery;
-    @BindView(R.id.txt_videoaudiodata)
-    TextView txt_videoaudiodata;
-    @BindView(R.id.txt_valid)
-    TextView txt_valid;
-    @BindView(R.id.txt_caution)
-    TextView txt_caution;
-    @BindView(R.id.txt_invalid)
-    TextView txt_invalid;
-    @BindView(R.id.txt_validmeta)
-    TextView txt_validmeta;
-    @BindView(R.id.txt_cautionmeta)
-    TextView txt_cautionmeta;
-    @BindView(R.id.txt_invalidmeta)
-    TextView txt_invalidmeta;
-    @BindView(R.id.text_meta)
-    TextView text_meta;
     @BindView(R.id.txt_connectioninformation)
     TextView txt_connectioninformation;
     @BindView(R.id.txt_videoupdatetransactionid)
@@ -386,7 +350,14 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     TextView txt_moon;
     @BindView(R.id.barvisualizer)
     visualizerview barvisualizerview;
-
+    @BindView(R.id.txt_total_frames)
+    TextView txt_total_frames;
+    @BindView(R.id.txt_start_time)
+    TextView txt_start_time;
+    @BindView(R.id.txt_end_time)
+    TextView txt_end_time;
+    @BindView(R.id.txt_total_length)
+    TextView txt_total_length;
 
     GoogleMap mgooglemap;
     private SensorManager msensormanager;
@@ -447,14 +418,12 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             layout_soundiformation.setVisibility(View.GONE);
 
             seekbar_mediavideoaudio.setEnabled(false);
-            seekbar_mediametadata.setEnabled(false);
             vertical_slider_speed.setEnabled(false);
             vertical_slider_altitude.setEnabled(false);
             vertical_slider_traveled.setEnabled(false);
             vertical_slider_gpsaccuracy.setEnabled(false);
             vertical_slider_connectionspeed.setEnabled(false);
             vertical_slider_connectiondatatimedely.setEnabled(false);
-            linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
             linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
             TimeZone timezone = TimeZone.getDefault();
@@ -601,7 +570,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             if(metricmainarraylist != null && metricmainarraylist.size() > 0)
             {
                 layout_mediasummary.setVisibility(View.VISIBLE);
-                layout_mediametadata.setVisibility(View.VISIBLE);
                 txt_mediainformation.setVisibility(View.VISIBLE);
                 txt_phone_date.setText("");
                 txt_world_date.setText("");
@@ -614,7 +582,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         {
             setdefaultzoomlevel=true;
             layout_mediasummary.setVisibility(View.GONE);
-            layout_mediametadata.setVisibility(View.GONE);
             txt_mediainformation.setVisibility(View.GONE);
             showhideverticalbar(true);
             resetmediainformation();
@@ -988,15 +955,11 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 {
                     if(seekbar_mediavideoaudio != null)
                         seekbar_mediavideoaudio.setProgress(currentmediaposition,true);
-                    if(seekbar_mediametadata != null)
-                        seekbar_mediametadata.setProgress(currentmediaposition,true);
                 }
                 else
                 {
                     if(seekbar_mediavideoaudio != null)
                         seekbar_mediavideoaudio.setProgress(currentmediaposition);
-                    if(seekbar_mediametadata != null)
-                        seekbar_mediametadata.setProgress(currentmediaposition);
                 }
             }
         }catch (Exception e)
@@ -1491,13 +1454,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             e.printStackTrace();
         }
 
-        try {
-            linear_mediametadata.removeAllViews();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
         linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
         for(int i=0;i<colorsectioncount.size();i++)
@@ -1513,25 +1469,15 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     if(! weight.trim().isEmpty())
                     {
                         linear_mediavideoaudio.addView(getmediaseekbarbackgroundview(weight,color));
-                        linear_mediametadata.addView(getmediaseekbarbackgroundview(weight,color));
                     }
                 }
             }
         }
 
-        txt_videoaudio_validframes.setText(validcount+" Frames");
-        txt_videoaudio_cautionframes.setText(cautioncount+" Frames");
-        txt_videoaudio_invalidframes.setText(invalidcount+" Frames");
-        txt_meta_validframes.setText(validcount+" Frames");
-        txt_meta_cautionframes.setText(cautioncount+" Frames");
-        txt_meta_invalidframes.setText(invalidcount+" Frames");
         mediapiechartdata(pie_videoaudiochart,validcount,cautioncount,invalidcount,unsent);
-        mediapiechartdata(pie_metadatachart,validcount,cautioncount,invalidcount,unsent);
 
         seekbar_mediavideoaudio.setPadding(0,0,0,0);
-        seekbar_mediametadata.setPadding(0,0,0,0);
         seekbar_mediavideoaudio.setMax(metricmainarraylist.size());
-        seekbar_mediametadata.setMax(metricmainarraylist.size());
     }
 
     private void showtraveledpath(final List<coloredpoint> points)
@@ -1893,20 +1839,9 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
         try
         {
-            txt_videoaudio_validframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-            txt_videoaudio_cautionframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-            txt_videoaudio_invalidframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-            txt_meta_validframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-            txt_meta_cautionframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-            txt_meta_invalidframes.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.zero_frames));
-
-            if(seekbar_mediametadata != null)
-                seekbar_mediametadata.setProgress(0);
-
             if(seekbar_mediavideoaudio != null)
                 seekbar_mediavideoaudio.setProgress(0);
 
-            linear_mediametadata.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
             linear_mediavideoaudio.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.validating_white_bg));
 
             clearlinegraphs();
@@ -1930,14 +1865,6 @@ public class metainformationfragment extends basefragment  implements OnChartVal
             }
 
 
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        try
-        {
-            linear_mediametadata.removeAllViews();
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -2442,27 +2369,13 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         tvlocationtracking.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         tvorientation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         tvPhoneanalytics.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_meta_cautionframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_meta_validframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_meta_invalidframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_Memory.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_mediainformation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_videoaudio_cautionframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_videoaudio_invalidframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_videoaudio_validframes.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_videoaudiodata.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_cpuusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_phonetime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txtbattery.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_valid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_caution.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_invalid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_timeinformation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_validmeta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_invalidmeta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        txt_cautionmeta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_worldclocktime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
-        text_meta.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_connectioninformation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_datatimedelay.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         txt_world_time.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));

@@ -1718,7 +1718,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                         txt_endtime.setText(common.parsedateformat(enddate) + " "+ common.parsetimeformat(enddate) +" " +
                                                 localTime);
                                         txt_createdtime.setText(common.parsetimeformat(startdate));
-
                                     }
 
                                 }catch (Exception e)

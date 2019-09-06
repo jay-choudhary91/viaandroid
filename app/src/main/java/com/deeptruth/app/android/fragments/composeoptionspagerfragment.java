@@ -299,9 +299,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             ViewGroup layout = (ViewGroup) inflater.inflate(enummediatype.getLayoutResId(), collection, false);
             final TextView txt_mediatype=(TextView)layout.findViewById(R.id.txt_mediatype);
 
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                txt_mediatype.setText(enummediatype.getItemname());
-            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage))
+            //if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+              //  txt_mediatype.setText(enummediatype.getItemname());
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage) ||
+                    BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
                 txt_mediatype.setText(enummediatypevideoimage.getItemname());
             else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composeraudio))
                 txt_mediatype.setText(enummediatypeaudio.getItemname());
@@ -309,7 +310,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             txt_mediatype.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                    /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
                     {
                         if(enummediatype.getItemposition() == 2)
                             pagermediatype.setCurrentItem(0,true);
@@ -317,8 +318,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                             pagermediatype.setCurrentItem(1,true);
                         else if(enummediatype.getItemposition() == 4)
                             pagermediatype.setCurrentItem(2,true);
-                    }
-                    else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage))
+                    }*/
+                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage) ||
+                            BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
                     {
                         if(enummediatypevideoimage.getItemposition() == 2)
                             pagermediatype.setCurrentItem(0,true);
@@ -358,12 +360,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         @Override
         public CharSequence getPageTitle(int position) {
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+            /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
             {
                 mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
                 return enummediatype.getItemname();
-            }
-            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage))
+            }*/
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage) || BuildConfig.FLAVOR.
+                    equalsIgnoreCase(config.build_flavor_composer))
             {
                 mediatypepagerenum_videoimage enummediatype = mediatypepagerenum_videoimage.values()[position];
                 return enummediatype.getItemname();
@@ -741,7 +744,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(currentselectedcomposer == mediatypepagerenum.values().length-1)
                 return;
 
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage))
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage) || BuildConfig.FLAVOR.
+                    equalsIgnoreCase(config.build_flavor_composer))
             {
                 if(currentselectedcomposer == 3 || currentselectedcomposer == 1)
                     return;
