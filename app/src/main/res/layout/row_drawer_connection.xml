@@ -17,7 +17,7 @@
             <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_connectioninformation"
                 style="@style/txt_drawer_graphical_title_big"
-                android:text="INFRASTRUCTURE"
+                android:text="CONNECTIONS"
                 app:fontType="bahnschrift_light"
                 />
 

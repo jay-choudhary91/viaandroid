@@ -299,7 +299,6 @@
                     style="@style/txt_row_encryption"
                     android:gravity="center"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:text="WiFi"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
@@ -307,7 +306,6 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="Network"/>
 
@@ -316,7 +314,6 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="Connection"/>
 
@@ -334,14 +331,12 @@
                     style="@style/txt_row_encryption"
                     android:gravity="center"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:text="Brightness"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_storagefree"
                     app:fontType="OpenSans_Regular"
                     android:gravity="center"
-                    android:layout_marginTop="5dp"
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
                     android:text="Storage Free"/>
@@ -352,7 +347,6 @@
                     style="@style/txt_row_encryption"
                     android:gravity="center"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:text="Barometer"/>
 
             </LinearLayout>
@@ -368,7 +362,6 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="Orientation"/>
 
@@ -377,7 +370,6 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="Camera"/>
 
@@ -386,7 +378,6 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:gravity="center"
                     android:text="Picture Quality"/>
 
@@ -403,7 +394,6 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:gravity="center"
-                    android:layout_marginTop="5dp"
                     android:layout_weight="0.5"
                     android:text="language"/>
 
@@ -422,7 +412,6 @@
                     style="@style/txt_row_encryption"
                     android:gravity="center"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:text="Currency"/>
 
             </LinearLayout>
@@ -438,7 +427,6 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:gravity="center"
-                    android:layout_marginTop="5dp"
                     android:layout_weight="0.5"
                     android:text="Airplane"/>
 
@@ -448,7 +436,6 @@
                     style="@style/txt_row_encryption"
                     android:gravity="center"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:text="GPS"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
@@ -457,7 +444,6 @@
                     style="@style/txt_row_encryption"
                     android:gravity="center"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:text="Jailbroken"/>
 
             </LinearLayout>
@@ -473,7 +459,6 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:gravity="center"
-                    android:layout_marginTop="5dp"
                     android:layout_weight="0.5"
                     android:text="Local Time"/>
 
@@ -483,7 +468,6 @@
                     style="@style/txt_row_encryption"
                     android:gravity="center"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:text="Time Zone"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
@@ -492,7 +476,6 @@
                     style="@style/txt_row_encryption"
                     android:gravity="center"
                     android:layout_weight="0.5"
-                    android:layout_marginTop="5dp"
                     android:text="Phone Uptime"/>
 
             </LinearLayout>
@@ -500,7 +483,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="5dp"
                 android:visibility="gone"
                 android:orientation="horizontal">
 
@@ -509,7 +492,7 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:gravity="left"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="2dp"
                     android:layout_weight="0.5"
                     android:text="Bluetooth"/>
 
@@ -527,7 +510,7 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:gravity="center"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="2dp"
                     android:layout_weight="0.5"
                     android:text="@string/availablewifinetwork"/>
 

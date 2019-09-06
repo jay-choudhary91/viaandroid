@@ -820,9 +820,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             .equalsIgnoreCase("1"))
                     {
                         common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                                "\n"+gpsaccuracy+" feet", tvgpsaccuracy);
+                                "\n"+"+/- "+gpsaccuracy+" feet", tvgpsaccuracy);
                         common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                                "\n"+gpsaccuracy+" feet", tv_gpsaccuracy);
+                                "\n"+"+/- "+gpsaccuracy+" feet", tv_gpsaccuracy);
                     }
                     else
                     {
@@ -2075,6 +2075,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             }
                         }
 
+
                         if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicedate")){
                             tvdate.setText(common.convertstringintodate(metricItemArraylist.get(j).getMetricTrackValue()));
                         }
@@ -2184,6 +2185,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             }*/
                         }
 
+
+
                     }
 
                     if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
@@ -2231,6 +2234,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     if(seekbar_mediametadata != null)
                         seekbar_mediametadata.setProgress(currentmediaposition);
                 }
+                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.sun_text)," "+applicationviavideocomposer.getactivity().getResources().getString(R.string.sun_direction), txt_sun);
+                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.moon_text)," "+applicationviavideocomposer.getactivity().getResources().getString(R.string.moon_direction), txt_moon);
+
             }
         }catch (Exception e)
         {

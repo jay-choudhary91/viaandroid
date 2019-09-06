@@ -593,7 +593,7 @@
     <string name="popup_alert">alertdialog</string>
 
     <string name="send_content">Select your file sharing service:</string>
-    <string name="timeheading"><![CDATA[TIME \& DATE]]></string>
+    <string name="timeheading"><![CDATA[TIME]]></string>
 
 
     <!-- updated login screen content -->

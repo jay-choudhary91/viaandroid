@@ -2063,7 +2063,7 @@ public class common {
         SpannableStringBuilder encryptionstring = new SpannableStringBuilder(encryptionstr);
         encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.regularfonttype.getStyle()), 0, encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.semiboldfonttype.getStyle()), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        encryptionstring.setSpan(new RelativeSizeSpan(1.1f), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        encryptionstring.setSpan(new RelativeSizeSpan(1f), encryption_key.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         txt_encryption.setText(encryptionstring);
     }
 
@@ -2077,12 +2077,12 @@ public class common {
             SpannableStringBuilder encryptionstring = new SpannableStringBuilder(encryptionstr);
             encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.regularfonttype.getStyle()), 0, keyname.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.semiboldfonttype.getStyle()), keyname.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            encryptionstring.setSpan(new RelativeSizeSpan(1.1f), keyname.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            encryptionstring.setSpan(new RelativeSizeSpan(1f), keyname.length(), encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_encryption.setText(encryptionstring);
         } else {
             SpannableStringBuilder encryptionstring = new SpannableStringBuilder(keyvalue);
             encryptionstring.setSpan(new StyleSpan(applicationviavideocomposer.semiboldfonttype.getStyle()), 0, keyvalue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            encryptionstring.setSpan(new RelativeSizeSpan(1.1f), 0, keyvalue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            encryptionstring.setSpan(new RelativeSizeSpan(1f), 0, keyvalue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_encryption.setText(encryptionstring);
         }
     }
