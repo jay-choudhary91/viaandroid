@@ -74,12 +74,14 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -1866,8 +1868,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         txt_meta_validframes.setText(validcount+" Frames");
         txt_meta_cautionframes.setText(cautioncount+" Frames");
         txt_meta_invalidframes.setText(invalidcount+" Frames");
-        mediapiechartdata(pie_videoaudiochart,validcount,cautioncount,invalidcount,unsent);
-        mediapiechartdata(pie_metadatachart,validcount,cautioncount,invalidcount,unsent);
+        mediapiechartdata(pie_videoaudiochart,20,15,40,25);
+        mediapiechartdata(pie_metadatachart,20,15,40,25);
 
         seekbar_mediavideoaudio.setPadding(0,0,0,0);
         seekbar_mediametadata.setPadding(0,0,0,0);
@@ -3155,11 +3157,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         piechart.getDescription().setEnabled(false);
         piechart.setRotationEnabled(false);
         piechart.setHighlightPerTapEnabled(false);
-        piechart.setHoleRadius(55f);
+        piechart.setHoleRadius(0f);
+        piechart.setDragDecelerationFrictionCoef(2f);
+        piechart.setDrawCenterText(false);
+        piechart.setDrawHoleEnabled(false);
+
         //meta_pie_chart.setTransparentCircleColor(getResources().getColor(R.color.transparent));
        // meta_pie_chart.setHoleRadius(0.0f);
         ArrayList<PieEntry> entries = new ArrayList<>();
-        String[] items = new String[] {""};
+        String[] items = new String[] {"Yellow","Green","Green","Gray"};
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
         entries.add(new PieEntry(valid,items[0 % items.length],0));
@@ -3168,6 +3174,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         entries.add(new PieEntry(unsent, items[3 % items.length],0));
 
         PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setSliceSpace(2f);
+        dataSet.setDrawIcons(false);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+        dataSet.setXValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        dataSet.setValueLinePart1OffsetPercentage(80.f);
+        dataSet.setValueLinePart1Length(0.9f);
+        dataSet.setValueLinePart2Length(0.5f);
+        dataSet.setValueLineColor(getActivity().getResources().getColor(R.color.white));
         // add a lot of colors
         ArrayList<Integer> colors = new ArrayList<>();
         colors.add(Color.parseColor(config.color_code_green));
@@ -3177,8 +3192,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         dataSet.setColors(colors);
         PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
         data.setDrawValues(false);
+        dataSet.setColors(colors);
         piechart.setData(data);
+        piechart.setEntryLabelColor(Color.WHITE);
+        piechart.setEntryLabelTextSize(7f);
+        piechart.highlightValues(null);
+        piechart.invalidate();
+
     }
 
 
