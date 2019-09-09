@@ -60,8 +60,9 @@
     <dimen name="margin_18dp">18dp</dimen>
     <dimen name="margin_30dp">30dp</dimen>
     <dimen name="margin_40dp">40dp</dimen>
-    <dimen name="margin_43dp">38dp</dimen>
+    <dimen name="margin_43dp">43dp</dimen>
     <dimen name="margin_50dp">50dp</dimen>
+    <dimen name="margin_80dp">70dp</dimen>
     <dimen name="textsize1sp">1sp</dimen>
     <dimen name="textsize2sp">2sp</dimen>
     <dimen name="textsize3sp">3sp</dimen>

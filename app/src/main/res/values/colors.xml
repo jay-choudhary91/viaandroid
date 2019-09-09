@@ -106,4 +106,13 @@
     <color name="heading_color">#143a64</color>
     <color name="divider_line">#cfcfcf</color>
     <color name="text_shadow">#7F000000</color>
+
+
+    <color name="send_medialist_background_color">#1DBDF2</color>
+    <color name="share_medialist_background_color">#00A4FF</color>
+    <color name="save_medialist_background_color">#0069A1</color>
+
+
+
+
 </resources>

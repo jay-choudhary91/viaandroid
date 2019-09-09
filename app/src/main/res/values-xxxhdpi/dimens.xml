@@ -37,6 +37,7 @@
     <dimen name="margin_40dp">40dp</dimen>
     <dimen name="margin_43dp">56dp</dimen>
     <dimen name="margin_50dp">50dp</dimen>
+    <dimen name="margin_80dp">70dp</dimen>
     <dimen name="encrypting_textsize5dp">5dp</dimen>
     <dimen name="encrypting_textsize6dp">6dp</dimen>
     <dimen name="encrypting_textsize7dp">7dp</dimen>
