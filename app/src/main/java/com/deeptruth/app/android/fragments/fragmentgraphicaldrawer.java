@@ -388,6 +388,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     TextView txt_end_time;
     @BindView(R.id.txt_total_length)
     TextView txt_total_length;
+    @BindView(R.id.layout_trimmed_recording)
+    LinearLayout layout_trimmed_recording;
+    @BindView(R.id.txt_trimmed_recording)
+    TextView txt_trimmed_recording;
+    @BindView(R.id.txt_trimmed_date_time)
+    TextView txt_trimmed_date_time;
+    @BindView(R.id.txt_trimmed_start_time)
+    TextView txt_trimmed_start_time;
+    @BindView(R.id.txt_trimmed_end_time)
+    TextView txt_trimmed_end_time;
+    @BindView(R.id.txt_trimmed_total_length)
+    TextView txt_trimmed_total_length;
+    @BindView(R.id.txt_trimmed_total_frames)
+    TextView txt_trimmed_total_frames;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -1294,8 +1308,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         else
         {
             setdefaultzoomlevel=true;
-            layout_mediasummary.setVisibility(View.GONE);
-            txt_mediainformation.setVisibility(View.GONE);
+            if(layout_mediasummary != null && txt_mediainformation != null)
+            {
+                layout_mediasummary.setVisibility(View.GONE);
+                txt_mediainformation.setVisibility(View.GONE);
+            }
+
             showhideverticalbar(true);
             resetmediainformation();
         }
@@ -1303,6 +1321,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void showhideverticalbar(boolean shouldtrue)
     {
+        if(vertical_slider_connectiondatatimedely == null)
+            return;
+
         if(shouldtrue)
         {
             vertical_slider_connectiondatatimedely.setVisibility(View.VISIBLE);
@@ -1810,6 +1831,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     String weight=itemarray[1];
                     if(! weight.trim().isEmpty())
                     {
+                        if(color.trim().isEmpty())
+                            color="gray";
+
                         linear_mediavideoaudio.addView(getmediaseekbarbackgroundview(weight,color));
                     }
                 }
@@ -2196,7 +2220,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 e.printStackTrace();
             }
 
-            String localkey="",mediastartdevicedate="",type="";
+            String localkey="",mediastartdevicedate="",type="",trimmedmediapath="",trimmeddatetime="",trimmedstarttime="",
+                    trimmedendtime="",trimmedduration="",trimmedframes="";
             Cursor cursor=mdbhelper.getstartmediainfo(common.getfilename(mediafilepath));
             if (cursor != null && cursor.getCount() > 0) {
                 if (cursor.moveToFirst()) {
@@ -2204,11 +2229,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
                         mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
                         type = "" + cursor.getString(cursor.getColumnIndex("type"));
+                        trimmedmediapath = "" + cursor.getString(cursor.getColumnIndex("trimmedmediapath"));
+                        trimmeddatetime = "" + cursor.getString(cursor.getColumnIndex("trimmeddatetime"));
+                        trimmedstarttime = "" + cursor.getString(cursor.getColumnIndex("trimmedstarttime"));
+                        trimmedendtime = "" + cursor.getString(cursor.getColumnIndex("trimmedendtime"));
+                        trimmedduration = "" + cursor.getString(cursor.getColumnIndex("trimmedduration"));
+                        trimmedframes = "" + cursor.getString(cursor.getColumnIndex("trimmedframes"));
 
                     } while (cursor.moveToNext());
                 }
-
-
             }
             if(! localkey.trim().isEmpty())
             {
@@ -2234,10 +2263,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 txt_start_time.setText("");
                 txt_end_time.setText("");
                 txt_total_frames.setText("");
+                txt_trimmed_date_time.setText("");
+                txt_trimmed_start_time.setText("");
+                txt_trimmed_end_time.setText("");
+                txt_trimmed_total_frames.setText("");
+                txt_trimmed_total_length.setText("");
+                layout_trimmed_recording.setVisibility(View.GONE);
 
                 if(! mediastartdevicedate.trim().isEmpty())
                 {
-
                         Date startdate = null;
                         if(mediastartdevicedate.contains("T"))
                         {
@@ -2265,6 +2299,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                         setmediatimedurationdata(duration,finalStartdate);
                                     }
                                 });
+                            }
+
+                            if(! trimmeddatetime.trim().isEmpty() && (! trimmeddatetime.equalsIgnoreCase("null")))
+                            {
+                                txt_trimmed_date_time.setText(trimmeddatetime);
+                                txt_trimmed_start_time.setText(trimmedstarttime);
+                                txt_trimmed_end_time.setText(trimmedendtime);
+                                //txt_trimmed_total_frames.setText(trimmedframes);
+                                txt_trimmed_total_frames.setText("-");
+                                txt_trimmed_total_length.setText(trimmedduration);
+                                layout_trimmed_recording.setVisibility(View.VISIBLE);
                             }
                         }
                         else
@@ -3192,7 +3237,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
        // meta_pie_chart.setHoleRadius(0.0f);
 
         String validString="",cautionString="",invalidString="",unsentString="";
-        int counter=0;
 
         if(valid > 0)
             validString=valid+" Valid Frames\n("+common.gettotalframepercentage(valid,lastsequenceno)+")";
@@ -3207,29 +3251,30 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             unsentString=unsent+" Unsent Frames\n("+common.gettotalframepercentage(unsent,lastsequenceno)+")";
 
         ArrayList<PieEntry> entries = new ArrayList<>();
-        String[] items = new String[] {validString,cautionString,invalidString,unsentString};
-
-
+        ArrayList<Integer> colors = new ArrayList<>();
 
         if(valid > 0)
-            entries.add(new PieEntry(valid,items[counter % items.length],0));
+        {
+            entries.add(new PieEntry(valid,validString,0));
+            colors.add(Color.parseColor(config.color_code_green));
+        }
 
         if(caution > 0)
         {
-            counter++;
-            entries.add(new PieEntry(caution,items[counter % items.length],0));
+            entries.add(new PieEntry(caution,cautionString,0));
+            colors.add(Color.parseColor(config.color_code_yellow));
         }
 
         if(invalid > 0)
         {
-            counter++;
-            entries.add(new PieEntry(invalid,items[counter % items.length],0));
+            entries.add(new PieEntry(invalid,invalidString,0));
+            colors.add(Color.parseColor(config.color_code_red));
         }
 
         if(unsent > 0)
         {
-            counter++;
-            entries.add(new PieEntry(unsent, items[counter % items.length],0));
+            entries.add(new PieEntry(unsent, unsentString,0));
+            colors.add(Color.parseColor(config.color_code_gray));
         }
 
         PieDataSet dataSet = new PieDataSet(entries, "");
@@ -3242,12 +3287,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         dataSet.setValueLinePart1Length(0.7f);
         dataSet.setValueLinePart2Length(0.5f);
         dataSet.setValueLineColor(getActivity().getResources().getColor(R.color.white));
-        // add a lot of colors
-        ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.parseColor(config.color_code_green));
-        colors.add(Color.parseColor(config.color_code_yellow));
-        colors.add(Color.parseColor(config.color_code_red));
-        colors.add(Color.parseColor(config.color_code_white_transparent));
 
         dataSet.setColors(colors);
         PieData data = new PieData(dataSet);

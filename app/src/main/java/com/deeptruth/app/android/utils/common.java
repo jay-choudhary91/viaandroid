@@ -1834,34 +1834,27 @@ public class common {
         return key;
     }
 
-    public static String[] getcurrentdatewithtimezone() {
-
+    public static String[] getcurrentdatewithtimezone()
+    {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"),
                 Locale.getDefault());
         Date currentLocalTime = calendar.getTime();
         DateFormat date = new SimpleDateFormat("Z");
         String localTime = date.format(currentLocalTime);
-
-
         int convertedVal = Integer.parseInt(localTime);
-
-        if (convertedVal > 0) {
+        if (convertedVal > 0)
+        {
             convertedVal = convertedVal / 100;
             localTime = "+" + "" + convertedVal;
-        } else {
-
+        }
+        else
+        {
             convertedVal = convertedVal / 100;
-
             localTime = "" + convertedVal;
         }
-
         DateFormat date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault());
-
         String currenttime[] = {date1.format(currentLocalTime), localTime};
-
-
         return currenttime;
-
     }
 
     public static String getvideotimefromurl(String url) {
@@ -2493,7 +2486,7 @@ public class common {
         } else if (colorname.equalsIgnoreCase("red")) {
             color = config.color_code_red;
         } else if (colorname.equalsIgnoreCase("gray")) {
-            color = config.color_code_transparent;
+            color = config.color_code_gray;
         } else if (colorname.equalsIgnoreCase(config.color_transparent)) {
             color = config.color_code_transparent;
         } else if (colorname.equalsIgnoreCase("white")) {

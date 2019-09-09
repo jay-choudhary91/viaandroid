@@ -1066,6 +1066,30 @@ public class databasemanager {
         return  cur;
     }
 
+    public void updatetrimmedmediainfo(String trimmedmediapath,String mediatoken,String trimmeddatetime,String trimmedstarttime,String trimmedendtime,
+                                       String trimmedduration,String trimmedframes)
+    {
+        try {
+            lock.lock();
+            String sql="update tblstartmediainfo set trimmeddatetime = '"+trimmeddatetime+
+                    "',trimmedstarttime ='"+trimmedstarttime+
+                    "',trimmedendtime ='"+trimmedendtime+
+                    "',trimmedframes ='"+trimmedframes+
+                    "',trimmedmediapath ='"+trimmedmediapath+
+                    "',trimmedduration = '"+trimmedduration+"' where token='"+mediatoken+"'";
+            Log.e("Sql tblstartmediainfo ",sql);
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+
+
     //* call from reader. Update staus from sync_pending to sync_complete.
     public void updatefindmediainfosyncstatus(String videotoken,String lastframe,String remainingframes,String syncstatus) {
         Cursor cur=null;
