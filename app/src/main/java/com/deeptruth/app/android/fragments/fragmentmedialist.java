@@ -2308,9 +2308,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         @Override
                         public void onItemClicked(Object object) {
 
-                            baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+                            /*baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                                     mediatype,false,mediathumbnailurl,mediafilepath,
-                                    applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),true,false);
+                                    applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),true,false);*/
+
+                            baseactivity.getinstance().showsharepopupsub(mediafilepath,mediatype,mediatoken,false);
 
                         }
                         @Override
@@ -2320,10 +2322,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     });
             return;
         }
-        baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
+        /*baseactivity.getinstance().videolocksharedialog(applicationviavideocomposer.getactivity(),mediafilepath,mediatoken,
                 mediatype,false,mediathumbnailurl,mediafilepath,
-                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),true,false);
-        //baseactivity.getinstance().showsharepopupsub(mediafilepath,config.item_video,mediatoken,ismediatrimmed);
+                applicationviavideocomposer.getactivity().getResources().getString(R.string.txt_publish),true,false);*/
+        baseactivity.getinstance().showsharepopupsub(mediafilepath,mediatype,mediatoken,false);
     }
 
 
