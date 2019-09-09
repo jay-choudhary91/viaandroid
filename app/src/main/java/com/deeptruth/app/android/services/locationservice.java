@@ -398,10 +398,10 @@ public class locationservice extends Service implements LocationListener, GpsSta
                         }
                         String currentaddress = strReturnedAddress.toString();
                         xdata.getinstance().saveSetting("currentaddress", "" + currentaddress);
-                        /*xdata.getinstance().saveSetting(config.currentcitystate, returnedAddress.getLocality()+", " +
-                                common.getabbreviationfromUSstate(returnedAddress.getAdminArea()));*/
                         xdata.getinstance().saveSetting(config.currentcitystate, returnedAddress.getLocality()+", " +
-                                returnedAddress.getAdminArea());
+                                common.getabbreviationfromUSstate(returnedAddress.getAdminArea()));
+                        /*xdata.getinstance().saveSetting(config.currentcitystate, returnedAddress.getLocality()+", " +
+                                returnedAddress.getAdminArea());*/
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
