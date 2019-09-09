@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/dark_popup_background"
+    android:background="@drawable/popup_background"
     android:orientation="vertical"
     >
 
@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/uploading_"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:fontType="Comfortaa-Regular"/>
 
@@ -109,7 +109,7 @@
                     android:gravity="center"
                     android:text="22% Complete"
                     android:layout_marginTop="@dimen/margin_5dp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:fontType="Comfortaa-Regular"/>
 
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginTop="@dimen/margin_10dp"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="16sp"
             android:text="@string/your_file_has_been_copied"
             app:fontType="Comfortaa-Regular"/>
@@ -168,7 +168,7 @@
                 android:text="Cancel upload"
                 android:padding="10dp"
                 android:layout_marginTop="@dimen/margin_5dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:fontType="Comfortaa-Regular"/>
 
