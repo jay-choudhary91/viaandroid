@@ -60,6 +60,7 @@
     <dimen name="margin_30dp">30dp</dimen>
     <dimen name="margin_32dp">32dp</dimen>
     <dimen name="margin_40dp">40dp</dimen>
+    <dimen name="margin_43dp">50.8dp</dimen>
     <dimen name="margin_50dp">50dp</dimen>
     <dimen name="margin_55dp">55dp</dimen>
     <dimen name="textsize1sp">1sp</dimen>
