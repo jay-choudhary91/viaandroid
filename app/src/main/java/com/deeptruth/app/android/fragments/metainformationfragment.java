@@ -925,12 +925,12 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                     && (! value.equalsIgnoreCase("null")))
                             {
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                                        "\n"+"+/-"+value+" feet", tv_gpsaccuracy);
+                                        "\n"+"+/- "+value+" feet", tv_gpsaccuracy);
                             }
                             else
                             {
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                                        "\n"+"+/-"+value, tv_gpsaccuracy);
+                                        "\n"+"+/- "+value, tv_gpsaccuracy);
                             }
                         }
                             if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))
@@ -2442,6 +2442,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         settextviewcolor(tvdeviceconnection, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         settextviewcolor(txt_sun, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         settextviewcolor(txt_moon, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        settextviewcolor(tv_gpsaccuracy, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         settextviewcolor(txtdegree, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
 
     }
