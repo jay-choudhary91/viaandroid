@@ -314,6 +314,8 @@
     <string name="metadata">Meta Data</string>
     <string name="video_audio_data">Video/Audio Data</string>
     <string name="original_recording">Original Recording</string>
+    <string name="trimmed_recording">Trimmed Recording</string>
+    <string name="txt_date_trimmed">Date Trimmed:</string>
     <string name="txt_start_time">Start Time:</string>
     <string name="txt_end_time">End Time:</string>
     <string name="length">Length:</string>

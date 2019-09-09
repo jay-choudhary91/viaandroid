@@ -3,7 +3,6 @@ package com.deeptruth.app.android.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.arch.lifecycle.Lifecycle;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
@@ -32,7 +31,6 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.BulletSpan;
@@ -108,18 +106,12 @@ import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.uploadfileatdropbox;
 import com.deeptruth.app.android.utils.xdata;
-import com.deeptruth.app.android.views.customfonttextview;
 import com.deeptruth.app.android.views.customseekbar;
 import com.dropbox.core.android.Auth;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
-import com.dropbox.core.v2.files.FileSharingInfo;
-import com.dropbox.core.v2.files.MediaInfo;
-import com.dropbox.core.v2.files.SymlinkInfo;
-import com.dropbox.core.v2.sharing.GetSharedLinkFileBuilder;
 import com.dropbox.core.v2.sharing.ListSharedLinksResult;
 import com.dropbox.core.v2.sharing.SharedLinkMetadata;
-import com.dropbox.core.v2.sharing.SharedLinkSettings;
 import com.eclipsesource.json.JsonValue;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -136,7 +128,6 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
 import com.google.api.client.http.FileContent;
-import com.google.api.client.json.Json;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
@@ -145,7 +136,6 @@ import com.onedrive.sdk.concurrency.ICallback;
 import com.onedrive.sdk.concurrency.IProgressCallback;
 import com.onedrive.sdk.core.ClientException;
 import com.onedrive.sdk.core.OneDriveErrorCodes;
-import com.onedrive.sdk.extensions.FileSystemInfo;
 import com.onedrive.sdk.extensions.IOneDriveClient;
 import com.onedrive.sdk.extensions.Item;
 import com.onedrive.sdk.options.Option;
@@ -191,9 +181,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             shareoptionsdialog=null;
     private Stack<Fragment> mfragments = new Stack<Fragment>();
     private static final int permission_location_request_code = 91;
-    String mediapath = "";
-    String mediatype = "";
-    String mediavideotoken = "",mediamethod = "";
+    String selectedmediapath = "",selectedmediatype = "",selectedmediatoken = "",selectedmediamethod = "";
     //Dialog dialog;
     Dialog dialoginapppurchase =null,dialogupgradecode=null,dialogfileuploadoptions=null;
     // In the class declaration section:
@@ -834,9 +822,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             if (subdialogshare != null && subdialogshare.isShowing())
                 subdialogshare.dismiss();
 
-            mediapath = path;
-            mediatype = type;
-            mediavideotoken = mediatoken;
+            selectedmediamethod="";
+            selectedmediapath = path;
+            selectedmediatype = type;
+            selectedmediatoken = mediatoken;
 
             subdialogshare =new Dialog(applicationviavideocomposer.getactivity(),R.style.transparent_dialog_borderless);
             subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -845,7 +834,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             subdialogshare.setCancelable(true);
 
             subdialogshare.setContentView(R.layout.share_popup);
-            //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
             int[] widthHeight = common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
             int width = widthHeight[0];
@@ -854,15 +842,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
             final LinearLayout linear_share_btn1 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn1);
             final LinearLayout linear_share_btn2 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn2);
-            final LinearLayout linear_share_btn3 = (LinearLayout) subdialogshare.findViewById(R.id.linear_share_btn3);
-            TextView txt_title1 = (TextView) subdialogshare.findViewById(R.id.txt_title1);
-            TextView txt_title2 = (TextView) subdialogshare.findViewById(R.id.txt_title2);
             ImageView img_cancel = subdialogshare.findViewById(R.id.img_cancelicon);
 
             linear_share_btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediamethod = config.sharemethod_private;
+                selectedmediamethod = config.sharemethod_private;
 
                 if(!isuserlogin()){
                     showdialogsignupfragment();
@@ -879,17 +864,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                 }*/
 
-                callmediashareapi(type, mediatoken, path, mediamethod);
+                callmediashareapi(type, mediatoken, path, selectedmediamethod);
             }
             });
 
             linear_share_btn2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                mediamethod = config.sharemethod_public;
+            public void onClick(View v)
+            {
+                selectedmediamethod = config.sharemethod_public;
 
                 if(!isuserlogin()){
-                    //redirecttologin();
                     showdialogsignupfragment();
                     return;
                 }
@@ -904,60 +889,35 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                 }*/
 
-                callmediashareapi(type , mediatoken, path, mediamethod);
+                callmediashareapi(type , mediatoken, path, selectedmediamethod);
             }
             });
 
-            linear_share_btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediamethod = config.type_linkinvite;
-
-                /*if(type.equalsIgnoreCase(config.type_video) && ismediatrimmed)
+            img_cancel.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
                 {
-                    common.shouldshowupgradepopup(config.mediatrimcount);
-                    if(common.ismediatrimcountexceed(config.mediatrimcount))
-                    {
-                        checkinapppurchasestatus(config.gravitycenter);
-                        return;
-                    }
-                }*/
+                    if (subdialogshare != null && subdialogshare.isShowing())
+                        subdialogshare.dismiss();
 
-                if(!isuserlogin()){
-                    showdialogsignupfragment();
-                    return;
                 }
-                callmediashareapi(type, mediatoken, path, mediamethod);
-            }
             });
-
-            img_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            if (subdialogshare != null && subdialogshare.isShowing())
-                subdialogshare.dismiss();
-            }
-            });
-
-
             setscreenwidthheight(subdialogshare,80,60,getResources().getString(R.string.popup_share));
-
             subdialogshare.show();
     }
 
     public void checkinapppurchasestatus(String gravity)
     {
         String message = applicationviavideocomposer.getactivity().getResources().getString(R.string.if_you_would_like_the_option);
-
         showinapppurchasepopup(applicationviavideocomposer.
-                getactivity(), "", message, new adapteritemclick(){
+                getactivity(), "", message, new adapteritemclick()
+        {
             @Override
             public void onItemClicked(Object object) {
-
             }
             @Override
             public void onItemClicked(Object object, int type) {
-
             }
         },gravity);
     }
@@ -1332,17 +1292,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         {
             e.printStackTrace();
         }
-    }
-
-
-    public void callsharapiafterlogin()
-    {
-        callmediashareapi(mediatype , mediavideotoken, mediapath, mediamethod);
-    }
-
-    public void callloginscreen(){
-        //redirecttologin();
-        return;
     }
 
     public void share_alert_dialog(final Context context,final String title, String content,adapteritemclick mitemclick){
@@ -1740,14 +1689,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void senditemsdialog(Context context,String mediafilepath,String mediatoken,final String type,
                                 boolean ismediatrimmed,String mediathumbnailurl,String trimmedmediapath,String popupcontenttype,boolean ismedialist){
-
-        /*if(popupcontenttype.equalsIgnoreCase(getResources().getString(R.string.txt_publish)))
-        {
-            if(!isuserlogin()){
-                redirecttologin();
-                return;
-            }
-        }*/
 
         ArrayList<sharemedia> sharemedia=new ArrayList<>();
         sharemedia.add(new sharemedia(R.drawable.box,config.item_box));
@@ -3269,6 +3210,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         initboxsession();
     }
 
+    public void loginsuccess()
+    {
+        if(selectedmediamethod.equalsIgnoreCase(config.type_private) || selectedmediamethod.equalsIgnoreCase(config.type_public))
+            callmediashareapi(selectedmediatype,selectedmediatoken,selectedmediapath,selectedmediamethod);
+    }
+
     public void showdialogsigninfragment(){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -3278,6 +3225,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         //ft.addToBackStack(null);
         fragmentsignin fragment = new fragmentsignin();
+        fragment.setdata(new adapteritemclick() {
+            @Override
+            public void onItemClicked(Object object) {
+                loginsuccess();
+            }
+
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
+        });
         fragment.show(ft, "signindialog");
     }
 

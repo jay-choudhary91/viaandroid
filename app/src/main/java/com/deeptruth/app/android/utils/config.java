@@ -138,7 +138,7 @@ public class config {
     public static final String prefs_sha = "sha";
     public static final String prefs_sha_salt = "shasalt";
 
-    public static final String currentstate = "currentstate";
+    public static final String currentcitystate = "currentcitystate";
     public static final String cpuusageuser = "cpuusageuser";
     public static final String cpuusagesystem = "cpuusagesystem";
     public static final String cpuusageiow = "cpuusageiow";

@@ -35,6 +35,7 @@ import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
+import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.inapputils.IabHelper;
@@ -57,13 +58,16 @@ import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunnin
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import wseemann.media.FFmpegMediaMetadataRetriever;
 
 
 public class fragmentsharemedia extends DialogFragment implements View.OnClickListener, ontrimvideolistener, onhglvideolistener {
@@ -842,15 +846,29 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
                         Log.e("SUCCESS with output : ","SUCCESS");
                         ismediatrimmed=true;
                         trimmedmediapath=dest.toString();
-                        progressdialog.dismisswaitdialog();
+                        new Thread(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                updatetrimmediadata(dest);
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable()
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        progressdialog.dismisswaitdialog();
 
-                        if(selecteditemclick == 1)
-                            publishitem();
-                        else if(selecteditemclick == 2)
-                            senditem();
-                        else if(selecteditemclick == 3)
-                            exportitem();
-
+                                        if(selecteditemclick == 1)
+                                            publishitem();
+                                        else if(selecteditemclick == 2)
+                                            senditem();
+                                        else if(selecteditemclick == 3)
+                                            exportitem();
+                                    }
+                                });
+                            }
+                        }).start();
                     }
 
                     @Override
@@ -874,6 +892,76 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
 
         } catch (Exception e) {
             // do nothing for now
+        }
+    }
+
+    public void updatetrimmediadata(File file)
+    {
+        if(! mediatoken.trim().isEmpty())
+        {
+            FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
+
+            try {
+                //path of the video of which you want frames
+                mmr.setDataSource(file.getAbsolutePath());
+
+                long durationlong = mmr.getMetadata().getLong("duration");
+                double frameRate = mmr.getMetadata().getDouble("framerate");
+                long numberofframe = (int) (durationlong/frameRate);
+
+                String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
+                String datetime = currenttimewithoffset[0];
+
+                Date startdate = null;
+                if(datetime.contains("T"))
+                {
+                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                    startdate = format.parse(datetime);
+                }
+                else
+                {
+                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    startdate = format.parse(datetime);
+                }
+
+                int seconds=(int)durationlong/1000;
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(startdate);
+                calendar.add(Calendar.SECOND, seconds);
+                Date enddate = calendar.getTime();
+                DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+                String localTime = datee.format(enddate);
+                String duration= common.gettimestring(durationlong);
+                String trimmeddatetime=common.parsedateformat(startdate) + " "+ common.parsetimeformat(startdate) +" " +localTime;
+                String trimmedendtime=common.parsedateformat(enddate) + " "+ common.parsetimeformat(enddate) +" " +localTime;
+
+                databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                mdbhelper.createDatabase();
+
+                try {
+                    mdbhelper.open();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try
+                {
+                    mdbhelper.updatetrimmedmediainfo(file.getAbsolutePath(),mediatoken,trimmeddatetime,trimmeddatetime,trimmedendtime,
+                            duration,""+numberofframe);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    mdbhelper.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } catch (Exception e) {
+                System.out.println("Exception= "+e);
+            }
+
         }
     }
 

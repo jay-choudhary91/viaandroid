@@ -62,7 +62,6 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
-import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -72,7 +71,6 @@ import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
-import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.celltowermodel;
 import com.deeptruth.app.android.models.mediametadatainfo;
@@ -84,12 +82,9 @@ import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.services.locationservice;
 import com.deeptruth.app.android.services.readmediadataservice;
 import com.deeptruth.app.android.utils.GetSpeedTestHostsHandler;
-import com.deeptruth.app.android.utils.HttpDownloadTest;
-import com.deeptruth.app.android.utils.PingTest;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.googleutils;
-import com.deeptruth.app.android.utils.logs;
 import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.noise;
 import com.deeptruth.app.android.utils.taskresult;
@@ -114,15 +109,11 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -134,16 +125,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Headers;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public abstract class locationawareactivity extends baseactivity implements GpsStatus.Listener,LocationListener, Orientation.Listener {
 
@@ -1871,7 +1856,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("satelliteid")) {
             metricItemValue = xdata.getinstance().getSetting("satelliteid");
         }else if (key.equalsIgnoreCase(config.recordedstate)) {
-            metricItemValue = xdata.getinstance().getSetting(config.currentstate);
+            metricItemValue = xdata.getinstance().getSetting(config.currentcitystate);
         } else if (key.equalsIgnoreCase("strengthofsatellites")) {
             metricItemValue = xdata.getinstance().getSetting("strengthofsatellites");
         } else if (key.equalsIgnoreCase("attitude")) {
