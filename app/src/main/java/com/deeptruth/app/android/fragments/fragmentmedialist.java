@@ -2345,14 +2345,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             });
             return;
-        }
-        checkwritepermission(videoobj);*/
+        }*/
 
-        checkwritepermission(videoobj);
-    }
-
-    public void checkwritepermission(video videoobj)
-    {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
             if (common.getstoragedeniedpermissions().isEmpty())

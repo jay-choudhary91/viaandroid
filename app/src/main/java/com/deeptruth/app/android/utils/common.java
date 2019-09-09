@@ -141,7 +141,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.WIFI_SERVICE;
@@ -3231,6 +3233,130 @@ public class common {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
         return output;
+    }
+
+    public static String getabbreviationfromUSstate(String state) {
+        if (fromstatelist().containsKey(state)) {
+            return fromstatelist().get(state);
+        }else{
+            return state;
+        }
+    }
+
+    public static Map<String, String> fromstatelist()
+    {
+        Map<String, String> statenametocodemap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        // Load US State Names.
+        statenametocodemap.put("Alabama","AL");
+        statenametocodemap.put("Alaska","AK");
+        statenametocodemap.put("Arizona","AZ");
+        statenametocodemap.put("Arkansas","AR");
+        statenametocodemap.put("California","CA");
+        statenametocodemap.put("Colorado","CO");
+        statenametocodemap.put("Connecticut","CT");
+        statenametocodemap.put("Delaware","DE");
+        statenametocodemap.put("District Of Columbia","DC");
+        statenametocodemap.put("Florida","FL");
+        statenametocodemap.put("Georgia","GA");
+        statenametocodemap.put("Hawaii","HI");
+        statenametocodemap.put("Idaho","ID");
+        statenametocodemap.put("Illinois","IL");
+        statenametocodemap.put("Indiana","IN");
+        statenametocodemap.put("Iowa","IA");
+        statenametocodemap.put("Kansas","KS");
+        statenametocodemap.put("Kentucky","KY");
+        statenametocodemap.put("Louisiana","LA");
+        statenametocodemap.put("Maine","ME");
+        statenametocodemap.put("Maryland","MD");
+        statenametocodemap.put("Massachusetts","MA");
+        statenametocodemap.put("Michigan","MI");
+        statenametocodemap.put("Minnesota","MN");
+        statenametocodemap.put("Mississippi","MS");
+        statenametocodemap.put("Missouri","MO");
+        statenametocodemap.put("Montana","MT");
+        statenametocodemap.put("Nebraska","NE");
+        statenametocodemap.put("Nevada","NV");
+        statenametocodemap.put("New Hampshire","NH");
+        statenametocodemap.put("New Jersey","NJ");
+        statenametocodemap.put("New Mexico","NM");
+        statenametocodemap.put("New York","NY");
+        statenametocodemap.put("North Carolina","NC");
+        statenametocodemap.put("North Dakota","ND");
+        statenametocodemap.put("Ohio","OH");
+        statenametocodemap.put("Oklahoma","OK");
+        statenametocodemap.put("Oregon","OR");
+        statenametocodemap.put("Pennsylvania","PA");
+        statenametocodemap.put("Rhode Island","RI");
+        statenametocodemap.put("South Carolina","SC");
+        statenametocodemap.put("South Dakota","SD");
+        statenametocodemap.put("Tennessee","TN");
+        statenametocodemap.put("Texas","TX");
+        statenametocodemap.put("Utah","UT");
+        statenametocodemap.put("Vermont","VT");
+        statenametocodemap.put("Virginia","VA");
+        statenametocodemap.put("Washington","WA");
+        statenametocodemap.put("West Virginia","WV");
+        statenametocodemap.put("Wisconsin","WI");
+        statenametocodemap.put("Wyoming","WY");
+        statenametocodemap.put("Guam", "GU");
+        statenametocodemap.put("Puerto Rico","PR");
+        statenametocodemap.put("Virgin Islands","VI");
+        statenametocodemap.put("Armed Forces (AE)","AE");
+        statenametocodemap.put("Armed Forces Americas","AA");
+        statenametocodemap.put("Armed Forces Pacific","AP");
+
+
+        // Load Canada State Names.
+        statenametocodemap.put("Alberta","AB");
+        statenametocodemap.put("British Columbia","BC");
+        statenametocodemap.put("Manitoba","MB");
+        statenametocodemap.put("New Brunswick","NB");
+        statenametocodemap.put("Newfoundland and Labrador","NF");
+        statenametocodemap.put("Northwest Territories","NT");
+        statenametocodemap.put("Nova Scotia","NS");
+        statenametocodemap.put("Nunavut","NU");
+        statenametocodemap.put("Ontario","ON");
+        statenametocodemap.put("Prince Edward Island","PE");
+        statenametocodemap.put("Quebec","QC");
+        statenametocodemap.put("Saskatchewan","SK");
+        statenametocodemap.put("Yukon Territory","YT");
+
+
+        // Load México State Names.
+        statenametocodemap.put("Aguascalientes", "AGU");
+        statenametocodemap.put("Baja California", "BCN");
+        statenametocodemap.put("Baja California Sur", "BCS");
+        statenametocodemap.put("Campeche", "CAM");
+        statenametocodemap.put("Chiapas", "CHP");
+        statenametocodemap.put("Chihuahua", "CHH");
+        statenametocodemap.put("Coahuila", "COA");
+        statenametocodemap.put("Colima", "COL");
+        statenametocodemap.put("Distrito Federal", "DIF");
+        statenametocodemap.put("Durango", "DUR");
+        statenametocodemap.put("Guanajuato", "GUA");
+        statenametocodemap.put("Guerrero", "GRO");
+        statenametocodemap.put("Hidalgo", "HID");
+        statenametocodemap.put("Jalisco", "JAL");
+        statenametocodemap.put("México", "MEX");
+        statenametocodemap.put("Michoacán", "MIC");
+        statenametocodemap.put("Morelos", "MOR");
+        statenametocodemap.put("Nayarit", "NAY");
+        statenametocodemap.put("Nuevo León", "NLE");
+        statenametocodemap.put("Oaxaca", "OAX");
+        statenametocodemap.put("Puebla", "PUE");
+        statenametocodemap.put("Querétaro", "QUE");
+        statenametocodemap.put("Quintana Roo", "ROO");
+        statenametocodemap.put("San Luis Potosí", "SLP");
+        statenametocodemap.put("Sinaloa", "SIN");
+        statenametocodemap.put("Sonora", "SON");
+        statenametocodemap.put("Tabasco", "TAB");
+        statenametocodemap.put("Tamaulipas", "TAM");
+        statenametocodemap.put("Tlaxcala", "TLA");
+        statenametocodemap.put("Veracruz", "VER");
+        statenametocodemap.put("Yucatán", "YUC");
+        statenametocodemap.put("Zacatecas", "ZAC");
+
+        return statenametocodemap;
     }
 
 }

@@ -30,14 +30,11 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
-import com.deeptruth.app.android.utils.googleutils;
 import com.deeptruth.app.android.utils.xdata;
 
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -370,13 +367,14 @@ public class locationservice extends Service implements LocationListener, GpsSta
                 Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
                 try {
                     List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                    //List<Address> addresses = geocoder.getFromLocation(43.618881, -116.215019, 1);
                     if (addresses != null) {
                         Address returnedAddress = addresses.get(0);
 
                         ArrayList<String> addressitems=new ArrayList<>();
                         addressitems.add(returnedAddress.getFeatureName());  // Mansarovar Plaza
-                        //addressitems.add(returnedAddress.getLocality());   // Jaipur
-                        addressitems.add(returnedAddress.getSubAdminArea()); // Jaipur
+                        addressitems.add(returnedAddress.getLocality());   // Jaipur
+                        //addressitems.add(returnedAddress.getSubAdminArea()); // Jaipur
                         addressitems.add(returnedAddress.getAdminArea());    // Rajasthan
                         addressitems.add(returnedAddress.getCountryCode());  // IN
 
@@ -400,7 +398,10 @@ public class locationservice extends Service implements LocationListener, GpsSta
                         }
                         String currentaddress = strReturnedAddress.toString();
                         xdata.getinstance().saveSetting("currentaddress", "" + currentaddress);
-                        xdata.getinstance().saveSetting(config.currentstate, "" + returnedAddress.getAdminArea());
+                        /*xdata.getinstance().saveSetting(config.currentcitystate, returnedAddress.getLocality()+", " +
+                                common.getabbreviationfromUSstate(returnedAddress.getAdminArea()));*/
+                        xdata.getinstance().saveSetting(config.currentcitystate, returnedAddress.getLocality()+", " +
+                                returnedAddress.getAdminArea());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

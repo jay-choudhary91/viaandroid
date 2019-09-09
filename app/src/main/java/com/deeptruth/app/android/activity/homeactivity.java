@@ -91,11 +91,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     private Handler myhandler;
     private Runnable myrunnable;
 
-    RelativeLayout layoutbottom;
-    LinearLayout layoutheader;
-    circularImageview playpausebutton;
-    RelativeLayout layoutcustomcontroller;
-    ImageView img_fullscreen;
     Date lastdateselection=null;
     boolean isviewtouched=false;
     //callservice phonecallservice;

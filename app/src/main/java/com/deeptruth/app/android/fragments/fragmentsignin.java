@@ -32,6 +32,7 @@ import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.activity.introscreenactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -71,7 +72,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     ImageView img_dialog_background;
     int rootviewheight,imageviewheight,userloginheight;
     View contaionerview = null;
-
+    adapteritemclick adapteritemupdate;
     /*@Override
     public int getlayoutid() {
         return R.layout.activity_loginactivity;
@@ -152,48 +153,22 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
             case R.id.createaccount:
                 baseactivity.getinstance().showdialogcreateaccountfragment(config.loginpage);
                 getDialog().dismiss();
-
-                /*fragmentcreateaccount fragcreateaccount = new fragmentcreateaccount();
-                getHelper().addFragment(fragcreateaccount,false,true);*/
-
-               /* Intent intent=new Intent(fragmentsignin.this,fragmentcreateaccount.class);
-                startActivity(intent);*/
                 break;
             case R.id.forgot_password:
                 baseactivity.getinstance().showdialogforgotpasswordfragment();
                 getDialog().dismiss();
-                /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
-                getHelper().addFragment(fragforgotpassword,false,true);*/
-
-                /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
-                startActivity(intent);*/
                 break;
-
             case R.id.img_backbutton:
                 getDialog().dismiss();
                 baseactivity.getinstance().showdialogsignupfragment();
-                /*fragmentforgotpassword fragforgotpassword = new fragmentforgotpassword();
-                getHelper().addFragment(fragforgotpassword,false,true);*/
-
-                /*intent = new Intent(fragmentsignin.this, fragmentforgotpassword.class);
-                startActivity(intent);*/
                 break;
-
             case R.id.layout_logindetails:
                 Log.e("ontouch","ontouch");
-
                 break;
-
             case R.id.layout_image:
                 Log.e("ontouchimage","ontouch");
                 break;
         }
-    }
-
-
-    public void navigatetosetchannel()
-    {
-
     }
 
     public boolean isvalidated(){
@@ -249,6 +224,9 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                                         baseactivity.getinstance().showdialogsetchannelfragment(not_verified);
                                     }
                                 }
+
+                                if(adapteritemupdate != null)
+                                    adapteritemupdate.onItemClicked(null);
 
                                 getDialog().dismiss();
                             }
@@ -306,7 +284,6 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
                                 baseactivity.getinstance().showdialogverifyuserfragment(config.loginpage);
-
                             }
                         }
 
@@ -354,5 +331,9 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
         double bottommargin = (height / 100) * 3;
         params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
         getDialog().getWindow().setAttributes(params);
+    }
+
+    public void setdata(adapteritemclick adapteritemupdate) {
+        this.adapteritemupdate = adapteritemupdate;
     }
 }

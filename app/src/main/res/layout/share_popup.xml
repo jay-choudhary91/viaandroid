@@ -66,20 +66,6 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:id="@+id/linear_share_btn3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/layout_share_screen">
-
-            <com.deeptruth.app.android.views.customfonttextview
-                app:fontType="OpenSans_Regular"
-                android:text="@string/str_direct_link"
-                style="@style/btn_share_screen"    />
-
-
-        </LinearLayout>
-
 
         <!--<LinearLayout
             android:id="@+id/linear_share_btn4"
