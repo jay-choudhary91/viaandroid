@@ -987,7 +987,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);*/
 
                         common.setdrawabledata("","NA", tvblockchainid);
-                        common.setdrawabledata(""," "+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
+                        common.setdrawabledata("",""+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
                         common.setdrawabledata("", "NA", tvblocknumber);
                         common.setdrawabledata("","NA", tvmetahash);
 
