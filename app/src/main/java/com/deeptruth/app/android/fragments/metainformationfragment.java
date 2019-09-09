@@ -146,6 +146,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
     customfonttextview tvwifi;
     @BindView(R.id.txt_gps_accuracy)
     customfonttextview tvgpsaccuracy;
+    @BindView(R.id.txt_gpsaccuracy)
+    customfonttextview tv_gpsaccuracy;
     @BindView(R.id.txt_screen)
     customfonttextview tvscreen;
     @BindView(R.id.txt_country)
@@ -655,6 +657,22 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             }
 
                         }
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.orientation))
+                        {
+                            String value=metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
+                                    && (! value.equalsIgnoreCase("null")))
+                            {
+                                int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
+                                common.setdrawabledata("",metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree) , txtdegree);
+                                rotatecompass(degree);
+                            }
+                            else
+                            {
+                                common.setdrawabledata("","NA", txtdegree);
+                            }
+
+                        }
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitudedegree))
                         {
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude)
@@ -901,11 +919,25 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                 showsatellitesinfo(satellitedate,satellitedata);
                         }
 
-                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy)) {
+                            String value = metricItemArraylist.get(j).getMetricTrackValue();
+                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
+                                    && (! value.equalsIgnoreCase("null")))
+                            {
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                                        "\n"+"+/-"+value+" feet", tv_gpsaccuracy);
+                            }
+                            else
+                            {
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
+                                        "\n"+"+/-"+value, tv_gpsaccuracy);
+                            }
+                        }
+                            if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))
                         {
                             String value=metricItemArraylist.get(j).getMetricTrackValue();
                             updateverticalsliderlocationdata(value,vertical_slider_gpsaccuracy);
-                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
+                            /*if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
                                     && (! value.equalsIgnoreCase("null")))
                             {
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
@@ -915,9 +947,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             {
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
                                         "\n"+value, tvgpsaccuracy);
-                            }
+                            }*/
                         }
-
                     }
 
                     if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
@@ -2411,6 +2442,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         settextviewcolor(tvdeviceconnection, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         settextviewcolor(txt_sun, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
         settextviewcolor(txt_moon, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+        settextviewcolor(txtdegree, applicationviavideocomposer.getactivity().getResources().getColor(R.color.black));
+
     }
 
     public void setgraphviewlinecolor(){
@@ -2531,8 +2564,18 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
                             String value = ""+set1.getEntryForIndex(selectedchartposition).getY();
                             String unit = ""+set1.getEntryForIndex(selectedchartposition).getData();
-                            common.setdrawabledata(graphtype,
-                                    "\n"+value+" "+unit , tvallgraphvalue);
+
+                            if(graphtype.equalsIgnoreCase(applicationviavideocomposer.getactivity().getString(R.string.gps_accuracy)))
+                            {
+                                common.setdrawabledata(graphtype,
+                                        "\n"+"+/- "+value+" "+unit , tvallgraphvalue);
+
+                            }else
+                            {
+                                common.setdrawabledata(graphtype,
+                                        "\n"+value+" "+unit , tvallgraphvalue);
+                            }
+
 
                             set1.getEntryForIndex(selectedchartposition).setIcon(ContextCompat.getDrawable(applicationviavideocomposer.getactivity(),
                                     R.drawable.blue_black_ball));
