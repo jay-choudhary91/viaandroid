@@ -925,23 +925,23 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                     && (! value.equalsIgnoreCase("null")))
                             {
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                                        "\n"+"+/- "+value+" feet", tv_gpsaccuracy);
+                                        "\n"+"+/-"+value+" feet", tv_gpsaccuracy);
                             }
                             else
                             {
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                                        "\n"+"+/- "+value, tv_gpsaccuracy);
+                                        "\n"+"+/-"+value, tv_gpsaccuracy);
                             }
                         }
-                            if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.itemgpsaccuracy))
                         {
                             String value=metricItemArraylist.get(j).getMetricTrackValue();
                             updateverticalsliderlocationdata(value,vertical_slider_gpsaccuracy);
-                            /*if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
+                           /* if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
                                     && (! value.equalsIgnoreCase("null")))
                             {
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),
-                                        "\n"+value+" feet", tvgpsaccuracy);
+                                        "\n"+ "+/- " +value+" feet", tvgpsaccuracy);
                             }
                             else
                             {
