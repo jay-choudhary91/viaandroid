@@ -1485,6 +1485,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         setbottomimgview();
         videodownwordarrow.setVisibility(View.GONE);
         rl_video_downwordarrow.setVisibility(View.GONE);
+        video_info.setVisibility(View.GONE);
         backgroundcolor();
         islastdragarrow =false;
         if(player != null && player.isPlaying()){
@@ -1525,6 +1526,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layout_mediatype.setVisibility(View.VISIBLE);
         totalduration.setVisibility(View.VISIBLE);
         time_current.setVisibility(View.VISIBLE);
+        video_info.setVisibility(View.VISIBLE);
         layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
         //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
         setheadermargin(common.getviewheight(actionbarpercentage),common.getviewheight(scrubberviewpercentage),0,false);
@@ -2523,6 +2525,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         img_fullscreen.setVisibility(View.VISIBLE);
         imgpause.setVisibility(View.GONE);
         img_colapseicon.setVisibility(View.GONE);
+        video_info.setVisibility(View.VISIBLE);
     }
 
     public void fullscreen_showcontrollers() {
@@ -2537,6 +2540,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layoutpause.setVisibility(View.VISIBLE);
         imgpause.setVisibility(View.VISIBLE);
         img_colapseicon.setVisibility(View.GONE);
+        video_info.setVisibility(View.GONE);
         gethelper().updateactionbar(1);
         setbottomimgview();
         layoutbackgroundcontroller.setVisibility(View.VISIBLE);

@@ -203,6 +203,7 @@
                                     android:layout_centerHorizontal="true"
                                     android:layout_marginTop="@dimen/margin_10dp"
                                     android:layout_centerVertical="true"
+                                    android:visibility="visible"
                                     android:background="@drawable/question"/>
 
 
