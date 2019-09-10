@@ -4,6 +4,7 @@
     style="@style/drawer_frames"
     android:id="@+id/layout_connection">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"

@@ -403,6 +403,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     TextView txt_trimmed_total_length;
     @BindView(R.id.txt_trimmed_total_frames)
     TextView txt_trimmed_total_frames;
+    @BindView(R.id.parentview)
+    LinearLayout parentview;
+
 
     View rootview;
     GoogleMap mgooglemap;
@@ -460,6 +463,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           phone_time_clock_black.setVisibility(View.GONE);
           world_time_clock_black.setVisibility(View.GONE);
           settextviewcolor();
+          setcoloronview(parentview);
 
           img_drawer_encryption.setColorFilter(Color.argb(255, 255, 255, 255));
           img_drawer_phone.setColorFilter(Color.argb(255, 255, 255, 255));
@@ -3462,6 +3466,49 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             chart.invalidate();
             valueconnectionspeed = value;
             chart.setVisibleYRange(-3f,value+5, YAxis.AxisDependency.LEFT);
+        }
+    }
+
+    public void setcoloronview(ViewGroup viewgrp){
+        for (int i=0; i<viewgrp.getChildCount();i++)
+        {
+            View view = viewgrp.getChildAt(i);
+            if (view instanceof TextView){
+                TextView txtview = (TextView) view;
+                txtview.setTextColor(getResources().getColor(R.color.white));
+
+            }
+            if(view instanceof RelativeLayout)
+            {
+                RelativeLayout relativelayout = (RelativeLayout)view;
+                setcoloronview(relativelayout);
+                /*for (int j=0; j<relativelayout.getChildCount();j++)
+                {
+                    View view1 = relativelayout.getChildAt(j);
+                    if (view1 instanceof TextView){
+                        txt_connection = (TextView) view1;
+                        txt_connection.setTextColor(getResources().getColor(R.color.red));
+                    }
+                    if(view1 instanceof LinearLayout)
+                    {
+                        linearlayout2 = (LinearLayout)view1;
+                        for (int k=0; k<linearlayout2.getChildCount();k++) {
+
+                            View view2 = linearlayout2.getChildAt(k);
+                            if (view2 instanceof TextView) {
+                                txt_connection = (TextView) view2;
+                                txt_connection.setTextColor(getResources().getColor(R.color.yellow));
+                            }
+                        }
+                    }
+                }*/
+
+            }
+            if(view instanceof LinearLayout)
+            {
+                LinearLayout linearlayout2 = (LinearLayout)view;
+                setcoloronview(linearlayout2);
+            }
         }
     }
 }
