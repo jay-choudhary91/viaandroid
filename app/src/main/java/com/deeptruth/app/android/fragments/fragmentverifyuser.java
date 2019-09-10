@@ -52,14 +52,14 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
     customfonttextview txt_verify;
     @BindView(R.id.edt_confirmchannel)
     customfontedittext edt_confirmchannel;
-   /* @BindView(R.id.rootview)
-    ScrollView rootview;*/
    @BindView(R.id.img_backbutton)
    ImageView img_backbutton;
    @BindView(R.id.layout_verifyuser)
    LinearLayout layout_verifyuser;
     @BindView(R.id.img_dialog_background)
     ImageView img_dialog_background;
+    @BindView(R.id.lay_logo)
+    LinearLayout lay_logo;
 
     View contaionerview = null;
     String forgotpassword="";
@@ -72,11 +72,11 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
             contaionerview = inflater.inflate(R.layout.dialog_confirmationcode, container, false);
             ButterKnife.bind(this, contaionerview);
 
-            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
-                    R.drawable.bluegradient);
-            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
+            lay_logo.setVisibility(View.GONE);
 
-            img_backbutton.setVisibility(View.GONE);
+            /*Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+                    R.drawable.bluegradient);
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));*/
 
             txt_verify.setOnClickListener(this);
             layout_verifyuser.setOnClickListener(this);

@@ -65,7 +65,7 @@
     <string name="send_to">Send To</string>
     <string name="capture">CAPTURE</string>
     <string name="start_by_documenting">Start by documenting what you\'re experiencing. Use DeepTruth to create audio, video and photo files.</string>
-    <string name="verify">VERIFY</string>
+    <string name="verify"> VERIFY</string>
     <string name="once_your_media_is_recorded">Once your media is recorded, it\'s logged as the original verified file. It can\'t be altered or edited in any way.</string>
     <string name="Share">SHARE</string>
     <string name="share_your_media_via_text">Share your media via text, document sharing sites, or on the public DeepTruth Channel.</string>
@@ -608,10 +608,18 @@
 
     <!-- updated login screen content -->
     <string name="signup">Sign Up</string>
-    <string name="already_have_an_account">Already have an account?</string>
+    <string name="already_have_an_account">Already have an account? Sign in</string>
+    <string name="have_a_confirmation_code">Have a confirmation code? Verify</string>
+    <string name="reset">Forgot password? Reset</string>
+    <string name="code_verify">Verify</string>
+    <string name="txt_confirmation">A confirmation code will \nbe emailed in minutes...</string>
+        <string name="videolock">VideoLock.com/</string>
+        <string name="txt_confirmation_code">Please enter your cnfimation code</string>
+
+
     <string name="confirm_channel">Confirm Channel</string>
     <string name="set_channel">Set Channel</string>
-    <string name="sign_in">Sign in</string>
+    <string name="sign_in"> Sign in</string>
     <string name="please_confirm_your_channel_name">Please confirm your channel name:</string>
     <string name="please_enter_your_channel_name">Please enter your channel name:</string>
     <string name="channel_name_is_unchangeable_after_an_account_is_created">* Channel names are unchangeable \nafter an account is created.</string>

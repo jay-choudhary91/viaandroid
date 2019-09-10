@@ -56,23 +56,24 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     EditText edt_password;
     @BindView(R.id.login)
     TextView txt_login;
-    @BindView(R.id.createaccount)
-    TextView txt_createaccount;
     @BindView(R.id.forgot_password)
     TextView txt_forgotpassword;
     @BindView(R.id.rootview)
     RelativeLayout rootview;
-    @BindView(R.id.layout_image)
-    LinearLayout layout_image;
+   /* @BindView(R.id.layout_image)
+    LinearLayout layout_image;*/
     @BindView(R.id.layout_logindetails)
     LinearLayout layout_logindetails;
     @BindView(R.id.img_backbutton)
     ImageView img_backbutton;
     @BindView(R.id.img_dialog_background)
     ImageView img_dialog_background;
+    @BindView(R.id.lay_logo)
+    LinearLayout lay_logo;
     int rootviewheight,imageviewheight,userloginheight;
     View contaionerview = null;
     adapteritemclick adapteritemupdate;
+
     /*@Override
     public int getlayoutid() {
         return R.layout.activity_loginactivity;
@@ -87,7 +88,9 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
 
             ButterKnife.bind(this, contaionerview);
 
-            rootview.post(new Runnable() {
+            lay_logo.setVisibility(View.GONE);
+
+            /*rootview.post(new Runnable() {
                 @Override
                 public void run() {
                     rootviewheight = rootview.getHeight();
@@ -102,20 +105,18 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                     layout_logindetails.requestLayout();
 
                 }
-            });
+            });*/
 
-            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+           /* Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
                     R.drawable.bluegradient);
-            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));*/
 
 
             txt_login.setOnClickListener(this);
-            txt_createaccount.setOnClickListener(this);
             txt_forgotpassword.setOnClickListener(this);
             rootview.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
             layout_logindetails.setOnClickListener(this);
-            layout_image.setOnClickListener(this);
         }
         return contaionerview;
     }
@@ -150,10 +151,6 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
             case R.id.login :
                 isvalidated();
                 break;
-            case R.id.createaccount:
-                baseactivity.getinstance().showdialogcreateaccountfragment(config.loginpage);
-                getDialog().dismiss();
-                break;
             case R.id.forgot_password:
                 baseactivity.getinstance().showdialogforgotpasswordfragment();
                 getDialog().dismiss();
@@ -164,9 +161,6 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 break;
             case R.id.layout_logindetails:
                 Log.e("ontouch","ontouch");
-                break;
-            case R.id.layout_image:
-                Log.e("ontouchimage","ontouch");
                 break;
         }
     }
