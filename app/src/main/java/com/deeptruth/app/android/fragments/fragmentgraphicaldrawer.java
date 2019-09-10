@@ -403,6 +403,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     TextView txt_trimmed_total_length;
     @BindView(R.id.txt_trimmed_total_frames)
     TextView txt_trimmed_total_frames;
+    @BindView(R.id.txt_gps_no_signal)
+    TextView txt_gps_no_signal;
+    @BindView(R.id.txt_gps_low_quality)
+    TextView txt_gps_low_quality;
+    @BindView(R.id.txt_slowdata_connection)
+    TextView txt_slowdata_connection;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -1292,6 +1298,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         metricmainarraylist.clear();
         cleargooglemap();
 
+        if(txt_gps_low_quality != null)
+        {
+            txt_gps_low_quality.setText("0 Frames");
+            txt_gps_no_signal.setText("0 Frames");
+            txt_slowdata_connection.setText("0 Frames");
+        }
+
         if(! isdatacomposing)
         {
             fetchmetadatafromdb(mediafilepath);
@@ -1763,12 +1776,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void drawmediainformation()
     {
-        int validcount=0,cautioncount=0,invalidcount=0,lastsequenceno=0,sectioncount=0,unsent=0;
+        int validcount=0,cautioncount=0,invalidcount=0,lastsequenceno=0,sectioncount=0,unsent=0,gpslowqualitycount=0
+                ,gpsnosignalcount=0,slowdataconnectioncount=0;
         String lastcolor="";
         ArrayList<String> colorsectioncount=new ArrayList<>();
         for (int i = 0; i < metricmainarraylist.size(); i++)
         {
             String strsequence=metricmainarraylist.get(i).getSequenceno();
+            String coloreason=metricmainarraylist.get(i).getColorreason();
             if(! strsequence.trim().isEmpty() && (! strsequence.equalsIgnoreCase("NA")) && (! strsequence.equalsIgnoreCase("null")))
             {
                 int sequenceno=Integer.parseInt(strsequence);   // 15  30  45
@@ -1780,6 +1795,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 else if(metricmainarraylist.get(i).getColor().equalsIgnoreCase(config.color_yellow))
                 {
                     cautioncount=cautioncount+sequencecount;
+                    if(coloreason.toLowerCase().contains(config.coloreason_gpsturnedoff.toLowerCase()) ||
+                            coloreason.toLowerCase().contains(config.coloreason_missing_gps_coordinates.toLowerCase()))
+                    {
+                        gpsnosignalcount=gpsnosignalcount+sequencecount;
+                    }
+                    else if(coloreason.toLowerCase().contains(config.coloreason_gps_accuracy.toLowerCase()))
+                    {
+                        gpslowqualitycount=gpslowqualitycount+sequencecount;
+                    }
+                    else if(coloreason.toLowerCase().contains(config.coloreason_slowdataconnection.toLowerCase()))
+                    {
+                        slowdataconnectioncount=slowdataconnectioncount+sequencecount;
+                    }
                 }
                 else if(metricmainarraylist.get(i).getColor().equalsIgnoreCase(config.color_red))
                 {
@@ -1842,7 +1870,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
 
         //mediapiechartdata(pie_videoaudiochart,20,10,40,30,100);
-        mediapiechartdata(pie_videoaudiochart,validcount,cautioncount,invalidcount,unsent,lastsequenceno);
+        mediapiechartdata(pie_videoaudiochart,validcount,cautioncount,invalidcount,unsent,lastsequenceno,gpslowqualitycount,
+                gpsnosignalcount,slowdataconnectioncount);
 
         seekbar_mediavideoaudio.setPadding(0,0,0,0);
         seekbar_mediavideoaudio.setMax(metricmainarraylist.size());
@@ -3250,7 +3279,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         chart.invalidate();
     }
 
-    public void mediapiechartdata(PieChart piechart,int valid,int caution,int invalid ,int unsent,int lastsequenceno)
+    public void mediapiechartdata(PieChart piechart,int valid,int caution,int invalid ,int unsent,int lastsequenceno,
+                                  int gpslowqualitycount,int gpsnosignalcount,int slowdataconnectioncount)
     {
         piechart.setNoDataText("");
         piechart.setExtraOffsets(30, 10, 30, 10);
@@ -3338,6 +3368,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         piechart.invalidate();
 
         txt_total_frames.setText(""+lastsequenceno);
+        txt_gps_low_quality.setText(""+gpslowqualitycount+" Frames");
+        txt_gps_no_signal.setText(""+gpsnosignalcount+" Frames");
+        txt_slowdata_connection.setText(""+slowdataconnectioncount+" Frames");
 
     }
 

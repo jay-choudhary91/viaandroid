@@ -1389,7 +1389,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         arraymediaitemlist.get(i).setThumbnailpath(thumbnailurl);
                         arraymediaitemlist.get(i).setMediacolor(color);
                         arraymediaitemlist.get(i).setLocalkey(localkey);
-                        arraymediaitemlist.get(i).setMediastatus(status);
                         arraymediaitemlist.get(i).setVideotoken(token);
 
 
@@ -1402,6 +1401,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         if((! arraymediaitemlist.get(i).getMediatitle().equalsIgnoreCase(title)) || (! arraymediaitemlist.get(i).getMedianotes().equalsIgnoreCase(media_notes)))
                             isneedtonotify=true;
 
+                        if((! arraymediaitemlist.get(i).getMediastatus().equalsIgnoreCase(status)))
+                            isneedtonotify=true;
+
+                        arraymediaitemlist.get(i).setMediastatus(status);
                         arraymediaitemlist.get(i).setMediatitle(title);
                         arraymediaitemlist.get(i).setMedianotes(media_notes);
 
@@ -1510,16 +1513,17 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             arraymediaitemlist.get(i).setInvalidcount(invalidcount);
                             arraymediaitemlist.get(i).setUnsentcount(unsentcount);
                             arraymediaitemlist.get(i).setMedialocation(recordedlocation);
-
-                            if(isneedtonotify)
-                            {
-                                if(adaptermedialistlocal != null && arraymediaitemlist.size() > 0)
-                                    adaptermedialistlocal.notifyItemChanged(i);
-
-                                if(adaptermedialistpublished != null && arraymediaitemlist.size() > 0)
-                                    adaptermedialistpublished.notifyItemChanged(i);
-                            }
                         }
+
+                        if(isneedtonotify)
+                        {
+                            if(adaptermedialistlocal != null && arraymediaitemlist.size() > 0)
+                                adaptermedialistlocal.notifyItemChanged(i);
+
+                            if(adaptermedialistpublished != null && arraymediaitemlist.size() > 0)
+                                adaptermedialistpublished.notifyItemChanged(i);
+                        }
+
                         break;
                     }
                 }

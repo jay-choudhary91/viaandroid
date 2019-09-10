@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
@@ -498,13 +499,35 @@ public class readmediadataservice extends Service {
                     {
                         e.printStackTrace();
                     }
-                }else{
+                }else
+                {
+
+                    if(mediatype.equalsIgnoreCase("image"))
+                        updatemediaattempt(common.getfilename(mediapath), 1, config.sync_notfound);
 
                     xapicounter++;
                     runxapicounter(mediafilepath);
                 }
             }
         });
+    }
+
+    public void updatemediaattempt(String location, int totalattempt, String status) {
+
+            databasemanager mdbhelper = new databasemanager(getApplicationContext());
+            mdbhelper.createDatabase();
+
+        try {
+            mdbhelper.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatemediaattempt(location, "" + totalattempt, status);
+            mdbhelper.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void getmediaframes(final String mediatoken, final int framestart, final int maxframes,String mediafilepath)

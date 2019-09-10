@@ -7,7 +7,7 @@
     android:orientation="vertical"
     >
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/img_backbutton"
         android:layout_width="35dp"
         android:layout_height="35dp"
@@ -15,7 +15,7 @@
         android:layout_marginTop="@dimen/margin_15dp"
         android:layout_marginLeft="@dimen/margin_15dp"
         android:tint="@color/white"
-        android:src="@drawable/ic_reply"/>
+        android:src="@drawable/ic_reply"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="0.6"
             android:layout_height="0dp"
             android:orientation="vertical"
             android:gravity="center"
@@ -55,25 +55,25 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_weight="0.3"
+            android:layout_weight="0.4"
             android:layout_height="0dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="vertical"
-                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
                 android:layout_marginBottom="@dimen/margin_40dp"
                 android:layout_height="wrap_content">
 
                 <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_please_wait"
+                    android:id="@+id/txt_uploading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/uploading_"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
+                    android:padding="@dimen/margin_5dp"
                     app:fontType="Comfortaa-Regular"/>
 
                 <RelativeLayout
@@ -110,28 +110,18 @@
                     android:text="22% Complete"
                     android:layout_marginTop="@dimen/margin_5dp"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     app:fontType="Comfortaa-Regular"/>
 
             </LinearLayout>
 
         </RelativeLayout>
 
-        <com.deeptruth.app.android.views.customfonttextview
-            android:id="@+id/txt_fileuploaded"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/margin_10dp"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:text="@string/your_file_has_been_copied"
-            app:fontType="Comfortaa-Regular"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.4"
+            android:layout_weight="0.3"
             android:orientation="vertical"
             android:gravity="center">
 

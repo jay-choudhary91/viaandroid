@@ -26,7 +26,6 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center"
-            android:visibility="visible"
             android:id="@+id/img_updownarrow"
             android:src="@drawable/ic_downarrow"/>
 
