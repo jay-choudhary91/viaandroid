@@ -2716,7 +2716,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                 }
                             });
 
-                            String value = ""+set1.getEntryForIndex(selectedchartposition).getY();
+                            int value = (int) set1.getEntryForIndex(selectedchartposition).getY();
                             String unit = ""+set1.getEntryForIndex(selectedchartposition).getData();
 
                             if(graphtype.equalsIgnoreCase(applicationviavideocomposer.getactivity().getString(R.string.gps_accuracy)))
