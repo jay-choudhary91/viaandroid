@@ -83,7 +83,6 @@
                 app:fontType="Comfortaa-Regular"
                 android:layout_below="@+id/email"
                 android:imeOptions="actionNext"
-                android:inputType="textPassword"
                 android:id="@+id/edt_channel_name"
                 android:singleLine="true"
                 android:layout_weight="1"
@@ -111,6 +110,7 @@
             app:fontType="Comfortaa-Regular"
             android:maxLength="50"
             android:imeOptions="actionDone"
+            android:inputType="textPassword"
             android:layout_marginTop="@dimen/margin_8dp"
             android:id="@+id/edt_confirmpassword"
            />
