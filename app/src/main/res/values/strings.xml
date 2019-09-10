@@ -10,7 +10,7 @@
     <string name="confirmpassword">Confirm Password</string>
     <string name="submit">Submit</string>
     <string name="next">Next</string>
-    <string name="login">Login</string>
+    <string name="login">Log In</string>
     <string name="create_account">Create Account</string>
     <string name="create_channel">Create Channel</string>
     <string name="forgot_password">Forgot Password?</string>
@@ -614,8 +614,11 @@
     <string name="reset">Forgot password? Reset</string>
     <string name="code_verify">Verify</string>
     <string name="txt_confirmation">A confirmation code will \nbe emailed in minutes...</string>
-        <string name="videolock">VideoLock.com/</string>
-        <string name="txt_confirmation_code">Please enter your cnfimation code</string>
+    <string name="videolock">VideoLock.com/</string>
+    <string name="txt_confirmation_code">Please enter your cnfimation code</string>
+    <string name="txt_please_login">Please Login</string>
+    <string name="txt_forgotpassword">Please enter your email address \nand we will send your password</string>
+    <string name="txt_send_password">Send Password</string>
 
 
     <string name="confirm_channel">Confirm Channel</string>

@@ -3263,7 +3263,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         fragment.show(ft, "createaccount");
     }
 
-    public void showdialogverifyuserfragment(String type){
+    public void showdialogverifyuserfragment(String forgotpassword,String type,String lastfragment ){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("verifyuser");
@@ -3272,11 +3272,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         //ft.addToBackStack(null);
         fragmentverifyuser fragment = new fragmentverifyuser();
-        fragment.setdata(type);
+        fragment.setdata(forgotpassword,type,lastfragment);
         fragment.show(ft, "verifyuser");
     }
 
-    public void showdialogforgotpasswordfragment(){
+    public void showdialogforgotpasswordfragment(String type,String lastfragment){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("forgotpassword");
@@ -3285,6 +3285,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         //ft.addToBackStack(null);
         fragmentforgotpassword fragment = new fragmentforgotpassword();
+        fragment.setdata(type,lastfragment);
         fragment.show(ft, "forgotpassword");
     }
 
