@@ -10,6 +10,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -46,8 +53,12 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
 
     @BindView(R.id.btn_signup)
     customfonttextview btn_signup;
-    @BindView(R.id.btn_signin)
-    customfonttextview btn_signin;
+    @BindView(R.id.tv_signin)
+    customfonttextview tv_signin;
+    @BindView(R.id.tv_verify)
+    customfonttextview tv_verify;
+    @BindView(R.id.tv_forgotpassword)
+    customfonttextview tv_forgotpassword;
     @BindView(R.id.img_backbutton)
     ImageView img_backbutton;
     @BindView(R.id.img_dialog_background)
@@ -63,14 +74,16 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
             contaionerview = inflater.inflate(R.layout.dialog_signup, container, false);
             ButterKnife.bind(this, contaionerview);
 
-            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+           /* Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
                     R.drawable.bluegradient);
-            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));*/
 
             btn_signup.setOnClickListener(this);
-            btn_signin.setOnClickListener(this);
-            btn_signin.setText(" "+applicationviavideocomposer.getactivity().getResources().getString(R.string.sign_in));
             img_backbutton.setOnClickListener(this);
+
+            setsigninclickabletext(tv_signin);
+            setverifyclickabletext(tv_verify);
+            setforgotpasswordclickabletext(tv_forgotpassword);
         }
         return contaionerview;
     }
@@ -100,10 +113,10 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
                 getDialog().dismiss();
                 break;
 
-            case R.id.btn_signin:
+            /*case R.id.btn_signin:
                 baseactivity.getinstance().showdialogsigninfragment();
                 getDialog().dismiss();
-                break;
+                break;*/
 
             case R.id.img_backbutton:
                 getDialog().dismiss();
@@ -142,5 +155,77 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
         double bottommargin = (height / 100) * 3;
         params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
         getDialog().getWindow().setAttributes(params);
+    }
+
+
+    public void setsigninclickabletext(customfonttextview tv_signin){
+
+        SpannableString ss = new SpannableString(applicationviavideocomposer.getactivity().getResources().getString(R.string.already_have_an_account));
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+
+                baseactivity.getinstance().showdialogsigninfragment();
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        };
+        ss.setSpan(clickableSpan, 25, 32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        tv_signin.setText(ss);
+        tv_signin.setMovementMethod(LinkMovementMethod.getInstance());
+        tv_signin.setHighlightColor(Color.TRANSPARENT);
+
+    }
+
+
+    public void setverifyclickabletext(customfonttextview tv_verify){
+        SpannableString ss = new SpannableString(applicationviavideocomposer.getactivity().getResources().getString(R.string.have_a_confirmation_code));
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+
+                baseactivity.getinstance().showdialogverifyuserfragment(config.loginpage);
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        };
+        ss.setSpan(clickableSpan, 26, 32, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        tv_verify   .setText(ss);
+        tv_verify.setMovementMethod(LinkMovementMethod.getInstance());
+        tv_verify.setHighlightColor(Color.TRANSPARENT);
+    }
+
+
+    public void setforgotpasswordclickabletext(customfonttextview tv_forgotpassword){
+        SpannableString ss = new SpannableString(applicationviavideocomposer.getactivity().getResources().getString(R.string.reset));
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+
+                baseactivity.getinstance().showdialogforgotpasswordfragment();
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+                ds.setUnderlineText(false);
+            }
+        };
+        ss.setSpan(clickableSpan, 17, 22, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        tv_forgotpassword.setText(ss);
+        tv_forgotpassword.setMovementMethod(LinkMovementMethod.getInstance());
+        tv_forgotpassword.setHighlightColor(Color.TRANSPARENT);
+
     }
 }

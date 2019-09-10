@@ -7,75 +7,35 @@
     android:fillViewport="true"
     android:id="@+id/rootview"
     android:layout_height="match_parent"
+    android:background="@drawable/popup_background"
     tools:context="com.deeptruth.app.android.fragments.fragmentsignin">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:focusableInTouchMode="true"
         android:layout_height="match_parent">
 
-
         <ImageView
             android:id="@+id/img_dialog_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:scaleType="fitXY"/>
 
-        <include layout="@layout/dialog_background"
-            android:id="@+id/layout_image"></include>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="bottom"
-            android:visibility="gone"
-            android:gravity="bottom">
-            <ImageView
-                android:id="@+id/img_imagedeep"
-                android:layout_width="220dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:src="@drawable/splash_logo_icon"
-                />
-
-          <!--  <ImageView
-                android:id="@+id/img_imagetext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="visible"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/deeptruth_text"/>
-
-            <com.deeptruth.app.android.views.customfonttextview
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="visible"
-                android:text="@string/proof_of_the_truth"
-                android:textSize="15dp"
-                app:fontType="Comfortaa-Regular"
-                android:textColor="@color/blue"
-                android:layout_marginTop="5dp"
-                android:layout_height="wrap_content" />-->
-        </LinearLayout>
+        <include layout="@layout/dialog_background"></include>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/layout_logindetails"
-            android:layout_below="@+id/layout_image"
+            android:layout_marginTop="@dimen/margin_50dp"
             android:layout_marginLeft="@dimen/dialog_leftmargin"
             android:layout_marginRight="@dimen/dialog_rightmargin"
+            android:orientation="vertical"
             android:gravity="center">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_centerInParent="true"
-                android:id="@+id/layout_signin"
-                android:layout_alignParentBottom="true"
-                android:layout_height="wrap_content">
+
 
                 <com.deeptruth.app.android.views.customfontedittext
                     style="@style/edt_dialogcreateaccount"
@@ -98,30 +58,27 @@
                     android:id="@+id/edt_password"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
-                    style="@style/txt_createaccount"
+                    style="@style/edttext_confirmchannel"
+                    android:padding="3dp"
                     android:text="@string/login"
+                    android:textColor="@color/white"
+                    android:background="@drawable/textview_bluebackgroundshape"
                     app:fontType="Comfortaa-Regular"
+                    android:layout_below="@+id/edt_password"
+                    android:layout_marginTop="@dimen/margin_50dp"
                     android:id="@+id/login"
-                    android:layout_marginTop="@dimen/margin_10dp"
-                    android:layout_below="@+id/edt_password"/>
-
-                <com.deeptruth.app.android.views.customfonttextview
-                    style="@style/txt_createaccount"
-                    android:text="@string/create_account"
-                    app:fontType="Comfortaa-Regular"
-                    android:id="@+id/createaccount"
-                    android:layout_below="@+id/login"/>
+                    />
 
                 <com.deeptruth.app.android.views.customfonttextview
                     style="@style/txt_createaccount"
                     android:text="@string/forgot_password"
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/forgot_password"
-                    android:layout_below="@+id/createaccount"/>
+                    android:layout_marginTop="@dimen/margin_15dp"
+                    android:layout_below="@+id/login"/>
 
 
-            </RelativeLayout>
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

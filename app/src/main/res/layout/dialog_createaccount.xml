@@ -3,12 +3,14 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@drawable/popup_background"
     android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/img_dialog_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:scaleType="fitXY"/>
 
     <LinearLayout
@@ -24,7 +26,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="@dimen/dialog_leftmargin"
         android:layout_marginRight="@dimen/dialog_rightmargin"
         android:id="@+id/rootview"
@@ -46,42 +48,72 @@
             app:fontType="Comfortaa-Bold"
             android:layout_gravity="center"
             android:gravity="center"
+            android:visibility="gone"
             android:textSize="11sp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:maxLines="3"
             />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:layout_width="0dp"
+                android:layout_height="@dimen/margin_40dp"
+                android:text="@string/videolock"
+                android:textColor="@color/black"
+                app:fontType="Comfortaa-Bold"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:visibility="visible"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:maxLines="1"
+                />
+
+
+            <com.deeptruth.app.android.views.customfontedittext
+                style="@style/edt_dialogcreateaccount"
+                android:layout_width="0dp"
+                android:hint="@string/channel_name"
+                app:fontType="Comfortaa-Regular"
+                android:layout_below="@+id/email"
+                android:imeOptions="actionNext"
+                android:inputType="textPassword"
+                android:id="@+id/edt_channel_name"
+                android:singleLine="true"
+                android:layout_weight="1"
+                />
+
+        </LinearLayout>
+
+
+
         <com.deeptruth.app.android.views.customfontedittext
             style="@style/edt_dialogcreateaccount"
+            android:layout_below="@+id/edt_password"
             android:hint="@string/password"
             app:fontType="Comfortaa-Regular"
-            android:layout_below="@+id/email"
             android:imeOptions="actionNext"
-            android:inputType="textPassword"
             android:singleLine="true"
-            android:layout_marginTop="@dimen/margin_5dp"
-            android:id="@+id/edt_password"/>
+            android:inputType="textPassword"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:id="@+id/edt_password"
+            />
 
         <com.deeptruth.app.android.views.customfontedittext
             style="@style/edt_dialogcreateaccount"
             android:hint="@string/confirmpassword"
-            android:layout_below="@+id/edt_password"
-            app:fontType="Comfortaa-Regular"
-            android:imeOptions="actionNext"
-            android:singleLine="true"
-            android:inputType="textPassword"
-            android:layout_marginTop="@dimen/margin_8dp"
-            android:id="@+id/edt_confirmpassword"/>
-
-        <com.deeptruth.app.android.views.customfontedittext
-            style="@style/edt_dialogcreateaccount"
-            android:hint="@string/channel_name"
             app:fontType="Comfortaa-Regular"
             android:maxLength="50"
             android:imeOptions="actionDone"
             android:layout_marginTop="@dimen/margin_8dp"
-            android:id="@+id/edt_channel_name"/>
+            android:id="@+id/edt_confirmpassword"
+           />
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="wrap_content"
@@ -90,26 +122,15 @@
             android:textColor="@color/white"
             app:fontType="Comfortaa-Bold"
             android:layout_gravity="center"
+            android:visibility="gone"
             android:gravity="center"
             android:textSize="9sp"
             android:layout_marginTop="@dimen/margin_5dp"
             />
 
         <com.deeptruth.app.android.views.customfonttextview
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/margin_2dp"
-            android:gravity="center"
-            android:text="@string/channelname_link"
-            android:textColor="@color/white"
-            android:textSize="9sp"
-            app:fontType="Comfortaa-Bold" />
-
-
-        <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/margin_40dp"
             android:padding="3dp"
             android:gravity="center"
             android:id="@+id/txt_submit"
@@ -117,9 +138,22 @@
             android:textColor="@color/white"
             android:background="@drawable/textview_bluebackgroundshape"
             app:fontType="Comfortaa-Regular"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/margin_40dp"
             android:textSize="15sp"
             />
+
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/margin_15dp"
+            android:gravity="center"
+            android:lines="2"
+            android:text="@string/txt_confirmation"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            app:fontType="Comfortaa-Bold" />
     </LinearLayout>
 
 </LinearLayout>

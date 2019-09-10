@@ -453,7 +453,7 @@
     </style>
     <style name="edttext_confirmchannel">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">@dimen/margin_40dp</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:background">@drawable/edittext_shap</item>
@@ -462,7 +462,7 @@
     </style>
 
     <style name="txtview_confirmchannel">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_5dp</item>
         <item name="android:layout_marginBottom">@dimen/margin_5dp</item>
@@ -475,11 +475,11 @@
 
     <style name="edt_dialogcreateaccount">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:padding">3dp</item>
-        <item name="android:textColorHint">@color/black</item>
+        <item name="android:textColorHint">@color/grey_x</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">15sp</item>
         <item name="android:maxLines">1</item>

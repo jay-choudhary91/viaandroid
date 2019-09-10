@@ -74,6 +74,8 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     LinearLayout rootview;
     @BindView(R.id.img_dialog_background)
     ImageView img_dialog_background;
+    @BindView(R.id.lay_logo)
+    LinearLayout lay_logo;
     String type = "";
 
 
@@ -87,13 +89,16 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
             contaionerview = inflater.inflate(R.layout.dialog_createaccount, container, false);
             ButterKnife.bind(this, contaionerview);
 
+            lay_logo.setVisibility(View.GONE);
+
             txt_submit.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
             imgvideolock_background.setOnClickListener(this);
             rootview.setOnClickListener(this);
-            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+           /* Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
                     R.drawable.bluegradient);
-            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,140));
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,140));*/
+
         }
         return contaionerview;
     }

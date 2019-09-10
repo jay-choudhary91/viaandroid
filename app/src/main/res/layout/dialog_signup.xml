@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@drawable/popup_background"
     android:layout_height="match_parent">
 
     <ImageView
@@ -20,8 +21,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:gravity="center"
         android:orientation="vertical"
+        android:layout_marginTop="@dimen/margin_55dp"
         android:layout_height="match_parent">
 
 
@@ -32,47 +33,59 @@
             android:padding="5dp"
             android:layout_marginLeft="@dimen/dialog_leftmargin"
             android:layout_marginRight="@dimen/dialog_rightmargin"
-            android:text="@string/signup"
+            android:text="@string/create_account"
             android:textColor="@color/white"
             android:layout_gravity="center"
+            android:textSize="@dimen/item_text_size_15"
             android:gravity="center"
             android:background="@drawable/textview_bluebackgroundshape"
             app:fontType="Comfortaa-Regular"
             />
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_signin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="2dp"
+            android:layout_marginLeft="@dimen/dialog_leftmargin"
+            android:layout_marginRight="@dimen/dialog_rightmargin"
+            android:text="@string/already_have_an_account"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:textSize="13sp"
+            app:fontType="Comfortaa-Regular"
+            />
 
-            <com.deeptruth.app.android.views.customfonttextview
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/already_have_an_account"
-                android:textColor="@color/white"
-                android:layout_gravity="center"
-                android:textSize="11sp"
-                android:gravity="center"
-                app:fontType="Comfortaa-Regular"
-                />
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_verify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:layout_marginLeft="@dimen/dialog_leftmargin"
+            android:layout_marginRight="@dimen/dialog_rightmargin"
+            android:text="@string/have_a_confirmation_code"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:textSize="13sp"
+            app:fontType="Comfortaa-Regular"
+            />
 
-            <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/btn_signin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:text="@string/sign_in"
-                android:textSize="11sp"
-                android:textColor="@color/blue"
-                android:layout_gravity="center"
-                android:gravity="center"
-                app:fontType="Comfortaa-Regular"
-                />
 
-        </LinearLayout>
-
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/tv_forgotpassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:layout_marginLeft="@dimen/dialog_leftmargin"
+            android:layout_marginRight="@dimen/dialog_rightmargin"
+            android:text="@string/forgot_password"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:textSize="13sp"
+            app:fontType="Comfortaa-Regular"
+            />
 
     </LinearLayout>
 
