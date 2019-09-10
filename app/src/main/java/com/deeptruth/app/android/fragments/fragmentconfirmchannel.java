@@ -161,10 +161,12 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
                         {
                             if(object.getString("success").equalsIgnoreCase("1"))
                             {
-
                                 getDialog().dismiss();
                                 if(userverified.equalsIgnoreCase("1") || userverified.trim().isEmpty())
                                     baseactivity.getinstance().showdialogverifyuserfragment(config.createaccount);
+
+                                if(object.has(config.clientchannel))
+                                    xdata.getinstance().saveSetting(config.clientchannel,object.getString(config.clientchannel));
                             }
                             else
                             {

@@ -219,6 +219,10 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
             invalidcount=1;
             holder.tv_invalid.setText(config.item_invalid+" 100%");
         }
+        else
+        {
+            holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
+        }
 
         holder.tv_valid.setVisibility(View.VISIBLE);
         holder.tv_caution.setVisibility(View.VISIBLE);
@@ -282,7 +286,6 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
         if(arrayList != null && arrayList.size() > 0)
         {
             holder.layout_update_labels.setVisibility(View.VISIBLE);
-            holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
             if(mediaobject.getColorsectionsarray() != null && mediaobject.getColorsectionsarray().size() > 0)
             {
                 for(int i=0;i<mediaobject.getColorsectionsarray().size();i++)

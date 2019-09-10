@@ -59,8 +59,10 @@ public class config {
     public static final double STATIC_LNG = -116.69653460383417;
 
     public static final double max_connectionspeedrange = 50;
+    public static final int connection_timeout = 10000;
 
     public static final String publishedlist_url = "https://videolock.com/my";
+    public static final String videolockbaseurl = "https://videolock.com/";
     public static final String location_elevationapi_baseurl = "https://maps.googleapis.com/maps/api/elevation/json?";
     public static final String prefs_name = "main_prefs";
     public static final String time_format = "hh:mm a";
@@ -88,6 +90,11 @@ public class config {
     public static final String gravitytop = "gravitytop";
     public static final String gravitycenter= "gravitycenter";
     public static final String gravitybottom= "gravitybottom";
+
+    public static final String coloreason_gpsturnedoff= "GPS Turned Off";
+    public static final String coloreason_missing_gps_coordinates= "Missing GPS Coordinates";
+    public static final String coloreason_gps_accuracy= "GPS Accuracy";
+    public static final String coloreason_slowdataconnection= "slow data connection";
 
     public static final String updatinglocation = " Updating location .....";
 

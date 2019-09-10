@@ -2496,13 +2496,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
 
         TextView txt_progress = (TextView) videolockuploadingdialog.findViewById(R.id.txt_progress);
-        TextView txt_fileuploaded = (TextView) videolockuploadingdialog.findViewById(R.id.txt_fileuploaded);
         TextView txt_ok = (TextView) videolockuploadingdialog.findViewById(R.id.txt_ok);
         TextView txt_cancel = (TextView) videolockuploadingdialog.findViewById(R.id.txt_cancel);
-        TextView txt_please_wait = (TextView) videolockuploadingdialog.findViewById(R.id.txt_please_wait);
+        TextView txt_uploading = (TextView) videolockuploadingdialog.findViewById(R.id.txt_uploading);
         customseekbar seekbar_uploading = (customseekbar) videolockuploadingdialog.findViewById(R.id.seekbar_uploading);
         AppCompatCheckBox checkbox_notify = (AppCompatCheckBox) videolockuploadingdialog.findViewById(R.id.checkbox_notify);
         checkbox_notify.setText(context.getResources().getString(R.string.notify_when_complete));
+        checkbox_notify.setTextColor(context.getResources().getColor(R.color.white));
         checkbox_notify.setTextColor(context.getResources().getColor(R.color.black));
         txt_fileuploaded.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.your_file_has_been_copied));
 
@@ -2524,16 +2524,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         if(isuploadcomplete)
         {
+            txt_uploading.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.your_file_has_been_copied)
+                    +" "+config.videolockbaseurl+xdata.getinstance().getSetting(config.clientchannel));
             checkbox_notify.setVisibility(View.GONE);
-            txt_fileuploaded.setVisibility(View.VISIBLE);
             txt_cancel.setVisibility(View.GONE);
-            txt_please_wait.setVisibility(View.GONE);
         }
         else
         {
-            txt_please_wait.setVisibility(View.VISIBLE);
+            txt_uploading.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.uploading_to)
+                    +" "+config.videolockbaseurl+xdata.getinstance().getSetting(config.clientchannel));
             checkbox_notify.setVisibility(View.VISIBLE);
-            txt_fileuploaded.setVisibility(View.GONE);
             txt_cancel.setVisibility(View.VISIBLE);
         }
 

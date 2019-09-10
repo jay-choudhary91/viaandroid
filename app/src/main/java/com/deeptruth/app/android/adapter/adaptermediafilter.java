@@ -82,7 +82,7 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
 
         if(mediaobject.isfilterselected())
         {
-            holder.img_updownarrow.setVisibility(View.VISIBLE);
+            //holder.img_updownarrow.setVisibility(View.VISIBLE);
             if(mediaobject.isascending())
                 holder.img_updownarrow.setImageResource(R.drawable.ic_uparrow);
             else
@@ -94,7 +94,7 @@ public class adaptermediafilter extends RecyclerView.Adapter<adaptermediafilter.
         }
         else
         {
-            holder.img_updownarrow.setVisibility(View.GONE);
+            //holder.img_updownarrow.setVisibility(View.GONE);
             holder.txt_options.setTypeface(applicationviavideocomposer.comfortaaregular);
             holder.txt_options.setTextSize(11);
             common.removeunderline(holder.txt_options,mediaobject.getmediafiltername());

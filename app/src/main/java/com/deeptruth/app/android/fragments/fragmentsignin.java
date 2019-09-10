@@ -208,6 +208,8 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
 
                                 if(object.has(config.clientchannel))
                                 {
+                                    xdata.getinstance().saveSetting(config.clientchannel,object.getString(config.clientchannel));
+
                                     if(object.getString(config.clientchannel).equalsIgnoreCase("null") ||
                                             object.getString(config.clientchannel).trim().isEmpty())
                                     {

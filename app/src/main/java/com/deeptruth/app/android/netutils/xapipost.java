@@ -73,6 +73,13 @@ public class xapipost extends AsyncTask<Void, Void, String> {
         HttpPost httppost = new HttpPost(baseUrl);
 
         try {
+            /*RequestConfig requestConfig = RequestConfig.custom()
+                    .setSocketTimeout(config.connection_timeout)
+                    .setConnectTimeout(config.connection_timeout)
+                    .setConnectionRequestTimeout(config.connection_timeout)
+                    .build();
+
+            httppost.setConfig(requestConfig);*/
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairList));
             HttpResponse response = httpclient.execute(httppost);
 

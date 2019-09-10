@@ -181,7 +181,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     ArrayList<celltowermodel> celltowers = new ArrayList<>();
     ArrayList<startmediainfo> unsyncedmediaitems = new ArrayList<>();
     int syncupdationcounter = 0;
-    int downloadmetadataattempt = 2, systemdialogshowrequestcode = 110;
+    int downloadmetadataattempt = 0, systemdialogshowrequestcode = 110;
     ArrayList<video> readerarraymedialist = new ArrayList<video>();
     private BroadcastReceiver coredatabroadcastreceiver;
     Date initialdate;
