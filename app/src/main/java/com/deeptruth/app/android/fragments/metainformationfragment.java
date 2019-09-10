@@ -2690,6 +2690,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
                     if(selectedchartposition <= set1.getEntryCount())
                     {
+                        Log.e("metaconnetion","connectiontimedelay");
                         for(int i=0;i<set1.getEntryCount();i++)
                             set1.getEntryForIndex(i).setIcon(null);
 
@@ -2721,11 +2722,13 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
                             if(graphtype.equalsIgnoreCase(applicationviavideocomposer.getactivity().getString(R.string.gps_accuracy)))
                             {
+                                Log.e("metaconnetion","connectiontimedelay");
                                 common.setdrawabledata(graphtype,
                                         "\n"+"+/- "+value+" "+unit , tvallgraphvalue);
 
                             }else
                             {
+                                Log.e("connectiontimedelay","connectiontimedelay");
                                 common.setdrawabledata(graphtype,
                                         "\n"+value+" "+unit , tvallgraphvalue);
                             }
