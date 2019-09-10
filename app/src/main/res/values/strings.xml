@@ -678,4 +678,6 @@
 
     <string name="txt_note">Note: If the recording was not originally created by VideoLock or the recording has been compressed by an email or text messaging system, the entire recording will be considered invalid.</string>
 
+    
+    <string name="you_have_successfully_registered">You have successfully registered \n your account on VideoLock.com.\n\n You can now upload any of your \n certified VideoLock recordings. \n\n After uploading, you can log in \n to VideoLock.com and manage \nyour content on your channel. \n\n Ready to upload your recording?  </string>
 </resources>
