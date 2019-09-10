@@ -615,7 +615,7 @@
     <string name="code_verify">Verify</string>
     <string name="txt_confirmation">A confirmation code will \nbe emailed in minutes...</string>
     <string name="videolock">VideoLock.com/</string>
-    <string name="txt_confirmation_code">Please enter your cnfimation code</string>
+    <string name="txt_confirmation_code">Please enter your cnfirmation code</string>
     <string name="txt_please_login">Please Login</string>
     <string name="txt_forgotpassword">Please enter your email address \nand we will send your password</string>
     <string name="txt_send_password">Send Password</string>
@@ -683,4 +683,16 @@
 
     
     <string name="you_have_successfully_registered">You have successfully registered \n your account on VideoLock.com.\n\n You can now upload any of your \n certified VideoLock recordings. \n\n After uploading, you can log in \n to VideoLock.com and manage \nyour content on your channel. \n\n Ready to upload your recording?  </string>
+
+
+    <!--Validation strings-->
+
+    <string name="invalid_email">invalid email address</string>
+    <string name="enter_email">Please enter email!</string>
+    <string name="password_not_match">password don\'t match</string>
+    <string name="limit_password">password needs to be atleast six characters long</string>
+    <string name="channel_name_validation">channel name can only have letters and numbers</string>
+    <string name="enter_channelname">Please enter channel name!</string>
+    <string name="limit_channelname">channel name can\'t be longer than 20 characters</string>
+
 </resources>

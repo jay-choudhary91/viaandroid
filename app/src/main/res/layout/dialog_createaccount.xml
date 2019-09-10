@@ -32,6 +32,12 @@
         android:id="@+id/rootview"
         android:layout_height="match_parent">
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_email"
+            android:layout_width="match_parent"
+            app:hintEnabled="false"
+            android:layout_height="wrap_content">
+
         <com.deeptruth.app.android.views.customfontedittext
             style="@style/edt_dialogcreateaccount"
             android:hint="@string/email"
@@ -39,6 +45,8 @@
             android:inputType="textEmailAddress"
             android:imeOptions="actionNext"
             android:id="@+id/email"/>
+
+        </android.support.design.widget.TextInputLayout>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="wrap_content"
@@ -74,11 +82,17 @@
                 android:layout_weight="1"
                 android:maxLines="1"
                 />
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_channel_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:hintEnabled="false"
+                android:layout_weight="1">
 
 
             <com.deeptruth.app.android.views.customfontedittext
                 style="@style/edt_dialogcreateaccount"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:hint="@string/channel_name"
                 app:fontType="Comfortaa-Regular"
                 android:layout_below="@+id/email"
@@ -86,12 +100,17 @@
                 android:imeOptions="actionNext"
                 android:id="@+id/edt_channel_name"
                 android:singleLine="true"
-                android:layout_weight="1"
                 />
+            </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
 
-
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            >
 
         <com.deeptruth.app.android.views.customfontedittext
             style="@style/edt_dialogcreateaccount"
@@ -105,6 +124,16 @@
             android:id="@+id/edt_password"
             />
 
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_confirmpassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            >
+
+
         <com.deeptruth.app.android.views.customfontedittext
             style="@style/edt_dialogcreateaccount"
             android:hint="@string/confirmpassword"
@@ -115,6 +144,8 @@
             android:layout_marginTop="@dimen/margin_8dp"
             android:id="@+id/edt_confirmpassword"
            />
+
+        </android.support.design.widget.TextInputLayout>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="wrap_content"

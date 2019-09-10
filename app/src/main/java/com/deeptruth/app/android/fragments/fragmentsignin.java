@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -39,6 +40,7 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
+import com.deeptruth.app.android.views.customfontedittext;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,9 +53,9 @@ import butterknife.ButterKnife;
 public class fragmentsignin extends DialogFragment implements View.OnClickListener{
     
     @BindView(R.id.edt_username)
-    EditText edt_username;
+    customfontedittext edt_username;
     @BindView(R.id.edt_password)
-    EditText edt_password;
+    customfontedittext edt_password;
     @BindView(R.id.login)
     TextView txt_login;
     @BindView(R.id.forgot_password)
@@ -70,6 +72,12 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     ImageView img_dialog_background;
     @BindView(R.id.lay_logo)
     LinearLayout lay_logo;
+
+    @BindView(R.id.input_layout_email)
+    TextInputLayout input_layout_email;
+    @BindView(R.id.input_layout_password)
+    TextInputLayout input_layout_password;
+
     int rootviewheight,imageviewheight,userloginheight;
     View contaionerview = null;
     adapteritemclick adapteritemupdate;
@@ -149,7 +157,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.login :
-                isvalidated();
+                checkvalidation();
                 break;
             case R.id.forgot_password:
                 baseactivity.getinstance().showdialogforgotpasswordfragment(config.loginpage,config.loginpage);
@@ -331,5 +339,17 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
 
     public void setdata(adapteritemclick adapteritemupdate) {
         this.adapteritemupdate = adapteritemupdate;
+    }
+
+    private void checkvalidation() {
+        if (!common.checkemailvalidation(applicationviavideocomposer.getactivity(),edt_username,input_layout_email)) {
+            return;
+        }
+
+        if (!common.checkpasswordloginvalidation(applicationviavideocomposer.getactivity(),edt_password,input_layout_password)) {
+            return;
+        }
+
+        isvalidated();
     }
 }
