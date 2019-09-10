@@ -189,7 +189,7 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
             @Override
             public void onClick(View textView) {
 
-                baseactivity.getinstance().showdialogverifyuserfragment(config.loginpage);
+                baseactivity.getinstance().showdialogverifyuserfragment("",config.signuppage,config.signuppage);
             }
             @Override
             public void updateDrawState(TextPaint ds) {
@@ -212,7 +212,7 @@ public class fragmentsignup extends DialogFragment implements View.OnClickListen
             @Override
             public void onClick(View textView) {
 
-                baseactivity.getinstance().showdialogforgotpasswordfragment();
+                baseactivity.getinstance().showdialogforgotpasswordfragment(config.signuppage,config.signuppage);
             }
             @Override
             public void updateDrawState(TextPaint ds) {

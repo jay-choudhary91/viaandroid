@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -49,8 +50,6 @@ import butterknife.ButterKnife;
 
 public class fragmentforgotpassword extends DialogFragment implements View.OnClickListener {
 
-    @BindView(R.id.tv_forgotpassword)
-    customfonttextview tvforgotpassword;
     @BindView(R.id.edt_username)
     customfontedittext edtusername;
     @BindView(R.id.tv_next)
@@ -60,6 +59,11 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
     ImageView img_dialog_background;
     @BindView(R.id.img_backbutton)
     ImageView img_backbutton;
+    @BindView(R.id.lay_logo)
+    LinearLayout lay_logo;
+
+    String type = "";
+    String lastfragment = "";
 
     @Nullable
     @Override
@@ -68,11 +72,12 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
             contaionerview = inflater.inflate(R.layout.activity_forgotpassword, container, false);
 
             ButterKnife.bind(this, contaionerview);
+            lay_logo.setVisibility(View.GONE);
 
-            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+          /*  Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
                     R.drawable.bluegradient);
             img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
-
+*/
             tv_next.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
 
@@ -98,9 +103,14 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
                 break;
 
             case R.id.img_backbutton:
+                if(type.equalsIgnoreCase(config.loginpage) && type.equalsIgnoreCase(config.loginpage) ){
+                    baseactivity.getinstance().showdialogsigninfragment();
+                    getDialog().dismiss();
+                }else{
+                    baseactivity.getinstance().showdialogsignupfragment();
+                    getDialog().dismiss();
+                }
 
-                baseactivity.getinstance().showdialogsigninfragment();
-                getDialog().dismiss();
 
                 break;
         }
@@ -129,7 +139,7 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                baseactivity.getinstance().showdialogverifyuserfragment(config.forgotpassword);
+                                baseactivity.getinstance().showdialogverifyuserfragment(config.forgotpassword,config.forgotpassword,lastfragment);
                             }
                             else
                             {
@@ -213,6 +223,11 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
         getDialog().getWindow().getAttributes().windowAnimations = R.style.dialog_slide_animation;
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    }
+
+    public void setdata(String type,String lastfragment){
+        this.type = type;
+        this.lastfragment = lastfragment;
     }
 
 

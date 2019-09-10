@@ -152,7 +152,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                 isvalidated();
                 break;
             case R.id.forgot_password:
-                baseactivity.getinstance().showdialogforgotpasswordfragment();
+                baseactivity.getinstance().showdialogforgotpasswordfragment(config.loginpage,config.loginpage);
                 getDialog().dismiss();
                 break;
             case R.id.img_backbutton:
@@ -277,7 +277,7 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                                 if(object.has(config.clientid))
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                baseactivity.getinstance().showdialogverifyuserfragment(config.loginpage);
+                                baseactivity.getinstance().showdialogverifyuserfragment(config.loginpage,config.loginpage,config.loginpage);
                             }
                         }
 

@@ -52,17 +52,19 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
     customfonttextview txt_verify;
     @BindView(R.id.edt_confirmchannel)
     customfontedittext edt_confirmchannel;
-   @BindView(R.id.img_backbutton)
-   ImageView img_backbutton;
-   @BindView(R.id.layout_verifyuser)
-   LinearLayout layout_verifyuser;
+    @BindView(R.id.img_backbutton)
+    ImageView img_backbutton;
+    @BindView(R.id.layout_verifyuser)
+    LinearLayout layout_verifyuser;
     @BindView(R.id.img_dialog_background)
     ImageView img_dialog_background;
     @BindView(R.id.lay_logo)
     LinearLayout lay_logo;
+    String type = "";
 
     View contaionerview = null;
     String forgotpassword="";
+    String lastfragment="";
 
 
     @Nullable
@@ -80,6 +82,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
 
             txt_verify.setOnClickListener(this);
             layout_verifyuser.setOnClickListener(this);
+            img_backbutton.setOnClickListener(this);
 
         }
         return contaionerview;
@@ -115,6 +118,21 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
                 break;
             case R.id.layout_verifyuser:
                 common.hidekeyboard(applicationviavideocomposer.getactivity());
+                break;
+            case R.id.img_backbutton:
+                if(type.equalsIgnoreCase(config.createaccount)){
+                    baseactivity.getinstance().showdialogsigninfragment();
+                    getDialog().dismiss();
+                }else if(type.equalsIgnoreCase(config.signuppage)){
+                    baseactivity.getinstance().showdialogsignupfragment();
+                    getDialog().dismiss();
+                }else if(type.equalsIgnoreCase(config.forgotpassword)){
+                    baseactivity.getinstance().showdialogforgotpasswordfragment(config.signuppage,lastfragment);
+                    getDialog().dismiss();
+                }else if(type.equalsIgnoreCase(config.loginpage)){
+                    baseactivity.getinstance().showdialogforgotpasswordfragment(config.signuppage,lastfragment);
+                    getDialog().dismiss();
+                }
                 break;
         }
     }
@@ -217,9 +235,10 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
         }
     }
 
-    public void setdata(String forgotpassword){
+    public void setdata(String forgotpassword,String type,String lastfragment){
         this.forgotpassword = forgotpassword;
-
+        this.type = type;
+        this.lastfragment = lastfragment;
     }
     @Override
     public void onResume() {

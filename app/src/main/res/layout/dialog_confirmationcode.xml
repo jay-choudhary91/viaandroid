@@ -37,7 +37,7 @@
             android:text="@string/txt_confirmation_code"
             android:textColor="@color/black"
             app:fontType="Comfortaa-Bold"
-            android:textSize="12sp"
+            android:textSize="13sp"
             />
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -50,8 +50,6 @@
             android:visibility="gone"
             android:gravity="center"
             android:textSize="12sp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
             />
 
         <com.deeptruth.app.android.views.customfontedittext
