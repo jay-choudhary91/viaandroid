@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/popup_background"
-    android:gravity="center"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="top"
+        android:layout_marginTop="@dimen/margin_80dp"
         android:layout_below="@id/layout_top"
         android:layout_above="@id/tableRow5"
         android:gravity="center" >
@@ -29,7 +29,7 @@
     <com.deeptruth.app.android.views.customfonttextview
         android:id="@+id/btn_signup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/margin_40dp"
         android:padding="5dp"
         android:layout_marginLeft="@dimen/dialog_leftmargin"
         android:layout_marginRight="@dimen/dialog_rightmargin"
