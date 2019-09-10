@@ -121,7 +121,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
                 break;
             case R.id.img_backbutton:
                 if(type.equalsIgnoreCase(config.createaccount)){
-                    baseactivity.getinstance().showdialogsigninfragment();
+                    baseactivity.getinstance().showdialogcreateaccountfragment("");
                     getDialog().dismiss();
                 }else if(type.equalsIgnoreCase(config.signuppage)){
                     baseactivity.getinstance().showdialogsignupfragment();
@@ -227,6 +227,7 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
         if(xdata.getinstance().getSetting(config.reset_authtoken).toString().trim().length() > 0)
         {
             baseactivity.getinstance().showdialogchangepasswordfragment();
+            getDialog().dismiss();
 
         }
         else
@@ -249,7 +250,8 @@ public class fragmentverifyuser extends DialogFragment implements View.OnClickLi
 
     public void gotologin(){
 
-        baseactivity.getinstance().showdialogsigninfragment();
+        baseactivity.getinstance().showdialogloginsuccessfragment();
+        getDialog().dismiss();
 
     }
 

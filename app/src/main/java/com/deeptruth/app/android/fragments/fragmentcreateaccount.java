@@ -220,8 +220,6 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
 
                                     getDialog().dismiss();
                                     baseactivity.getinstance().showdialogverifyuserfragment("",config.createaccount,config.createaccount);
-
-
                                 }
                             }
 

@@ -33,6 +33,7 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
+import com.deeptruth.app.android.views.customfonttextview;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,6 +48,8 @@ public class fragmentloginsuccess extends DialogFragment implements View.OnClick
 
     @BindView(R.id.txt_content)
     TextView txt_content;
+    @BindView(R.id.btn_signup)
+    customfonttextview btn_signup;
     int rootviewheight,imageviewheight,userloginheight;
     View contaionerview = null;
     adapteritemclick adapteritemupdate;
@@ -83,6 +86,8 @@ public class fragmentloginsuccess extends DialogFragment implements View.OnClick
 
             common.setspanning(textsharepopup,txt_content);
 
+            btn_signup.setOnClickListener(this);
+
         }
         return contaionerview;
     }
@@ -114,6 +119,10 @@ public class fragmentloginsuccess extends DialogFragment implements View.OnClick
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.btn_signup:
+                baseactivity.getinstance().showdialogsigninfragment();
+                getDialog().dismiss();
+                break;
         }
     }
 
