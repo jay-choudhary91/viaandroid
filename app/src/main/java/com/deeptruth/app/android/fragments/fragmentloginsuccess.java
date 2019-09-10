@@ -76,7 +76,7 @@ public class fragmentloginsuccess extends DialogFragment implements View.OnClick
 
             textsharepopup.add(new sharepopuptextspanning(1.18f,133,167,str));//144
             textsharepopup.add(new sharepopuptextspanning(1.17f,167,196,str));
-            textsharepopup.add(new sharepopuptextspanning(1.16f,196,227,str));
+            textsharepopup.add(new sharepopuptextspanning(1.17f,196,227,str));
 
             textsharepopup.add(new sharepopuptextspanning(1.14f,227,str.length(),str));
 
