@@ -2503,7 +2503,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         customseekbar seekbar_uploading = (customseekbar) videolockuploadingdialog.findViewById(R.id.seekbar_uploading);
         AppCompatCheckBox checkbox_notify = (AppCompatCheckBox) videolockuploadingdialog.findViewById(R.id.checkbox_notify);
         checkbox_notify.setText(context.getResources().getString(R.string.notify_when_complete));
-        checkbox_notify.setTextColor(context.getResources().getColor(R.color.white));
+        checkbox_notify.setTextColor(context.getResources().getColor(R.color.black));
         txt_fileuploaded.setText(applicationviavideocomposer.getactivity().getResources().getString(R.string.your_file_has_been_copied));
 
         seekbar_uploading.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

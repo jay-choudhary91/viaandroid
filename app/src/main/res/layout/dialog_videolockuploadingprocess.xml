@@ -139,7 +139,7 @@
                 android:id="@+id/checkbox_notify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/white"
+                android:buttonTint="@color/black"
                 android:checked="true"
                 android:text="@string/notify_when_complete"
                 android:textSize="15sp"/>
