@@ -140,6 +140,7 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
                                     xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
                                 baseactivity.getinstance().showdialogverifyuserfragment(config.forgotpassword,config.forgotpassword,lastfragment);
+                                getDialog().dismiss();
                             }
                             else
                             {
@@ -170,6 +171,7 @@ public class fragmentforgotpassword extends DialogFragment implements View.OnCli
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
+
                             new AlertDialog.Builder(applicationviavideocomposer.getactivity())
                                     .setMessage(error)
                                     .setPositiveButton(android.R.string.ok, null)
