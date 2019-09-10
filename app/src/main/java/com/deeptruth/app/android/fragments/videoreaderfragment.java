@@ -693,7 +693,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
 
                    float leftmargin = applicationviavideocomposer.getactivity().getResources().getDimension(R.dimen.margin_43dp);
-                   p.setMargins((int) (thumbRect.centerX() - leftmargin), 0, -100, 0);
+                   p.setMargins((int) (thumbRect.centerX() - common.dpToPx(applicationviavideocomposer.getactivity(),43)), 0, -100, 0);
 
                    layout_progressline.setLayoutParams(p);
                    txt_mediatimethumb.setText(common.gettimestring(seekBar.getProgress()));
