@@ -2364,8 +2364,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 txt_trimmed_date_time.setText(trimmeddatetime);
                                 txt_trimmed_start_time.setText(trimmedstarttime);
                                 txt_trimmed_end_time.setText(trimmedendtime);
-                                //txt_trimmed_total_frames.setText(trimmedframes);
-                                txt_trimmed_total_frames.setText("-");
+                                txt_trimmed_total_frames.setText(trimmedframes);
+                                //txt_trimmed_total_frames.setText("-");
                                 txt_trimmed_total_length.setText(trimmedduration);
                                 layout_trimmed_recording.setVisibility(View.VISIBLE);
                             }

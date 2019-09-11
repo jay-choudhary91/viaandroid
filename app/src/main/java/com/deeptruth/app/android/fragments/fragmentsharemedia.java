@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
@@ -41,6 +44,7 @@ import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.inapputils.IabHelper;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.metadatahash;
+import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.rangeseekbar.interfaces.onrangeseekbarchangelistener;
 import com.deeptruth.app.android.rangeseekbar.widgets.crystalrangeseekbar;
 import com.deeptruth.app.android.services.insertmediadataservice;
@@ -57,7 +61,10 @@ import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -899,69 +906,156 @@ public class fragmentsharemedia extends DialogFragment implements View.OnClickLi
     {
         if(! mediatoken.trim().isEmpty())
         {
-            FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", file);
 
-            try {
-                //path of the video of which you want frames
-                mmr.setDataSource(file.getAbsolutePath());
+            final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(), uri);
+            if (mp != null) {
+                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                        long durationlong = mediaPlayer.getDuration();
+                        try {
 
-                long durationlong = mmr.getMetadata().getLong("duration");
-                double frameRate = mmr.getMetadata().getDouble("framerate");
-                long numberofframe = (int) (durationlong/frameRate);
+                            final String destinationpath = common.createtempfileofmedianameforhash(config.prefs_md5,file.
+                                    getAbsolutePath()).getAbsolutePath();
+                            String[] complexcommand = {"-i", file.getAbsolutePath(),"-f", "framemd5" ,destinationpath};
 
-                String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
-                String datetime = currenttimewithoffset[0];
+                            try {
+                                ffmpeg.execute(complexcommand, new ExecuteBinaryResponseHandler() {
+                                    @Override
+                                    public void onFailure(String s) {
+                                        Log.e("Failure with output : ","IN onFailure");
+                                    }
 
-                Date startdate = null;
-                if(datetime.contains("T"))
-                {
-                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                    startdate = format.parse(datetime);
-                }
-                else
-                {
-                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                    startdate = format.parse(datetime);
-                }
+                                    @Override
+                                    public void onSuccess(String s) {
+                                        Log.e("SUCCESS with output : ",s);
 
-                int seconds=(int)durationlong/1000;
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(startdate);
-                calendar.add(Calendar.SECOND, seconds);
-                Date enddate = calendar.getTime();
-                DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
-                String localTime = datee.format(enddate);
-                String duration= common.gettimestring(durationlong);
-                String trimmeddatetime=common.parsedateformat(startdate) + " "+ common.parsetimeformat(startdate) +" " +localTime;
-                String trimmedendtime=common.parsedateformat(enddate) + " "+ common.parsetimeformat(enddate) +" " +localTime;
+                                        BufferedReader br=null;
+                                        int framecounter=0;
+                                        try {
+                                            br = new BufferedReader(new FileReader(new File(destinationpath)));
+                                            String line;
+                                            while ((line = br.readLine()) != null)
+                                            {
+                                                if(line.trim().length() > 0)
+                                                {
+                                                    String[] splitarray=line.split(",");
+                                                    if(splitarray.length > 5)
+                                                    {
+                                                        String hash=splitarray[splitarray.length-1];
+                                                        if(hash.trim().length() > 20 && splitarray[0].equalsIgnoreCase("0")
+                                                                && (! hash.trim().equalsIgnoreCase
+                                                                ("c99a74c555371a433d121f551d6c6398")))
+                                                        {
+                                                            framecounter++;
+                                                        }
+                                                    }
+                                                }
+                                            }
 
-                databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-                mdbhelper.createDatabase();
+                                            try
+                                            {
+                                                String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
+                                                String datetime = currenttimewithoffset[0];
 
-                try {
-                    mdbhelper.open();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                                                Date startdate = null;
+                                                if(datetime.contains("T"))
+                                                {
+                                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+                                                            Locale.ENGLISH);
+                                                    startdate = format.parse(datetime);
+                                                }
+                                                else
+                                                {
+                                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                                    startdate = format.parse(datetime);
+                                                }
 
-                try
-                {
-                    mdbhelper.updatetrimmedmediainfo(file.getAbsolutePath(),mediatoken,trimmeddatetime,trimmeddatetime,trimmedendtime,
-                            duration,""+numberofframe);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                                                int seconds=(int)durationlong/1000;
+                                                Calendar calendar = Calendar.getInstance();
+                                                calendar.setTime(startdate);
+                                                calendar.add(Calendar.SECOND, seconds);
+                                                Date enddate = calendar.getTime();
+                                                DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+                                                String localTime = datee.format(enddate);
+                                                String duration= common.gettimestring(durationlong);
+                                                String trimmeddatetime=common.parsedateformat(startdate) + " "+
+                                                        common.parsetimeformat(startdate) +" " +
+                                                        localTime;
+                                                String trimmedendtime=common.parsedateformat(enddate) + " "+
+                                                        common.parsetimeformat(enddate) +" " +
+                                                        localTime;
 
-                try {
-                    mdbhelper.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                                                databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                                                mdbhelper.createDatabase();
 
-            } catch (Exception e) {
-                System.out.println("Exception= "+e);
+                                                try {
+                                                    mdbhelper.open();
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                try
+                                                {
+                                                    mdbhelper.updatetrimmedmediainfo(file.getAbsolutePath(),mediatoken,trimmeddatetime,
+                                                            trimmeddatetime,trimmedendtime,
+                                                            duration,""+framecounter);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                try {
+                                                    mdbhelper.close();
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }catch (Exception e)
+                                            {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                        catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        finally{
+                                            try {
+                                                if(br != null)
+                                                    br.close();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onProgress(String s) {
+                                        Log.e( "Progress bar : " , "In Progress");
+                                    }
+
+                                    @Override
+                                    public void onStart() {
+                                        Log.e("Start with output : ","IN START");
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        Log.e("Start with output : ","IN Finish");
+                                    }
+                                });
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+
+                        } catch (Exception e) {
+                            System.out.println("Exception= "+e);
+                        }
+                    }
+                });
             }
-
         }
     }
 
