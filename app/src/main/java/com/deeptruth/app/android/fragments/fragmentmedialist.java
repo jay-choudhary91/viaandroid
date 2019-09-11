@@ -2091,18 +2091,17 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     Log.e("Start with output : ","IN onFinish");
                                 }
                             });
-
-
                         }
 
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
-                            public void run() {
+                            public void run()
+                            {
+                                xdata.getinstance().saveSetting("initialdatereaderapi","0");
                                 progressdialog.dismisswaitdialog();
                                 Toast.makeText(getActivity(),"Media uploaded successfully!",Toast.LENGTH_SHORT).show();
                             }
                         });
-
 
                     }catch (Exception e)
                     {
