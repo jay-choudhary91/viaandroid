@@ -93,7 +93,7 @@
     <dimen name="iconheight">28dp</dimen>
     <dimen name="iconwidth">28dp</dimen>
 
-    <dimen name="dialog_leftmargin">45dp</dimen>
-    <dimen name="dialog_rightmargin">45dp</dimen>
+    <dimen name="dialog_leftmargin">35dp</dimen>
+    <dimen name="dialog_rightmargin">35dp</dimen>
     <dimen name="margin_55dp">55dp</dimen>
 </resources>

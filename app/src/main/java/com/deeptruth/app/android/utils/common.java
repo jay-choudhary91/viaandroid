@@ -60,6 +60,7 @@ import android.os.SystemClock;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -145,6 +146,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.content.Context.WIFI_SERVICE;
 
@@ -2059,8 +2062,6 @@ public class common {
     }
 
     public static void setdrawabledata(String keyname, String keyvalue, TextView txt_encryption) {
-        Log.e("keyname",keyname);
-        Log.e("keyvalue",keyvalue);
         if (txt_encryption == null)
             return;
 
@@ -2502,6 +2503,8 @@ public class common {
         }
     }
 
+
+
     public static boolean isvalidusername(String target) {
         if (target == null) {
             return false;
@@ -2524,20 +2527,76 @@ public class common {
         return android.util.Patterns.PHONE.matcher(number).matches();
     }
 
-    public static boolean checkemailvalidation(Context mcontext, customfontedittext edtusername) {
+    public static boolean checkemailvalidation(Context mcontext, customfontedittext edtusername,TextInputLayout input_layout_email) {
 
         if (edtusername.getText().toString().trim().toString().length() == 0) {
-            Toast.makeText(mcontext, "Please enter email!", Toast.LENGTH_SHORT).show();
+            input_layout_email.setError(mcontext.getResources().getString(R.string.enter_email));
+            edtusername.requestFocus();
             return false;
-        }
-        if (!common.isValidEmail(edtusername.getText().toString().trim())) {
-            Toast.makeText(mcontext, "Please enter valid email!", Toast.LENGTH_SHORT).show();
+        }else if (!common.isValidEmail(edtusername.getText().toString().trim())) {
+            input_layout_email.setError(mcontext.getResources().getString(R.string.invalid_email));
+            edtusername.requestFocus();
             return false;
+        }else{
+            input_layout_email.setErrorEnabled(false);
         }
         return true;
     }
 
-    ;
+    public static boolean checkchennelnamevalidation(Context mcontext, customfontedittext edtchannelname,TextInputLayout input_layout_channelname) {
+
+        Pattern p = Pattern.compile("[^A-Za-z0-9]");
+        Matcher m = p.matcher(edtchannelname.getText().toString().trim());
+        // boolean b = m.matches();
+        boolean value = m.find();
+
+        if (edtchannelname.getText().toString().trim().toString().length() == 0) {
+            input_layout_channelname.setError(mcontext.getResources().getString(R.string.enter_channelname));
+            edtchannelname.requestFocus();
+            return false;
+        }else if (edtchannelname.getText().toString().trim().length()>20) {
+            input_layout_channelname.setError(mcontext.getResources().getString(R.string.limit_channelname));
+            edtchannelname.requestFocus();
+            return false;
+        }else if (value) {
+            input_layout_channelname.setError(mcontext.getResources().getString(R.string.channel_name_validation));
+            edtchannelname.requestFocus();
+            return false;
+        }else{
+            input_layout_channelname.setErrorEnabled(false);
+        }
+        return true;
+    }
+
+    public static boolean checkpasswordvalidation(Context mcontext, customfontedittext edtpasswordname, customfontedittext edtconfirmpasswordname,TextInputLayout input_layout_password,TextInputLayout input_layout_confirmpassword) {
+
+         if (edtpasswordname.getText().toString().trim().length()<6) {
+             input_layout_password.setError(mcontext.getResources().getString(R.string.limit_password));
+             edtpasswordname.requestFocus();
+             return false;
+        }else if(!edtpasswordname.getText().toString().trim().equalsIgnoreCase(edtconfirmpasswordname.getText().toString().trim())) {
+             input_layout_confirmpassword.setError(mcontext.getResources().getString(R.string.password_not_match));
+             edtconfirmpasswordname.requestFocus();
+             return false;
+        }else{
+             input_layout_password.setErrorEnabled(false);
+             input_layout_confirmpassword.setErrorEnabled(false);
+        }
+        return true;
+    }
+
+    public static boolean checkpasswordloginvalidation(Context mcontext, customfontedittext edtpasswordname,TextInputLayout input_layout_password) {
+
+         if (edtpasswordname.getText().toString().trim().length()<6) {
+             input_layout_password.setError(mcontext.getResources().getString(R.string.limit_password));
+             edtpasswordname.requestFocus();
+             return false;
+        }else{
+             input_layout_password.setErrorEnabled(false);
+        }
+        return true;
+    }
+
 
     public static String getactionbarcolor() {
         String colorString = "#" + common.gettransparencyvalues()[65] + "004860";

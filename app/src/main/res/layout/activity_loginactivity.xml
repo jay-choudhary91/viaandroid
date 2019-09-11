@@ -35,16 +35,36 @@
             android:orientation="vertical"
             android:gravity="center">
 
+            <com.deeptruth.app.android.views.customfonttextview
+                style="@style/txtview_confirmchannel"
+                android:text="@string/txt_please_login"
+                android:textColor="@color/black"
+                app:fontType="Comfortaa-Bold"
+                android:textSize="13sp"
+                />
 
-
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_email"
+                android:layout_width="match_parent"
+                app:hintEnabled="false"
+                android:layout_height="wrap_content">
                 <com.deeptruth.app.android.views.customfontedittext
                     style="@style/edt_dialogcreateaccount"
                     android:hint="@string/email"
                     app:fontType="Comfortaa-Regular"
                     android:background="@drawable/edittext_shap"
                     android:maxLength="50"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:imeOptions="actionNext"
                     android:id="@+id/edt_username"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_password"
+                android:layout_width="match_parent"
+                app:hintEnabled="false"
+                android:layout_marginTop="@dimen/margin_10dp"
+                android:layout_height="wrap_content">
 
                 <com.deeptruth.app.android.views.customfontedittext
                     style="@style/edt_dialogcreateaccount"
@@ -56,6 +76,7 @@
                     android:layout_marginTop="@dimen/margin_8dp"
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/edt_password"/>
+            </android.support.design.widget.TextInputLayout>
 
                 <com.deeptruth.app.android.views.customfonttextview
                     style="@style/edttext_confirmchannel"
@@ -65,7 +86,7 @@
                     android:background="@drawable/textview_bluebackgroundshape"
                     app:fontType="Comfortaa-Regular"
                     android:layout_below="@+id/edt_password"
-                    android:layout_marginTop="@dimen/margin_50dp"
+                    android:layout_marginTop="@dimen/margin_40dp"
                     android:id="@+id/login"
                     />
 

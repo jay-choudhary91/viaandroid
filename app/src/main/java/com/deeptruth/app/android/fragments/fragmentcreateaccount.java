@@ -16,6 +16,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
@@ -43,6 +44,7 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
+import com.deeptruth.app.android.views.customfontedittext;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,13 +59,13 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
 
 
     @BindView(R.id.edt_channel_name)
-    EditText edt_channel_name;
+    customfontedittext edt_channel_name;
     @BindView(R.id.email)
-    EditText edt_email;
+    customfontedittext edt_email;
     @BindView(R.id.edt_password)
-    EditText edt_password;
+    customfontedittext edt_password;
     @BindView(R.id.edt_confirmpassword)
-    EditText edt_confirmpassword;
+    customfontedittext edt_confirmpassword;
     @BindView(R.id.txt_submit)
     TextView txt_submit;
     @BindView(R.id.img_backbutton)
@@ -76,6 +78,15 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     ImageView img_dialog_background;
     @BindView(R.id.lay_logo)
     LinearLayout lay_logo;
+
+    @BindView(R.id.input_layout_email)
+    TextInputLayout input_layout_email;
+    @BindView(R.id.input_layout_channel_name)
+    TextInputLayout input_layout_channel_name;
+    @BindView(R.id.input_layout_password)
+    TextInputLayout input_layout_password;
+    @BindView(R.id.input_layout_confirmpassword)
+    TextInputLayout input_layout_confirmpassword;
     String type = "";
 
 
@@ -128,8 +139,8 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txt_submit:
-                checkValidations();
 
+                checkvalidation();
                 break;
             case R.id.img_backbutton:
                 //checkValidations();
@@ -219,9 +230,7 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
                                         xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
                                     getDialog().dismiss();
-                                    baseactivity.getinstance().showdialogconfirmchannelfragment("","");
-
-
+                                    baseactivity.getinstance().showdialogverifyuserfragment("",config.createaccount,config.createaccount);
                                 }
                             }
 
@@ -293,6 +302,22 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
             phonenumber=phonenumber.replace("-","");
             return phonenumber;
     }*/
+
+    private void checkvalidation() {
+        if (!common.checkemailvalidation(applicationviavideocomposer.getactivity(),edt_email,input_layout_email)) {
+            return;
+        }
+
+        if (!common.checkchennelnamevalidation(applicationviavideocomposer.getactivity(),edt_channel_name,input_layout_channel_name)) {
+            return;
+        }
+
+        if (!common.checkpasswordvalidation(applicationviavideocomposer.getactivity(),edt_password,edt_confirmpassword,input_layout_password,input_layout_confirmpassword)) {
+            return;
+        }
+
+        checkValidations();
+    }
 
 }
 

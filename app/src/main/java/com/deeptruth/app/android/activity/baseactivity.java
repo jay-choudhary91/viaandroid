@@ -70,6 +70,7 @@ import com.deeptruth.app.android.fragments.fragmentchangepassword;
 import com.deeptruth.app.android.fragments.fragmentconfirmchannel;
 import com.deeptruth.app.android.fragments.fragmentcreateaccount;
 import com.deeptruth.app.android.fragments.fragmentforgotpassword;
+import com.deeptruth.app.android.fragments.fragmentloginsuccess;
 import com.deeptruth.app.android.fragments.fragmentsetchannel;
 import com.deeptruth.app.android.fragments.fragmentsharemedia;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
@@ -3262,7 +3263,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         fragment.show(ft, "createaccount");
     }
 
-    public void showdialogverifyuserfragment(String type){
+    public void showdialogverifyuserfragment(String forgotpassword,String type,String lastfragment ){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("verifyuser");
@@ -3271,11 +3272,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         //ft.addToBackStack(null);
         fragmentverifyuser fragment = new fragmentverifyuser();
-        fragment.setdata(type);
+        fragment.setdata(forgotpassword,type,lastfragment);
         fragment.show(ft, "verifyuser");
     }
 
-    public void showdialogforgotpasswordfragment(){
+    public void showdialogforgotpasswordfragment(String type,String lastfragment){
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("forgotpassword");
@@ -3284,6 +3285,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         //ft.addToBackStack(null);
         fragmentforgotpassword fragment = new fragmentforgotpassword();
+        fragment.setdata(type,lastfragment);
         fragment.show(ft, "forgotpassword");
     }
 
@@ -3323,6 +3325,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         fragmentconfirmchannel fragment = new fragmentconfirmchannel();
         fragment.setdata(channelname,userverified);
         fragment.show(ft, "confirmchannel");
+    }
+    public void showdialogloginsuccessfragment(){
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("loginsuccess");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        //ft.addToBackStack(null);
+        fragmentloginsuccess fragment = new fragmentloginsuccess();
+       /* fragment.setdata(channelname,userverified);*/
+        fragment.show(ft, "loginsuccess");
     }
 
     public void alertdialog(final Context context,String msg){
