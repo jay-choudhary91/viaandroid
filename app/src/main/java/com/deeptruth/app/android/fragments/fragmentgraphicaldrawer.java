@@ -2957,7 +2957,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 {
                     int totalsize=set1.getEntryCount();
                     int selectedchartposition = (mediarunningpercentage * totalsize) / 100;
-                    Log.e("selectedchartposition",""+selectedchartposition);
 
                     int count = 0;
 
@@ -2967,7 +2966,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             set1.getEntryForIndex(i).setIcon(null);
 
                         count =  set1.getEntryCount();
-                        Log.e("count",""+count);
                         if (count != 1) {
                             if(selectedchartposition ==set1.getEntryCount())
                                 selectedchartposition = selectedchartposition-1;

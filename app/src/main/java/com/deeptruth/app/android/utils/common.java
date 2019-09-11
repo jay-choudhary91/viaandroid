@@ -2066,8 +2066,6 @@ public class common {
     }
 
     public static void setdrawabledata(String keyname, String keyvalue, TextView txt_encryption) {
-        Log.e("keyname",keyname);
-        Log.e("keyvalue",keyvalue);
         if (txt_encryption == null)
             return;
 

@@ -1027,7 +1027,11 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     tvblocknumber.setText(arraycontainerformetric.getValuehash());
                     tvmetahash.setText(arraycontainerformetric.getMetahash());
 
+                    Log.e("currentmediaposition",""+currentmediaposition);
+
                     int mediarunningpercentage = (currentmediaposition * 100) / metricmainarraylist.size();
+
+                    Log.e("mediarunningpercentage",""+mediarunningpercentage);
 
                     if(linechart_connectionspeed != null)
                         updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage,vertical_slider_connectionspeed,tvconnection,applicationviavideocomposer.getactivity().getResources().getString(R.string.connection));
@@ -2088,17 +2092,17 @@ public class metainformationfragment extends basefragment  implements OnChartVal
         dataSet.setValueLinePart1OffsetPercentage(80.f);
         dataSet.setValueLinePart1Length(0.7f);
         dataSet.setValueLinePart2Length(0.5f);
-        dataSet.setValueLineColor(getActivity().getResources().getColor(R.color.white));
+        dataSet.setValueLineColor(getActivity().getResources().getColor(R.color.black));
 
         dataSet.setColors(colors);
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
+        data.setValueTextColor(Color.BLACK);
         data.setDrawValues(false);
         dataSet.setColors(colors);
         piechart.setData(data);
-        piechart.setEntryLabelColor(Color.WHITE);
+        piechart.setEntryLabelColor(Color.BLACK);
         piechart.setEntryLabelTextSize(7f);
         piechart.highlightValues(null);
         piechart.invalidate();
@@ -2716,6 +2720,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                 public void run()
                 {
                     int totalsize=set1.getEntryCount();
+                    Log.e("totalsize",""+totalsize);
                     int selectedchartposition = (mediarunningpercentage * totalsize) / 100;
                     Log.e("selectedchartposition",""+selectedchartposition);
 
@@ -2723,17 +2728,19 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
                     if(selectedchartposition <= set1.getEntryCount())
                     {
-                        Log.e("metaconnetion","connectiontimedelay");
                         for(int i=0;i<set1.getEntryCount();i++)
                             set1.getEntryForIndex(i).setIcon(null);
 
                         count =  set1.getEntryCount();
-                        Log.e("count",""+count);
                         if (count != 1) {
-                            if(selectedchartposition ==set1.getEntryCount())
+                            if(selectedchartposition ==set1.getEntryCount()){
+                                Log.e("selectedchartposition",""+selectedchartposition);
                                 selectedchartposition = selectedchartposition-1;
+                            }
+
 
                             final int finalSelectedchartposition = selectedchartposition;
+
                             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -2752,16 +2759,15 @@ public class metainformationfragment extends basefragment  implements OnChartVal
 
                             int value = (int) set1.getEntryForIndex(selectedchartposition).getY();
                             String unit = ""+set1.getEntryForIndex(selectedchartposition).getData();
+                            Log.e("value",""+value +unit);
 
                             if(graphtype.equalsIgnoreCase(applicationviavideocomposer.getactivity().getString(R.string.gps_accuracy)))
                             {
-                                Log.e("metaconnetion","connectiontimedelay");
                                 common.setdrawabledata(graphtype,
                                         "\n"+"+/- "+value+" "+unit , tvallgraphvalue);
 
                             }else
                             {
-                                Log.e("connectiontimedelay","connectiontimedelay");
                                 common.setdrawabledata(graphtype,
                                         "\n"+value+" "+unit , tvallgraphvalue);
                             }
