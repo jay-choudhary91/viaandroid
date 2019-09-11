@@ -728,8 +728,6 @@ public class common {
             metricItemName = config.gpslongitudedegree;
         } else if (key.equalsIgnoreCase("gpslongitude")) {
             metricItemName = "gpslongitude";
-        } else if (key.equalsIgnoreCase("gpsquality")) {
-            metricItemName = "gpsquality";
         } else if (key.equalsIgnoreCase(config.gpsaltitude)) {
             metricItemName = config.gpsaltitude;
         } else if (key.equalsIgnoreCase("gpsverticalaccuracy")) {
@@ -798,8 +796,6 @@ public class common {
             metricItemName = "lightsensorenabled";
         } else if (key.equalsIgnoreCase("internalip")) {
             metricItemName = "internalip";
-        } else if (key.equalsIgnoreCase("externalip")) {
-            metricItemName = "externalip";
         } else if (key.equalsIgnoreCase("processorcount")) {
             metricItemName = "processorcount";
         } else if (key.equalsIgnoreCase("activeprocessorcount")) {
@@ -1777,12 +1773,12 @@ public class common {
     public static String[] getmetricesarray() {
         String[] items = {"battery", "phonetype", "imeinumber", "simserialnumber", "version", "osversion", "softwareversion", "model",
                 "manufacturer", "brightness", "gpslatitude", "gpslongitude", config.gpslatitudedegree, config.gpslongitudedegree,
-                config.gpsaltitude, "gpsquality", "carrier", "screenwidth","screenheight", config.systemuptimeminutes,
+                config.gpsaltitude,"carrier", "screenwidth","screenheight", config.systemuptimeminutes,
                 config.systemuptimeseconds,"multitaskingenabled",
                 "proximitysensorenabled", "pluggedin", "devicedate", "devicetime","deviceregion", "devicelanguage", "devicecurrency",
                 "timezone", "headphonesattached", "accessoriesattached", "nameattachedaccessories", "attachedaccessoriescount",
                 "totalspace", "usedspace", "memoryusage", "freespace","orientation", "deviceorientation", "rammemory", "usedram",
-                "freeram", "wificonnect", "cellnetworkconnect", "internalip","externalip", "networktype",
+                "freeram", "wificonnect", "cellnetworkconnect", "internalip","networktype",
                 config.connectedphonenetworkquality, "gravitysensorenabled", "gyroscopesensorenabled",
                 "lightsensorenabled", "debuggerattached", "deviceid", "bluetoothonoff", "wifiname", config.wifinetworkavailable,
                 "processorcount", "activeprocessorcount", config.cpuusageuser, config.cpuusagesystem, config.cpuusageiow,

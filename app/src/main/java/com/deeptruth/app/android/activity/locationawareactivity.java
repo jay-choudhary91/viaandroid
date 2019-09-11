@@ -1500,7 +1500,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             int height = size.y;
             metricItemValue = "" + height;
         } else if (key.equalsIgnoreCase("wificonnect") || key.equalsIgnoreCase(config.wifinetworkavailable) || key.equalsIgnoreCase("wifiname")
-                || key.equalsIgnoreCase("connectedwifiquality") || key.equalsIgnoreCase("externalip")) {
+                || key.equalsIgnoreCase("connectedwifiquality")) {
             metricItemValue = "NA";
             ConnectivityManager connManager = (ConnectivityManager) locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -1511,9 +1511,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                     if (key.equalsIgnoreCase(config.wifinetworkavailable) || key.equalsIgnoreCase("wificonnect"))
                         metricItemValue = "true";
-
-                    if (key.equalsIgnoreCase("externalip"))
-                        metricItemValue = common.getWifiIPAddress(locationawareactivity.this);
 
                     if (key.equalsIgnoreCase("wifiname")) {
                         metricItemValue = connectionInfo.getSSID();
@@ -1565,7 +1562,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = "" + percentage + "%";
         } else if (key.equalsIgnoreCase("gpslatitude") || key.equalsIgnoreCase("gpslongitude") || key.equalsIgnoreCase(config.gpsaltitude) ||
                 key.equalsIgnoreCase("gpsverticalaccuracy")
-                || key.equalsIgnoreCase("gpsquality") || key.equalsIgnoreCase("heading")
+                || key.equalsIgnoreCase("heading")
                 || key.equalsIgnoreCase("speed") || key.equalsIgnoreCase("gpsaccuracy")) {
             metricItemValue = "";
         } else if (key.equalsIgnoreCase("totalspace")) {
@@ -2086,9 +2083,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(Math.abs(yAngle)) + "° ");
                         updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(Math.abs(zAngle)) + "° ");*/
 
-                        updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(xAngle) + "° ");
-                        updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(yAngle) + "° ");
-                        updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(zAngle) + "° ");
+                        updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(xAngle));
+                        updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(yAngle));
+                        updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(zAngle));
 
                         //lastinclination = inclination;
                         // Source link of degree conversion http://wizmoz.blogspot.com/2013/01/simple-accelerometer-data-conversion-to.html
@@ -2189,8 +2186,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 @Override
                                 public void run() {
                                     if (getcurrentfragment() != null) {
-                                        updatearrayitem(config.cpuusageuser, "" + (int) (finalTotalcpu) + "%");
-                                        updatearrayitem(config.cpuusagesystem, "" + (int) (finalTotalcpu) + "%");
+                                        String finalvalue=""+finalTotalcpu;
+                                        finalvalue = finalvalue.replaceAll("[^\\d.]", "");
+                                        updatearrayitem(config.cpuusageuser, "" + finalvalue + "%");
+                                        updatearrayitem(config.cpuusagesystem, "" + finalvalue + "%");
                                         //updatearrayitem(config.cpuusageiow, ""+(int)(finalTotalcpu)+"%");
                                         //updatearrayitem(config.cpuusageirq, ""+(int)(finalTotalcpu)+"%");
                                     }
@@ -2212,13 +2211,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 @Override
                                 public void run() {
                                     if (getcurrentfragment() != null) {
-                                        value1[0] = value1[0].replace("User", "");
+                                        value1[0] = value1[0].replaceAll("[^\\d.]", "");
+                                        value2[0] = value2[0].replaceAll("[^\\d.]", "");
+                                        value3[0] = value3[0].replaceAll("[^\\d.]", "");
+                                        value4[0] = value4[0].replaceAll("[^\\d.]", "");
+
                                         updatearrayitem(config.cpuusageuser, value1[0]);
-                                        value2[0] = value2[0].replace("System", "");
                                         updatearrayitem(config.cpuusagesystem, value2[0]);
-                                        value3[0] = value3[0].replace("IOW", "");
                                         updatearrayitem(config.cpuusageiow, value3[0]);
-                                        value4[0] = value4[0].replace("IRQ", "");
                                         updatearrayitem(config.cpuusageirq, value4[0]);
 
                                     }

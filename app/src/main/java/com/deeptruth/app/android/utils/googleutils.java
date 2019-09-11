@@ -17,7 +17,6 @@ public class googleutils {
         xdata.getinstance().saveSetting("lat", "" + location.getLatitude());
         xdata.getinstance().saveSetting("lng", "" + location.getLongitude());
         xdata.getinstance().saveSetting("gpsaltittude", "" + location.getAltitude());
-        xdata.getinstance().saveSetting("gpsquality", "" + location.getAccuracy());
         xdata.getinstance().saveSetting("speed",""+ location.getSpeed());
         xdata.getinstance().saveSetting("heading", ""+ location.getBearing());
 
