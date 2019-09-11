@@ -78,7 +78,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:visibility="visible"
-                android:textSize="15sp"
+                android:textSize="13sp"
                 android:layout_weight="1"
                 android:maxLines="1"
                 />
