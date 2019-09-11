@@ -892,7 +892,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         }
 
 
-                       /* if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicedate")){
+                        /*if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("devicedate")){
                             tvdate.setText(common.convertstringintodate(metricItemArraylist.get(j).getMetricTrackValue()));
                         }
 
@@ -1027,17 +1027,14 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                     tvblocknumber.setText(arraycontainerformetric.getValuehash());
                     tvmetahash.setText(arraycontainerformetric.getMetahash());
 
-                    Log.e("currentmediaposition",""+currentmediaposition);
-
                     int mediarunningpercentage = (currentmediaposition * 100) / metricmainarraylist.size();
-
-                    Log.e("mediarunningpercentage",""+mediarunningpercentage);
 
                     if(linechart_connectionspeed != null)
                         updatelinegraphwithposition(linechart_connectionspeed,connectionspeedvalues,mediarunningpercentage,vertical_slider_connectionspeed,tvconnection,applicationviavideocomposer.getactivity().getResources().getString(R.string.connection));
 
                     if(linechart_datatimedelay != null)
                         updatelinegraphwithposition(linechart_datatimedelay,connectiondatadelayvalues,mediarunningpercentage,vertical_slider_connectiondatatimedely,txt_datatimedelay,applicationviavideocomposer.getactivity().getResources().getString(R.string.data_time_delay));
+
                     if(linechart_gpsaccuracy != null)
                         updatelinegraphwithposition(linechart_gpsaccuracy,gpsaccuracyvalues,mediarunningpercentage,vertical_slider_gpsaccuracy,tvgpsaccuracy,applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy));
 
@@ -1227,8 +1224,8 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             txt_trimmed_date_time.setText(trimmeddatetime);
                             txt_trimmed_start_time.setText(trimmedstarttime);
                             txt_trimmed_end_time.setText(trimmedendtime);
-                            //txt_trimmed_total_frames.setText(trimmedframes);
-                            txt_trimmed_total_frames.setText("-");
+                            txt_trimmed_total_frames.setText(trimmedframes);
+                            //txt_trimmed_total_frames.setText("-");
                             txt_trimmed_total_length.setText(trimmedduration);
                             layout_trimmed_recording.setVisibility(View.VISIBLE);
                         }
@@ -2732,6 +2729,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                             set1.getEntryForIndex(i).setIcon(null);
 
                         count =  set1.getEntryCount();
+                        Log.e("getEntryCount",""+set1.getEntryCount());
                         if (count != 1) {
                             if(selectedchartposition ==set1.getEntryCount()){
                                 Log.e("selectedchartposition",""+selectedchartposition);
