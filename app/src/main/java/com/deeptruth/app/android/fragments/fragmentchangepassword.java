@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +32,11 @@ import com.deeptruth.app.android.fragments.registrationbasefragment;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
+import com.deeptruth.app.android.views.customfontedittext;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,35 +50,37 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
 
 
     @BindView(R.id.edt_password)
-    EditText edt_password;
+    customfontedittext edt_password;
     @BindView(R.id.edt_confirmpassword)
-    EditText edt_confirmpassword;
+    customfontedittext edt_confirmpassword;
     @BindView(R.id.tv_submit)
     TextView tv_submit;
-    @BindView(R.id.img_dialog_background)
-    ImageView img_dialog_background;
     @BindView(R.id.img_backbutton)
     ImageView img_backbutton;
+    @BindView(R.id.lay_logo)
+    LinearLayout lay_logo;
+    @BindView(R.id.input_layout_email)
+    nochangingbackgroundtextinputLlayout input_layout_password;
+    @BindView(R.id.input_layout_password)
+    nochangingbackgroundtextinputLlayout input_layout_confirmpassword;
 
-    View contaionerview = null;
+    View containerview = null;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(contaionerview ==null){
-            contaionerview = inflater.inflate(R.layout.activity_changepassword, container, false);
+        if(containerview ==null){
+            containerview = inflater.inflate(R.layout.activity_changepassword, container, false);
 
-            ButterKnife.bind(this, contaionerview);
-
-            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
-                    R.drawable.bluegradient);
-            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
+            ButterKnife.bind(this, containerview);
+            lay_logo.setVisibility(View.GONE);
+            img_backbutton.setVisibility(View.GONE);
 
             tv_submit.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
         }
-        return contaionerview;
+        return containerview;
     }
 
     @Override
@@ -84,11 +89,13 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
         switch (v.getId())
         {
             case R.id.tv_submit:
-                validatechangepassword();
+                checkvalidation();
+
                 break;
 
             case R.id.img_backbutton:
-                //validatechangepassword();
+                baseactivity.getinstance().showdialogforgotpasswordfragment(config.signuppage,config.signuppage);
+                getDialog().dismiss();
                 break;
         }
     }
@@ -224,5 +231,16 @@ public class fragmentchangepassword extends DialogFragment implements View.OnCli
         double bottommargin = (height / 100) * 3;
         params.y = 10 + Integer.parseInt(xdata.getinstance().getSetting(config.TOPBAR_HEIGHT));
         getDialog().getWindow().setAttributes(params);
+    }
+
+    private void checkvalidation() {
+
+        if(!common.checkpasswordloginvalidation(applicationviavideocomposer.getactivity(),edt_password,input_layout_password))
+            return;
+
+        if (!common.checkpasswordvalidation(applicationviavideocomposer.getactivity(),edt_password,edt_confirmpassword,input_layout_confirmpassword))
+            return;
+
+        validatechangepassword();
     }
 }

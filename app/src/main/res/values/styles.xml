@@ -472,6 +472,11 @@
 
     </style>
 
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 
     <style name="edt_dialogcreateaccount">
         <item name="android:layout_width">match_parent</item>

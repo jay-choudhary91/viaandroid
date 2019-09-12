@@ -43,7 +43,7 @@
                 android:textSize="13sp"
                 />
 
-            <android.support.design.widget.TextInputLayout
+            <com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout
                 android:id="@+id/input_layout_email"
                 android:layout_width="match_parent"
                 app:hintEnabled="false"
@@ -57,9 +57,9 @@
                     android:layout_marginTop="@dimen/margin_10dp"
                     android:imeOptions="actionNext"
                     android:id="@+id/edt_username"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout
                 android:id="@+id/input_layout_password"
                 android:layout_width="match_parent"
                 app:hintEnabled="false"
@@ -76,7 +76,7 @@
                     android:layout_marginTop="@dimen/margin_8dp"
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/edt_password"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout>
 
                 <com.deeptruth.app.android.views.customfonttextview
                     style="@style/edttext_confirmchannel"

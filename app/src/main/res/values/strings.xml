@@ -689,6 +689,9 @@
 
     <string name="invalid_email">invalid email address</string>
     <string name="enter_email">Please enter email!</string>
+    <string name="enter_password">Please enter password!</string>
+    <string name="enter_reset_password">Please reset password</string>
+    <string name="enter_confirm_password">Please enter confirm passwordl!</string>
     <string name="password_not_match">password don\'t match</string>
     <string name="limit_password">password needs to be atleast six characters long</string>
     <string name="channel_name_validation">channel name can only have letters and numbers</string>

@@ -37,6 +37,7 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
@@ -74,9 +75,9 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
     LinearLayout lay_logo;
 
     @BindView(R.id.input_layout_email)
-    TextInputLayout input_layout_email;
+    nochangingbackgroundtextinputLlayout input_layout_email;
     @BindView(R.id.input_layout_password)
-    TextInputLayout input_layout_password;
+    nochangingbackgroundtextinputLlayout input_layout_password;
 
     int rootviewheight,imageviewheight,userloginheight;
     View contaionerview = null;
@@ -226,11 +227,11 @@ public class fragmentsignin extends DialogFragment implements View.OnClickListen
                                             not_verified=object.getString("not_verified");
 
                                         baseactivity.getinstance().showdialogsetchannelfragment(not_verified);
-                                    }
+                                    }else{
+                                        if(adapteritemupdate != null)
+                                            adapteritemupdate.onItemClicked(null);
+                                        }
                                 }
-
-                                if(adapteritemupdate != null)
-                                    adapteritemupdate.onItemClicked(null);
 
                                 getDialog().dismiss();
                             }

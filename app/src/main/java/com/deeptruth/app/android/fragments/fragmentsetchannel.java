@@ -29,6 +29,7 @@ import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
@@ -55,8 +56,10 @@ public class fragmentsetchannel extends DialogFragment implements View.OnClickLi
     LinearLayout imgvideolock_background;
     @BindView(R.id.rootview)
     RelativeLayout rootview;
-    @BindView(R.id.img_dialog_background)
-    ImageView img_dialog_background;
+    @BindView(R.id.lay_logo)
+    LinearLayout lay_logo;
+    @BindView(R.id.input_layout_channelname)
+    nochangingbackgroundtextinputLlayout input_layout_channelname;
     View contaionerview = null;
     String userverified="";
 
@@ -67,9 +70,7 @@ public class fragmentsetchannel extends DialogFragment implements View.OnClickLi
             contaionerview = inflater.inflate(R.layout.dialog_setchannel, container, false);
             ButterKnife.bind(this, contaionerview);
 
-            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
-                    R.drawable.bluegradient);
-            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
+            lay_logo.setVisibility(View.GONE);
 
             txt_createaccount.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
@@ -105,10 +106,7 @@ public class fragmentsetchannel extends DialogFragment implements View.OnClickLi
 
         switch (v.getId()){
             case R.id.txt_createaccount:
-                if(edt_channelname.getText().toString().trim().length() > 0)
-                    baseactivity.getinstance().showdialogconfirmchannelfragment(edt_channelname.getText().toString().trim(),userverified);
-                else
-                    Toast.makeText(applicationviavideocomposer.getactivity(),"Please enter channel name!",Toast.LENGTH_SHORT).show();
+                checkvalidation();
                 break;
 
             case R.id.img_backbutton:
@@ -161,5 +159,17 @@ public class fragmentsetchannel extends DialogFragment implements View.OnClickLi
 
     public void setdata(String userverified) {
         this.userverified = userverified;
+    }
+
+
+
+    private void checkvalidation() {
+
+        if (!common.checkchennelnamevalidation(applicationviavideocomposer.getactivity(),edt_channelname,input_layout_channelname))
+            return;
+
+
+        baseactivity.getinstance().showdialogconfirmchannelfragment(edt_channelname.getText().toString().trim(),userverified);
+        getDialog().dismiss();
     }
 }

@@ -2953,7 +2953,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             set1.getEntryForIndex(i).setIcon(null);
 
                         count =  set1.getEntryCount();
-                        if (count != 1) {
+                        if (!isdatacomposing) {
                             if(selectedchartposition ==set1.getEntryCount())
                                 selectedchartposition = selectedchartposition-1;
 
@@ -2974,7 +2974,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 }
                             });
 
-                            int value = (int) set1.getEntryForIndex(selectedchartposition).getY();
+                            String value = ""+ set1.getEntryForIndex(selectedchartposition).getY();
                             String unit = ""+set1.getEntryForIndex(selectedchartposition).getData();
 
                             if(graphtype.equalsIgnoreCase(applicationviavideocomposer.getactivity().getString(R.string.gps_accuracy)))
@@ -3000,7 +3000,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         public void run() {
 
                             //chart.invalidate();
-                            if(finalCount != 1){
+                            if(!isdatacomposing){
                                 if(vertical_seekbar.getVisibility() == View.VISIBLE)
                                     vertical_seekbar.setVisibility(View.GONE);
                             }else{
