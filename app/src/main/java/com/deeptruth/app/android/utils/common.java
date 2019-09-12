@@ -887,12 +887,18 @@ public class common {
             metricItemName = config.jailbroken;
         }else if (key.equalsIgnoreCase(config.recordedstate)) {
             metricItemName = config.recordedstate;
-        }
-        else if (key.equalsIgnoreCase(config.camera)) {
+        }else if (key.equalsIgnoreCase(config.camera)) {
             metricItemName = config.camera;
-        }
-        else if (key.equalsIgnoreCase(config.picturequality)) {
+        }else if (key.equalsIgnoreCase(config.picturequality)) {
             metricItemName = config.picturequality;
+        }else if (key.equalsIgnoreCase(config.sequencestartdate)) {
+            metricItemName = config.sequencestartdate;
+        }else if (key.equalsIgnoreCase(config.sequenceenddate)) {
+            metricItemName = config.sequenceenddate;
+        }else if (key.equalsIgnoreCase(config.sequencestarttime)) {
+            metricItemName = config.sequencestarttime;
+        }else if (key.equalsIgnoreCase(config.sequenceendtime)) {
+            metricItemName = config.sequenceendtime;
         }
         return metricItemName;
     }
@@ -1746,7 +1752,7 @@ public class common {
     }
 
     public static String[] getmetricesarray() {
-        String[] items = {"battery", "phonetype", "imeinumber", "simserialnumber", "version", "osversion", "softwareversion", "model",
+        String[] items = {config.sequencestarttime,"battery", "phonetype", "imeinumber", "simserialnumber", "version", "osversion", "softwareversion", "model",
                 "manufacturer", "brightness", "gpslatitude", "gpslongitude", config.gpslatitudedegree, config.gpslongitudedegree,
                 config.gpsaltitude,"carrier", "screenwidth","screenheight", config.systemuptimeseconds,"multitaskingenabled",
                 "proximitysensorenabled", "pluggedin", "devicedate", "devicetime","deviceregion", "devicelanguage", "devicecurrency",
@@ -1762,7 +1768,8 @@ public class common {
                 "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid", "numberoftowers",
                 "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,
                 "phoneclocktime", "worldclocktime", config.connectiondatadelay,config.satellitedate,config.satellitesdata,
-                config.worldclockdate,config.phoneclockdate,config.recordedstate};
+                config.worldclockdate,config.phoneclockdate,config.recordedstate,config.sequencestartdate,config.sequenceenddate,
+                config.sequenceendtime};
 
         return items;
     }

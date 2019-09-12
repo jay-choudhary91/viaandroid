@@ -695,8 +695,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
                     arrayobject.put("interim_identifying_hashes","");
                     arrayobject.put("distancetravelled","0");
-                    arrayobject.put("sequencestarttime",starttime);
-                    arrayobject.put("sequenceendtime",endtime);
+                    arrayobject.put("sequencestarttime",starttime+" "+common.gettimezoneshortname());
+                    arrayobject.put("sequenceendtime",endtime+" "+common.gettimezoneshortname());
                     arrayobject.put("devicetime",devicetime);
                 }
                 String metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());

@@ -2060,8 +2060,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(metricesjsonarray != null && metricesjsonarray.length() > 0)
             {
                 JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
-                arrayobject.put("sequencestarttime",starttime);
-                arrayobject.put("sequenceendtime",endtime);
+                arrayobject.put("sequencestarttime",starttime+" "+common.gettimezoneshortname());
+                arrayobject.put("sequenceendtime",endtime+" "+common.gettimezoneshortname());
                 arrayobject.put("devicetime",devicetime);
             }
 

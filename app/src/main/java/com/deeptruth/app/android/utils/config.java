@@ -237,6 +237,10 @@ public class config {
     public static final String gpsonoff="gpsonoff";
     public static final String deviceorientation="deviceorientation";
     public static final String recordedstate="recordedstate";
+    public static final String sequencestartdate="sequencestartdate";
+    public static final String sequenceenddate="sequenceenddate";
+    public static final String sequencestarttime="sequencestarttime";
+    public static final String sequenceendtime="sequenceendtime";
 
     public static final String sync_offline="offline";
     public static final String sync_pending="pending";

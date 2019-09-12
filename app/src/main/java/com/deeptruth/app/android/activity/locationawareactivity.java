@@ -1835,6 +1835,19 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         else if (key.equalsIgnoreCase(config.picturequality)) {
             metricItemValue = xdata.getinstance().getSetting(config.picturequality);
         }
+        else if (key.equalsIgnoreCase(config.sequencestarttime) || key.equalsIgnoreCase(config.sequenceendtime)) {
+            Calendar sequencetime = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS aa");
+            String starttime = sdf.format(sequencetime.getTime());
+            metricItemValue = starttime+" "+common.gettimezoneshortname();
+        }
+        else if (key.equalsIgnoreCase(config.sequencestartdate) || key.equalsIgnoreCase(config.sequenceenddate)) {
+            Calendar calander = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(config.date_format);
+            String date = simpleDateFormat.format(calander.getTime());
+            metricItemValue = date;
+        }
+
         /*else if (key.equalsIgnoreCase(config.sister_metric)) {
             metricItemValue=xdata.getinstance().getSetting(config.sister_metric);
         }
