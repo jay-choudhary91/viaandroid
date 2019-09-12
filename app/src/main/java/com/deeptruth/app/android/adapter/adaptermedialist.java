@@ -226,8 +226,12 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
 
         holder.tv_valid.setVisibility(View.VISIBLE);
         holder.tv_caution.setVisibility(View.VISIBLE);
-        holder.tv_unsent.setVisibility(View.VISIBLE);
         holder.tv_invalid.setVisibility(View.VISIBLE);
+
+        if (mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
+            holder.tv_unsent.setVisibility(View.GONE);
+        else
+            holder.tv_unsent.setVisibility(View.VISIBLE);
 
         holder.tv_valid.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
         holder.tv_caution.setTextSize(TypedValue.COMPLEX_UNIT_SP,11);
@@ -317,7 +321,10 @@ public class adaptermedialist extends RecyclerSwipeAdapter<adaptermedialist.myVi
         {
             Log.e("else case ","case2");
             holder.layout_update_labels.setVisibility(View.VISIBLE);
-            holder.tv_unsent.setVisibility(View.VISIBLE);
+            if (mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
+                holder.tv_unsent.setVisibility(View.GONE);
+            else
+                holder.tv_unsent.setVisibility(View.VISIBLE);
 
             holder.tv_unsent.setText(config.item_unsent+" 100%");
             holder.progressmediasync.setVisibility(View.VISIBLE);
