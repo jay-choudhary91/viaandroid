@@ -423,9 +423,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                             if (metricobject.has("satellites"))
                                 xdata.getinstance().saveSetting(config.item_satellitesdata, metricobject.getJSONArray("satellites").toString());
-
-                            if (metricobject.has("remote_ip"))
-                                xdata.getinstance().saveSetting(config.item_remoteip, metricobject.getString("remote_ip"));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1318,13 +1315,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     public String metric_read(String key) {
         String metricItemValue = "";
 
-        if (key.equalsIgnoreCase(config.decibel) || key.equalsIgnoreCase(config.currentcalldecibel)) {
-            if (ContextCompat.checkSelfPermission(locationawareactivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        if (key.equalsIgnoreCase(config.decibel))
+        {
+            /*if (ContextCompat.checkSelfPermission(locationawareactivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(locationawareactivity.this,
                         new String[]{Manifest.permission.RECORD_AUDIO},
                         PERMISSION_RECORD_AUDIO);
-            }
-            return "NA";
+            }*/
+            return xdata.getinstance().getSetting(config.decibelvalue);
         } else if (key.equalsIgnoreCase("connectedphonenetworkquality")) {
             String str = telephonymanager.getNetworkOperatorName();
             if (str != null) {
@@ -1339,10 +1337,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             return "";
         }*/ else if (key.equalsIgnoreCase(config.cpuusagesystem)) {
             getsystemusage();
-            return "";
-        } else if (key.equalsIgnoreCase(config.currentcallinprogress) || key.equalsIgnoreCase(config.currentcalldurationseconds)
-                || key.equalsIgnoreCase(config.currentcallremotenumber)) {
-            getCallInfo();
             return "";
         } else if (key.equalsIgnoreCase("imeinumber")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1463,7 +1457,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     metricItemValue = "YES";
             }
 
-        } else if (key.equalsIgnoreCase("networktype") || key.equalsIgnoreCase("internalip")) {
+        } else if (key.equalsIgnoreCase("networktype")) {
             metricItemValue = "NA";
             ConnectivityManager cm =
                     (ConnectivityManager) locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -1481,10 +1475,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 if (TYPE_WIFI && key.equalsIgnoreCase("networktype")) {
                     metricItemValue = "Wifi";
                 }
-
-                if (key.equalsIgnoreCase("internalip") && TYPE_MOBILE)
-                    metricItemValue = common.getLocalIpAddress();
-
             }
 
         } else if (key.equalsIgnoreCase("screenwidth")) {
@@ -1634,11 +1624,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             Locale defaultLocale = Locale.getDefault();
             metricItemValue = common.displayCurrencyInfoForLocale(defaultLocale);
         }
-        else if (key.equalsIgnoreCase("systemuptimeminutes"))
-        {
-            // Get the whole uptime
-            metricItemValue = String.valueOf(common.getsystemuptimeinseconds()/60);
-        }
         else if (key.equalsIgnoreCase("systemuptimeseconds"))
         {
             // Get the whole uptime
@@ -1711,18 +1696,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricItemValue = "NA";
             }
 
-        } else if (key.equalsIgnoreCase("nameattachedaccessories")) {
-            if (common.isChargerConnected(locationawareactivity.this) == true && common.isHeadsetOn(locationawareactivity.this) == true) {
-
-                metricItemValue = ("Charger" + "," + "headphone");
-
-            } else if (common.isChargerConnected(locationawareactivity.this) == true) {
-                metricItemValue = "Charger";
-            } else if (common.isHeadsetOn(locationawareactivity.this) == true) {
-                metricItemValue = "headphone";
-            } else {
-                metricItemValue = "NA";
-            }
         } else if (key.equalsIgnoreCase("multitaskingenabled")) {
             metricItemValue = "true";
 
@@ -1730,15 +1703,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = "false";
             if (Debug.isDebuggerConnected())
                 metricItemValue = "true";
-
-        } else if (key.equalsIgnoreCase("currentcallvolume")) {
-            try {
-                AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                int STREAM_VOICE_CALL = audio.getStreamVolume(AudioManager.STREAM_VOICE_CALL);
-                metricItemValue = "" + STREAM_VOICE_CALL;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
         } else if (key.equalsIgnoreCase("devicetime")) {
             /*Calendar c = Calendar.getInstance();
@@ -1762,7 +1726,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = "" + connectiondatadelay;
         } else if (key.equalsIgnoreCase("address")) {
             metricItemValue = xdata.getinstance().getSetting("currentaddress");
-        } else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")|| (key.equalsIgnoreCase("deviceconnection"))) {
+        } else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")) {
 
             if(common.getxdatavalue(xdata.getinstance().getSetting(config.airplanemode)).equalsIgnoreCase("ON")){
                 metricItemValue = "NA";
@@ -1814,21 +1778,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                     e.printStackTrace();
                                 }
                             }
-                        } else if (key.equalsIgnoreCase("deviceconnection")) {
-
-                            switch (networkType) {
-                                case TelephonyManager.NETWORK_TYPE_IDEN:
-                                    metricItemValue = "2G";
-                                    break;
-
-                                case TelephonyManager.NETWORK_TYPE_HSPAP:
-                                    metricItemValue = "3G";
-                                    break;
-
-                                case TelephonyManager.NETWORK_TYPE_LTE:
-                                    metricItemValue = "4G";
-                                    break;
-                            }
                         }
                     }
                 }
@@ -1877,9 +1826,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         else if (key.equalsIgnoreCase(config.satellitesdata)) {
             metricItemValue = xdata.getinstance().getSetting(config.item_satellitesdata);
         }
-        else if (key.equalsIgnoreCase(config.remoteip)) {
-            metricItemValue = xdata.getinstance().getSetting(config.item_remoteip);
-        }
         else if (key.equalsIgnoreCase(config.jailbroken)) {
             metricItemValue = xdata.getinstance().saveSetting(config.jailbroken,"NO");
         }
@@ -1888,9 +1834,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         else if (key.equalsIgnoreCase(config.picturequality)) {
             metricItemValue = xdata.getinstance().getSetting(config.picturequality);
-        }
-        else if (key.equalsIgnoreCase(config.screenorientatioin)) {
-            metricItemValue = xdata.getinstance().getSetting(config.screenorientatioin);
         }
         /*else if (key.equalsIgnoreCase(config.sister_metric)) {
             metricItemValue=xdata.getinstance().getSetting(config.sister_metric);
@@ -1968,7 +1911,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             @Override
             public void run() {
                 updatearrayitem(config.decibel, deciblevalue);
-                updatearrayitem(config.currentcalldecibel, deciblevalue);
                 stop();
             }
         });
@@ -2338,10 +2280,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             xdata.getinstance().saveSetting("CALL_STATUS", (CALL_STATUS.isEmpty()) ? "None" : CALL_STATUS);
             xdata.getinstance().saveSetting("CALL_DURATION", (duration.isEmpty()) ? "None" : duration);
             xdata.getinstance().saveSetting("CALL_REMOTE_NUMBER", (CALL_REMOTE_NUMBER.isEmpty()) ? "None" : CALL_REMOTE_NUMBER);
-
-            updatearrayitem(config.currentcallinprogress, xdata.getinstance().getSetting("CALL_STATUS"));
-            updatearrayitem(config.currentcalldurationseconds, xdata.getinstance().getSetting("CALL_STATUS"));
-            updatearrayitem(config.currentcallremotenumber, xdata.getinstance().getSetting("CALL_STATUS"));
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -558,7 +558,6 @@ public class common {
         xdata.getinstance().saveSetting(config.devicecurrency, "NA");
         xdata.getinstance().saveSetting(config.gpsonoff, "NA");
         xdata.getinstance().saveSetting(config.deviceorientation, "NA");
-        xdata.getinstance().saveSetting(config.screenorientatioin, "NA");
         xdata.getinstance().saveSetting(config.picturequality, "NA");
     }
 
@@ -650,8 +649,6 @@ public class common {
             xdata.getinstance().saveSetting(config.gpsonoff, ((ismetricsselected) ? value : "NA"));
         }else if(keyname.equalsIgnoreCase(config.deviceorientation)){
             xdata.getinstance().saveSetting(config.deviceorientation, ((ismetricsselected) ? value : "NA"));
-        }else if(keyname.equalsIgnoreCase(config.screenorientatioin)){
-            xdata.getinstance().saveSetting(config.screenorientatioin, ((ismetricsselected) ? value : "NA"));
         }else if(keyname.equalsIgnoreCase(config.picturequality)){
             xdata.getinstance().saveSetting(config.picturequality, ((ismetricsselected) ? value : "NA"));
         }else if(keyname.equalsIgnoreCase(config.jailbroken)) {
@@ -761,10 +758,7 @@ public class common {
             metricItemName = "freeram";
         } else if (key.equalsIgnoreCase("devicecurrency")) {
             metricItemName = "devicecurrency";
-        } else if (key.equalsIgnoreCase(config.systemuptimeminutes)) {
-            metricItemName = config.systemuptimeminutes;
-        }
-        else if (key.equalsIgnoreCase(config.systemuptimeseconds)) {
+        } else if (key.equalsIgnoreCase(config.systemuptimeseconds)) {
             metricItemName = config.systemuptimeseconds;
         }
         else if (key.equalsIgnoreCase("pluggedin")) {
@@ -773,9 +767,7 @@ public class common {
             metricItemName = "headphonesattached";
         } else if (key.equalsIgnoreCase("deviceorientation")) {
             metricItemName = "deviceorientation";
-        } else if (key.equalsIgnoreCase("orientation")) {
-            metricItemName = "orientation";
-        } else if (key.equalsIgnoreCase("wifiname")) {
+        }else if (key.equalsIgnoreCase("wifiname")) {
             metricItemName = "wifiname";
         } else if (key.equalsIgnoreCase("connectedwifiquality")) {
             metricItemName = "connectedwifiquality";
@@ -797,8 +789,6 @@ public class common {
             metricItemName = "proximitysensorenabled";
         } else if (key.equalsIgnoreCase("lightsensorenabled")) {
             metricItemName = "lightsensorenabled";
-        } else if (key.equalsIgnoreCase("internalip")) {
-            metricItemName = "internalip";
         } else if (key.equalsIgnoreCase("processorcount")) {
             metricItemName = "processorcount";
         } else if (key.equalsIgnoreCase("activeprocessorcount")) {
@@ -831,8 +821,6 @@ public class common {
             metricItemName = "accessoriesattached";
         } else if (key.equalsIgnoreCase("attachedaccessoriescount")) {
             metricItemName = "attachedaccessoriescount";
-        } else if (key.equalsIgnoreCase("nameattachedaccessories")) {
-            metricItemName = "nameattachedaccessories";
         } else if (key.equalsIgnoreCase("decibel")) {
             metricItemName = "decibel";
         } else if (key.equalsIgnoreCase("gpsnumberofsatelites")) {
@@ -841,16 +829,6 @@ public class common {
             metricItemName = config.distancetravelled;
         } else if (key.equalsIgnoreCase("debuggerattached")) {
             metricItemName = "debuggerattached";
-        } else if (key.equalsIgnoreCase("currentcallinprogress")) {
-            metricItemName = "currentcallinprogress";
-        } else if (key.equalsIgnoreCase("currentcallremotenumber")) {
-            metricItemName = "currentcallremotenumber";
-        } else if (key.equalsIgnoreCase("currentcalldurationseconds")) {
-            metricItemName = "currentcalldurationseconds";
-        } else if (key.equalsIgnoreCase("currentcallvolume")) {
-            metricItemName = "currentcallvolume";
-        } else if (key.equalsIgnoreCase("currentcalldecibel")) {
-            metricItemName = "currentcalldecibel";
         } else if (key.equalsIgnoreCase("devicetime")) {
             metricItemName = "devicetime";
         } else if (key.equalsIgnoreCase("devicedate")) {
@@ -877,8 +855,6 @@ public class common {
             metricItemName = "celltowersignalstrength";
         } else if (key.equalsIgnoreCase("celltowerid")) {
             metricItemName = "celltowerid";
-        }else if (key.equalsIgnoreCase("deviceconnection")) {
-            metricItemName = "deviceconnection";
         } else if (key.equalsIgnoreCase("numberoftowers")) {
             metricItemName = "numberoftowers";
         } else if (key.equalsIgnoreCase("numberofsatellites")) {
@@ -889,8 +865,6 @@ public class common {
             metricItemName = "satelliteid";
         } else if (key.equalsIgnoreCase("strengthofsatellites")) {
             metricItemName = "strengthofsatellites";
-        }else if (key.equalsIgnoreCase("screenorientatioin")) {
-            metricItemName = "screenorientatioin";
         } else if (key.equalsIgnoreCase("attitude")) {
             metricItemName = config.phone_attitude;
         } else if (key.equalsIgnoreCase(config.availablewifinetwork)) {
@@ -909,8 +883,6 @@ public class common {
             metricItemName = config.satellitedate;
         } else if (key.equalsIgnoreCase(config.satellitesdata)) {
             metricItemName = config.satellitesdata;
-        } else if (key.equalsIgnoreCase(config.remoteip)) {
-            metricItemName = config.remoteip;
         }else if (key.equalsIgnoreCase(config.jailbroken)) {
             metricItemName = config.jailbroken;
         }else if (key.equalsIgnoreCase(config.recordedstate)) {
@@ -1776,23 +1748,20 @@ public class common {
     public static String[] getmetricesarray() {
         String[] items = {"battery", "phonetype", "imeinumber", "simserialnumber", "version", "osversion", "softwareversion", "model",
                 "manufacturer", "brightness", "gpslatitude", "gpslongitude", config.gpslatitudedegree, config.gpslongitudedegree,
-                config.gpsaltitude,"carrier", "screenwidth","screenheight", config.systemuptimeminutes,
-                config.systemuptimeseconds,"multitaskingenabled",
+                config.gpsaltitude,"carrier", "screenwidth","screenheight", config.systemuptimeseconds,"multitaskingenabled",
                 "proximitysensorenabled", "pluggedin", "devicedate", "devicetime","deviceregion", "devicelanguage", "devicecurrency",
-                "timezone", "headphonesattached", "accessoriesattached", "nameattachedaccessories", "attachedaccessoriescount",
-                "totalspace", "usedspace", "memoryusage", "freespace","orientation", "deviceorientation", "rammemory", "usedram",
-                "freeram", "wificonnect", "cellnetworkconnect", "internalip","networktype",
+                "timezone", "headphonesattached", "accessoriesattached","attachedaccessoriescount",
+                "totalspace", "usedspace", "memoryusage", "freespace","deviceorientation", "rammemory", "usedram",
+                "freeram", "wificonnect", "cellnetworkconnect","networktype",
                 config.connectedphonenetworkquality, "gravitysensorenabled", "gyroscopesensorenabled",
                 "lightsensorenabled", "debuggerattached", "deviceid", "bluetoothonoff", "wifiname", config.wifinetworkavailable,
                 "processorcount", "activeprocessorcount", config.cpuusageuser, config.cpuusagesystem, config.cpuusageiow,
                 config.cpuusageirq, config.compass, config.decibel, config.barometer, config.acceleration_x, config.acceleration_y,
-                config.acceleration_z, config.distancetravelled, config.currentcallinprogress, config.currentcalldurationseconds,
-                config.currentcallremotenumber, config.currentcalldecibel, config.airplanemode,
-                "camera",config.picturequality,config.jailbroken,"screenorientatioin",
-                "isaccelerometeravailable", "dataconnection", "currentcallvolume", "gpsonoff", "syncphonetime", "country","jailbroken",
-                "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid","deviceconnection", "numberoftowers",
+                config.acceleration_z, config.distancetravelled, config.airplanemode,"camera",config.picturequality,config.jailbroken,
+                "isaccelerometeravailable", "dataconnection", "gpsonoff", "syncphonetime", "country","jailbroken",
+                "connectionspeed", "gpsaccuracy", "speed", "heading", "address", "celltowersignalstrength", "celltowerid", "numberoftowers",
                 "numberofsatellites","satelliteangle", "satelliteid", "strengthofsatellites", "attitude", config.availablewifinetwork,
-                "phoneclocktime", "worldclocktime", config.connectiondatadelay,config.satellitedate,config.satellitesdata,config.remoteip,
+                "phoneclocktime", "worldclocktime", config.connectiondatadelay,config.satellitedate,config.satellitesdata,
                 config.worldclockdate,config.phoneclockdate,config.recordedstate};
 
         return items;

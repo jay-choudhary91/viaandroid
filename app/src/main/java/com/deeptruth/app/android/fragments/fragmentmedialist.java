@@ -442,8 +442,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             resetmedialist();
 
-            webview.loadUrl(config.publishedlist_url);
-
             webview.setWebViewClient(new WebViewClient() {
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     view.loadUrl(url);
@@ -709,6 +707,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         getColor(R.color.blue_item_deselected));
                 showselectedmediatypeitems(true);
                 resetlistfilters();
+
+                if(xdata.getinstance().getSetting(config.isuserlogin).equalsIgnoreCase("1"))
+                    webview.loadUrl(config.publishedlist_url+xdata.getinstance().getSetting(config.authtoken));
+
                 break;
             case R.id.img_camera:
                 launchbottombarfragment();
