@@ -1314,23 +1314,27 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             updatemediapublishedstatus(paramitem.get(0).getMediatoken());
                             medialistitemaddbroadcast();
 
-                            if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
+                            if(paramitem.get(0).getSharemethod().equalsIgnoreCase(config.sharemethod_private) ||
+                                    paramitem.get(0).getSharemethod().equalsIgnoreCase(config.sharemethod_public))
                             {
-                                common.shownotification(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
-                                    .getResources().getString(R.string.your_file_has_been_copied));
-                                showvideolockuploadingprocessdialog(applicationviavideocomposer.getactivity(),
-                                        100,100,shareurl,true,
-                                        new adapteritemclick() {
-                                            @Override
-                                            public void onItemClicked(Object object) {
+                                if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
+                                {
+                                    common.shownotification(applicationviavideocomposer.getactivity(),applicationviavideocomposer.getactivity()
+                                            .getResources().getString(R.string.your_file_has_been_copied));
+                                    showvideolockuploadingprocessdialog(applicationviavideocomposer.getactivity(),
+                                            100,100,shareurl,true,
+                                            new adapteritemclick() {
+                                                @Override
+                                                public void onItemClicked(Object object) {
 
-                                            }
+                                                }
 
-                                            @Override
-                                            public void onItemClicked(Object object, int type) {
+                                                @Override
+                                                public void onItemClicked(Object object, int type) {
 
-                                            }
-                                        });
+                                                }
+                                            });
+                                }
                             }
                         }
                     } catch (JSONException e) {
@@ -1927,6 +1931,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onUploadComplete(FileMetadata result) {
                 progressdialog.dismisswaitdialog();
+
+                if(standarduploadingdialog == null && (standarduploadingdialog.isShowing()))
+                    standarduploadingdialog.dismiss();
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -1964,6 +1972,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                                 .getResources().getString(R.string.file_uploaded_dropbox));
                                         showstandarduploadprocesscompletedialog(applicationviavideocomposer.getactivity(),100,100,
                                                 sharemessage,applicationviavideocomposer.getactivity().getResources().getString(R.string.file_uploaded_dropbox));
+                                    }
+
+                                    ArrayList<uploaddataparams> paramitem=getuploadarrayitembykey(filepath);
+                                    if(paramitem != null)
+                                    {
+                                        paramitem.get(0).setMediastoredurl(finalSharabalelink);
+                                        saveuploadparaminhashmap(filepath,paramitem);
+                                        callmediashareapi(filepath);
                                     }
                                 }
                             });
@@ -2101,6 +2117,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                                     R.string.file_uploaded_googledrive));
                                 }
 
+                                ArrayList<uploaddataparams> paramitem=getuploadarrayitembykey(getreadytouploadfile().getAbsolutePath());
+                                if(paramitem != null)
+                                {
+                                    paramitem.get(0).setMediastoredurl(sharabalelink);
+                                    saveuploadparaminhashmap(getreadytouploadfile().getAbsolutePath(),paramitem);
+                                    callmediashareapi(getreadytouploadfile().getAbsolutePath());
+                                }
+
                             }
                         });
 
@@ -2176,10 +2200,15 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                                         showstandarduploadprocesscompletedialog(applicationviavideocomposer.getactivity(),
                                                                 100,100,sharemessage,applicationviavideocomposer.getactivity().getResources().getString(
                                                                         R.string.file_uploaded_onedrive));
-
-                                                        callmediashareapi(filepath);
                                                     }
 
+                                                    ArrayList<uploaddataparams> paramitem=getuploadarrayitembykey(filepath);
+                                                    if(paramitem != null)
+                                                    {
+                                                        paramitem.get(0).setMediastoredurl(sharabalelink);
+                                                        saveuploadparaminhashmap(filepath,paramitem);
+                                                        callmediashareapi(filepath);
+                                                    }
                                                 }
                                             });
                                         }
@@ -3156,6 +3185,15 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                             }
                         });
                     }
+
+                    /*ArrayList<uploaddataparams> paramitem=getuploadarrayitembykey(filepath);
+                    if(paramitem != null)
+                    {
+                        paramitem.get(0).setMediastoredurl(sharabalelink);
+                        saveuploadparaminhashmap(filepath,paramitem);
+                        callmediashareapi(filepath);
+                    }*/
+
                     //showToast("Media uploaded successfully!" + uploadFileInfo.getName());
                 } catch (BoxException e) {
                     e.printStackTrace();

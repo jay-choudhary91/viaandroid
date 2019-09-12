@@ -61,7 +61,7 @@ public class config {
     public static final double max_connectionspeedrange = 50;
     public static final int connection_timeout = 10000;
 
-    public static final String publishedlist_url = "https://videolock.com/";
+    public static final String publishedlist_url = "https://videolock.com?authtoken=";
     public static final String videolockbaseurl = "https://videolock.com/";
     public static final String location_elevationapi_baseurl = "https://maps.googleapis.com/maps/api/elevation/json?";
     public static final String prefs_name = "main_prefs";
