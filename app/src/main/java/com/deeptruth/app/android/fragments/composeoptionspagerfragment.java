@@ -1155,7 +1155,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
  public void  getscreenorientation(float rotateangle){
 
-     if(fragaudiocomposer != null && currentselectedcomposer == 2){
+     /*if(fragaudiocomposer != null && currentselectedcomposer == 2){
 
          xdata.getinstance().saveSetting(config.screenorientatioin,"NA");
 
@@ -1169,7 +1169,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
          }else if(rotateangle == 180){
              xdata.getinstance().saveSetting(config.screenorientatioin,"Portrait");
          }
-     }
+     }*/
  }
 
     @Override

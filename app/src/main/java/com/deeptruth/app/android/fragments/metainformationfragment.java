@@ -722,27 +722,13 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                                 int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),
                                         "\n"+metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), tvheading);
-                                rotatecompass(degree);
-                            }
-                            else
-                            {
-                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"NA", tvheading);
-                            }
-
-                        }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.orientation))
-                        {
-                            String value=metricItemArraylist.get(j).getMetricTrackValue();
-                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
-                                    && (! value.equalsIgnoreCase("null")))
-                            {
-                                int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
                                 common.setdrawabledata("",
                                         metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), txtdegree);
                                 rotatecompass(degree);
                             }
                             else
                             {
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"NA", tvheading);
                                 common.setdrawabledata("","NA", txtdegree);
                             }
 
@@ -808,7 +794,7 @@ public class metainformationfragment extends basefragment  implements OnChartVal
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("deviceconnection")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_connection),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvdeviceconnection);
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("screenorientatioin")){
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.deviceorientation)){
 
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_orientation),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvorientations);
                         }

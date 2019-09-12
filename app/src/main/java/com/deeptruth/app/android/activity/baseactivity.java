@@ -88,6 +88,7 @@ import com.deeptruth.app.android.interfaces.progressupdate;
 import com.deeptruth.app.android.models.sharemedia;
 import com.deeptruth.app.android.models.sharepopuptextspanning;
 import com.deeptruth.app.android.models.trimbuttontext;
+import com.deeptruth.app.android.models.uploaddataparams;
 import com.deeptruth.app.android.netutils.connectivityreceiver;
 import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
@@ -204,11 +205,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     ServiceConnection mServiceConn;
     Bundle skuDetails;
 
-
-    /* Azure AD v2 Configs */
-    final static String[] onedrivescopes = {"https://graph.microsoft.com/User.Read"};
-    final static String msgraphurl = "https://graph.microsoft.com/v1.0/me";
-
     /* UI & Debugging Variables */
     private static final String TAG = baseactivity.class.getSimpleName();
 
@@ -221,6 +217,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     private BoxApiFolder mFolderApi;
     private BoxApiFile mFileApi;
     private xapipostfile xapiupload;
+    private HashMap<String,ArrayList<uploaddataparams>> fileuploaddataparammap=new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -865,7 +862,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                 }*/
 
-                callmediashareapi(type, mediatoken, path, selectedmediamethod);
+                saveuploadparaminhashmap(path,mediatoken,type,selectedmediamethod);
+                callmediashareapi(path);
             }
             });
 
@@ -890,7 +888,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                 }*/
 
-                callmediashareapi(type , mediatoken, path, selectedmediamethod);
+                saveuploadparaminhashmap(path,mediatoken,type,selectedmediamethod);
+                callmediashareapi(path);
             }
             });
 
@@ -1062,21 +1061,51 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             showsharedialogfragment(filepath, mediatoken, mediatype, mediathumbnailurl);
     }
 
-    public void callmediashareapi(final String mediatype, final String mediatoken, final String path, String method) {
+    public void saveuploadparaminhashmap(String mediafilepath,String mediatoken,String mediatype,String sharemethod)
+    {
+        ArrayList<uploaddataparams> arrayitems=new ArrayList<>();
+        uploaddataparams params=new uploaddataparams();
+        params.setFilepath(mediafilepath);
+        params.setMediatoken(mediatoken);
+        params.setMediatype(mediatype);
+        params.setSharemethod(sharemethod);
+        arrayitems.add(params);
+        fileuploaddataparammap.put(mediafilepath,arrayitems);
+    }
+
+    public void saveuploadparaminhashmap(String mediafilepath,ArrayList<uploaddataparams> arrayitems)
+    {
+        fileuploaddataparammap.put(mediafilepath,arrayitems);
+    }
+
+    public ArrayList<uploaddataparams> getuploadarrayitembykey(String key)
+    {
+        if(fileuploaddataparammap != null && fileuploaddataparammap.size() > 0)
+            return fileuploaddataparammap.get(key);
+
+        return null;
+    }
+
+    public void callmediashareapi(final String mediafilepath)
+    {
+
+        ArrayList<uploaddataparams> paramitem=getuploadarrayitembykey(mediafilepath);
+        if(paramitem == null)
+            return;
 
         HashMap<String, String> requestparams = new HashMap<>();
-        requestparams.put("type", mediatype);
+        requestparams.put("type", paramitem.get(0).getMediatype());
         requestparams.put("action", "share");
-        if(mediatype.equalsIgnoreCase(config.item_image))
-            requestparams.put("imagetoken", mediatoken);
-        else if(mediatype.equalsIgnoreCase(config.item_audio))
-            requestparams.put("audiotoken", mediatoken);
-        else if(mediatype.equalsIgnoreCase(config.item_video))
-            requestparams.put("videotoken", mediatoken);
+        if(paramitem.get(0).getMediatype().equalsIgnoreCase(config.item_image))
+            requestparams.put("imagetoken", paramitem.get(0).getMediatoken());
+        else if(paramitem.get(0).getMediatype().equalsIgnoreCase(config.item_audio))
+            requestparams.put("audiotoken", paramitem.get(0).getMediatoken());
+        else if(paramitem.get(0).getMediatype().equalsIgnoreCase(config.item_video))
+            requestparams.put("videotoken", paramitem.get(0).getMediatoken());
 
         requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
-        requestparams.put("sharemethod", method);
-        requestparams.put("fileextension",common.getfileextension(path).replace(".",""));
+        requestparams.put("sharemethod", paramitem.get(0).getSharemethod());
+        requestparams.put("fileextension",common.getfileextension(paramitem.get(0).getFilepath()).replace(".",""));
 
         progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
         xapipost_send(applicationviavideocomposer.getactivity(), requestparams, new apiresponselistener() {
@@ -1092,71 +1121,109 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         object = new JSONObject(response.getData().toString());
 
                         if(object.has("storageuploadurl"))
+                        {
                             storageurl=object.getString("storageuploadurl");
+                            paramitem.get(0).setMediastoredurl(storageurl);
+                        }
 
                         if(object.has("sharedurl"))
+                        {
                             shareurl=object.getString("sharedurl");
+                            paramitem.get(0).setMediashareurl(shareurl);
+                        }
+
+                        if(object.has("imagesharekey"))
+                            paramitem.get(0).setSharekey(object.getString("imagesharekey"));
+
+                        if(object.has("audiosharekey"))
+                            paramitem.get(0).setSharekey(object.getString("audiosharekey"));
+
+                        if(object.has("videosharekey"))
+                            paramitem.get(0).setSharekey(object.getString("videosharekey"));
+
+                        if(object.has("imageshareid"))
+                            paramitem.get(0).setShareid(object.getString("imageshareid"));
+
+                        if(object.has("videoshareid"))
+                            paramitem.get(0).setShareid(object.getString("videoshareid"));
+
+                        if(object.has("audioshareid"))
+                            paramitem.get(0).setShareid(object.getString("audioshareid"));
 
                         if(object.has("shareurl"))
-                            shareurl=object.getString("shareurl");
-
-                        if(! storageurl.trim().isEmpty())
                         {
-                            xdata.getinstance().saveSetting(config.datauploading_process_dialog,"0");
-                            xapi_uploadfile(applicationviavideocomposer.getactivity(), storageurl, path, new apiresponselistener() {
-                                @Override
-                                public void onResponse(taskresult response) {
-                                    progressdialog.dismisswaitdialog();
-                                    if (response.isSuccess())
-                                    {
-                                        callmediastoreapi(mediatoken, mediatype, path);
-                                        Log.e("xapipostfile ","step6");
-                                    }
-                                    else
-                                    {
-                                        if(videolockuploadingdialog != null && videolockuploadingdialog.isShowing())
-                                            videolockuploadingdialog.dismiss();
-                                    }
-                                }
-                            }, new progressupdate() {
-                                @Override
-                                public void onupdateprogress(String percentage) {
-                                    progressdialog.dismisswaitdialog();
-                                    if(xdata.getinstance().getSetting(config.datauploading_process_dialog).equalsIgnoreCase("0")
-                                            && callbackstatus[0] == 0)
-                                    {
-                                        new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        showvideolockuploadingprocessdialog(applicationviavideocomposer.getactivity(),
-                                                            Long.parseLong(percentage),100,"",false,
-                                                            new adapteritemclick() {
-                                                                @Override
-                                                                public void onItemClicked(Object object) {
-                                                                    callbackstatus[0] =1;
-                                                                }
+                            shareurl=object.getString("shareurl");
+                            paramitem.get(0).setMediashareurl(shareurl);
+                        }
 
+                        saveuploadparaminhashmap(mediafilepath,paramitem);
+
+                        if(paramitem.get(0).getSharemethod().equalsIgnoreCase(config.sharemethod_private) ||
+                                paramitem.get(0).getSharemethod().equalsIgnoreCase(config.sharemethod_public))
+                        {
+                            if(! storageurl.trim().isEmpty())
+                            {
+                                xdata.getinstance().saveSetting(config.datauploading_process_dialog,"0");
+                                xapi_uploadfile(applicationviavideocomposer.getactivity(), storageurl, paramitem.get(0).getFilepath(),
+                                        new apiresponselistener() {
+                                            @Override
+                                            public void onResponse(taskresult response) {
+                                                progressdialog.dismisswaitdialog();
+                                                if (response.isSuccess())
+                                                {
+                                                    callmediastoreapi(paramitem.get(0).getFilepath());
+                                                    Log.e("xapipostfile ","step6");
+                                                }
+                                                else
+                                                {
+                                                    if(videolockuploadingdialog != null && videolockuploadingdialog.isShowing())
+                                                        videolockuploadingdialog.dismiss();
+                                                }
+                                            }
+                                        }, new progressupdate() {
+                                            @Override
+                                            public void onupdateprogress(String percentage) {
+                                                progressdialog.dismisswaitdialog();
+                                                if(xdata.getinstance().getSetting(config.datauploading_process_dialog).equalsIgnoreCase("0")
+                                                        && callbackstatus[0] == 0)
+                                                {
+                                                    new Thread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                                                 @Override
-                                                                public void onItemClicked(Object object, int type) {
+                                                                public void run() {
+                                                                    showvideolockuploadingprocessdialog(applicationviavideocomposer.getactivity(),
+                                                                            Long.parseLong(percentage),100,"",false,
+                                                                            new adapteritemclick() {
+                                                                                @Override
+                                                                                public void onItemClicked(Object object) {
+                                                                                    callbackstatus[0] =1;
+                                                                                }
+
+                                                                                @Override
+                                                                                public void onItemClicked(Object object, int type) {
+                                                                                }
+                                                                            });
                                                                 }
                                                             });
-                                                    }
-                                                });
+                                                        }
+                                                    }).start();
+                                                }
                                             }
-                                        }).start();
-                                    }
-                                }
-                            });
+                                        });
+                            }
+                            else if(! shareurl.trim().isEmpty())
+                            {
+                                updatemediapublishedstatus(paramitem.get(0).getMediatoken());
+                                common.sharemessagewithapps(shareurl);
+                                medialistitemaddbroadcast();
+                                progressdialog.dismisswaitdialog();
+                            }
                         }
-                        else if(! shareurl.trim().isEmpty())
+                        else
                         {
-                            updatemediapublishedstatus(mediatoken);
-                            common.sharemessagewithapps(shareurl);
-                            medialistitemaddbroadcast();
-                            progressdialog.dismisswaitdialog();
+                            callmediastoreapi(paramitem.get(0).getFilepath());
                         }
 
                         if(object.has("message"))
@@ -1175,19 +1242,33 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         });
     }
 
-    public void callmediastoreapi(String mediatoken, String mediatype, String mediapath)
+    public void callmediastoreapi(String mediapath)
     {
+        ArrayList<uploaddataparams> paramitem=getuploadarrayitembykey(mediapath);
+        if(paramitem == null)
+            return;
+
         HashMap<String, String> requestparams = new HashMap<>();
         requestparams.put("action", "stored");
-        requestparams.put("type", mediatype);
+        requestparams.put("type", paramitem.get(0).getMediatype());
         requestparams.put("authtoken", xdata.getinstance().getSetting(config.authtoken));
+        requestparams.put("storedurl", paramitem.get(0).getMediastoredurl());
         requestparams.put("fileextension",common.getfileextension(mediapath).replace(".",""));
-        if(mediatype.equalsIgnoreCase(config.item_image))
-            requestparams.put("imagetoken", mediatoken);
-        else if(mediatype.equalsIgnoreCase(config.item_audio))
-            requestparams.put("audiotoken", mediatoken);
-        else if(mediatype.equalsIgnoreCase(config.item_video))
-            requestparams.put("videotoken", mediatoken);
+        if(paramitem.get(0).getMediatype().equalsIgnoreCase(config.item_image))
+        {
+            requestparams.put("imagetoken", paramitem.get(0).getMediatoken());
+            requestparams.put("imagesharekey", paramitem.get(0).getSharekey());
+        }
+        else if(paramitem.get(0).getMediatype().equalsIgnoreCase(config.item_audio))
+        {
+            requestparams.put("audiotoken", paramitem.get(0).getMediatoken());
+            requestparams.put("audiosharekey", paramitem.get(0).getSharekey());
+        }
+        else if(paramitem.get(0).getMediatype().equalsIgnoreCase(config.item_video))
+        {
+            requestparams.put("videotoken", paramitem.get(0).getMediatoken());
+            requestparams.put("videosharekey", paramitem.get(0).getSharekey());
+        }
 
         progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
         xapipost_send(applicationviavideocomposer.getactivity(), requestparams, new apiresponselistener() {
@@ -1230,7 +1311,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                         if(! shareurl.trim().isEmpty())
                         {
-                            updatemediapublishedstatus(mediatoken);
+                            updatemediapublishedstatus(paramitem.get(0).getMediatoken());
                             medialistitemaddbroadcast();
 
                             if(xdata.getinstance().getSetting(config.datauploaded_success_dialog).equalsIgnoreCase("1"))
@@ -1740,6 +1821,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                     if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_box))
                     {
+                        saveuploadparaminhashmap(getreadytouploadfile().getAbsolutePath(),mediatoken,type,config.sharemethod_box);
                         if(mFileApi == null)
                         {
                             BoxConfig.IS_LOG_ENABLED = true;
@@ -1753,6 +1835,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_googledrive))
                     {
+                        saveuploadparaminhashmap(getreadytouploadfile().getAbsolutePath(),mediatoken,type,config.sharemethod_gdrive);
                         requestgooglesignin();
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_videoLock_share))
@@ -1765,32 +1848,27 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_microsoft_onedrive))
                     {
+                        saveuploadparaminhashmap(getreadytouploadfile().getAbsolutePath(),mediatoken,type,config.sharemethod_onedrive);
+                        //callmediashareapi(type,mediatoken,getreadytouploadfile().getAbsolutePath(),config.sharemethod_onedrive);
                         loginwithonedrive(trimmedmediapath);
                     }
                     else if(sharemedia.get(position).getMedianame().equalsIgnoreCase(config.item_dropbox))
                     {
+                        saveuploadparaminhashmap(getreadytouploadfile().getAbsolutePath(),mediatoken,type,config.sharemethod_dropbox);
                         if(xdata.getinstance().getSetting(config.dropboxauthtoken).trim().isEmpty())
                         {
                             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                            {
                                 Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.dropbox_appkey_composer));
-                            }
                             else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composeraudio))
-                            {
                                 Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.dropbox_appkey_composer_audio));
-                            }
                             else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composervideoimage))
-                            {
                                 Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.dropbox_appkey_composer_videoimage));
-                            }
                             else if(BuildConfig.FLAVOR.contains(config.build_flavor_reader))
-                            {
                                 Auth.startOAuth2Authentication(baseactivity.this, applicationviavideocomposer.getactivity()
                                         .getResources().getString(R.string.dropbox_appkey_reader));
-                            }
                         }
                         else
                         {
@@ -2098,6 +2176,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                                                         showstandarduploadprocesscompletedialog(applicationviavideocomposer.getactivity(),
                                                                 100,100,sharemessage,applicationviavideocomposer.getactivity().getResources().getString(
                                                                         R.string.file_uploaded_onedrive));
+
+                                                        callmediashareapi(filepath);
                                                     }
 
                                                 }
@@ -3212,7 +3292,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     public void loginsuccess()
     {
         if(selectedmediamethod.equalsIgnoreCase(config.type_private) || selectedmediamethod.equalsIgnoreCase(config.type_public))
-            callmediashareapi(selectedmediatype,selectedmediatoken,selectedmediapath,selectedmediamethod);
+            callmediashareapi(selectedmediapath);
     }
 
     public void showdialogsigninfragment(){

@@ -793,7 +793,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.network),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)), tvnetwork);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.version),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.OSversion)), tvversion);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_barometer),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.barometer)), tvbarometer);
-                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_orientation),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.screenorientatioin)), tvorientations);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_orientation),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.deviceorientation)), tvorientations);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_airplane_mode),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.airplanemode)), tvairoplan_mode);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_currency),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.devicecurrency)), tvcurrency);
                     common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)), tvwifi);
@@ -1178,6 +1178,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void setsoundinformation(int ampletudevalue,int decibelvalue,boolean issoundwaveshow){
 
+        xdata.getinstance().saveSetting(config.decibelvalue,""+decibelvalue);
         if(layout_soundiformation == null)
             return;
 
@@ -1917,27 +1918,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                                 int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
                                 common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),
                                         "\n"+metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), tvheading);
-                                rotatecompass(degree);
-                            }
-                            else
-                            {
-                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"NA", tvheading);
-                            }
-
-                        }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.orientation))
-                        {
-                            String value=metricItemArraylist.get(j).getMetricTrackValue();
-                            if((! value.trim().isEmpty()) && (! value.equalsIgnoreCase("NA"))
-                                    && (! value.equalsIgnoreCase("null")))
-                            {
-                                int degree = Integer.parseInt(metricItemArraylist.get(j).getMetricTrackValue());
                                 common.setdrawabledata("",
                                         metricItemArraylist.get(j).getMetricTrackValue()+"° " +common.getcompassdirection(degree), txtdegree);
                                 rotatecompass(degree);
                             }
                             else
                             {
+                                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"NA", tvheading);
                                 common.setdrawabledata("","NA", txtdegree);
                             }
 
@@ -2003,7 +1990,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("deviceconnection")){
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_connection),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvdeviceconnection);
                         }
-                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("screenorientatioin")){
+                        else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.deviceorientation)){
 
                             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.data_orientation),"\n"+metricItemArraylist.get(j).getMetricTrackValue(), tvorientations);
                         }

@@ -61,7 +61,7 @@ public class config {
     public static final double max_connectionspeedrange = 50;
     public static final int connection_timeout = 10000;
 
-    public static final String publishedlist_url = "https://videolock.com/my";
+    public static final String publishedlist_url = "https://videolock.com/";
     public static final String videolockbaseurl = "https://videolock.com/";
     public static final String location_elevationapi_baseurl = "https://maps.googleapis.com/maps/api/elevation/json?";
     public static final String prefs_name = "main_prefs";
@@ -177,8 +177,6 @@ public class config {
     public static final String address = "address";
     public static final String carrier = "carrier";
     public static final String deviceconnection = "deviceconnection";
-    public static final String screenorientatioin = "screenorientatioin";
-    public static final String systemuptimeminutes = "systemuptimeminutes";
     public static final String systemuptimeseconds = "systemuptimeseconds";
 
     public static final String blockchainid = "blockchainid";
@@ -328,6 +326,7 @@ public class config {
     public static final String json_towerlist="json_towerlist";
     public static final String jailbroken="jailbroken";
     public static final String isuserlogin="isuserlogin";
+    public static final String decibelvalue="decibelvalue";
 
     public static final String item_satellitesdate ="item_satellitesdate";
     public static final String item_remoteip="item_remoteip";
