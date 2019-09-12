@@ -32,10 +32,11 @@
         android:id="@+id/rootview"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.TextInputLayout
+        <com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout
             android:id="@+id/input_layout_email"
             android:layout_width="match_parent"
             app:hintEnabled="false"
+            app:errorTextAppearance="@style/error_appearance"
             android:layout_height="wrap_content">
 
         <com.deeptruth.app.android.views.customfontedittext
@@ -46,7 +47,7 @@
             android:imeOptions="actionNext"
             android:id="@+id/email"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="wrap_content"
@@ -82,10 +83,11 @@
                 android:layout_weight="1"
                 android:maxLines="1"
                 />
-            <android.support.design.widget.TextInputLayout
+            <com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout
                 android:id="@+id/input_layout_channel_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:errorTextAppearance="@style/error_appearance"
                 app:hintEnabled="false"
                 android:layout_weight="1">
 
@@ -101,14 +103,15 @@
                 android:id="@+id/edt_channel_name"
                 android:singleLine="true"
                 />
-            </android.support.design.widget.TextInputLayout>
+            </com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout>
 
         </LinearLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout
             android:id="@+id/input_layout_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:errorTextAppearance="@style/error_appearance"
             android:layout_marginTop="@dimen/margin_8dp"
             app:hintEnabled="false"
             >
@@ -125,13 +128,14 @@
             android:id="@+id/edt_password"
             />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout
             android:id="@+id/input_layout_confirmpassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_8dp"
+            app:errorTextAppearance="@style/error_appearance"
             app:hintEnabled="false"
             >
 
@@ -147,7 +151,7 @@
             android:id="@+id/edt_confirmpassword"
            />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="wrap_content"

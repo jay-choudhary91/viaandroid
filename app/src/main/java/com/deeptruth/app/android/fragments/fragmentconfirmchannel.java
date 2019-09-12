@@ -31,6 +31,7 @@ import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
@@ -57,8 +58,12 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
     LinearLayout imgvideolock_background;
     @BindView(R.id.rootview)
     RelativeLayout rootview;
-    @BindView(R.id.img_dialog_background)
-    ImageView img_dialog_background;
+    /*@BindView(R.id.img_dialog_background)
+    ImageView img_dialog_background;*/
+    @BindView(R.id.lay_logo)
+    LinearLayout lay_logo;
+    @BindView(R.id.input_layout_channelname)
+    nochangingbackgroundtextinputLlayout input_layout_channelname;
     View contaionerview = null;
     String userverified="",channelname="";
 
@@ -69,9 +74,11 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
             contaionerview = inflater.inflate(R.layout.dialog_confirmchannel, container, false);
             ButterKnife.bind(this, contaionerview);
 
-            Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
+            /*Bitmap bitmap = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(),
                     R.drawable.bluegradient);
-            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));
+            img_dialog_background.setImageBitmap(common.getRoundedCornerBitmap(bitmap,170));*/
+
+            lay_logo.setVisibility(View.GONE);
 
             txt_createaccount.setOnClickListener(this);
             img_backbutton.setOnClickListener(this);
@@ -109,12 +116,13 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
             case R.id.txt_createaccount:
                 if(channelname.trim().isEmpty())
                 {
-                    checkValidations();
+                    checkvalidation();
+
                 }
                 else
                 {
                     if(channelname.equals(edt_username.getText().toString().trim()))
-                        checkValidations();
+                        checkvalidation();
                     else
                         Toast.makeText(applicationviavideocomposer.getactivity(),"Confirm channel name mismatch!",Toast.LENGTH_SHORT).show();
                 }
@@ -122,7 +130,8 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
                 break;
 
             case R.id.img_backbutton:
-                baseactivity.getinstance().showdialogcreateaccountfragment("");
+                //baseactivity.getinstance().showdialogcreateaccountfragment("");
+                baseactivity.getinstance().showdialogsetchannelfragment("");
                 getDialog().dismiss();
                 break;
 
@@ -251,5 +260,14 @@ public class fragmentconfirmchannel extends DialogFragment implements View.OnCli
     public void setdata(String channelname,String userverified) {
         this.channelname = channelname;
         this.userverified = userverified;
+    }
+
+    private void checkvalidation() {
+
+        if (!common.checkchennelnamevalidation(applicationviavideocomposer.getactivity(),edt_username,input_layout_channelname))
+            return;
+
+
+        checkValidations();
     }
 }

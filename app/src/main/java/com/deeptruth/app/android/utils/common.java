@@ -2568,26 +2568,30 @@ public class common {
         return true;
     }
 
-    public static boolean checkpasswordvalidation(Context mcontext, customfontedittext edtpasswordname, customfontedittext edtconfirmpasswordname,TextInputLayout input_layout_password,TextInputLayout input_layout_confirmpassword) {
+    public static boolean checkpasswordvalidation(Context mcontext, customfontedittext edtpasswordname, customfontedittext edtconfirmpasswordname,TextInputLayout input_layout_confirmpassword) {
 
-         if (edtpasswordname.getText().toString().trim().length()<6) {
-             input_layout_password.setError(mcontext.getResources().getString(R.string.limit_password));
-             edtpasswordname.requestFocus();
+         if (edtconfirmpasswordname.getText().toString().trim().toString().length() == 0) {
+             input_layout_confirmpassword.setError(mcontext.getResources().getString(R.string.enter_confirm_password));
+             edtconfirmpasswordname.requestFocus();
              return false;
         }else if(!edtpasswordname.getText().toString().trim().equalsIgnoreCase(edtconfirmpasswordname.getText().toString().trim())) {
              input_layout_confirmpassword.setError(mcontext.getResources().getString(R.string.password_not_match));
              edtconfirmpasswordname.requestFocus();
              return false;
         }else{
-             input_layout_password.setErrorEnabled(false);
              input_layout_confirmpassword.setErrorEnabled(false);
         }
         return true;
     }
 
+
     public static boolean checkpasswordloginvalidation(Context mcontext, customfontedittext edtpasswordname,TextInputLayout input_layout_password) {
 
-         if (edtpasswordname.getText().toString().trim().length()<6) {
+        if (edtpasswordname.getText().toString().trim().toString().length() == 0) {
+            input_layout_password.setError(mcontext.getResources().getString(R.string.enter_password));
+            edtpasswordname.requestFocus();
+            return false;
+        }else if (edtpasswordname.getText().toString().trim().length()<6) {
              input_layout_password.setError(mcontext.getResources().getString(R.string.limit_password));
              edtpasswordname.requestFocus();
              return false;

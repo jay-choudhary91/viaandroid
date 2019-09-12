@@ -2,36 +2,20 @@ package com.deeptruth.app.android.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +23,7 @@ import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.baseactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.utils.nochangingbackgroundtextinputLlayout;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
@@ -51,7 +36,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import br.com.sapereaude.maskedEditText.MaskedEditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -80,13 +64,13 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     LinearLayout lay_logo;
 
     @BindView(R.id.input_layout_email)
-    TextInputLayout input_layout_email;
+    nochangingbackgroundtextinputLlayout input_layout_email;
     @BindView(R.id.input_layout_channel_name)
-    TextInputLayout input_layout_channel_name;
+    nochangingbackgroundtextinputLlayout input_layout_channel_name;
     @BindView(R.id.input_layout_password)
-    TextInputLayout input_layout_password;
+    nochangingbackgroundtextinputLlayout input_layout_password;
     @BindView(R.id.input_layout_confirmpassword)
-    TextInputLayout input_layout_confirmpassword;
+    nochangingbackgroundtextinputLlayout input_layout_confirmpassword;
     String type = "";
 
 
@@ -304,20 +288,19 @@ public class fragmentcreateaccount extends DialogFragment implements View.OnClic
     }*/
 
     private void checkvalidation() {
-        if (!common.checkemailvalidation(applicationviavideocomposer.getactivity(),edt_email,input_layout_email)) {
+        if (!common.checkemailvalidation(applicationviavideocomposer.getactivity(),edt_email,input_layout_email))
             return;
-        }
 
-        if (!common.checkchennelnamevalidation(applicationviavideocomposer.getactivity(),edt_channel_name,input_layout_channel_name)) {
+        if (!common.checkchennelnamevalidation(applicationviavideocomposer.getactivity(),edt_channel_name,input_layout_channel_name))
             return;
-        }
 
-        if (!common.checkpasswordvalidation(applicationviavideocomposer.getactivity(),edt_password,edt_confirmpassword,input_layout_password,input_layout_confirmpassword)) {
+        if(!common.checkpasswordloginvalidation(applicationviavideocomposer.getactivity(),edt_password,input_layout_password))
             return;
-        }
+
+        if (!common.checkpasswordvalidation(applicationviavideocomposer.getactivity(),edt_password,edt_confirmpassword,input_layout_confirmpassword))
+            return;
 
         checkValidations();
     }
-
 }
 
