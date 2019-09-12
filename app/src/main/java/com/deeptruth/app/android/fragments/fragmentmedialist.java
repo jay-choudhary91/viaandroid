@@ -699,7 +699,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 recyclerviewlocallist.setVisibility(View.GONE);
                 recyclerviewpublishedlist.setVisibility(View.GONE);
                 recyclerviewfilteroption.setVisibility(View.GONE);
-                webview.setVisibility(View.VISIBLE);
 
                 txt_publishedfiles.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().
                         getColor(R.color.blue_item_selected));
@@ -709,7 +708,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 resetlistfilters();
 
                 if(xdata.getinstance().getSetting(config.isuserlogin).equalsIgnoreCase("1"))
+                {
+                    webview.setVisibility(View.VISIBLE);
                     webview.loadUrl(config.publishedlist_url+xdata.getinstance().getSetting(config.authtoken));
+                }
+                else
+                    webview.setVisibility(View.GONE);
 
                 break;
             case R.id.img_camera:
